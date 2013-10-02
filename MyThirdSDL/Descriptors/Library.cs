@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SharpDL.Graphics;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -16,8 +17,8 @@ namespace MyThirdSDL.Descriptors
 		public int CommunicationEffectiveness { get; private set; }
 		public int LeadershipEffectiveness { get; private set; }
 
-		public Library(string agentName)
-			: base(agentName, WIDTH_IN_TILES, HEIGHT_IN_TILES)
+		public Library(string agentName, Texture texture, Vector position)
+			: base(agentName, texture, position, WIDTH_IN_TILES, HEIGHT_IN_TILES)
 		{
 			IntelligenceEffectiveness = 1;
 			CreativityEffectiveness = 1;

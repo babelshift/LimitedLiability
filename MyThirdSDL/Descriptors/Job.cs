@@ -6,17 +6,20 @@ using System.Threading.Tasks;
 
 namespace MyThirdSDL.Descriptors
 {
-	public class Job : Agent
+	public class Job
 	{
 		public string Title { get; private set; }
 		public double Salary { get; private set; }
-		public int RequiredIntelligence { get; private set; }
-		public int RequiredCreativity { get; private set; }
-		public int RequiredCommunication { get; private set; }
-		public int RequiredLeadership { get; private set; }
+		public Skills.Rating RequiredIntelligence { get; private set; }
+		public Skills.Rating RequiredCreativity { get; private set; }
+		public Skills.Rating RequiredCommunication { get; private set; }
+		public Skills.Rating RequiredLeadership { get; private set; }
 
-		public Job(string agentName, string title, double salary, int requiredIntelligence, int requiredCreativity, int requiredCommunication, int requiredLeadership)
-			: base(agentName)
+		public Job(string title, double salary, 
+			Skills.Rating requiredIntelligence, 
+			Skills.Rating requiredCreativity, 
+			Skills.Rating requiredCommunication, 
+			Skills.Rating requiredLeadership)
 		{
 			Title = title;
 			Salary = salary;

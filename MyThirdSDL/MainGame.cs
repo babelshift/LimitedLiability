@@ -1,4 +1,5 @@
-﻿using SharpDL;
+﻿using MyThirdSDL.Descriptors;
+using SharpDL;
 using SharpDL.Events;
 using SharpDL.Graphics;
 using SharpDL.Input;
@@ -121,8 +122,10 @@ namespace MyThirdSDL
 			//player.Activate();
 			
 			Surface thingSurface = new Surface("Images/thing.png", Surface.SurfaceType.PNG);
-			thing = new Thing(new Vector(100, 100), new Vector(50, 50), new Texture(Renderer, thingSurface));
-			thing.Activate();
+			Texture thingTexture = new Texture(Renderer, thingSurface);
+			Job job = new Job("Systems Engineer", 75000, Skills.Rating.Great, Skills.Rating.Bad, Skills.Rating.Neutral, Skills.Rating.Neutral);
+			employee = new Employee("Employee 1", thingTexture, new Vector(100, 100), "Justin", "Skiles", 29, new DateTime(1984, 9, 9), job);
+			employee.Activate();
 
 			Surface tileSurface = new Surface("Images/tileCollisionBox.png", Surface.SurfaceType.PNG);
 			tileCollisionBoxImage = new Image(Renderer, tileSurface, Image.ImageFormat.PNG);
@@ -135,7 +138,7 @@ namespace MyThirdSDL
 
 			string isoWorldText = String.Format("(Iso) WorldX: {0}, WorldY: {1}", isoMouseWorldGridIndex.X, isoMouseWorldGridIndex.Y);
 			string orthoWorldText = String.Format("(Ortho) WorldX: {0}, WorldY: {1}", isoMouseWorldGridIndex.X, isoMouseWorldGridIndex.Y);
-			string thingStatusRawText = String.Format("Thing Status: {0}", thing.MyStatus);
+			string thingStatusRawText = String.Format("Thing Activity: {0}", employee.Activity);
 			Font font = new Font("Fonts/Arcade N.ttf", 18);
 			Surface isoWorldFontSurface = new Surface(font, isoWorldText, color);
 			Surface orthoWorldFontSurface = new Surface(font, orthoWorldText, color);
@@ -153,7 +156,7 @@ namespace MyThirdSDL
 		private Image tileHighlightImage;
 		private Image tileCollisionBoxImage;
 		//private Player player;
-		private Thing thing;
+		private Employee employee;
 		private SharpDL.Graphics.Color color = new SharpDL.Graphics.Color(255, 165, 0);
 
 		/// <summary>
@@ -197,16 +200,16 @@ namespace MyThirdSDL
 
 				try
 				{
-					Queue<MapObject> bestPath = tiledMap.FindBestPath(thing.WorldGridIndex, roundedMouseClickIndex);
-					thing.SetPath(bestPath);
+					Queue<MapObject> bestPath = tiledMap.FindBestPath(employee.WorldGridIndex, roundedMouseClickIndex);
+					employee.SetPath(bestPath);
 				}
 				catch { /* show error somewhere, we have chosen an invalid location */ }
 			}
-			thing.Update(gameTime, keysPressed);
+			employee.Update(gameTime);
 
 			isoWorldGridIndexText.UpdateText(String.Format("(Iso) WorldX: {0}, WorldY: {1}", isoMouseWorldGridIndex.X, isoMouseWorldGridIndex.Y));
 			orthoWorldGridIndexText.UpdateText(String.Format("(X,Y): ({0},{1})", orthoMouseWorldPosition.X, orthoMouseWorldPosition.Y));
-			thingStatusText.UpdateText(String.Format("Thing Status: {0}", thing.MyStatus));
+			thingStatusText.UpdateText(String.Format("{0} Activity: {1}", employee.AgentName, employee.Activity));
 		}
 
 		private bool hasPathPossiblyChanged = false;
@@ -263,7 +266,7 @@ namespace MyThirdSDL
 				}
 			}
 
-			thing.Draw(gameTime, Renderer);
+			employee.Draw(gameTime, Renderer);
 
 			Renderer.RenderTexture(isoWorldGridIndexText.Texture, 0, 0);
 			Renderer.RenderTexture(orthoWorldGridIndexText.Texture, 0, 18);

@@ -17,7 +17,6 @@ namespace MyThirdSDL
 
 	public abstract class Entity
 	{
-		public Guid ID { get; private set; }
 		public Vector WorldGridIndex { get; protected set; }
 		public Vector WorldPosition { get; protected set; }
 		public Vector ProjectedPosition { get; protected set; }
@@ -27,7 +26,6 @@ namespace MyThirdSDL
 
 		public Entity(Vector position, Vector speed)
 		{
-			ID = Guid.NewGuid();
 			Status = EntityStatus.Inactive;
 			WorldPosition = position;
 			Speed = speed;

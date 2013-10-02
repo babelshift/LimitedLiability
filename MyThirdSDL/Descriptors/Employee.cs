@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SharpDL.Graphics;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,6 +9,8 @@ namespace MyThirdSDL.Descriptors
 {
 	public class Employee : Agent
 	{
+		private static Vector speed = new Vector(25, 25);
+
 		public string FullName { get { return FirstName + " " + LastName;}}
 		public string FirstName { get; private set; }
 		public string LastName { get; private set; }
@@ -31,8 +34,8 @@ namespace MyThirdSDL.Descriptors
 			}
 		}
 
-		public Employee(string agentName, string firstName, string lastName, int age, DateTime birthday, Job job)
-			: base(agentName)
+		public Employee(string agentName, Texture texture, Vector position, string firstName, string lastName, int age, DateTime birthday, Job job)
+			: base(agentName, texture, position, speed)
 		{
 			FirstName = firstName;
 			LastName = lastName;

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SharpDL.Graphics;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -14,8 +15,8 @@ namespace MyThirdSDL.Descriptors
 		public int ThirstEffectiveness { get; private set; }
 		public int HungerEffectiveness { get; private set; }
 
-		public SodaMachine(string agentName)
-			: base(agentName)
+		public SodaMachine(string agentName, Texture texture, Vector startingPosition)
+			: base(agentName, texture, startingPosition)
 		{
 			HealthEffectiveness = -1;
 			HygieneEffectiveness = 0;

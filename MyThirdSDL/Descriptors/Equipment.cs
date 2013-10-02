@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SharpDL.Graphics;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,6 +11,7 @@ namespace MyThirdSDL.Descriptors
 	{
 		public double Cost { get; private set; }
 
-		public Equipment(string agentName) : base(agentName) { }
+		public Equipment(string agentName, Texture texture, Vector startingPosition) 
+			: base(agentName, texture, startingPosition, Vector.Zero) { }
 	}
 }

@@ -14,8 +14,8 @@ namespace MyThirdSDL.Descriptors
 		public int WidthInTiles { get; private set; }
 		public int HeightInTiles { get; private set; }
 
-		public Room(string agentName, int widthInTiles, int heightInTiles)
-			: base(agentName)
+		public Room(string agentName, Texture texture, Vector startingPosition, int widthInTiles, int heightInTiles)
+			: base(agentName, texture, startingPosition, Vector.Zero)
 		{
 			WidthInTiles = widthInTiles;
 			HeightInTiles = heightInTiles;
