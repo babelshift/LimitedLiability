@@ -24,21 +24,10 @@ namespace MyThirdSDL.Descriptors
 
 	public abstract class Agent : IDrawable
 	{
-		public Guid ID { get; private set; }
-		public string AgentName { get; private set; }
-		public double SimulationAge { get; private set; }
-		public AgentStatus Status { get; private set; }
-		public AgentActivity Activity { get; private set; }
-
-		public Vector WorldGridIndex { get; private set; }
-		public Vector WorldPosition { get; protected set; }
-		public float Depth { get { return WorldPosition.X + WorldPosition.Y; } }
-		public Vector Speed { get; private set; }
+		private Queue<MapObject> pathNodes;
 
 		private Texture Texture { get; set; }
-		public Vector ProjectedPosition { get; private set; }
 		private Vector Destination { get; set; }
-
 		private Rectangle CollisionBox
 		{
 			get
@@ -47,7 +36,16 @@ namespace MyThirdSDL.Descriptors
 			}
 		}
 
-		private Queue<MapObject> pathNodes;
+		public Guid ID { get; private set; }
+		public string AgentName { get; private set; }
+		public double SimulationAge { get; private set; }
+		public AgentStatus Status { get; private set; }
+		public AgentActivity Activity { get; private set; }
+		public Vector WorldGridIndex { get; private set; }
+		public Vector WorldPosition { get; protected set; }
+		public float Depth { get { return WorldPosition.X + WorldPosition.Y; } }
+		public Vector Speed { get; private set; }
+		public Vector ProjectedPosition { get; private set; }
 
 		public Agent(string name, Texture texture, Vector startingPosition, Vector startingSpeed)
 		{
@@ -169,7 +167,7 @@ namespace MyThirdSDL.Descriptors
 			if (Status == AgentStatus.Active)
 			{
 				if (IsAtDestination())
-					GetNextDestinationNode();
+					SetNextDestinationNode();
 
 				if (!IsAtDestination())
 					Move(gameTime.ElapsedGameTime.TotalSeconds);
@@ -186,18 +184,18 @@ namespace MyThirdSDL.Descriptors
 			}
 		}
 
-		private void ResetMovement()
-		{
-			pathNodes = null;
-			Destination = CoordinateHelper.DefaultVector;
-			Activity = AgentActivity.Idle;
-		}
-
 		private void Move(double dt)
 		{
 			Activity = AgentActivity.Walking;
 			Vector direction = GetMovementDirection();
 			WorldPosition += new Vector((float)(direction.X * Speed.X * dt), (float)(direction.Y * Speed.Y * dt));
+		}
+
+		private void ResetMovement()
+		{
+			pathNodes = null;
+			Destination = CoordinateHelper.DefaultVector;
+			Activity = AgentActivity.Idle;
 		}
 
 		private bool IsAtDestination()
@@ -208,7 +206,7 @@ namespace MyThirdSDL.Descriptors
 				return false;
 		}
 
-		private void GetNextDestinationNode()
+		private void SetNextDestinationNode()
 		{
 			if (pathNodes != null)
 				if (pathNodes.Count() > 0)

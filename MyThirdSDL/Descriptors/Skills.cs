@@ -8,6 +8,8 @@ namespace MyThirdSDL.Descriptors
 {
 	public class Skills
 	{
+		private static Random random = new Random();
+
 		public enum Rating
 		{
 			Atrocious = 0,
@@ -36,6 +38,14 @@ namespace MyThirdSDL.Descriptors
 			Leadership = blanketRating;
 		}
 
+		public Skills(Rating intelligence, Rating creativity, Rating communication, Rating leadership)
+		{
+			Intelligence = intelligence;
+			Creativity = creativity;
+			Communication = communication;
+			Leadership = leadership;
+		}
+
 		public void AdjustIntelligence(int intelligence)
 		{
 			Intelligence += intelligence;
@@ -54,6 +64,21 @@ namespace MyThirdSDL.Descriptors
 		public void AdjustLeadership(int leadership)
 		{
 			Leadership += leadership;
+		}
+
+		public static Skills GetRandomSkills()
+		{
+			int randomIntelligence = random.Next(0, 10);
+			int randomCreativity = random.Next(0, 10);
+			int randomCommunication = random.Next(0, 10);
+			int randomLeadership = random.Next(0, 10);
+
+			return new Skills(
+				(Skills.Rating)randomIntelligence,
+				(Skills.Rating)randomCreativity,
+				(Skills.Rating)randomCommunication,
+				(Skills.Rating)randomLeadership
+			);
 		}
 	}
 }

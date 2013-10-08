@@ -18,9 +18,13 @@ namespace MyThirdSDL
 
 		private Vector orthoMouseWorldPosition = Vector.Zero;
 		private Vector isoMouseWorldGridIndex = Vector.Zero;
+		private Vector isoMouseWorldPosition = Vector.Zero;
 		private Vector isoMouseClickWorldGridIndex = CoordinateHelper.DefaultVector;
+		private Vector isoMouseClickWorldPosition = Vector.Zero;
 
 		private List<KeyInformation.VirtualKeyCode> keysPressed = new List<KeyInformation.VirtualKeyCode>();
+
+		private AgentFactory agentFactory;
 
 		/// <summary>
 		/// By default, the constructor does nothing. Something to do is subscribe to various game events.
@@ -39,6 +43,11 @@ namespace MyThirdSDL
 			{
 				isoMouseClickWorldGridIndex = isoMouseWorldGridIndex;
 				hasPathPossiblyChanged = true;
+
+				isoMouseClickWorldPosition = isoMouseWorldPosition;
+
+				SnackMachine snackMachine = agentFactory.CreateSnackMachine(isoMouseClickWorldPosition);
+				userAddedDrawables.Add(snackMachine);
 			}
 		}
 
@@ -59,6 +68,7 @@ namespace MyThirdSDL
 			int mouseY = e.RelativeToWindowY;
 
 			Vector worldSpace = CoordinateHelper.ScreenSpaceToWorldSpace(mouseX, mouseY, CoordinateHelper.ScreenOffset, CoordinateHelper.ScreenProjectionType.Isometric);
+			isoMouseWorldPosition = worldSpace;
 			isoMouseWorldGridIndex = CoordinateHelper.WorldSpaceToWorldGridIndex(worldSpace.X, worldSpace.Y, tiledMap.TileWidth / 2, tiledMap.TileHeight);
 			orthoMouseWorldPosition = new Vector(mouseX, mouseY);
 
@@ -100,6 +110,9 @@ namespace MyThirdSDL
 			CreateWindow("My Third SDL", 100, 100, SCREEN_WIDTH, SCREEN_HEIGHT, WindowFlags.Shown);
 			CreateRenderer(RendererFlags.RendererAccelerated);
 
+			JobFactory.Initialize();
+			agentFactory = new AgentFactory(Renderer);
+
 			Camera.Position = Vector.Zero;
 		}
 
@@ -117,14 +130,7 @@ namespace MyThirdSDL
 
 			collisionManager = new CollisionManager(tiledMap.Width, tiledMap.Height);
 
-			//Surface playerSurface = new Surface("Images/playerIsoBox.png", Surface.SurfaceType.PNG);
-			//player = new Player(new Vector(100, 100), new Vector(200, 200), new Texture(Renderer, playerSurface));
-			//player.Activate();
-			
-			Surface thingSurface = new Surface("Images/thing.png", Surface.SurfaceType.PNG);
-			Texture thingTexture = new Texture(Renderer, thingSurface);
-			Job job = new Job("Systems Engineer", 75000, Skills.Rating.Great, Skills.Rating.Bad, Skills.Rating.Neutral, Skills.Rating.Neutral);
-			employee = new Employee("Employee 1", thingTexture, new Vector(100, 100), "Justin", "Skiles", 29, new DateTime(1984, 9, 9), job);
+			employee = agentFactory.CreateEmployee(new Vector(100, 100));
 			employee.Activate();
 
 			Surface tileSurface = new Surface("Images/tileCollisionBox.png", Surface.SurfaceType.PNG);
@@ -136,26 +142,18 @@ namespace MyThirdSDL
 			Surface tileHightlightSelectedSurface = new Surface("Images/tileHighlightSelected.png", Surface.SurfaceType.PNG);
 			tileHighlightSelectedImage = new Image(Renderer, tileHightlightSelectedSurface, Image.ImageFormat.PNG);
 
-			string isoWorldText = String.Format("(Iso) WorldX: {0}, WorldY: {1}", isoMouseWorldGridIndex.X, isoMouseWorldGridIndex.Y);
-			string orthoWorldText = String.Format("(Ortho) WorldX: {0}, WorldY: {1}", isoMouseWorldGridIndex.X, isoMouseWorldGridIndex.Y);
-			string thingStatusRawText = String.Format("Thing Activity: {0}", employee.Activity);
-			Font font = new Font("Fonts/Arcade N.ttf", 18);
-			Surface isoWorldFontSurface = new Surface(font, isoWorldText, color);
-			Surface orthoWorldFontSurface = new Surface(font, orthoWorldText, color);
-			Surface thingStatusFontSurface = new Surface(font, thingStatusRawText, color);
-			isoWorldGridIndexText = new TrueTypeText(Renderer, isoWorldFontSurface, isoWorldText, font, color);
-			orthoWorldGridIndexText = new TrueTypeText(Renderer, orthoWorldFontSurface, orthoWorldText, font, color);
-			thingStatusText = new TrueTypeText(Renderer, thingStatusFontSurface, thingStatusRawText, font, color);
+			isoWorldGridIndexText = TrueTypeTextFactory.CreateTrueTypeText(Renderer, "Fonts/Arcade N.ttf", 18, color);
+			orthoWorldGridIndexText = TrueTypeTextFactory.CreateTrueTypeText(Renderer, "Fonts/Arcade N.ttf", 18, color);
+			thingStatusText = TrueTypeTextFactory.CreateTrueTypeText(Renderer, "Fonts/Arcade N.ttf", 18, color);
 		}
 
-		private Image thingImage;
+		private TimeSpan simulationTime = TimeSpan.Zero;
 		private Image tileHighlightSelectedImage;
 		private TrueTypeText isoWorldGridIndexText;
 		private TrueTypeText orthoWorldGridIndexText;
 		private TrueTypeText thingStatusText;
 		private Image tileHighlightImage;
 		private Image tileCollisionBoxImage;
-		//private Player player;
 		private Employee employee;
 		private SharpDL.Graphics.Color color = new SharpDL.Graphics.Color(255, 165, 0);
 
@@ -169,6 +167,8 @@ namespace MyThirdSDL
 		/// you will experience update/draw lag.</remarks>
 		protected override void Update(GameTime gameTime)
 		{
+			simulationTime = gameTime.TotalGameTime;
+
 			if (mouseOverScreenEdge == MouseOverScreenEdge.Top)
 				Camera.MoveUp();
 			else if(mouseOverScreenEdge == MouseOverScreenEdge.Bottom)
@@ -214,6 +214,9 @@ namespace MyThirdSDL
 
 		private bool hasPathPossiblyChanged = false;
 
+		private List<IDrawable> userAddedDrawables = new List<IDrawable>();
+		private List<IDrawable> allDrawables = new List<IDrawable>();
+
 		/// <summary>
 		/// Draw the game state such as player textures and positions, enemy textures and positions, map textures, and
 		/// anything else that is used in the simulation state.
@@ -224,6 +227,7 @@ namespace MyThirdSDL
 		/// you will experience update/draw lag.</remarks>
 		protected override void Draw(GameTime gameTime)
 		{
+			allDrawables.Clear();
 			Renderer.ClearScreen();
 
 			TileLayer baseLayer = tiledMap.TileLayers.First(tl => tl.Type == TileLayerType.Base);
@@ -240,19 +244,18 @@ namespace MyThirdSDL
 			}
 
 			// collect a list of the drawable objects that need to be depth sorted
-			List<IDrawable> drawables = new List<IDrawable>();
-			//drawables.Add(player);
+			allDrawables.AddRange(userAddedDrawables);
 
 			// select out the drawable tiles from our height layer
 			TileLayer heightLayer = tiledMap.TileLayers.First(tl => tl.Type == TileLayerType.Height);
 			IEnumerable<Tile> drawableTiles = heightLayer.Tiles.Where(t => !t.IsEmpty);
-			drawables.AddRange(drawableTiles);
+			allDrawables.AddRange(drawableTiles);
 
 			// sort the drawables by their depth
-			drawables.Sort((d1, d2) => d1.Depth.CompareTo(d2.Depth));
+			allDrawables.Sort((d1, d2) => d1.Depth.CompareTo(d2.Depth));
 
 			// draw the drawables!
-			foreach (IDrawable drawable in drawables)
+			foreach (IDrawable drawable in allDrawables)
 			{
 				drawable.Draw(gameTime, Renderer);
 

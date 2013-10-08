@@ -34,7 +34,7 @@ namespace MyThirdSDL.Descriptors
 			}
 		}
 
-		public Employee(string agentName, Texture texture, Vector position, string firstName, string lastName, int age, DateTime birthday, Job job)
+		public Employee(string agentName, Texture texture, Vector position, string firstName, string lastName, int age, DateTime birthday, Skills skills, Job job)
 			: base(agentName, texture, position, speed)
 		{
 			FirstName = firstName;
@@ -42,9 +42,9 @@ namespace MyThirdSDL.Descriptors
 			Age = age;
 			Birthday = birthday;
 			Job = job;
+			Skills = skills;
 
 			Necessities = new Necessities(Necessities.Rating.Full);
-			Skills = new Skills(Skills.Rating.Genius);
 		}
 	}
 }
