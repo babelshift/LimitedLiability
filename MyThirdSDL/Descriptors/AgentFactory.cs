@@ -11,12 +11,13 @@ namespace MyThirdSDL.Descriptors
 	{
 		private List<string> firstNames = new List<string>();
 		private Random random = new Random();
+		private TextureStore textureStore;
+		private ContentManager contentManager;
+		private Renderer renderer;
+		private int currentEmployeeNumber = 0;
+		private int currentEquipmentNumber = 0;
 
-		private int CurrentEmployeeNumber { get; set; }
-		private int CurrentEquipmentNumber { get; set; }
-		private Renderer Renderer { get; set; }
-
-		public AgentFactory(Renderer renderer)
+		public AgentFactory(Renderer renderer, ContentManager contentManager)
 		{
 			firstNames.Add("Justin");
 			firstNames.Add("Joanne");
@@ -25,18 +26,18 @@ namespace MyThirdSDL.Descriptors
 			firstNames.Add("Jennifer");
 			firstNames.Add("Adam");
 
-			Renderer = renderer;
+			this.renderer = renderer;
+			this.contentManager = contentManager;
 
-			CurrentEmployeeNumber = 0;
-			CurrentEquipmentNumber = 0;
+			textureStore = new TextureStore(renderer);
 		}
 
 		#region Employees
 
 		public Employee CreateEmployee(Vector position)
 		{
-			string texturePath = "Images/thing.png";
-			Texture texture = CreateTexture(texturePath);
+			string texturePath = contentManager.GetContentPath("Employee1");
+			Texture texture = textureStore.GetTexture(texturePath);
 
 			int employeeNumber = GetNextEmployeeNumber();
 			string firstName = GetRandomFirstName();
@@ -57,7 +58,7 @@ namespace MyThirdSDL.Descriptors
 
 		private int GetNextEmployeeNumber()
 		{
-			return CurrentEmployeeNumber++;
+			return currentEmployeeNumber++;
 		}
 
 		private string GetRandomFirstName()
@@ -70,17 +71,10 @@ namespace MyThirdSDL.Descriptors
 
 		#endregion
 
-		private Texture CreateTexture(string texturePath)
-		{
-			Surface surface = new Surface(texturePath, Surface.SurfaceType.PNG);
-			Texture texture = new Texture(Renderer, surface);
-			return texture;
-		}
-
 		public SnackMachine CreateSnackMachine(Vector position)
 		{
-			string texturePath = "Images/Equipment/SnackMachine.png";
-			Texture texture = CreateTexture(texturePath);
+			string texturePath = contentManager.GetContentPath("SnackMachine");
+			Texture texture = textureStore.GetTexture(texturePath);
 			int equipmentNumber = GetNextEquipmentNumber();
 			SnackMachine snackMachine = new SnackMachine("Equipment " + equipmentNumber, texture, position);
 			return snackMachine;
@@ -88,7 +82,7 @@ namespace MyThirdSDL.Descriptors
 
 		private int GetNextEquipmentNumber()
 		{
-			return CurrentEquipmentNumber++;
+			return currentEquipmentNumber++;
 		}
 	}
 }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SharpDL.Graphics;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,11 +9,14 @@ namespace MyThirdSDL.UserInterface
 {
 	public class ToolboxTray : Control
 	{
-		private Label LabelMoney { get; private set; }
-		private Label LabelSimulationDateTime { get; private set; }
-		private Button ButtonGeneralSelect { get; private set; }
-		private Button ButtonPlaceEquipment { get; private set; }
-		private Button ButtonPlaceRoom { get; private set; }
-		private Button ButtonCompanyData { get; private set; }
+		public ToolboxTray(Texture texture, Vector position)
+			: base(texture, position) { }
+
+		private Label LabelMoney { get; set; }
+		private Label LabelSimulationDateTime { get; set; }
+		private Button ButtonGeneralSelect { get; set; }
+		private Button ButtonPlaceEquipment { get; set; }
+		private Button ButtonPlaceRoom { get; set; }
+		private Button ButtonCompanyData { get; set; }
 	}
 }

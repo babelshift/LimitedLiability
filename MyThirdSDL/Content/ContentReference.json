@@ -1,0 +1,17 @@
+﻿{
+	"fonts": [
+		{ "key": "Arcade", "value": "Fonts/Arcade N.ttf" }  
+	], 
+	"textures": [
+		{ "key": "SnackMachine", "value": "Images/Equipment/SnackMachine.png" },
+		{ "key": "IconWarning", "value": "Images/UserInterface/IconWarning.png" },
+		{ "key": "MessageBoxFrame", "value": "Images/UserInterface/MessageBoxFrame.png" },
+		{ "key": "Employee1", "value": "Images/thing.png" },
+		{ "key": "TileHighlight2", "value": "Images/tileHighlight2.png" },
+		{ "key": "TileHighlightSelected", "value": "Images/tileHighlightSelected.png" }
+	],
+	"maps": [
+		{ "key": "Map1", "value": "Maps/Map1.tmx" },
+		{ "key": "Map2", "value": "Maps/Map2.tmx" }
+	] 
+}

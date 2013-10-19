@@ -35,6 +35,9 @@
     <StartupObject>MyThirdSDL.Program</StartupObject>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\packages\Newtonsoft.Json.5.0.8\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="SharpDL, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\Libs\SharpDL.dll</HintPath>
@@ -63,9 +66,11 @@
   <ItemGroup>
     <Compile Include="Camera.cs" />
     <Compile Include="CollisionManager.cs" />
+    <Compile Include="ContentManager.cs" />
     <Compile Include="CoordinateHelper.cs" />
     <Compile Include="Descriptors\Agent.cs" />
     <Compile Include="Descriptors\AgentFactory.cs" />
+    <Compile Include="Descriptors\TextureStore.cs" />
     <Compile Include="Descriptors\Equipment.cs" />
     <Compile Include="Descriptors\INecessityAffector.cs" />
     <Compile Include="Descriptors\ISkillsAffector.cs" />
@@ -102,45 +107,55 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
-    <None Include="Fonts\Arcade N.ttf">
+    <None Include="Content\ContentReference.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Content\Fonts\Arcade N.ttf">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <Compile Include="IHasNeighbors.cs" />
-    <None Include="Maps\Map1.tmx">
+    <None Include="Content\Maps\Map1.tmx">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <SubType>Designer</SubType>
     </None>
-    <None Include="Maps\Map2.tmx">
+    <None Include="Content\Maps\Map2.tmx">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <SubType>Designer</SubType>
     </None>
+    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Images\CubeTileSheet.png">
+    <Content Include="Content\Images\CubeTileSheet.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Images\Equipment\SnackMachine.png">
+    <Content Include="Content\Images\Equipment\SnackMachine.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Images\playerCollisionBox.png">
+    <Content Include="Content\Images\playerCollisionBox.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Images\playerIsoBox.png">
+    <Content Include="Content\Images\playerIsoBox.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Images\thing.png">
+    <Content Include="Content\Images\thing.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Images\tileCollisionBox.png">
+    <Content Include="Content\Images\tileCollisionBox.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Images\tileHighlight.png">
+    <Content Include="Content\Images\tileHighlight.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Images\tileHighlight2.png">
+    <Content Include="Content\Images\tileHighlight2.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Images\tileHighlightSelected.png">
+    <Content Include="Content\Images\tileHighlightSelected.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Images\User Interface\IconWarning.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Images\User Interface\MessageBoxFrame.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>

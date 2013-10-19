@@ -10,16 +10,26 @@ namespace MyThirdSDL.UserInterface
 {
 	public abstract class Control
 	{
-		private Guid ID { get; private set; }
-		private Texture Texture { get; private set; }
-		private Vector Position { get; private set; }
-		
-		public void Update(GameTime gameTime)
+		private Guid ID { get; set; }
+		private Texture Texture { get; set; }
+		private Vector Position { get; set; }
+
+		public Control(Texture texture, Vector position)
 		{
+			ID = Guid.NewGuid();
+			Texture = texture;
+			Position = position;
 		}
 
-		public void Draw(GameTime gameTime, Renderer renderer)
+		public void Update(GameTime gameTime)
 		{
+
+		}
+
+		public virtual void Draw(GameTime gameTime, Renderer renderer)
+		{
+			if(Texture != null)
+				renderer.RenderTexture(Texture, Position.X, Position.Y);
 		}
 	}
 }

@@ -1,4 +1,5 @@
 ﻿using MyThirdSDL.Descriptors;
+using MyThirdSDL.UserInterface;
 using SharpDL;
 using SharpDL.Events;
 using SharpDL.Graphics;
@@ -25,6 +26,8 @@ namespace MyThirdSDL
 		private List<KeyInformation.VirtualKeyCode> keysPressed = new List<KeyInformation.VirtualKeyCode>();
 
 		private AgentFactory agentFactory;
+		private ControlFactory controlFactory;
+		private ContentManager contentManager = new ContentManager();
 
 		/// <summary>
 		/// By default, the constructor does nothing. Something to do is subscribe to various game events.
@@ -97,7 +100,15 @@ namespace MyThirdSDL
 			//keysPressed.Remove(e.KeyInformation.VirtualKey);
 			if (keysPressed.Contains(e.KeyInformation.VirtualKey))
 				keysPressed.Remove(e.KeyInformation.VirtualKey);
+
+			if (e.KeyInformation.VirtualKey == KeyInformation.VirtualKeyCode.Escape)
+			{
+				messageBox = controlFactory.CreateMessageBox(new Vector(500, 500), "This is a test!", MessageBoxType.Information);
+				messageBox.Show();
+			}
 		}
+
+		private MyThirdSDL.UserInterface.MessageBox messageBox;
 
 		/// <summary>
 		/// Initialize the SDL Window and SDL Renderer with any required flags. 
@@ -111,13 +122,15 @@ namespace MyThirdSDL
 			CreateRenderer(RendererFlags.RendererAccelerated);
 
 			JobFactory.Initialize();
-			agentFactory = new AgentFactory(Renderer);
+			contentManager.Initialize();
+			agentFactory = new AgentFactory(Renderer, contentManager);
+			controlFactory = new ControlFactory(Renderer);
 
 			Camera.Position = Vector.Zero;
 		}
 
 		private TiledMap tiledMap;
-		private CollisionManager collisionManager;
+		//private CollisionManager collisionManager;
 
 		/// <summary>
 		/// Load any content that you will need to use in the update/draw game loop.
@@ -126,25 +139,29 @@ namespace MyThirdSDL
 		{
 			base.LoadContent();
 
-			tiledMap = new TiledMap("Maps/Map2.tmx", Renderer);
+			string mapPath = contentManager.GetContentPath("Map2");
+			tiledMap = new TiledMap(mapPath, Renderer);
 
-			collisionManager = new CollisionManager(tiledMap.Width, tiledMap.Height);
+			//collisionManager = new CollisionManager(tiledMap.Width, tiledMap.Height);
 
 			employee = agentFactory.CreateEmployee(new Vector(100, 100));
 			employee.Activate();
 
-			Surface tileSurface = new Surface("Images/tileCollisionBox.png", Surface.SurfaceType.PNG);
-			tileCollisionBoxImage = new Image(Renderer, tileSurface, Image.ImageFormat.PNG);
+			//Surface tileSurface = new Surface("Images/tileCollisionBox.png", Surface.SurfaceType.PNG);
+			//tileCollisionBoxImage = new Image(Renderer, tileSurface, Image.ImageFormat.PNG);
 
-			Surface tileHighlightSurface = new Surface("Images/tileHighlight2.png", Surface.SurfaceType.PNG);
+			string tileHighlightTexturePath = contentManager.GetContentPath("TileHighlight2");
+			Surface tileHighlightSurface = new Surface(tileHighlightTexturePath, Surface.SurfaceType.PNG);
 			tileHighlightImage = new Image(Renderer, tileHighlightSurface, Image.ImageFormat.PNG);
 
-			Surface tileHightlightSelectedSurface = new Surface("Images/tileHighlightSelected.png", Surface.SurfaceType.PNG);
+			string tileHighlightSelectedTexturePath = contentManager.GetContentPath("TileHighlightSelected");
+			Surface tileHightlightSelectedSurface = new Surface(tileHighlightSelectedTexturePath, Surface.SurfaceType.PNG);
 			tileHighlightSelectedImage = new Image(Renderer, tileHightlightSelectedSurface, Image.ImageFormat.PNG);
 
-			isoWorldGridIndexText = TrueTypeTextFactory.CreateTrueTypeText(Renderer, "Fonts/Arcade N.ttf", 18, color);
-			orthoWorldGridIndexText = TrueTypeTextFactory.CreateTrueTypeText(Renderer, "Fonts/Arcade N.ttf", 18, color);
-			thingStatusText = TrueTypeTextFactory.CreateTrueTypeText(Renderer, "Fonts/Arcade N.ttf", 18, color);
+			string fontPath = contentManager.GetContentPath("Arcade");
+			isoWorldGridIndexText = TrueTypeTextFactory.CreateTrueTypeText(Renderer, fontPath, 18, color);
+			orthoWorldGridIndexText = TrueTypeTextFactory.CreateTrueTypeText(Renderer, fontPath, 18, color);
+			thingStatusText = TrueTypeTextFactory.CreateTrueTypeText(Renderer, fontPath, 18, color);
 		}
 
 		private TimeSpan simulationTime = TimeSpan.Zero;
@@ -153,7 +170,7 @@ namespace MyThirdSDL
 		private TrueTypeText orthoWorldGridIndexText;
 		private TrueTypeText thingStatusText;
 		private Image tileHighlightImage;
-		private Image tileCollisionBoxImage;
+		//private Image tileCollisionBoxImage;
 		private Employee employee;
 		private SharpDL.Graphics.Color color = new SharpDL.Graphics.Color(255, 165, 0);
 
@@ -180,12 +197,12 @@ namespace MyThirdSDL
 
 			//player.Update(gameTime, keysPressed);
 
-			List<ICollidable> collidables = new List<ICollidable>();
+			//List<ICollidable> collidables = new List<ICollidable>();
 			//collidables.Add(player);
 
-			IEnumerable<MapObjectLayer> collidableLayers = tiledMap.MapObjectLayers.Where(mol => mol.Type == MapObjectLayerType.Collidable);
-			foreach (var collidableLayer in collidableLayers)
-				collisionManager.HandleCollisions(collidableLayer.MapObjects, collidables);
+			//IEnumerable<MapObjectLayer> collidableLayers = tiledMap.MapObjectLayers.Where(mol => mol.Type == MapObjectLayerType.Collidable);
+			//foreach (var collidableLayer in collidableLayers)
+			//	collisionManager.HandleCollisions(collidableLayer.MapObjects, collidables);
 
 			//player.SaveCollisionBox();
 
@@ -274,6 +291,9 @@ namespace MyThirdSDL
 			Renderer.RenderTexture(isoWorldGridIndexText.Texture, 0, 0);
 			Renderer.RenderTexture(orthoWorldGridIndexText.Texture, 0, 18);
 			Renderer.RenderTexture(thingStatusText.Texture, 0, 36);
+
+			if (messageBox != null)
+				messageBox.Draw(gameTime, Renderer);
 
 			Renderer.RenderPresent();
 		}

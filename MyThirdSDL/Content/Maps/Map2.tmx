@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <map version="1.0" orientation="isometric" width="25" height="25" tilewidth="64" tileheight="32">
  <tileset firstgid="1" name="CubeTileSheet" tilewidth="64" tileheight="64">
-  <image source="Images/CubeTileSheet.png" width="640" height="320"/>
+  <image source="Content/Images/CubeTileSheet.png" width="640" height="320"/>
  </tileset>
  <layer name="Floor" width="25" height="25">
   <data encoding="base64" compression="zlib">
