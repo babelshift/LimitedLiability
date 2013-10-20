@@ -11,8 +11,16 @@ namespace MyThirdSDL.UserInterface
 	public abstract class Control
 	{
 		private Guid ID { get; set; }
-		private Texture Texture { get; set; }
-		private Vector Position { get; set; }
+		protected Texture Texture { get; set; }
+		protected Vector Position { get; set; }
+
+		protected Rectangle Bounds
+		{
+			get
+			{
+				return new Rectangle((int)Position.X, (int)Position.Y, Texture.Width, Texture.Height);
+			}
+		}
 
 		public Control(Texture texture, Vector position)
 		{
@@ -21,7 +29,7 @@ namespace MyThirdSDL.UserInterface
 			Position = position;
 		}
 
-		public void Update(GameTime gameTime)
+		public virtual void Update(GameTime gameTime)
 		{
 
 		}

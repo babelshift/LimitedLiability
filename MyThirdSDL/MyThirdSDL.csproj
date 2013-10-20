@@ -42,14 +42,16 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\Libs\SharpDL.dll</HintPath>
     </Reference>
-    <Reference Include="SharpDL.Events">
+    <Reference Include="SharpDL.Events, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\Libs\SharpDL.Events.dll</HintPath>
     </Reference>
     <Reference Include="SharpDL.Graphics, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\Libs\SharpDL.Graphics.dll</HintPath>
     </Reference>
-    <Reference Include="SharpDL.Input">
+    <Reference Include="SharpDL.Input, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\Libs\SharpDL.Input.dll</HintPath>
     </Reference>
     <Reference Include="SharpTiles">
@@ -96,13 +98,14 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Thing.cs" />
     <Compile Include="TiledMap.cs" />
-    <Compile Include="TrueTypeTextFactory.cs" />
     <Compile Include="UserInterface\Button.cs" />
     <Compile Include="UserInterface\Control.cs" />
     <Compile Include="UserInterface\ControlFactory.cs" />
+    <Compile Include="UserInterface\Icon.cs" />
     <Compile Include="UserInterface\Label.cs" />
     <Compile Include="UserInterface\MessageBox.cs" />
     <Compile Include="UserInterface\ToolboxTray.cs" />
+    <Compile Include="UserInterface\Tooltip.cs" />
     <Compile Include="UserInterface\UserInterfaceManager.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -152,14 +155,52 @@
     <Content Include="Content\Images\tileHighlightSelected.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Content\Images\User Interface\IconArrowUpRight.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Images\User Interface\IconBarChartUp.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Images\User Interface\IconDollar.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Images\User Interface\IconForklift.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Images\User Interface\IconHandTruck.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Images\User Interface\IconOpenBox.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Images\User Interface\IconPenPaper.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Images\User Interface\IconPersonPlain.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Images\User Interface\IconWatch.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Content\Images\User Interface\IconWarning.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Images\User Interface\IconWindow.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\Images\User Interface\MessageBoxFrame.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Content\Images\User Interface\ToolboxTray.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Images\User Interface\ToolboxTrayButtonHover.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Images\User Interface\TooltipFrame.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>copy "$(SolutionDir)Libs\*.*" "$(TargetDir)"</PostBuildEvent>

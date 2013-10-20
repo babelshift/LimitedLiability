@@ -3,12 +3,25 @@
 		{ "key": "Arcade", "value": "Fonts/Arcade N.ttf" }  
 	], 
 	"textures": [
-		{ "key": "SnackMachine", "value": "Images/Equipment/SnackMachine.png" },
-		{ "key": "IconWarning", "value": "Images/UserInterface/IconWarning.png" },
-		{ "key": "MessageBoxFrame", "value": "Images/UserInterface/MessageBoxFrame.png" },
 		{ "key": "Employee1", "value": "Images/thing.png" },
 		{ "key": "TileHighlight2", "value": "Images/tileHighlight2.png" },
-		{ "key": "TileHighlightSelected", "value": "Images/tileHighlightSelected.png" }
+		{ "key": "TileHighlightSelected", "value": "Images/tileHighlightSelected.png" },
+		{ "key": "SnackMachine", "value": "Images/Equipment/SnackMachine.png" },
+		{ "key": "MessageBoxFrame", "value": "Images/User Interface/MessageBoxFrame.png" },
+		{ "key": "IconWarning", "value": "Images/User Interface/IconWarning.png" },
+		{ "key": "ToolboxTray", "value": "Images/User Interface/ToolboxTray.png" },
+		{ "key": "ToolboxTrayButtonHover", "value": "Images/User Interface/ToolboxTrayButtonHover.png" },
+		{ "key": "ButtonSelectGeneral", "value": "Images/User Interface/IconArrowUpRight.png" },
+		{ "key": "ButtonSelectEquipment", "value": "Images/User Interface/IconHandTruck.png" },
+		{ "key": "ButtonSelectRoom", "value": "Images/User Interface/IconForklift.png" },
+		{ "key": "ButtonFinances", "value": "Images/User Interface/IconBarChartUp.png" },
+		{ "key": "ButtonCompany", "value": "Images/User Interface/IconPenPaper.png" },
+		{ "key": "ButtonEmployees", "value": "Images/User Interface/IconPersonPlain.png" },
+		{ "key": "ButtonProducts", "value": "Images/User Interface/IconOpenBox.png" },
+		{ "key": "ButtonMenu", "value": "Images/User Interface/IconWindow.png" },
+		{ "key": "IconMoney", "value": "Images/User Interface/IconDollar.png" },
+		{ "key": "IconTime", "value": "Images/User Interface/IconWatch.png" },
+		{ "key": "TooltipFrame", "value": "Images/User Interface/TooltipFrame.png" }
 	],
 	"maps": [
 		{ "key": "Map1", "value": "Maps/Map1.tmx" },

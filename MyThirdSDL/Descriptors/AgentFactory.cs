@@ -29,7 +29,7 @@ namespace MyThirdSDL.Descriptors
 			this.renderer = renderer;
 			this.contentManager = contentManager;
 
-			textureStore = new TextureStore(renderer);
+			this.textureStore = new TextureStore(renderer);
 		}
 
 		#region Employees

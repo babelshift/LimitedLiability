@@ -1,4 +1,5 @@
-﻿using SharpDL.Graphics;
+﻿using SharpDL;
+using SharpDL.Graphics;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,9 +10,12 @@ namespace MyThirdSDL.UserInterface
 {
 	public class Label : Control
 	{
-		public Label(Texture texture, Vector position)
-			: base(texture, position)
+		private TrueTypeText trueTypeText;
+
+		public Label(Vector position, TrueTypeText trueTypeText)
+			: base(trueTypeText.Texture, position)
 		{
+			this.trueTypeText = trueTypeText;
 		}
 	}
 }

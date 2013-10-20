@@ -26,7 +26,6 @@ namespace MyThirdSDL
 		private List<KeyInformation.VirtualKeyCode> keysPressed = new List<KeyInformation.VirtualKeyCode>();
 
 		private AgentFactory agentFactory;
-		private ControlFactory controlFactory;
 		private ContentManager contentManager = new ContentManager();
 
 		/// <summary>
@@ -42,7 +41,7 @@ namespace MyThirdSDL
 
 		private void MainGame_MouseButtonPressed(object sender, MouseButtonEventArgs e)
 		{
-			if (e.MouseButton == MouseButtonEventArgs.MouseButtonCode.Left)
+			if (e.MouseButton == MouseButtonCode.Left)
 			{
 				isoMouseClickWorldGridIndex = isoMouseWorldGridIndex;
 				hasPathPossiblyChanged = true;
@@ -95,17 +94,8 @@ namespace MyThirdSDL
 
 		private void MainGame_KeyReleased(object sender, KeyboardEventArgs e)
 		{
-			//keysPressed.Add(e.KeyInformation.VirtualKey);
-			//player.Update(null, keysPressed);
-			//keysPressed.Remove(e.KeyInformation.VirtualKey);
 			if (keysPressed.Contains(e.KeyInformation.VirtualKey))
 				keysPressed.Remove(e.KeyInformation.VirtualKey);
-
-			if (e.KeyInformation.VirtualKey == KeyInformation.VirtualKeyCode.Escape)
-			{
-				messageBox = controlFactory.CreateMessageBox(new Vector(500, 500), "This is a test!", MessageBoxType.Information);
-				messageBox.Show();
-			}
 		}
 
 		private MyThirdSDL.UserInterface.MessageBox messageBox;
@@ -124,12 +114,12 @@ namespace MyThirdSDL
 			JobFactory.Initialize();
 			contentManager.Initialize();
 			agentFactory = new AgentFactory(Renderer, contentManager);
-			controlFactory = new ControlFactory(Renderer);
 
 			Camera.Position = Vector.Zero;
 		}
 
 		private TiledMap tiledMap;
+		private UserInterfaceManager userInterfaceManager;
 		//private CollisionManager collisionManager;
 
 		/// <summary>
@@ -140,28 +130,26 @@ namespace MyThirdSDL
 			base.LoadContent();
 
 			string mapPath = contentManager.GetContentPath("Map2");
-			tiledMap = new TiledMap(mapPath, Renderer);
+			string tileHighlightTexturePath = contentManager.GetContentPath("TileHighlight2");
+			string tileHighlightSelectedTexturePath = contentManager.GetContentPath("TileHighlightSelected");
+			string fontPath = contentManager.GetContentPath("Arcade");
 
-			//collisionManager = new CollisionManager(tiledMap.Width, tiledMap.Height);
+			tiledMap = new TiledMap(mapPath, Renderer);
 
 			employee = agentFactory.CreateEmployee(new Vector(100, 100));
 			employee.Activate();
 
-			//Surface tileSurface = new Surface("Images/tileCollisionBox.png", Surface.SurfaceType.PNG);
-			//tileCollisionBoxImage = new Image(Renderer, tileSurface, Image.ImageFormat.PNG);
-
-			string tileHighlightTexturePath = contentManager.GetContentPath("TileHighlight2");
 			Surface tileHighlightSurface = new Surface(tileHighlightTexturePath, Surface.SurfaceType.PNG);
 			tileHighlightImage = new Image(Renderer, tileHighlightSurface, Image.ImageFormat.PNG);
 
-			string tileHighlightSelectedTexturePath = contentManager.GetContentPath("TileHighlightSelected");
 			Surface tileHightlightSelectedSurface = new Surface(tileHighlightSelectedTexturePath, Surface.SurfaceType.PNG);
 			tileHighlightSelectedImage = new Image(Renderer, tileHightlightSelectedSurface, Image.ImageFormat.PNG);
 
-			string fontPath = contentManager.GetContentPath("Arcade");
 			isoWorldGridIndexText = TrueTypeTextFactory.CreateTrueTypeText(Renderer, fontPath, 18, color);
 			orthoWorldGridIndexText = TrueTypeTextFactory.CreateTrueTypeText(Renderer, fontPath, 18, color);
 			thingStatusText = TrueTypeTextFactory.CreateTrueTypeText(Renderer, fontPath, 18, color);
+
+			userInterfaceManager = new UserInterfaceManager(Renderer, contentManager);
 		}
 
 		private TimeSpan simulationTime = TimeSpan.Zero;
@@ -170,7 +158,6 @@ namespace MyThirdSDL
 		private TrueTypeText orthoWorldGridIndexText;
 		private TrueTypeText thingStatusText;
 		private Image tileHighlightImage;
-		//private Image tileCollisionBoxImage;
 		private Employee employee;
 		private SharpDL.Graphics.Color color = new SharpDL.Graphics.Color(255, 165, 0);
 
@@ -195,17 +182,6 @@ namespace MyThirdSDL
 			else if(mouseOverScreenEdge == MouseOverScreenEdge.Right)
 				Camera.MoveRight();
 
-			//player.Update(gameTime, keysPressed);
-
-			//List<ICollidable> collidables = new List<ICollidable>();
-			//collidables.Add(player);
-
-			//IEnumerable<MapObjectLayer> collidableLayers = tiledMap.MapObjectLayers.Where(mol => mol.Type == MapObjectLayerType.Collidable);
-			//foreach (var collidableLayer in collidableLayers)
-			//	collisionManager.HandleCollisions(collidableLayer.MapObjects, collidables);
-
-			//player.SaveCollisionBox();
-
 			if (isoMouseClickWorldGridIndex != CoordinateHelper.DefaultVector && hasPathPossiblyChanged)
 			{
 				hasPathPossiblyChanged = false;
@@ -227,6 +203,8 @@ namespace MyThirdSDL
 			isoWorldGridIndexText.UpdateText(String.Format("(Iso) WorldX: {0}, WorldY: {1}", isoMouseWorldGridIndex.X, isoMouseWorldGridIndex.Y));
 			orthoWorldGridIndexText.UpdateText(String.Format("(X,Y): ({0},{1})", orthoMouseWorldPosition.X, orthoMouseWorldPosition.Y));
 			thingStatusText.UpdateText(String.Format("{0} Activity: {1}", employee.AgentName, employee.Activity));
+
+			userInterfaceManager.Update(gameTime);
 		}
 
 		private bool hasPathPossiblyChanged = false;
@@ -292,8 +270,7 @@ namespace MyThirdSDL
 			Renderer.RenderTexture(orthoWorldGridIndexText.Texture, 0, 18);
 			Renderer.RenderTexture(thingStatusText.Texture, 0, 36);
 
-			if (messageBox != null)
-				messageBox.Draw(gameTime, Renderer);
+			userInterfaceManager.Draw(gameTime, Renderer);
 
 			Renderer.RenderPresent();
 		}
