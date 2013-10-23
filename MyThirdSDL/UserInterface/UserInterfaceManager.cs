@@ -17,17 +17,20 @@ namespace MyThirdSDL.UserInterface
 
 	public class UserInterfaceManager
 	{
+		private Point bottomRightPointOfWindow;
 		private ControlFactory controlFactory;
 
 		public MouseModeType MouseMode { get; private set; }
 		public ToolboxTray ToolboxTray { get; private set; }
 
-		public UserInterfaceManager(Renderer renderer, ContentManager contentManager)
+		public UserInterfaceManager(Renderer renderer, ContentManager contentManager, Point bottomRightPointOfWindow)
 		{
+			this.bottomRightPointOfWindow = bottomRightPointOfWindow;
+
 			MouseMode = MouseModeType.SelectGeneral;
 
 			controlFactory = new ControlFactory(renderer, contentManager);
-			ToolboxTray = controlFactory.CreateToolboxTray(new Vector(100, 100));
+			ToolboxTray = controlFactory.CreateToolboxTray(new Vector(bottomRightPointOfWindow.X / 2 - 300, bottomRightPointOfWindow.Y - 50));
 			ToolboxTray.ButtonSelectGeneralClicked += ToolboxTray_ButtonSelectGeneralClicked;
 			ToolboxTray.ButtonSelectEquipmentClicked += ToolboxTray_ButtonSelectEquipmentClicked;
 			ToolboxTray.ButtonSelectRoomClicked += ToolboxTray_ButtonSelectRoomClicked;

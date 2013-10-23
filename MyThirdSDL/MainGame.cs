@@ -149,7 +149,7 @@ namespace MyThirdSDL
 			orthoWorldGridIndexText = TrueTypeTextFactory.CreateTrueTypeText(Renderer, fontPath, 18, color);
 			thingStatusText = TrueTypeTextFactory.CreateTrueTypeText(Renderer, fontPath, 18, color);
 
-			userInterfaceManager = new UserInterfaceManager(Renderer, contentManager);
+			userInterfaceManager = new UserInterfaceManager(Renderer, contentManager, new Point(SCREEN_WIDTH, SCREEN_HEIGHT));
 		}
 
 		private TimeSpan simulationTime = TimeSpan.Zero;
