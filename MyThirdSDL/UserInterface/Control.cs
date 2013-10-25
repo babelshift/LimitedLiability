@@ -12,7 +12,7 @@ namespace MyThirdSDL.UserInterface
 	{
 		private Guid ID { get; set; }
 		protected Texture Texture { get; set; }
-		protected Vector Position { get; set; }
+		public virtual Vector Position { get; set; }
 
 		protected Rectangle Bounds
 		{

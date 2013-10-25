@@ -241,6 +241,9 @@
     <Content Include="Content\Images\User Interface\IconWindowConfirm.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Content\Images\User Interface\MenuEquipmentFrame.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Content\Images\User Interface\MessageBoxFrame.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

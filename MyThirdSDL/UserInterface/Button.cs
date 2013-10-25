@@ -41,6 +41,7 @@ namespace MyThirdSDL.UserInterface
 
 		public override void Draw(GameTime gameTime, Renderer renderer)
 		{
+			base.Draw(gameTime, renderer);
 			if (isHovered)
 			{
 				if (textureHover != null)
@@ -49,7 +50,6 @@ namespace MyThirdSDL.UserInterface
 					Tooltip.Draw(gameTime, renderer);
 			}
 
-			base.Draw(gameTime, renderer);
 		}
 
 		private void OnClicked(EventArgs e)
