@@ -48,8 +48,8 @@ namespace MyThirdSDL
 
 				isoMouseClickWorldPosition = isoMouseWorldPosition;
 
-				SnackMachine snackMachine = agentFactory.CreateSnackMachine(isoMouseClickWorldPosition);
-				userAddedDrawables.Add(snackMachine);
+				//SnackMachine snackMachine = agentFactory.CreateSnackMachine(isoMouseClickWorldPosition);
+				//userAddedDrawables.Add(snackMachine);
 			}
 		}
 
@@ -149,7 +149,11 @@ namespace MyThirdSDL
 			orthoWorldGridIndexText = TrueTypeTextFactory.CreateTrueTypeText(Renderer, fontPath, 18, color);
 			thingStatusText = TrueTypeTextFactory.CreateTrueTypeText(Renderer, fontPath, 18, color);
 
-			userInterfaceManager = new UserInterfaceManager(Renderer, contentManager, new Point(SCREEN_WIDTH, SCREEN_HEIGHT));
+			List<IPurchasable> purchasableItems = new List<IPurchasable>();
+			purchasableItems.Add(agentFactory.CreateSnackMachine());
+			purchasableItems.Add(agentFactory.CreateSodaMachine());
+			purchasableItems.Add(agentFactory.CreateWaterFountain());
+			userInterfaceManager = new UserInterfaceManager(Renderer, contentManager, new Point(SCREEN_WIDTH, SCREEN_HEIGHT), purchasableItems);
 		}
 
 		private TimeSpan simulationTime = TimeSpan.Zero;
@@ -202,7 +206,7 @@ namespace MyThirdSDL
 
 			isoWorldGridIndexText.UpdateText(String.Format("(Iso) WorldX: {0}, WorldY: {1}", isoMouseWorldGridIndex.X, isoMouseWorldGridIndex.Y));
 			orthoWorldGridIndexText.UpdateText(String.Format("(X,Y): ({0},{1})", orthoMouseWorldPosition.X, orthoMouseWorldPosition.Y));
-			thingStatusText.UpdateText(String.Format("{0} Activity: {1}", employee.AgentName, employee.Activity));
+			thingStatusText.UpdateText(String.Format("{0} Activity: {1}", employee.Name, employee.Activity));
 
 			userInterfaceManager.Update(gameTime);
 		}

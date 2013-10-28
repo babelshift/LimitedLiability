@@ -7,16 +7,20 @@ using System.Threading.Tasks;
 
 namespace MyThirdSDL.Descriptors
 {
-	public class SodaMachine : Equipment, INecessityAffector
+	public class SodaMachine : Equipment, IPurchasable
 	{
+		private const int price = 50;
+		private const string name = "Soda Machine";
+
 		public int HealthEffectiveness { get; private set; }
 		public int HygieneEffectiveness { get; private set; }
 		public int SleepEffectiveness { get; private set; }
 		public int ThirstEffectiveness { get; private set; }
 		public int HungerEffectiveness { get; private set; }
+		public string IconTextureKey { get { return "IconSoda"; } }
 
-		public SodaMachine(string agentName, Texture texture, Vector startingPosition)
-			: base(agentName, texture, startingPosition)
+		public SodaMachine(Texture texture, Vector startingPosition)
+			: base(name, texture, startingPosition, price)
 		{
 			HealthEffectiveness = -1;
 			HygieneEffectiveness = 0;

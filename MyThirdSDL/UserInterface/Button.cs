@@ -11,17 +11,34 @@ namespace MyThirdSDL.UserInterface
 {
 	public class Button : Control
 	{
+		private Icon icon;
+		private Icon iconHover;
 		private Texture textureHover;
-		private bool isHovered = false;
+
+		protected bool IsHovered { get; private set; }
+		protected bool IsClicked { get; private set; }
 
 		public Tooltip Tooltip { get; set; }
 
 		public event EventHandler Clicked;
 
-		public Button(Texture texture, Texture textureHover, Vector position)
+		public bool IsPressed { get; private set; }
+
+		public Button(Texture texture, Texture textureHover, Vector position, Icon icon = null, Icon iconHover = null)
 			: base(texture, position)
 		{
 			this.textureHover = textureHover;
+			this.icon = icon;
+			this.iconHover = iconHover;
+		}
+
+		protected bool GetClicked(MouseState mouseState)
+		{
+			if (IsHovered)
+				if (mouseState.ButtonsPressed.Contains(MouseButtonCode.Left))
+					return true;
+
+			return false;
 		}
 
 		public override void Update(GameTime gameTime)
@@ -30,26 +47,45 @@ namespace MyThirdSDL.UserInterface
 
 			MouseState mouseState = Mouse.GetState();
 			if (Bounds.Contains(new Point(mouseState.X, mouseState.Y)))
-			{
-				if (mouseState.ButtonsPressed.Contains(MouseButtonCode.Left))
-					OnClicked(EventArgs.Empty);
-				isHovered = true;
-			}
+				IsHovered = true;
 			else
-				isHovered = false;
+				IsHovered = false;
+
+			IsClicked = GetClicked(mouseState);
+
+			if (IsClicked)
+				OnClicked(EventArgs.Empty);
 		}
 
 		public override void Draw(GameTime gameTime, Renderer renderer)
 		{
-			base.Draw(gameTime, renderer);
-			if (isHovered)
+			if (IsPressed || IsHovered)
 			{
-				if (textureHover != null)
-					renderer.RenderTexture(textureHover, (int)Position.X - 3, (int)Position.Y - 2);
-				if (Tooltip != null)
-					Tooltip.Draw(gameTime, renderer);
-			}
+				if (IsHovered)
+					if (Tooltip != null)
+						Tooltip.Draw(gameTime, renderer);
 
+				if (textureHover != null)
+					renderer.RenderTexture(textureHover, (int)Position.X, (int)Position.Y);
+				if (iconHover != null)
+					iconHover.Draw(gameTime, renderer);
+			}
+			else
+			{
+				base.Draw(gameTime, renderer);
+				if (icon != null)
+					icon.Draw(gameTime, renderer);
+			}
+		}
+
+		public void ToggleOn()
+		{
+			IsPressed = true;
+		}
+
+		public void ToggleOff()
+		{
+			IsPressed = false;
 		}
 
 		private void OnClicked(EventArgs e)

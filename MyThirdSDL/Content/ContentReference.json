@@ -7,24 +7,28 @@
 		{ "key": "TileHighlight2",				"value": "Images/tileHighlight2.png" },
 		{ "key": "TileHighlightSelected",		"value": "Images/tileHighlightSelected.png" },
 		{ "key": "SnackMachine",				"value": "Images/Equipment/SnackMachine.png" },
+		{ "key": "SodaMachine",					"value": "Images/Equipment/SodaMachine.png" },
+		{ "key": "WaterFountain",				"value": "Images/Equipment/WaterFountain.png" },
 
 		{ "key": "MessageBoxFrame",				"value": "Images/User Interface/MessageBoxFrame.png" },
 		{ "key": "ToolboxTray",					"value": "Images/User Interface/ToolboxTray.png" },
+		{ "key": "ToolboxTrayButton",			"value": "Images/User Interface/ToolboxTrayButton.png" },
 		{ "key": "ToolboxTrayButtonHover",		"value": "Images/User Interface/ToolboxTrayButtonHover.png" },
 		{ "key": "TooltipFrame",				"value": "Images/User Interface/TooltipFrame.png" },
 		{ "key": "MenuEquipmentFrame",			"value": "Images/User Interface/MenuEquipmentFrame.png" },
-
-		{ "key": "ButtonSelectGeneral",			"value": "Images/User Interface/IconArrowUpRight.png" },
-		{ "key": "ButtonSelectEquipment",		"value": "Images/User Interface/IconHandTruck.png" },
-		{ "key": "ButtonSelectRoom",			"value": "Images/User Interface/IconForklift.png" },
-		{ "key": "ButtonFinances",				"value": "Images/User Interface/IconBarChartUp.png" },
-		{ "key": "ButtonCompany",				"value": "Images/User Interface/IconPenPaper.png" },
-		{ "key": "ButtonEmployees",				"value": "Images/User Interface/IconPersonPlain.png" },
-		{ "key": "ButtonProducts",				"value": "Images/User Interface/IconOpenBox.png" },
-		{ "key": "ButtonMenu",					"value": "Images/User Interface/IconWindow.png" },
+		
 		{ "key": "ButtonMenuItem",				"value": "Images/User Interface/ButtonMenuItem.png" },
 		{ "key": "ButtonMenuItemHover",			"value": "Images/User Interface/ButtonMenuItemHover.png" },
+		{ "key": "ButtonSquare",				"value": "Images/User Interface/ButtonSquare.png" },
+		{ "key": "ButtonSquareHover",			"value": "Images/User Interface/ButtonSquareHover.png" },
 		
+		{ "key": "IconPenPaper",				"value": "Images/User Interface/IconPenPaper.png" },
+		{ "key": "IconWindow",					"value": "Images/User Interface/IconWindow.png" },
+		{ "key": "IconOpenBox",					"value": "Images/User Interface/IconOpenBox.png" },
+		{ "key": "IconPersonPlain",				"value": "Images/User Interface/IconPersonPlain.png" },
+		{ "key": "IconBarChartUp",				"value": "Images/User Interface/IconBarChartUp.png" },
+		{ "key": "IconForklift",				"value": "Images/User Interface/IconForklift.png" },
+		{ "key": "IconArrowsInward",			"value": "Images/User Interface/IconArrowsInward.png" },
 		{ "key": "IconWarning",					"value": "Images/User Interface/IconWarning.png" },
 		{ "key": "IconMoney",					"value": "Images/User Interface/IconDollar.png" },
 		{ "key": "IconTime",					"value": "Images/User Interface/IconWatch.png" },
@@ -44,9 +48,7 @@
 		{ "key": "IconSoda",					"value": "Images/User Interface/IconSoda.png" },
 		{ "key": "IconChicken",					"value": "Images/User Interface/IconChicken.png" },
 		{ "key": "IconWindowClose",				"value": "Images/User Interface/IconWindowClose.png" },
-		{ "key": "IconWindowCloseHover",		"value": "Images/User Interface/IconWindowClose.png" },
-		{ "key": "IconWindowConfirm",			"value": "Images/User Interface/IconWindowConfirm.png" },
-		{ "key": "IconWindowConfirmHover",		"value": "Images/User Interface/IconWindowConfirm.png" }
+		{ "key": "IconWindowConfirm",			"value": "Images/User Interface/IconWindowConfirm.png" }
 	],
 	"maps": [
 		{ "key": "Map1",						"value": "Maps/Map1.tmx" },

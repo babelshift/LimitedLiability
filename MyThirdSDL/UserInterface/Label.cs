@@ -12,6 +12,12 @@ namespace MyThirdSDL.UserInterface
 	{
 		private TrueTypeText trueTypeText;
 
+		public string Text
+		{
+			get { return trueTypeText.Text; }
+			set { trueTypeText.UpdateText(value); }
+		}
+
 		public Label(Vector position, TrueTypeText trueTypeText)
 			: base(trueTypeText.Texture, position)
 		{

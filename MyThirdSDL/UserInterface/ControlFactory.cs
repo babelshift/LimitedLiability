@@ -36,7 +36,7 @@ namespace MyThirdSDL.UserInterface
 			return messageBox;
 		}
 
-		public MenuEquipment CreateMenuEquipment(Vector position)
+		public MenuEquipment CreateMenuEquipment(Vector position, IEnumerable<IPurchasable> purchasableItems)
 		{
 			Texture texture = GetTexture("MenuEquipmentFrame");
 			
@@ -64,21 +64,21 @@ namespace MyThirdSDL.UserInterface
 			Label labelThirst = CreateLabel(new Vector(position.X + 400, position.Y + 180), fontPath, fontSizeContent, fontColor, "N/A");
 			Label labelHunger = CreateLabel(new Vector(position.X + 400, position.Y + 210), fontPath, fontSizeContent, fontColor, "N/A");
 
-			Button buttonCloseWindow = CreateButton(new Vector(position.X + 460, position.Y - 40), "IconWindowClose", "IconWindowCloseHover");
-			Button buttonConfirmWindow = CreateButton(new Vector(position.X + 460, position.Y + 295), "IconWindowConfirm", "IconWindowCloseHover");
+			Button buttonCloseWindow = CreateButton(new Vector(position.X + 454, position.Y - 47), "ButtonSquare", "ButtonSquareHover", "IconWindowClose", "IconWindowClose");
+			Button buttonConfirmWindow = CreateButton(new Vector(position.X + 454, position.Y + 285), "ButtonSquare", "ButtonSquareHover", "IconWindowConfirm", "IconWindowConfirm");
 
-			Button buttonArrowCircleLeft = CreateButton(new Vector(position.X + 10, position.Y + 245), "IconArrowCircleLeft", "IconArrowCircleLeftHover");
-			Button buttonArrowCircleRight = CreateButton(new Vector(position.X + 310, position.Y + 245), "IconArrowCircleRight", "IconArrowCircleRightHover");
+			Button buttonArrowCircleLeft = CreateButton(new Vector(position.X + 5, position.Y + 235), "ButtonSquare", "ButtonSquareHover", "IconArrowCircleLeft", "IconArrowCircleLeft");
+			Button buttonArrowCircleRight = CreateButton(new Vector(position.X + 302, position.Y + 235), "ButtonSquare", "ButtonSquareHover", "IconArrowCircleRight", "IconArrowCircleRight");
 
 			MenuEquipment menuEquipment = new MenuEquipment(texture, position, iconMainMenu, iconInfoMenu, labelMainMenu, labelInfoMenu,
 				iconMoney, iconHealth, iconHygiene, iconSleep, iconThirst, iconHunger, labelMoney, labelHealth, labelHygiene, labelSleep, labelThirst,
 				labelHunger, buttonArrowCircleLeft, buttonArrowCircleRight, buttonCloseWindow, buttonConfirmWindow);
 
-			ButtonMenuItem buttonMenuItem1 = CreateButtonMenuItem(position, "ButtonMenuItem", "ButtonMenuItemHover", "Snack Machine", "IconPizza", 100);
-			ButtonMenuItem buttonMenuItem2 = CreateButtonMenuItem(position, "ButtonMenuItem", "ButtonMenuItemHover", "Water Fountain", "IconWater", 50);
-
-			menuEquipment.AddButtonMenuItem(buttonMenuItem1);
-			menuEquipment.AddButtonMenuItem(buttonMenuItem2);
+			foreach(var purchasableItem in purchasableItems)
+			{
+				ButtonMenuItem buttonMenuItem = CreateButtonMenuItem(position, "ButtonMenuItem", "ButtonMenuItemHover", purchasableItem);
+				menuEquipment.AddButtonMenuItem(buttonMenuItem);
+			}
 
 			return menuEquipment;
 		}
@@ -89,8 +89,8 @@ namespace MyThirdSDL.UserInterface
 
 			int toolboxTraySpaceBetweenButtons = 41;
 			int toolboxTrayOuterEdgeWidth = 4;
-			int toolboxTrayButtonImageOffsetX = 3;
-			int toolboxTrayButtonImageOffsetY = 6;
+			int toolboxTrayButtonImageOffsetX = 0;
+			int toolboxTrayButtonImageOffsetY = 4;
 
 			Vector buttonOnePosition = position + new Vector(toolboxTrayOuterEdgeWidth + toolboxTrayButtonImageOffsetX, toolboxTrayButtonImageOffsetY);
 			Vector buttonTwoPosition = position + new Vector(toolboxTrayOuterEdgeWidth + toolboxTrayButtonImageOffsetX + toolboxTraySpaceBetweenButtons, toolboxTrayButtonImageOffsetY);
@@ -103,15 +103,16 @@ namespace MyThirdSDL.UserInterface
 			Vector iconOnePosition = position + new Vector(toolboxTrayOuterEdgeWidth + toolboxTrayButtonImageOffsetX + toolboxTraySpaceBetweenButtons * 8, toolboxTrayButtonImageOffsetY);
 			Vector iconTwoPosition = position + new Vector(toolboxTrayOuterEdgeWidth + toolboxTrayButtonImageOffsetX + toolboxTraySpaceBetweenButtons * 8 + 135, toolboxTrayButtonImageOffsetY);
 
+			string buttonTexturePathKey = "ToolboxTrayButton";
 			string buttonHoverTexturePathKey = "ToolboxTrayButtonHover";
-			Button buttonSelectGeneral = CreateButton(buttonOnePosition, "ButtonSelectGeneral", buttonHoverTexturePathKey);
-			Button buttonSelectEquipment = CreateButton(buttonTwoPosition, "ButtonSelectEquipment", buttonHoverTexturePathKey);
-			Button buttonSelectRoom = CreateButton(buttonThreePosition, "ButtonSelectRoom", buttonHoverTexturePathKey);
-			Button buttonFinances = CreateButton(buttonFourPosition, "ButtonFinances", buttonHoverTexturePathKey);
-			Button buttonCompany = CreateButton(buttonFivePosition, "ButtonCompany", buttonHoverTexturePathKey);
-			Button buttonEmployees = CreateButton(buttonSixPosition, "ButtonEmployees", buttonHoverTexturePathKey);
-			Button buttonProducts = CreateButton(buttonSevenPosition, "ButtonProducts", buttonHoverTexturePathKey);
-			Button buttonMainMenu = CreateButton(buttonEightPosition, "ButtonMenu", buttonHoverTexturePathKey);
+			Button buttonSelectGeneral = CreateButton(buttonOnePosition, buttonTexturePathKey, buttonHoverTexturePathKey, "IconArrowsInward", "IconArrowsInward");
+			Button buttonSelectEquipment = CreateButton(buttonTwoPosition, buttonTexturePathKey, buttonHoverTexturePathKey, "IconHandTruck", "IconHandTruck");
+			Button buttonSelectRoom = CreateButton(buttonThreePosition, buttonTexturePathKey, buttonHoverTexturePathKey, "IconForklift", "IconForklift");
+			Button buttonFinances = CreateButton(buttonFourPosition, buttonTexturePathKey, buttonHoverTexturePathKey, "IconBarChartUp", "IconBarChartUp");
+			Button buttonCompany = CreateButton(buttonFivePosition, buttonTexturePathKey, buttonHoverTexturePathKey, "IconPenPaper", "IconPenPaper");
+			Button buttonEmployees = CreateButton(buttonSixPosition, buttonTexturePathKey, buttonHoverTexturePathKey, "IconPersonPlain", "IconPersonPlain");
+			Button buttonProducts = CreateButton(buttonSevenPosition, buttonTexturePathKey, buttonHoverTexturePathKey, "IconOpenBox", "IconOpenBox");
+			Button buttonMainMenu = CreateButton(buttonEightPosition, buttonTexturePathKey, buttonHoverTexturePathKey, "IconWindow", "IconWindow");
 			Icon iconMoney = CreateIcon(iconOnePosition, "IconMoney");
 			Icon iconTime = CreateIcon(iconTwoPosition, "IconTime");
 
@@ -145,8 +146,7 @@ namespace MyThirdSDL.UserInterface
 			return toolboxTray;
 		}
 
-		public ButtonMenuItem CreateButtonMenuItem(Vector position, string texturePathKey, string textureHoverPathKey, 
-			string buttonText, string textureIconPathKey, int price)
+		public ButtonMenuItem CreateButtonMenuItem(Vector position, string texturePathKey, string textureHoverPathKey, IPurchasable purchasableItem)
 		{
 			string fontPath = contentManager.GetContentPath("Arcade");
 			Color fontColor = new Color(218, 218, 218);
@@ -160,19 +160,25 @@ namespace MyThirdSDL.UserInterface
 			Vector iconMoneyPosition = new Vector(position.X + 245, position.Y + 5);
 			Vector labelMoneyPosition = new Vector(position.X + 280, position.Y + 15);
 
-			Icon iconItem = CreateIcon(iconItemPosition, textureIconPathKey);
-			Label labelItem = CreateLabel(labelItemPosition, fontPath, fontSizeContent, fontColor, buttonText);
+			Icon iconItem = CreateIcon(iconItemPosition, purchasableItem.IconTextureKey);
+			Label labelItem = CreateLabel(labelItemPosition, fontPath, fontSizeContent, fontColor, purchasableItem.Name);
 			Icon iconMoney = CreateIcon(iconMoneyPosition, "IconMoney");
-			Label labelMoney = CreateLabel(labelMoneyPosition, fontPath, fontSizeContent, fontColor, price.ToString());
+			Label labelMoney = CreateLabel(labelMoneyPosition, fontPath, fontSizeContent, fontColor, purchasableItem.Price.ToString());
 
-			return new ButtonMenuItem(position, texture, textureHover, iconItem, labelItem, iconMoney, labelMoney);
+			return new ButtonMenuItem(position, texture, textureHover, iconItem, labelItem, iconMoney, labelMoney, purchasableItem);
 		}
 
-		public Button CreateButton(Vector position, string texturePathKey, string textureHoverPathKey)
+		public Button CreateButton(Vector position, string texturePathKey, string textureHoverPathKey, 
+			string iconTexturePathKey, string iconTextureHoverPathKey)
 		{
 			Texture texture = GetTexture(texturePathKey);
 			Texture textureHover = GetTexture(textureHoverPathKey);
-			return new Button(texture, textureHover, position);
+			Icon icon = CreateIcon(position, iconTexturePathKey);
+			Icon iconHover = CreateIcon(position, iconTextureHoverPathKey);
+			icon.Position = new Vector(position.X + (texture.Width / 2 - icon.Width / 2), position.Y + (texture.Height / 2 - icon.Height / 2));
+			iconHover.Position = new Vector(position.X + (texture.Width / 2 - icon.Width / 2), position.Y + (texture.Height / 2 - icon.Height / 2));
+
+			return new Button(texture, textureHover, position, icon, iconHover);
 		}
 
 		public Icon CreateIcon(Vector position, string texturePathKey)

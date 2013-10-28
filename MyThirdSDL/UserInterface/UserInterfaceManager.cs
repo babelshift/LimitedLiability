@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Collections.Concurrent;
+using MyThirdSDL.Descriptors;
 
 namespace MyThirdSDL.UserInterface
 {
@@ -20,20 +21,22 @@ namespace MyThirdSDL.UserInterface
 	{
 		private Point bottomRightPointOfWindow;
 		private ControlFactory controlFactory;
-		private ConcurrentQueue<Control> controls = new ConcurrentQueue<Control>();
 
+		private ToolboxTray toolboxTray;
+		private MenuEquipment menuEquipment;
 		private bool isEquipmentMenuOpen = false;
+		private IEnumerable<IPurchasable> purchasableItems;
 
 		public MouseModeType MouseMode { get; private set; }
 
-		public UserInterfaceManager(Renderer renderer, ContentManager contentManager, Point bottomRightPointOfWindow)
+		public UserInterfaceManager(Renderer renderer, ContentManager contentManager, Point bottomRightPointOfWindow, IEnumerable<IPurchasable> purchasableItems)
 		{
 			this.bottomRightPointOfWindow = bottomRightPointOfWindow;
 
 			MouseMode = MouseModeType.SelectGeneral;
 
 			controlFactory = new ControlFactory(renderer, contentManager);
-			var toolboxTray = controlFactory.CreateToolboxTray(new Vector(bottomRightPointOfWindow.X / 2 - 300, bottomRightPointOfWindow.Y - 50));
+			toolboxTray = controlFactory.CreateToolboxTray(new Vector(bottomRightPointOfWindow.X / 2 - 300, bottomRightPointOfWindow.Y - 50));
 			toolboxTray.ButtonSelectGeneralClicked += ToolboxTray_ButtonSelectGeneralClicked;
 			toolboxTray.ButtonSelectEquipmentClicked += ToolboxTray_ButtonSelectEquipmentClicked;
 			toolboxTray.ButtonSelectRoomClicked += ToolboxTray_ButtonSelectRoomClicked;
@@ -42,7 +45,8 @@ namespace MyThirdSDL.UserInterface
 			toolboxTray.ButtonEmployeesClicked += ToolboxTray_ButtonEmployeesClicked;
 			toolboxTray.ButtonProductsClicked += ToolboxTray_ButtonProductsClicked;
 			toolboxTray.ButtonMainMenuClicked += ToolboxTray_ButtonMainMenuClicked;
-			controls.Enqueue(toolboxTray);
+
+			this.purchasableItems = purchasableItems;
 		}
 
 		private void ToolboxTray_ButtonMainMenuClicked(object sender, EventArgs e)
@@ -79,13 +83,21 @@ namespace MyThirdSDL.UserInterface
 		{
 			if (!isEquipmentMenuOpen)
 			{
-				MenuEquipment menuEquipment = controlFactory.CreateMenuEquipment(new Vector(100, 100));
-				controls.Enqueue(menuEquipment);
+				if (menuEquipment == null)
+				{
+					menuEquipment = controlFactory.CreateMenuEquipment(new Vector(100, 100), purchasableItems);
+					menuEquipment.ButtonCloseWindowClicked += menuEquipment_ButtonCloseWindowClicked;
+				}
 
 				MouseMode = MouseModeType.SelectEquipment;
 
 				isEquipmentMenuOpen = true;
 			}
+		}
+
+		private void menuEquipment_ButtonCloseWindowClicked(object sender, EventArgs e)
+		{
+			isEquipmentMenuOpen = false;
 		}
 
 		private void ToolboxTray_ButtonSelectGeneralClicked(object sender, EventArgs e)
@@ -95,14 +107,18 @@ namespace MyThirdSDL.UserInterface
 		
 		public void Update(GameTime gameTime)
 		{
-			foreach (var control in controls)
-				control.Update(gameTime);
+			toolboxTray.Update(gameTime);
+
+			if(isEquipmentMenuOpen)
+				menuEquipment.Update(gameTime);
 		}
 
 		public void Draw(GameTime gameTime, Renderer renderer)
 		{
-			foreach (var control in controls)
-				control.Draw(gameTime, renderer);
+			toolboxTray.Draw(gameTime, renderer);
+
+			if (isEquipmentMenuOpen)
+				menuEquipment.Draw(gameTime, renderer);
 		}
 	}
 }

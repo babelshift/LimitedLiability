@@ -9,9 +9,12 @@ namespace MyThirdSDL.Descriptors
 {
 	public abstract class Equipment : Agent
 	{
-		public double Cost { get; private set; }
+		public int Price { get; private set; }
 
-		public Equipment(string agentName, Texture texture, Vector startingPosition) 
-			: base(agentName, texture, startingPosition, Vector.Zero) { }
+		public Equipment(string agentName, Texture texture, Vector startingPosition, int price)
+			: base(agentName, texture, startingPosition, Vector.Zero)
+		{
+			Price = price;
+		}
 	}
 }

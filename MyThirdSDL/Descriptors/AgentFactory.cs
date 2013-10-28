@@ -71,13 +71,47 @@ namespace MyThirdSDL.Descriptors
 
 		#endregion
 
+		public SnackMachine CreateSnackMachine()
+		{
+			return CreateSnackMachine(Vector.Zero);
+		}
+
 		public SnackMachine CreateSnackMachine(Vector position)
 		{
-			string texturePath = contentManager.GetContentPath("SnackMachine");
+			return CreateAgent<SnackMachine>("SnackMachine", position);
+		}
+
+		public SodaMachine CreateSodaMachine()
+		{
+			return CreateSodaMachine(Vector.Zero);
+		}
+
+		public SodaMachine CreateSodaMachine(Vector position)
+		{
+			return CreateAgent<SodaMachine>("SodaMachine", position);
+		}
+
+		public WaterFountain CreateWaterFountain()
+		{
+			return CreateWaterFountain(Vector.Zero);
+		}
+
+		public WaterFountain CreateWaterFountain(Vector position)
+		{
+			return CreateAgent<WaterFountain>("WaterFountain", position);
+		}
+
+		private T CreateAgent<T>(string texturePathKey, Vector position)
+		{
+			Texture texture = GetTextureFromStore(texturePathKey);
+			return (T)Activator.CreateInstance(typeof(T), texture, position);
+		}
+
+		private Texture GetTextureFromStore(string texturePathKey)
+		{
+			string texturePath = contentManager.GetContentPath(texturePathKey);
 			Texture texture = textureStore.GetTexture(texturePath);
-			int equipmentNumber = GetNextEquipmentNumber();
-			SnackMachine snackMachine = new SnackMachine("Equipment " + equipmentNumber, texture, position);
-			return snackMachine;
+			return texture;
 		}
 
 		private int GetNextEquipmentNumber()

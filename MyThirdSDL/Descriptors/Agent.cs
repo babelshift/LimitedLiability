@@ -37,7 +37,7 @@ namespace MyThirdSDL.Descriptors
 		}
 
 		public Guid ID { get; private set; }
-		public string AgentName { get; private set; }
+		public string Name { get; private set; }
 		public double SimulationAge { get; private set; }
 		public AgentStatus Status { get; private set; }
 		public AgentActivity Activity { get; private set; }
@@ -50,7 +50,7 @@ namespace MyThirdSDL.Descriptors
 		public Agent(string name, Texture texture, Vector startingPosition, Vector startingSpeed)
 		{
 			ID = Guid.NewGuid();
-			AgentName = name;
+			Name = name;
 			SimulationAge = 0.0;
 			Status = AgentStatus.Unknown;
 			Activity = AgentActivity.Unknown;

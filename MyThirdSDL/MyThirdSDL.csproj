@@ -72,6 +72,7 @@
     <Compile Include="CoordinateHelper.cs" />
     <Compile Include="Descriptors\Agent.cs" />
     <Compile Include="Descriptors\AgentFactory.cs" />
+    <Compile Include="Descriptors\IPurchasable.cs" />
     <Compile Include="Descriptors\TextureStore.cs" />
     <Compile Include="Descriptors\Equipment.cs" />
     <Compile Include="Descriptors\INecessityAffector.cs" />
@@ -84,6 +85,7 @@
     <Compile Include="Descriptors\Skills.cs" />
     <Compile Include="Descriptors\SnackMachine.cs" />
     <Compile Include="Descriptors\SodaMachine.cs" />
+    <Compile Include="Descriptors\WaterFountain.cs" />
     <Compile Include="Entity.cs" />
     <Compile Include="GridManager.cs" />
     <Compile Include="ICollidable.cs" />
@@ -133,6 +135,12 @@
     <Content Include="Content\Images\CubeTileSheet.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Content\Images\Equipment\WaterFountain.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Images\Equipment\SodaMachine.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Content\Images\Equipment\SnackMachine.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -163,13 +171,19 @@
     <Content Include="Content\Images\User Interface\ButtonMenuItemHover.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Content\Images\User Interface\ButtonSquare.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Images\User Interface\ButtonSquareHover.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Content\Images\User Interface\IconArrowCircleLeft.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\Images\User Interface\IconArrowCircleRight.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Images\User Interface\IconArrowUpRight.png">
+    <Content Include="Content\Images\User Interface\IconArrowsInward.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\Images\User Interface\IconBarChartUp.png">
@@ -248,6 +262,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\Images\User Interface\ToolboxTray.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Images\User Interface\ToolboxTrayButton.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\Images\User Interface\ToolboxTrayButtonHover.png">

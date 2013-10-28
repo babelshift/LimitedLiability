@@ -1,4 +1,5 @@
-﻿using SharpDL;
+﻿using MyThirdSDL.Descriptors;
+using SharpDL;
 using SharpDL.Graphics;
 using System;
 using System.Collections.Generic;
@@ -14,6 +15,9 @@ namespace MyThirdSDL.UserInterface
 		private Label labelMain;
 		private Icon iconMoney;
 		private Label labelMoney;
+		private IPurchasable purchasableItem;
+
+		public new event EventHandler<PurchasableItemClickedEventArgs> Clicked;
 
 		public override Vector Position
 		{
@@ -27,29 +31,39 @@ namespace MyThirdSDL.UserInterface
 				float changeX = value.X - base.Position.X;
 				float changeY = value.Y - base.Position.Y;
 
-				if(iconMain != null)
+				if (iconMain != null)
 					iconMain.Position = new Vector(iconMain.Position.X + changeX, iconMain.Position.Y + changeY);
-	
-				if(labelMain != null)
+
+				if (labelMain != null)
 					labelMain.Position = new Vector(labelMain.Position.X + changeX, labelMain.Position.Y + changeY);
-	
-				if(iconMoney != null)
+
+				if (iconMoney != null)
 					iconMoney.Position = new Vector(iconMoney.Position.X + changeX, iconMoney.Position.Y + changeY);
-	
-				if(labelMoney != null)
+
+				if (labelMoney != null)
 					labelMoney.Position = new Vector(labelMoney.Position.X + changeX, labelMoney.Position.Y + changeY);
 
 				base.Position = value;
 			}
 		}
 
-		public ButtonMenuItem(Vector position, Texture texture, Texture textureHover, Icon iconItem, Label labelItem, Icon iconMoney, Label labelMoney)
+		public ButtonMenuItem(Vector position, Texture texture, Texture textureHover,
+			Icon iconItem, Label labelItem, Icon iconMoney, Label labelMoney, IPurchasable purchasableItem)
 			: base(texture, textureHover, position)
 		{
 			this.iconMain = iconItem;
 			this.labelMain = labelItem;
 			this.iconMoney = iconMoney;
 			this.labelMoney = labelMoney;
+			this.purchasableItem = purchasableItem;
+		}
+
+		public override void Update(GameTime gameTime)
+		{
+			base.Update(gameTime);
+
+			if (IsClicked)
+				OnClicked();
 		}
 
 		public override void Draw(GameTime gameTime, Renderer renderer)
@@ -60,6 +74,24 @@ namespace MyThirdSDL.UserInterface
 			labelMain.Draw(gameTime, renderer);
 			iconMoney.Draw(gameTime, renderer);
 			labelMoney.Draw(gameTime, renderer);
+		}
+
+		private void OnClicked()
+		{
+			PurchasableItemClickedEventArgs e = new PurchasableItemClickedEventArgs(purchasableItem);
+
+			if (Clicked != null)
+				Clicked(this, e);
+		}
+	}
+
+	public class PurchasableItemClickedEventArgs : EventArgs
+	{
+		public IPurchasable PurchasableItem { get; private set; }
+
+		public PurchasableItemClickedEventArgs(IPurchasable purchasableItem)
+		{
+			this.PurchasableItem = purchasableItem;
 		}
 	}
 }

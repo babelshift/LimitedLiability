@@ -7,26 +7,26 @@ using System.Threading.Tasks;
 
 namespace MyThirdSDL.Descriptors
 {
-	public class SnackMachine : Equipment, IPurchasable
+	public class WaterFountain : Equipment, IPurchasable
 	{
-		private const int price = 50;
-		private const string name = "Snack Machine";
+		private const int price = 25;
+		private const string name = "Water Fountain";
 
 		public int HealthEffectiveness { get; private set; }
 		public int HygieneEffectiveness { get; private set; }
 		public int SleepEffectiveness { get; private set; }
 		public int ThirstEffectiveness { get; private set; }
 		public int HungerEffectiveness { get; private set; }
-		public string IconTextureKey { get { return "IconPizza"; } }
+		public string IconTextureKey { get { return "IconWater"; } }
 
-		public SnackMachine(Texture texture, Vector startingPosition)
+		public WaterFountain(Texture texture, Vector startingPosition)
 			: base(name, texture, startingPosition, price)
 		{
-			HealthEffectiveness = -1;
+			HealthEffectiveness = 1;
 			HygieneEffectiveness = 0;
 			SleepEffectiveness = 0;
-			ThirstEffectiveness = 0;
-			HungerEffectiveness = 2;
+			ThirstEffectiveness = 1;
+			HungerEffectiveness = 0;
 		}
 	}
 }
