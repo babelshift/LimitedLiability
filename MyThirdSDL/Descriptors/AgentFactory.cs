@@ -34,7 +34,7 @@ namespace MyThirdSDL.Descriptors
 
 		#region Employees
 
-		public Employee CreateEmployee(Vector position)
+		public Employee CreateEmployee(TimeSpan birthTime, Vector position)
 		{
 			string texturePath = contentManager.GetContentPath("Employee1");
 			Texture texture = textureStore.GetTexture(texturePath);
@@ -45,7 +45,7 @@ namespace MyThirdSDL.Descriptors
 			Skills skills = Skills.GetRandomSkills();
 			Job job = JobFactory.CreateJob(skills);
 
-			Employee employee = new Employee("Employee " + employeeNumber, texture, position, firstName, "Smith", age, DateTime.Now, skills, job);
+			Employee employee = new Employee(birthTime, "Employee " + employeeNumber, texture, position, firstName, "Smith", age, DateTime.Now, skills, job);
 
 			return employee;
 		}
@@ -71,40 +71,40 @@ namespace MyThirdSDL.Descriptors
 
 		#endregion
 
-		public SnackMachine CreateSnackMachine()
+		public SnackMachine CreateSnackMachine(TimeSpan birthTime)
 		{
-			return CreateSnackMachine(Vector.Zero);
+			return CreateSnackMachine(birthTime, Vector.Zero);
 		}
 
-		public SnackMachine CreateSnackMachine(Vector position)
+		public SnackMachine CreateSnackMachine(TimeSpan birthTime, Vector position)
 		{
-			return CreateAgent<SnackMachine>("SnackMachine", position);
+			return CreateAgent<SnackMachine>(birthTime, "SnackMachine", position);
 		}
 
-		public SodaMachine CreateSodaMachine()
+		public SodaMachine CreateSodaMachine(TimeSpan birthTime)
 		{
-			return CreateSodaMachine(Vector.Zero);
+			return CreateSodaMachine(birthTime, Vector.Zero);
 		}
 
-		public SodaMachine CreateSodaMachine(Vector position)
+		public SodaMachine CreateSodaMachine(TimeSpan birthTime, Vector position)
 		{
-			return CreateAgent<SodaMachine>("SodaMachine", position);
+			return CreateAgent<SodaMachine>(birthTime, "SodaMachine", position);
 		}
 
-		public WaterFountain CreateWaterFountain()
+		public WaterFountain CreateWaterFountain(TimeSpan birthTime)
 		{
-			return CreateWaterFountain(Vector.Zero);
+			return CreateWaterFountain(birthTime, Vector.Zero);
 		}
 
-		public WaterFountain CreateWaterFountain(Vector position)
+		public WaterFountain CreateWaterFountain(TimeSpan birthTime, Vector position)
 		{
-			return CreateAgent<WaterFountain>("WaterFountain", position);
+			return CreateAgent<WaterFountain>(birthTime, "WaterFountain", position);
 		}
 
-		private T CreateAgent<T>(string texturePathKey, Vector position)
+		private T CreateAgent<T>(TimeSpan birthTime, string texturePathKey, Vector position)
 		{
 			Texture texture = GetTextureFromStore(texturePathKey);
-			return (T)Activator.CreateInstance(typeof(T), texture, position);
+			return (T)Activator.CreateInstance(typeof(T), birthTime, texture, position);
 		}
 
 		private Texture GetTextureFromStore(string texturePathKey)

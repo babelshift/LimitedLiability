@@ -22,9 +22,14 @@ namespace MyThirdSDL.UserInterface
 		private Point bottomRightPointOfWindow;
 		private ControlFactory controlFactory;
 
+		private Label labelMousePositionAbsolute;
+		private Label labelMousePositionIsometric;
+		private Label labelSimulationTime;
+
 		private ToolboxTray toolboxTray;
 		private MenuEquipment menuEquipment;
 		private bool isEquipmentMenuOpen = false;
+
 		private IEnumerable<IPurchasable> purchasableItems;
 
 		public MouseModeType MouseMode { get; private set; }

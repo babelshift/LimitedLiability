@@ -17,8 +17,8 @@ namespace MyThirdSDL.Descriptors
 		public int CommunicationEffectiveness { get; private set; }
 		public int LeadershipEffectiveness { get; private set; }
 
-		public Library(string agentName, Texture texture, Vector position)
-			: base(agentName, texture, position, WIDTH_IN_TILES, HEIGHT_IN_TILES)
+		public Library(TimeSpan birthTime, string agentName, Texture texture, Vector position)
+			: base(birthTime, agentName, texture, position, WIDTH_IN_TILES, HEIGHT_IN_TILES)
 		{
 			IntelligenceEffectiveness = 1;
 			CreativityEffectiveness = 1;

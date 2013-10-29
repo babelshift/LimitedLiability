@@ -152,6 +152,8 @@ namespace MyThirdSDL.UserInterface
 				buttonMenuItemPosition = new Vector(Position.X + 10, Position.Y + 100);
 			else if (buttonMenuItemCount == 2)
 				buttonMenuItemPosition = new Vector(Position.X + 10, Position.Y + 150);
+			else if (buttonMenuItemCount == 3)
+				buttonMenuItemPosition = new Vector(Position.X + 10, Position.Y + 200);
 			else if (buttonMenuItemCount >= 4)
 				return;
 

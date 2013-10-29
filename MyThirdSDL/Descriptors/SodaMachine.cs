@@ -19,8 +19,8 @@ namespace MyThirdSDL.Descriptors
 		public int HungerEffectiveness { get; private set; }
 		public string IconTextureKey { get { return "IconSoda"; } }
 
-		public SodaMachine(Texture texture, Vector startingPosition)
-			: base(name, texture, startingPosition, price)
+		public SodaMachine(TimeSpan birthTime, Texture texture, Vector startingPosition)
+			: base(birthTime, name, texture, startingPosition, price)
 		{
 			HealthEffectiveness = -1;
 			HygieneEffectiveness = 0;

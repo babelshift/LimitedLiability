@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace MyThirdSDL.Descriptors
 {
-	public enum AgentStatus
+	public enum AgentState
 	{
 		Unknown,
 		Active,
@@ -35,11 +35,19 @@ namespace MyThirdSDL.Descriptors
 				return new Rectangle((int)WorldPosition.X, (int)WorldPosition.Y, Texture.Width / 2, Texture.Height / 2);
 			}
 		}
+		private TimeSpan BirthTime { get; set; }
 
 		public Guid ID { get; private set; }
 		public string Name { get; private set; }
-		public double SimulationAge { get; private set; }
-		public AgentStatus Status { get; private set; }
+		public TimeSpan SimulationAge { get; private set; }
+		public TimeSpan WorldAge
+		{
+			get
+			{
+				return TimeSpan.FromMilliseconds(8640 * SimulationAge.TotalMilliseconds);
+			}
+		}
+		public AgentState State { get; private set; }
 		public AgentActivity Activity { get; private set; }
 		public Vector WorldGridIndex { get; private set; }
 		public Vector WorldPosition { get; protected set; }
@@ -47,12 +55,12 @@ namespace MyThirdSDL.Descriptors
 		public Vector Speed { get; private set; }
 		public Vector ProjectedPosition { get; private set; }
 
-		public Agent(string name, Texture texture, Vector startingPosition, Vector startingSpeed)
+		public Agent(TimeSpan birthTime, string name, Texture texture, Vector startingPosition, Vector startingSpeed)
 		{
 			ID = Guid.NewGuid();
+			BirthTime = birthTime;
 			Name = name;
-			SimulationAge = 0.0;
-			Status = AgentStatus.Unknown;
+			State = AgentState.Unknown;
 			Activity = AgentActivity.Unknown;
 
 			WorldPosition = startingPosition;
@@ -62,6 +70,11 @@ namespace MyThirdSDL.Descriptors
 			ProjectedPosition = GetProjectedPosition();
 			WorldGridIndex = GetWorldGridIndex();
 			Destination = CoordinateHelper.DefaultVector;
+		}
+
+		public void SetSimulationAge(TimeSpan simulationTime)
+		{
+			SimulationAge = simulationTime.Subtract(BirthTime);
 		}
 
 		public void SetPath(Queue<MapObject> pathNodes)
@@ -102,7 +115,7 @@ namespace MyThirdSDL.Descriptors
 
 		private Vector GetMovementDirection()
 		{
-			if (Status == AgentStatus.Active)
+			if (State == AgentState.Active)
 			{
 				float movementDirectionX = 0f;
 				float movementDirectionY = 0f;
@@ -129,21 +142,23 @@ namespace MyThirdSDL.Descriptors
 
 		public void Activate()
 		{
-			ChangeStatus(AgentStatus.Active);
+			ChangeStatus(AgentState.Active);
 		}
 
 		public void Deactivate()
 		{
-			ChangeStatus(AgentStatus.Inactive);
+			ChangeStatus(AgentState.Inactive);
 		}
 
-		protected void ChangeStatus(AgentStatus status)
+		protected void ChangeStatus(AgentState status)
 		{
-			if (Status != status)
-				Status = status;
+			if (State != status)
+				State = status;
 		}
 
 		#endregion
+
+		#region Game Loop
 
 		public void Update(GameTime gameTime)
 		{
@@ -162,9 +177,11 @@ namespace MyThirdSDL.Descriptors
 			renderer.RenderTexture(Texture, drawPositionX, drawPositionY);
 		}
 
+		#endregion
+
 		private void Move(GameTime gameTime)
 		{
-			if (Status == AgentStatus.Active)
+			if (State == AgentState.Active)
 			{
 				if (IsAtDestination())
 					SetNextDestinationNode();

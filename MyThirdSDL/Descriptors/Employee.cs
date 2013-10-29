@@ -34,8 +34,8 @@ namespace MyThirdSDL.Descriptors
 			}
 		}
 
-		public Employee(string agentName, Texture texture, Vector position, string firstName, string lastName, int age, DateTime birthday, Skills skills, Job job)
-			: base(agentName, texture, position, speed)
+		public Employee(TimeSpan birthTime, string agentName, Texture texture, Vector position, string firstName, string lastName, int age, DateTime birthday, Skills skills, Job job)
+			: base(birthTime, agentName, texture, position, speed)
 		{
 			FirstName = firstName;
 			LastName = lastName;

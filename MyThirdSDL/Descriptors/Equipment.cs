@@ -11,8 +11,8 @@ namespace MyThirdSDL.Descriptors
 	{
 		public int Price { get; private set; }
 
-		public Equipment(string agentName, Texture texture, Vector startingPosition, int price)
-			: base(agentName, texture, startingPosition, Vector.Zero)
+		public Equipment(TimeSpan birthTime, string agentName, Texture texture, Vector startingPosition, int price)
+			: base(birthTime, agentName, texture, startingPosition, Vector.Zero)
 		{
 			Price = price;
 		}

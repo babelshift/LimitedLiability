@@ -27,6 +27,7 @@ namespace MyThirdSDL
 
 		private AgentFactory agentFactory;
 		private ContentManager contentManager = new ContentManager();
+		private SimulationManager simulationManager = new SimulationManager();
 
 		/// <summary>
 		/// By default, the constructor does nothing. Something to do is subscribe to various game events.
@@ -136,8 +137,8 @@ namespace MyThirdSDL
 
 			tiledMap = new TiledMap(mapPath, Renderer);
 
-			employee = agentFactory.CreateEmployee(new Vector(100, 100));
-			employee.Activate();
+			employee = agentFactory.CreateEmployee(TimeSpan.Zero, new Vector(100, 100));
+			simulationManager.AddAgent(employee);
 
 			Surface tileHighlightSurface = new Surface(tileHighlightTexturePath, Surface.SurfaceType.PNG);
 			tileHighlightImage = new Image(Renderer, tileHighlightSurface, Image.ImageFormat.PNG);
@@ -145,14 +146,17 @@ namespace MyThirdSDL
 			Surface tileHightlightSelectedSurface = new Surface(tileHighlightSelectedTexturePath, Surface.SurfaceType.PNG);
 			tileHighlightSelectedImage = new Image(Renderer, tileHightlightSelectedSurface, Image.ImageFormat.PNG);
 
-			isoWorldGridIndexText = TrueTypeTextFactory.CreateTrueTypeText(Renderer, fontPath, 18, color);
-			orthoWorldGridIndexText = TrueTypeTextFactory.CreateTrueTypeText(Renderer, fontPath, 18, color);
-			thingStatusText = TrueTypeTextFactory.CreateTrueTypeText(Renderer, fontPath, 18, color);
+			isoWorldGridIndexText = TrueTypeTextFactory.CreateTrueTypeText(Renderer, fontPath, 16, color);
+			orthoWorldGridIndexText = TrueTypeTextFactory.CreateTrueTypeText(Renderer, fontPath, 16, color);
+			thingStatusText = TrueTypeTextFactory.CreateTrueTypeText(Renderer, fontPath, 16, color);
+			simulationTimeText = TrueTypeTextFactory.CreateTrueTypeText(Renderer, fontPath, 16, color);
+			simulationAgeText = TrueTypeTextFactory.CreateTrueTypeText(Renderer, fontPath, 16, color);
+			worldAgeText = TrueTypeTextFactory.CreateTrueTypeText(Renderer, fontPath, 16, color);
 
 			List<IPurchasable> purchasableItems = new List<IPurchasable>();
-			purchasableItems.Add(agentFactory.CreateSnackMachine());
-			purchasableItems.Add(agentFactory.CreateSodaMachine());
-			purchasableItems.Add(agentFactory.CreateWaterFountain());
+			purchasableItems.Add(agentFactory.CreateSnackMachine(TimeSpan.Zero));
+			purchasableItems.Add(agentFactory.CreateSodaMachine(TimeSpan.Zero));
+			purchasableItems.Add(agentFactory.CreateWaterFountain(TimeSpan.Zero));
 			userInterfaceManager = new UserInterfaceManager(Renderer, contentManager, new Point(SCREEN_WIDTH, SCREEN_HEIGHT), purchasableItems);
 		}
 
@@ -161,6 +165,9 @@ namespace MyThirdSDL
 		private TrueTypeText isoWorldGridIndexText;
 		private TrueTypeText orthoWorldGridIndexText;
 		private TrueTypeText thingStatusText;
+		private TrueTypeText simulationTimeText;
+		private TrueTypeText simulationAgeText;
+		private TrueTypeText worldAgeText;
 		private Image tileHighlightImage;
 		private Employee employee;
 		private SharpDL.Graphics.Color color = new SharpDL.Graphics.Color(255, 165, 0);
@@ -179,11 +186,11 @@ namespace MyThirdSDL
 
 			if (mouseOverScreenEdge == MouseOverScreenEdge.Top)
 				Camera.MoveUp();
-			else if(mouseOverScreenEdge == MouseOverScreenEdge.Bottom)
+			else if (mouseOverScreenEdge == MouseOverScreenEdge.Bottom)
 				Camera.MoveDown();
-			else if(mouseOverScreenEdge == MouseOverScreenEdge.Left)
+			else if (mouseOverScreenEdge == MouseOverScreenEdge.Left)
 				Camera.MoveLeft();
-			else if(mouseOverScreenEdge == MouseOverScreenEdge.Right)
+			else if (mouseOverScreenEdge == MouseOverScreenEdge.Right)
 				Camera.MoveRight();
 
 			if (isoMouseClickWorldGridIndex != CoordinateHelper.DefaultVector && hasPathPossiblyChanged)
@@ -191,7 +198,7 @@ namespace MyThirdSDL
 				hasPathPossiblyChanged = false;
 
 				Vector roundedMouseClickIndex = new Vector(
-					(int)(Math.Round(isoMouseClickWorldGridIndex.X)), 
+					(int)(Math.Round(isoMouseClickWorldGridIndex.X)),
 					(int)(Math.Round(isoMouseClickWorldGridIndex.Y))
 				);
 
@@ -202,11 +209,15 @@ namespace MyThirdSDL
 				}
 				catch { /* show error somewhere, we have chosen an invalid location */ }
 			}
-			employee.Update(gameTime);
+			simulationManager.Update(gameTime);
 
 			isoWorldGridIndexText.UpdateText(String.Format("(Iso) WorldX: {0}, WorldY: {1}", isoMouseWorldGridIndex.X, isoMouseWorldGridIndex.Y));
 			orthoWorldGridIndexText.UpdateText(String.Format("(X,Y): ({0},{1})", orthoMouseWorldPosition.X, orthoMouseWorldPosition.Y));
 			thingStatusText.UpdateText(String.Format("{0} Activity: {1}", employee.Name, employee.Activity));
+			simulationAgeText.UpdateText(String.Format("{0} Simulation Age: {1}", employee.Name, employee.SimulationAge));
+			worldAgeText.UpdateText(String.Format("{0} World Age: {1} years, {2} months, {3} days", employee.Name, 
+				employee.WorldAge.Days / 365, employee.WorldAge.Days / 12, employee.WorldAge.Days));
+			simulationTimeText.UpdateText(String.Format("Simulation Time: {0}", simulationManager.SimulationTimeDisplay));
 
 			userInterfaceManager.Update(gameTime);
 		}
@@ -258,7 +269,7 @@ namespace MyThirdSDL
 			{
 				drawable.Draw(gameTime, Renderer);
 
-				if(drawable is Tile)
+				if (drawable is Tile)
 				{
 					if (CoordinateHelper.AreIndicesEqual(drawable.WorldGridIndex, isoMouseClickWorldGridIndex))
 						DrawTileHighlight(tileHighlightSelectedImage, drawable.ProjectedPosition - Camera.Position);
@@ -273,6 +284,9 @@ namespace MyThirdSDL
 			Renderer.RenderTexture(isoWorldGridIndexText.Texture, 0, 0);
 			Renderer.RenderTexture(orthoWorldGridIndexText.Texture, 0, 18);
 			Renderer.RenderTexture(thingStatusText.Texture, 0, 36);
+			Renderer.RenderTexture(simulationTimeText.Texture, 0, 54);
+			Renderer.RenderTexture(simulationAgeText.Texture, 0, 72);
+			Renderer.RenderTexture(worldAgeText.Texture, 0, 90);
 
 			userInterfaceManager.Draw(gameTime, Renderer);
 
