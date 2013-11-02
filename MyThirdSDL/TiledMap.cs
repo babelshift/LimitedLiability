@@ -152,7 +152,7 @@ namespace MyThirdSDL
 		public TileLayerType Type { get; private set; }
 		public int Width { get; private set; }
 		public int Height { get; private set; }
-		public IReadOnlyList<Tile> Tiles { get { return tiles; } }
+		public IList<Tile> Tiles { get { return tiles; } }
 
 		public TileLayer(string name, int width, int height)
 		{

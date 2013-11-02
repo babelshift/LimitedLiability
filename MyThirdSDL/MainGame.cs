@@ -99,8 +99,6 @@ namespace MyThirdSDL
 				keysPressed.Remove(e.KeyInformation.VirtualKey);
 		}
 
-		private MyThirdSDL.UserInterface.MessageBox messageBox;
-
 		/// <summary>
 		/// Initialize the SDL Window and SDL Renderer with any required flags. 
 		/// Also initialize anything else of interest (SDL_ttf, SDL_image, etc).
