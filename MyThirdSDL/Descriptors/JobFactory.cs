@@ -6,16 +6,12 @@ using System.Threading.Tasks;
 
 namespace MyThirdSDL.Descriptors
 {
-	public static class JobFactory
+	public class JobFactory
 	{
-		private static List<Job> jobs = new List<Job>();
-		private static Random random = new Random();
-		private static bool isInitialized = false;
+		private List<Job> jobs = new List<Job>();
+		private Random random = new Random();
 
-		/// <summary>
-		/// Initializes all jobs in the system. Must be called prior to calling any other methods.
-		/// </summary>
-		public static void Initialize()
+		public JobFactory()
 		{
 			Job janitor = new Job("Janitor", 25000, Skills.Rating.Atrocious, Skills.Rating.Atrocious, Skills.Rating.Atrocious, Skills.Rating.Atrocious);
 			Job maintenance = new Job("Maintenance", 30000, Skills.Rating.Satisfactory, Skills.Rating.Atrocious, Skills.Rating.Atrocious, Skills.Rating.Atrocious);
@@ -38,8 +34,6 @@ namespace MyThirdSDL.Descriptors
 			jobs.Add(humanResources);
 			jobs.Add(manager);
 			jobs.Add(executive);
-
-			isInitialized = true;
 		}
 
 		/// <summary>
@@ -47,11 +41,8 @@ namespace MyThirdSDL.Descriptors
 		/// </summary>
 		/// <param name="skill"></param>
 		/// <returns></returns>
-		public static Job CreateJob(Skills skill)
+		public Job CreateJob(Skills skill)
 		{
-			if (!isInitialized)
-				throw new Exception("JobFactory has not been initialized yet. Call Initialize() first.");
-
 			 List<Job> validJobs = jobs.Where(j =>
 				skill.Intelligence >= j.RequiredIntelligence
 				&& skill.Creativity >= j.RequiredCreativity

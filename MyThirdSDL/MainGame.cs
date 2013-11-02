@@ -14,20 +14,36 @@ namespace MyThirdSDL
 {
 	public class MainGame : Game
 	{
+		#region Constants
+
 		private const int SCREEN_WIDTH = 1440;
 		private const int SCREEN_HEIGHT = 900;
 
-		private Vector orthoMouseWorldPosition = Vector.Zero;
-		private Vector isoMouseWorldGridIndex = Vector.Zero;
-		private Vector isoMouseWorldPosition = Vector.Zero;
-		private Vector isoMouseClickWorldGridIndex = CoordinateHelper.DefaultVector;
-		private Vector isoMouseClickWorldPosition = Vector.Zero;
+		#endregion
 
+		#region Input Data
+
+		private Vector mousePositionWorldGridIndex = Vector.Zero;
+		private Vector mouseClickPositionWorldGridIndex = CoordinateHelper.DefaultVector;
+		private Vector mouseClickWorldPosition = Vector.Zero;
+		private MouseOverScreenEdge mouseOverScreenEdge;
 		private List<KeyInformation.VirtualKeyCode> keysPressed = new List<KeyInformation.VirtualKeyCode>();
 
+		#endregion
+
+		#region Factories and Managers
+
+		private JobFactory jobFactory;
 		private AgentFactory agentFactory;
-		private ContentManager contentManager = new ContentManager();
-		private SimulationManager simulationManager = new SimulationManager();
+		private ContentManager contentManager;
+		private SimulationManager simulationManager;
+		private UserInterfaceManager userInterfaceManager;
+
+		#endregion
+
+		private TiledMap tiledMap;
+
+		#region Constructors
 
 		/// <summary>
 		/// By default, the constructor does nothing. Something to do is subscribe to various game events.
@@ -40,48 +56,37 @@ namespace MyThirdSDL
 			MouseButtonPressed += MainGame_MouseButtonPressed;
 		}
 
+		#endregion
+
+		#region Event Handlers
+
 		private void MainGame_MouseButtonPressed(object sender, MouseButtonEventArgs e)
 		{
+			userInterfaceManager.HandleMouseButtonPressedEvent(sender, e);
+
 			if (e.MouseButton == MouseButtonCode.Left)
 			{
-				isoMouseClickWorldGridIndex = isoMouseWorldGridIndex;
+				mouseClickPositionWorldGridIndex = mousePositionWorldGridIndex;
+				mouseClickWorldPosition = new Vector(e.RelativeToWindowX, e.RelativeToWindowY);
 				hasPathPossiblyChanged = true;
-
-				isoMouseClickWorldPosition = isoMouseWorldPosition;
-
-				//SnackMachine snackMachine = agentFactory.CreateSnackMachine(isoMouseClickWorldPosition);
-				//userAddedDrawables.Add(snackMachine);
 			}
 		}
 
-		public enum MouseOverScreenEdge
-		{
-			None,
-			Top,
-			Bottom,
-			Left,
-			Right
-		}
-
-		private MouseOverScreenEdge mouseOverScreenEdge;
-
 		private void MainGame_MouseMoving(object sender, MouseMotionEventArgs e)
 		{
-			int mouseX = e.RelativeToWindowX;
-			int mouseY = e.RelativeToWindowY;
+			userInterfaceManager.HandleMouseMovingEvent(sender, e);
 
-			Vector worldSpace = CoordinateHelper.ScreenSpaceToWorldSpace(mouseX, mouseY, CoordinateHelper.ScreenOffset, CoordinateHelper.ScreenProjectionType.Isometric);
-			isoMouseWorldPosition = worldSpace;
-			isoMouseWorldGridIndex = CoordinateHelper.WorldSpaceToWorldGridIndex(worldSpace.X, worldSpace.Y, tiledMap.TileWidth / 2, tiledMap.TileHeight);
-			orthoMouseWorldPosition = new Vector(mouseX, mouseY);
+			Vector mousePositionIsometric = CoordinateHelper.ScreenSpaceToWorldSpace(e.RelativeToWindowX, e.RelativeToWindowY, 
+				CoordinateHelper.ScreenOffset, CoordinateHelper.ScreenProjectionType.Isometric);
+			mousePositionWorldGridIndex = CoordinateHelper.WorldSpaceToWorldGridIndex(mousePositionIsometric.X, mousePositionIsometric.Y, tiledMap.TileWidth / 2, tiledMap.TileHeight);
 
-			if (mouseX < 50)
+			if (e.RelativeToWindowX < 50 && e.RelativeToWindowX > 0)
 				mouseOverScreenEdge = MouseOverScreenEdge.Left;
-			else if (mouseX > SCREEN_WIDTH - 50)
+			else if (e.RelativeToWindowX > SCREEN_WIDTH - 50 && e.RelativeToWindowX < SCREEN_WIDTH - 1)
 				mouseOverScreenEdge = MouseOverScreenEdge.Right;
-			else if (mouseY < 50)
+			else if (e.RelativeToWindowY < 50 && e.RelativeToWindowY > 0)
 				mouseOverScreenEdge = MouseOverScreenEdge.Top;
-			else if (mouseY > SCREEN_HEIGHT - 50)
+			else if (e.RelativeToWindowY > SCREEN_HEIGHT - 50 && e.RelativeToWindowY < SCREEN_HEIGHT - 1)
 				mouseOverScreenEdge = MouseOverScreenEdge.Bottom;
 			else
 				mouseOverScreenEdge = MouseOverScreenEdge.None;
@@ -99,6 +104,8 @@ namespace MyThirdSDL
 				keysPressed.Remove(e.KeyInformation.VirtualKey);
 		}
 
+		#endregion
+
 		/// <summary>
 		/// Initialize the SDL Window and SDL Renderer with any required flags. 
 		/// Also initialize anything else of interest (SDL_ttf, SDL_image, etc).
@@ -110,16 +117,13 @@ namespace MyThirdSDL
 			CreateWindow("My Third SDL", 100, 100, SCREEN_WIDTH, SCREEN_HEIGHT, WindowFlags.Shown);
 			CreateRenderer(RendererFlags.RendererAccelerated);
 
-			JobFactory.Initialize();
-			contentManager.Initialize();
-			agentFactory = new AgentFactory(Renderer, contentManager);
+			contentManager = new ContentManager();
+			simulationManager = new SimulationManager();
+			jobFactory = new JobFactory();
+			agentFactory = new AgentFactory(Renderer, contentManager, jobFactory);
 
 			Camera.Position = Vector.Zero;
 		}
-
-		private TiledMap tiledMap;
-		private UserInterfaceManager userInterfaceManager;
-		//private CollisionManager collisionManager;
 
 		/// <summary>
 		/// Load any content that you will need to use in the update/draw game loop.
@@ -131,7 +135,7 @@ namespace MyThirdSDL
 			string mapPath = contentManager.GetContentPath("Map2");
 			string tileHighlightTexturePath = contentManager.GetContentPath("TileHighlight2");
 			string tileHighlightSelectedTexturePath = contentManager.GetContentPath("TileHighlightSelected");
-			string fontPath = contentManager.GetContentPath("Arcade");
+			//string fontPath = contentManager.GetContentPath("Arcade");
 
 			tiledMap = new TiledMap(mapPath, Renderer);
 
@@ -144,12 +148,12 @@ namespace MyThirdSDL
 			Surface tileHightlightSelectedSurface = new Surface(tileHighlightSelectedTexturePath, Surface.SurfaceType.PNG);
 			tileHighlightSelectedImage = new Image(Renderer, tileHightlightSelectedSurface, Image.ImageFormat.PNG);
 
-			isoWorldGridIndexText = TrueTypeTextFactory.CreateTrueTypeText(Renderer, fontPath, 16, color);
-			orthoWorldGridIndexText = TrueTypeTextFactory.CreateTrueTypeText(Renderer, fontPath, 16, color);
-			thingStatusText = TrueTypeTextFactory.CreateTrueTypeText(Renderer, fontPath, 16, color);
-			simulationTimeText = TrueTypeTextFactory.CreateTrueTypeText(Renderer, fontPath, 16, color);
-			simulationAgeText = TrueTypeTextFactory.CreateTrueTypeText(Renderer, fontPath, 16, color);
-			worldAgeText = TrueTypeTextFactory.CreateTrueTypeText(Renderer, fontPath, 16, color);
+//			isoWorldGridIndexText = TrueTypeTextFactory.CreateTrueTypeText(Renderer, fontPath, 16, color);
+//			orthoWorldGridIndexText = TrueTypeTextFactory.CreateTrueTypeText(Renderer, fontPath, 16, color);
+//			thingStatusText = TrueTypeTextFactory.CreateTrueTypeText(Renderer, fontPath, 16, color);
+//			simulationTimeText = TrueTypeTextFactory.CreateTrueTypeText(Renderer, fontPath, 16, color);
+//			simulationAgeText = TrueTypeTextFactory.CreateTrueTypeText(Renderer, fontPath, 16, color);
+//			worldAgeText = TrueTypeTextFactory.CreateTrueTypeText(Renderer, fontPath, 16, color);
 
 			List<IPurchasable> purchasableItems = new List<IPurchasable>();
 			purchasableItems.Add(agentFactory.CreateSnackMachine(TimeSpan.Zero));
@@ -158,17 +162,16 @@ namespace MyThirdSDL
 			userInterfaceManager = new UserInterfaceManager(Renderer, contentManager, new Point(SCREEN_WIDTH, SCREEN_HEIGHT), purchasableItems);
 		}
 
-		private TimeSpan simulationTime = TimeSpan.Zero;
-		private Image tileHighlightSelectedImage;
-		private TrueTypeText isoWorldGridIndexText;
-		private TrueTypeText orthoWorldGridIndexText;
-		private TrueTypeText thingStatusText;
-		private TrueTypeText simulationTimeText;
-		private TrueTypeText simulationAgeText;
-		private TrueTypeText worldAgeText;
+//		private TrueTypeText isoWorldGridIndexText;
+//		private TrueTypeText orthoWorldGridIndexText;
+//		private TrueTypeText thingStatusText;
+//		private TrueTypeText simulationTimeText;
+//		private TrueTypeText simulationAgeText;
+//		private TrueTypeText worldAgeText;
 		private Image tileHighlightImage;
+		private Image tileHighlightSelectedImage;
 		private Employee employee;
-		private SharpDL.Graphics.Color color = new SharpDL.Graphics.Color(255, 165, 0);
+		//private SharpDL.Graphics.Color color = new SharpDL.Graphics.Color(255, 165, 0);
 
 		/// <summary>
 		/// Update the game state such as positions, health, power ups, ammo, and anything else that is used
@@ -180,24 +183,16 @@ namespace MyThirdSDL
 		/// you will experience update/draw lag.</remarks>
 		protected override void Update(GameTime gameTime)
 		{
-			simulationTime = gameTime.TotalGameTime;
+			Camera.Update(mouseOverScreenEdge);
+			simulationManager.Update(gameTime);
 
-			if (mouseOverScreenEdge == MouseOverScreenEdge.Top)
-				Camera.MoveUp();
-			else if (mouseOverScreenEdge == MouseOverScreenEdge.Bottom)
-				Camera.MoveDown();
-			else if (mouseOverScreenEdge == MouseOverScreenEdge.Left)
-				Camera.MoveLeft();
-			else if (mouseOverScreenEdge == MouseOverScreenEdge.Right)
-				Camera.MoveRight();
-
-			if (isoMouseClickWorldGridIndex != CoordinateHelper.DefaultVector && hasPathPossiblyChanged)
+			if (mouseClickPositionWorldGridIndex != CoordinateHelper.DefaultVector && hasPathPossiblyChanged)
 			{
 				hasPathPossiblyChanged = false;
 
 				Vector roundedMouseClickIndex = new Vector(
-					(int)(Math.Round(isoMouseClickWorldGridIndex.X)),
-					(int)(Math.Round(isoMouseClickWorldGridIndex.Y))
+					(int)(Math.Round(mouseClickPositionWorldGridIndex.X)),
+					(int)(Math.Round(mouseClickPositionWorldGridIndex.Y))
 				);
 
 				try
@@ -207,17 +202,16 @@ namespace MyThirdSDL
 				}
 				catch { /* show error somewhere, we have chosen an invalid location */ }
 			}
-			simulationManager.Update(gameTime);
 
-			isoWorldGridIndexText.UpdateText(String.Format("(Iso) WorldX: {0}, WorldY: {1}", isoMouseWorldGridIndex.X, isoMouseWorldGridIndex.Y));
-			orthoWorldGridIndexText.UpdateText(String.Format("(X,Y): ({0},{1})", orthoMouseWorldPosition.X, orthoMouseWorldPosition.Y));
-			thingStatusText.UpdateText(String.Format("{0} Activity: {1}", employee.Name, employee.Activity));
-			simulationAgeText.UpdateText(String.Format("{0} Simulation Age: {1}", employee.Name, employee.SimulationAge));
-			worldAgeText.UpdateText(String.Format("{0} World Age: {1} years, {2} months, {3} days", employee.Name, 
-				employee.WorldAge.Days / 365, employee.WorldAge.Days / 12, employee.WorldAge.Days));
-			simulationTimeText.UpdateText(String.Format("Simulation Time: {0}", simulationManager.SimulationTimeDisplay));
+			//isoWorldGridIndexText.UpdateText(String.Format("(Iso) WorldX: {0}, WorldY: {1}", isoMouseWorldGridIndex.X, isoMouseWorldGridIndex.Y));
+			//orthoWorldGridIndexText.UpdateText(String.Format("(X,Y): ({0},{1})", orthoMouseWorldPosition.X, orthoMouseWorldPosition.Y));
+			//thingStatusText.UpdateText(String.Format("{0} Activity: {1}", employee.Name, employee.Activity));
+			//simulationAgeText.UpdateText(String.Format("{0} Simulation Age: {1}", employee.Name, employee.SimulationAge));
+			//worldAgeText.UpdateText(String.Format("{0} World Age: {1} years, {2} months, {3} days", employee.Name, 
+			//	employee.WorldAge.Days / 365, employee.WorldAge.Days / 12, employee.WorldAge.Days));
 
-			userInterfaceManager.Update(gameTime);
+			string simulationTimeText = String.Format("Simulation Time: {0}", simulationManager.SimulationTimeDisplay);
+			userInterfaceManager.Update(gameTime, simulationTimeText);
 		}
 
 		private bool hasPathPossiblyChanged = false;
@@ -244,10 +238,10 @@ namespace MyThirdSDL
 			{
 				baseTile.Draw(gameTime, Renderer);
 
-				if (CoordinateHelper.AreIndicesEqual(baseTile.WorldGridIndex, isoMouseClickWorldGridIndex))
+				if (CoordinateHelper.AreIndicesEqual(baseTile.WorldGridIndex, mouseClickPositionWorldGridIndex))
 					DrawTileHighlight(tileHighlightSelectedImage, baseTile.ProjectedPosition - Camera.Position);
 
-				if (CoordinateHelper.AreIndicesEqual(baseTile.WorldGridIndex, isoMouseWorldGridIndex))
+				if (CoordinateHelper.AreIndicesEqual(baseTile.WorldGridIndex, mousePositionWorldGridIndex))
 					DrawTileHighlight(tileHighlightImage, baseTile.ProjectedPosition - Camera.Position);
 			}
 
@@ -269,22 +263,22 @@ namespace MyThirdSDL
 
 				if (drawable is Tile)
 				{
-					if (CoordinateHelper.AreIndicesEqual(drawable.WorldGridIndex, isoMouseClickWorldGridIndex))
+					if (CoordinateHelper.AreIndicesEqual(drawable.WorldGridIndex, mouseClickPositionWorldGridIndex))
 						DrawTileHighlight(tileHighlightSelectedImage, drawable.ProjectedPosition - Camera.Position);
 
-					if (CoordinateHelper.AreIndicesEqual(drawable.WorldGridIndex, isoMouseWorldGridIndex))
+					if (CoordinateHelper.AreIndicesEqual(drawable.WorldGridIndex, mousePositionWorldGridIndex))
 						DrawTileHighlight(tileHighlightImage, drawable.ProjectedPosition - Camera.Position);
 				}
 			}
 
 			employee.Draw(gameTime, Renderer);
 
-			Renderer.RenderTexture(isoWorldGridIndexText.Texture, 0, 0);
-			Renderer.RenderTexture(orthoWorldGridIndexText.Texture, 0, 18);
-			Renderer.RenderTexture(thingStatusText.Texture, 0, 36);
-			Renderer.RenderTexture(simulationTimeText.Texture, 0, 54);
-			Renderer.RenderTexture(simulationAgeText.Texture, 0, 72);
-			Renderer.RenderTexture(worldAgeText.Texture, 0, 90);
+			//Renderer.RenderTexture(isoWorldGridIndexText.Texture, 0, 0);
+			//Renderer.RenderTexture(orthoWorldGridIndexText.Texture, 0, 18);
+			//Renderer.RenderTexture(thingStatusText.Texture, 0, 36);
+			//Renderer.RenderTexture(simulationTimeText.Texture, 0, 54);
+			//Renderer.RenderTexture(simulationAgeText.Texture, 0, 72);
+			//Renderer.RenderTexture(worldAgeText.Texture, 0, 90);
 
 			userInterfaceManager.Draw(gameTime, Renderer);
 

@@ -96,7 +96,7 @@ namespace MyThirdSDL
 		/// <returns></returns>
 		private List<int> GetCollidableGridIndices(ICollidable collidable)
 		{
-			List<GridCell> cellsCollidableIsIn = new List<GridCell>();
+			//List<GridCell> cellsCollidableIsIn = new List<GridCell>();
 
 			Vector minCorner = new Vector(collidable.CollisionBox.X, collidable.CollisionBox.Y);
 			Vector maxCorner = new Vector(collidable.CollisionBox.X + collidable.CollisionBox.Width, collidable.CollisionBox.Y + collidable.CollisionBox.Height);

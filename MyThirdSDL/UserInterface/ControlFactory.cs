@@ -36,10 +36,12 @@ namespace MyThirdSDL.UserInterface
 			return messageBox;
 		}
 
-		public MenuEquipment CreateMenuEquipment(Vector position, IEnumerable<IPurchasable> purchasableItems)
+		public MenuEquipment CreateMenuEquipment(Vector bottomRightPointOfWindow, IEnumerable<IPurchasable> purchasableItems)
 		{
 			Texture texture = GetTexture("MenuEquipmentFrame");
-			
+
+			Vector position = new Vector(bottomRightPointOfWindow.X / 2 - texture.Width / 2, bottomRightPointOfWindow.Y / 2 - texture.Height / 2);
+
 			string fontPath = contentManager.GetContentPath("Arcade");
 			Color fontColor = new Color(218, 218, 218);
 			int fontSizeTitle = 14;

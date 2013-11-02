@@ -13,11 +13,12 @@ namespace MyThirdSDL.Descriptors
 		private Random random = new Random();
 		private TextureStore textureStore;
 		private ContentManager contentManager;
+		private JobFactory jobFactory;
 		private Renderer renderer;
 		private int currentEmployeeNumber = 0;
 		private int currentEquipmentNumber = 0;
 
-		public AgentFactory(Renderer renderer, ContentManager contentManager)
+		public AgentFactory(Renderer renderer, ContentManager contentManager, JobFactory jobFactory)
 		{
 			firstNames.Add("Justin");
 			firstNames.Add("Joanne");
@@ -28,7 +29,7 @@ namespace MyThirdSDL.Descriptors
 
 			this.renderer = renderer;
 			this.contentManager = contentManager;
-
+			this.jobFactory = jobFactory;
 			this.textureStore = new TextureStore(renderer);
 		}
 
@@ -43,7 +44,7 @@ namespace MyThirdSDL.Descriptors
 			string firstName = GetRandomFirstName();
 			int age = GetRandomAge();
 			Skills skills = Skills.GetRandomSkills();
-			Job job = JobFactory.CreateJob(skills);
+			Job job = jobFactory.CreateJob(skills);
 
 			Employee employee = new Employee(birthTime, "Employee " + employeeNumber, texture, position, firstName, "Smith", age, DateTime.Now, skills, job);
 
@@ -64,7 +65,7 @@ namespace MyThirdSDL.Descriptors
 		private string GetRandomFirstName()
 		{
 			int i = random.Next(0, firstNames.Count - 1);
-			int employeeNum = random.Next();
+			//int employeeNum = random.Next();
 			string firstName = firstNames[i];
 			return firstName;
 		}

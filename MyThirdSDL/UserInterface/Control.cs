@@ -11,8 +11,8 @@ namespace MyThirdSDL.UserInterface
 	public abstract class Control
 	{
 		private Guid ID { get; set; }
+
 		protected Texture Texture { get; set; }
-		public virtual Vector Position { get; set; }
 
 		protected Rectangle Bounds
 		{
@@ -21,6 +21,12 @@ namespace MyThirdSDL.UserInterface
 				return new Rectangle((int)Position.X, (int)Position.Y, Texture.Width, Texture.Height);
 			}
 		}
+
+		public virtual Vector Position { get; set; }
+
+		public int Width { get { return Bounds.Width; } }
+
+		public int Height { get { return Bounds.Height; } }
 
 		public Control(Texture texture, Vector position)
 		{
@@ -36,7 +42,7 @@ namespace MyThirdSDL.UserInterface
 
 		public virtual void Draw(GameTime gameTime, Renderer renderer)
 		{
-			if(Texture != null)
+			if (Texture != null)
 				renderer.RenderTexture(Texture, Position.X, Position.Y);
 		}
 	}
