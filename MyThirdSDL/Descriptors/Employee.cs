@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace MyThirdSDL.Descriptors
 {
-	public class Employee : Agent
+	public class Employee : MobileAgent
 	{
 		private static Vector speed = new Vector(25, 25);
 

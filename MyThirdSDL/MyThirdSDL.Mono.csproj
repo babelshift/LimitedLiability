@@ -114,6 +114,7 @@
     <Compile Include="UserInterface\ToolboxTray.cs" />
     <Compile Include="UserInterface\Tooltip.cs" />
     <Compile Include="UserInterface\UserInterfaceManager.cs" />
+    <Compile Include="Descriptors\MobileAgent.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

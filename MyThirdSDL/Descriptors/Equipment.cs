@@ -12,7 +12,7 @@ namespace MyThirdSDL.Descriptors
 		public int Price { get; private set; }
 
 		public Equipment(TimeSpan birthTime, string agentName, Texture texture, Vector startingPosition, int price)
-			: base(birthTime, agentName, texture, startingPosition, Vector.Zero)
+			: base(birthTime, agentName, texture, startingPosition)
 		{
 			Price = price;
 		}

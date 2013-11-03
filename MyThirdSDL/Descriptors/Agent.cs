@@ -8,38 +8,39 @@ using System.Threading.Tasks;
 
 namespace MyThirdSDL.Descriptors
 {
-	public enum AgentState
-	{
-		Unknown,
-		Active,
-		Inactive
-	}
-
-	public enum AgentActivity
-	{
-		Unknown,
-		Walking,
-		Idle
-	}
-
 	public abstract class Agent : IDrawable
 	{
-		private Queue<MapObject> pathNodes;
+		public enum AgentState
+		{
+			Unknown,
+			Active,
+			Inactive
+		}
+
+		#region Members 
 
 		private Texture Texture { get; set; }
-		private Vector Destination { get; set; }
-		private Rectangle CollisionBox
+
+		protected Rectangle CollisionBox
 		{
 			get
 			{
 				return new Rectangle((int)WorldPosition.X, (int)WorldPosition.Y, Texture.Width / 2, Texture.Height / 2);
 			}
 		}
+
 		private TimeSpan BirthTime { get; set; }
 
+		#endregion
+
+		#region Properties
+
 		public Guid ID { get; private set; }
+
 		public string Name { get; private set; }
+
 		public TimeSpan SimulationAge { get; private set; }
+
 		public TimeSpan WorldAge
 		{
 			get
@@ -47,50 +48,51 @@ namespace MyThirdSDL.Descriptors
 				return TimeSpan.FromMilliseconds(8640 * SimulationAge.TotalMilliseconds);
 			}
 		}
+
 		public AgentState State { get; private set; }
-		public AgentActivity Activity { get; private set; }
+
 		public Vector WorldGridIndex { get; private set; }
+
 		public Vector WorldPosition { get; protected set; }
+
 		public float Depth { get { return WorldPosition.X + WorldPosition.Y; } }
-		public Vector Speed { get; private set; }
+
 		public Vector ProjectedPosition { get; private set; }
 
-		public Agent(TimeSpan birthTime, string name, Texture texture, Vector startingPosition, Vector startingSpeed)
+		#endregion
+
+		#region Constructors
+
+		public Agent(TimeSpan birthTime, string name, Texture texture, Vector startingPosition)
 		{
 			ID = Guid.NewGuid();
 			BirthTime = birthTime;
 			Name = name;
+			Texture = texture;
 			State = AgentState.Unknown;
-			Activity = AgentActivity.Unknown;
 
 			WorldPosition = startingPosition;
-			Speed = startingSpeed;
-			Texture = texture;
-
 			ProjectedPosition = GetProjectedPosition();
 			WorldGridIndex = GetWorldGridIndex();
-			Destination = CoordinateHelper.DefaultVector;
 		}
+
+		#endregion
+
+		#region Utilities
 
 		public void SetSimulationAge(TimeSpan simulationTime)
 		{
 			SimulationAge = simulationTime.Subtract(BirthTime);
 		}
 
-		public void SetPath(Queue<MapObject> pathNodes)
-		{
-			if (this.pathNodes == null)
-				this.pathNodes = pathNodes;
-		}
-
 		private Vector GetWorldGridIndex()
 		{
 			Vector worldGridIndex = CoordinateHelper.WorldSpaceToWorldGridIndex(
-				WorldPosition.X,
-				WorldPosition.Y,
-				CoordinateHelper.WorldGridCellWidth,
-				CoordinateHelper.WorldGridCellHeight
-			);
+				                        WorldPosition.X,
+				                        WorldPosition.Y,
+				                        CoordinateHelper.WorldGridCellWidth,
+				                        CoordinateHelper.WorldGridCellHeight
+			                        );
 
 			int worldGridIndexX = (int)Math.Round(worldGridIndex.X);
 			int worldGridIndexY = (int)Math.Round(worldGridIndex.Y);
@@ -102,41 +104,18 @@ namespace MyThirdSDL.Descriptors
 		private Vector GetProjectedPosition()
 		{
 			Vector projectedPosition = CoordinateHelper.WorldSpaceToScreenSpace(
-				WorldPosition.X,
-				WorldPosition.Y,
-				Texture.Width / 2,
-				Texture.Height,
-				CoordinateHelper.ScreenOffset,
-				CoordinateHelper.ScreenProjectionType.Isometric
-			);
+				                           WorldPosition.X,
+				                           WorldPosition.Y,
+				                           Texture.Width / 2,
+				                           Texture.Height,
+				                           CoordinateHelper.ScreenOffset,
+				                           CoordinateHelper.ScreenProjectionType.Isometric
+			                           );
 
 			return projectedPosition;
 		}
 
-		private Vector GetMovementDirection()
-		{
-			if (State == AgentState.Active)
-			{
-				float movementDirectionX = 0f;
-				float movementDirectionY = 0f;
-
-				if (WorldPosition.X > Destination.X)
-					movementDirectionX -= 1f;
-
-				if (WorldPosition.X < Destination.X)
-					movementDirectionX += 1f;
-
-				if (WorldPosition.Y > Destination.Y)
-					movementDirectionY -= 1f;
-
-				if (WorldPosition.Y < Destination.Y)
-					movementDirectionY += 1f;
-
-				return new Vector(movementDirectionX, movementDirectionY);
-			}
-			else
-				return Vector.Zero;
-		}
+		#endregion
 
 		#region Status Changes
 
@@ -160,9 +139,8 @@ namespace MyThirdSDL.Descriptors
 
 		#region Game Loop
 
-		public void Update(GameTime gameTime)
+		public virtual void Update(GameTime gameTime)
 		{
-			Move(gameTime);
 			WorldGridIndex = GetWorldGridIndex();
 		}
 
@@ -179,55 +157,5 @@ namespace MyThirdSDL.Descriptors
 
 		#endregion
 
-		private void Move(GameTime gameTime)
-		{
-			if (State == AgentState.Active)
-			{
-				if (IsAtDestination())
-					SetNextDestinationNode();
-
-				if (!IsAtDestination())
-					Move(gameTime.ElapsedGameTime.TotalSeconds);
-				else
-				{
-					if (pathNodes != null)
-					{
-						if (pathNodes.Count == 0)
-							ResetMovement();
-						else
-							Destination = pathNodes.Dequeue().WorldPosition;
-					}
-				}
-			}
-		}
-
-		private void Move(double dt)
-		{
-			Activity = AgentActivity.Walking;
-			Vector direction = GetMovementDirection();
-			WorldPosition += new Vector((float)(direction.X * Speed.X * dt), (float)(direction.Y * Speed.Y * dt));
-		}
-
-		private void ResetMovement()
-		{
-			pathNodes = null;
-			Destination = CoordinateHelper.DefaultVector;
-			Activity = AgentActivity.Idle;
-		}
-
-		private bool IsAtDestination()
-		{
-			if (Destination == CoordinateHelper.DefaultVector || CollisionBox.Contains(new Point((int)Destination.X, (int)Destination.Y)))
-				return true;
-			else
-				return false;
-		}
-
-		private void SetNextDestinationNode()
-		{
-			if (pathNodes != null)
-				if (pathNodes.Count() > 0)
-					Destination = pathNodes.Dequeue().WorldPosition;
-		}
 	}
 }
