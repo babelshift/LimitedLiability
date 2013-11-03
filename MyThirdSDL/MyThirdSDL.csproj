@@ -36,23 +36,19 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Newtonsoft.Json">
-      <HintPath>..\packages\Newtonsoft.Json.5.0.8\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <HintPath>..\Libs\Newtonsoft.Json.dll</HintPath>
     </Reference>
-    <Reference Include="SharpDL, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\Libs\SharpDL.dll</HintPath>
-    </Reference>
-    <Reference Include="SharpDL.Events, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="SharpDL.Events">
       <HintPath>..\Libs\SharpDL.Events.dll</HintPath>
     </Reference>
-    <Reference Include="SharpDL.Graphics, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="SharpDL.Graphics">
       <HintPath>..\Libs\SharpDL.Graphics.dll</HintPath>
     </Reference>
-    <Reference Include="SharpDL.Input, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="SharpDL.Input">
       <HintPath>..\Libs\SharpDL.Input.dll</HintPath>
+    </Reference>
+    <Reference Include="SharpDL.Mono">
+      <HintPath>..\Libs\SharpDL.Mono.dll</HintPath>
     </Reference>
     <Reference Include="SharpTiles">
       <HintPath>..\Libs\SharpTiles.dll</HintPath>
@@ -99,7 +95,6 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SimulationManager.cs" />
-    <Compile Include="Thing.cs" />
     <Compile Include="TiledMap.cs" />
     <Compile Include="UserInterface\Button.cs" />
     <Compile Include="UserInterface\ButtonMenuItem.cs" />
@@ -277,7 +272,11 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>copy "$(SolutionDir)Libs\*.*" "$(TargetDir)"</PostBuildEvent>
+    <PostBuildEvent>
+    </PostBuildEvent>
+  </PropertyGroup>
+  <PropertyGroup>
+    <PreBuildEvent>copy "$(SolutionDir)Libs\*.*" "$(TargetDir)"</PreBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
