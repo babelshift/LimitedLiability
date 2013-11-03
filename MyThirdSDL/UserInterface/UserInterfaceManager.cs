@@ -36,18 +36,26 @@ namespace MyThirdSDL.UserInterface
 		#region Diagnostic Items
 
 		private List<Label> diagnosticLabels = new List<Label>();
-
 		private Label labelMousePositionAbsolute;
 		private Label labelMousePositionIsometric;
 		private Label labelSimulationTime;
 		private Label labelWorldGridIndex;
+
+		private Label labelEmployeeHealthRaw;
+		private Label labelEmployeeHealthRating;
+
 		#endregion
+
+		public void SetEmployeeHealth(double raw, MyThirdSDL.Descriptors.Necessities.Rating rating)
+		{
+			labelEmployeeHealthRaw.Text = raw.ToString();
+			labelEmployeeHealthRating.Text = rating.ToString();
+		}
 
 		#region Controls
 
 		private ToolboxTray toolboxTray;
 		private MenuEquipment menuEquipment;
-
 		private IEnumerable<IPurchasable> purchasableItems;
 		private bool isEquipmentMenuOpen = false;
 
@@ -81,6 +89,9 @@ namespace MyThirdSDL.UserInterface
 			labelMousePositionAbsolute = controlFactory.CreateLabel(Vector.Zero, fontPath, fontSizeContent, fontColor, ".");
 			labelMousePositionIsometric = controlFactory.CreateLabel(Vector.Zero + new Vector(0, 18), fontPath, fontSizeContent, fontColor, ".");
 			labelSimulationTime = controlFactory.CreateLabel(Vector.Zero + new Vector(0, 36), fontPath, fontSizeContent, fontColor, ".");
+
+			labelEmployeeHealthRaw = controlFactory.CreateLabel(Vector.Zero + new Vector(0, 54), fontPath, fontSizeContent, fontColor, ".");
+			labelEmployeeHealthRating = controlFactory.CreateLabel(Vector.Zero + new Vector(0, 72), fontPath, fontSizeContent, fontColor, ".");
 		}
 
 		#region ToolboxTray Events
@@ -166,6 +177,9 @@ namespace MyThirdSDL.UserInterface
 			labelMousePositionIsometric.Draw(gameTime, renderer);
 			labelSimulationTime.Draw(gameTime, renderer);
 
+			labelEmployeeHealthRating.Draw(gameTime, renderer);
+			labelEmployeeHealthRaw.Draw(gameTime, renderer);
+
 			toolboxTray.Draw(gameTime, renderer);
 
 			if (isEquipmentMenuOpen)
@@ -185,12 +199,13 @@ namespace MyThirdSDL.UserInterface
 		{
 			var mousePositionAbsolute = new Vector(e.RelativeToWindowX, e.RelativeToWindowY);
 			var mousePositionIsometric = CoordinateHelper.ScreenSpaceToWorldSpace(e.RelativeToWindowX, e.RelativeToWindowY, 
-				CoordinateHelper.ScreenOffset, CoordinateHelper.ScreenProjectionType.Isometric);
+				                             CoordinateHelper.ScreenOffset, CoordinateHelper.ScreenProjectionType.Isometric);
 
 			labelMousePositionAbsolute.Text = String.Format("Mouse Position (Absolute): ({0}, {1})", mousePositionAbsolute.X, mousePositionAbsolute.Y);
 			labelMousePositionIsometric.Text = String.Format("Mouse Position (Isometric): ({0}, {1})", mousePositionIsometric.X, mousePositionIsometric.Y);
 		}
 
 		#endregion
+
 	}
 }

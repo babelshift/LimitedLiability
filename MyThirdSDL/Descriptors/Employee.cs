@@ -46,5 +46,40 @@ namespace MyThirdSDL.Descriptors
 
 			Necessities = new Necessities(Necessities.Rating.Full);
 		}
+
+		public override void Update(SharpDL.GameTime gameTime)
+		{
+			// as time goes on
+			// we need to slowly increase sleepiness
+			// we need to slowly increase hunger
+			// we need to slowly increase thirst
+			// we need to slowly reduce hygiene
+			// we need to slowly reduce health / fitness
+			Necessities.AdjustSleep(-0.01);
+			Necessities.AdjustHunger(-0.01);
+			Necessities.AdjustThirst(-0.01);
+			Necessities.AdjustHygiene(-0.01);
+			Necessities.AdjustHealth(-0.01);
+
+			// if desk/office is available, go to desk/office and work 
+			// else reduce happiness somehow (skills slowly go down?)
+
+			// if hungry, find vending machine / lunch room, eat
+			// else increase hunger (reduce hunger rating)
+
+			// if thirsty, find vending machine / lunch room, drink
+			// else increase thirst (reduce thirst rating)
+
+			// if dirty, find bathroom, wash, relieve self
+			// else decrease hygiene (reduce hygiene rating)
+
+			// if sleepy
+			// if during work hours, sleep at desk, perform poorly, complain
+			// if after work hours, leave work
+
+			// if unhappy, complain, threaten to quit, quit, lash out at office / others
+
+			base.Update(gameTime);
+		}
 	}
 }

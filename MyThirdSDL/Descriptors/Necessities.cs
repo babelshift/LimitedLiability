@@ -23,11 +23,46 @@ namespace MyThirdSDL.Descriptors
 			Full = 10
 		}
 
-		public Rating Sleep { get; private set; }
-		public Rating Health { get; private set; }
-		public Rating Hygiene { get; private set; }
-		public Rating Hunger { get; private set; }
-		public Rating Thirst { get; private set; }
+		private double sleepRating;
+		public double healthRating;
+		private double hygieneRating;
+		private double hungerRating;
+		private double thirstRating;
+
+		public Rating Sleep
+		{ 
+			get { return GetRatingFromDouble(sleepRating); } 
+			private set { sleepRating = (double)value; }
+		}
+
+		public Rating Health
+		{ 
+			get { return GetRatingFromDouble(healthRating); } 
+			private set { healthRating = (double)value; }
+		}
+
+		public Rating Hygiene
+		{ 
+			get { return GetRatingFromDouble(hygieneRating); } 
+			private set { hygieneRating = (double)value; }
+		}
+
+		public Rating Hunger
+		{ 
+			get { return GetRatingFromDouble(hungerRating); } 
+			private set { hungerRating = (double)value; }
+		}
+
+		public Rating Thirst
+		{ 
+			get { return GetRatingFromDouble(thirstRating); } 
+			private set { thirstRating = (double)value; }
+		}
+
+		private Rating GetRatingFromDouble(double rating)
+		{
+			return (Rating)((int)Math.Round(rating));
+		}
 
 		public Necessities(Rating blanketRating)
 		{
@@ -47,29 +82,44 @@ namespace MyThirdSDL.Descriptors
 			Thirst = thirst;
 		}
 
-		public void AdjustSleep(int sleep)
+		public void AdjustSleep(double sleepRating)
 		{
-			Sleep += sleep;
+			if (this.sleepRating + sleepRating > 0)
+				this.sleepRating += sleepRating;
+			else
+				this.sleepRating = 0.0;
 		}
 
-		public void AdjustHealth(int health)
+		public void AdjustHealth(double healthRating)
 		{
-			Health += health;
+			if (this.healthRating + healthRating > 0)
+				this.healthRating += healthRating;
+			else
+				this.healthRating = 0.0;
 		}
 
-		public void AdjustHygiene(int Hygiene)
+		public void AdjustHygiene(double hygieneRating)
 		{
-			Hygiene += Hygiene;
+			if (this.hygieneRating + hygieneRating > 0)
+				this.hygieneRating += hygieneRating;
+			else
+				this.hygieneRating = 0.0;
 		}
 
-		public void AdjustHunger(int Hunger)
+		public void AdjustHunger(double hungerRating)
 		{
-			Hunger += Hunger;
+			if (this.hungerRating + hungerRating > 0)
+				this.hungerRating += hungerRating;
+			else
+				this.hungerRating = 0.0;
 		}
 
-		public void AdjustThirst(int Thirst)
+		public void AdjustThirst(double thirstRating)
 		{
-			Thirst += Thirst;
+			if (this.thirstRating + thirstRating > 0)
+				this.thirstRating += thirstRating;
+			else
+				this.thirstRating = 0.0;
 		}
 	}
 }

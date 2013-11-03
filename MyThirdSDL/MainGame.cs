@@ -175,6 +175,8 @@ namespace MyThirdSDL
 			userInterfaceManager = new UserInterfaceManager(Renderer, contentManager, new Point(SCREEN_WIDTH, SCREEN_HEIGHT), purchasableItems);
 		}
 
+		private Label labelEmployeeHealth;
+
 		/// <summary>
 		/// Update the game state such as positions, health, power ups, ammo, and anything else that is used
 		/// in the simulation parameters.
@@ -197,6 +199,8 @@ namespace MyThirdSDL
 
 			string simulationTimeText = simulationManager.SimulationTimeDisplay;
 			userInterfaceManager.Update(gameTime, simulationTimeText);
+
+			userInterfaceManager.SetEmployeeHealth(employee.Necessities.healthRating, employee.Necessities.Health);
 		}
 
 		/// <summary>
