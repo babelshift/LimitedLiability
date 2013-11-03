@@ -14,6 +14,7 @@ namespace MyThirdSDL
 {
 	public class MainGame : Game
 	{
+
 		#region Constants
 
 		private const int SCREEN_WIDTH = 1440;
@@ -23,9 +24,9 @@ namespace MyThirdSDL
 
 		#region Input Data
 
-		private Vector mousePositionWorldGridIndex = Vector.Zero;
 		private Vector mouseClickPositionWorldGridIndex = CoordinateHelper.DefaultVector;
-		private Vector mouseClickWorldPosition = Vector.Zero;
+		private Vector mousePositionWorldGridIndex = CoordinateHelper.DefaultVector;
+		private Vector mouseClickWorldPosition = CoordinateHelper.DefaultVector;
 		private MouseOverScreenEdge mouseOverScreenEdge;
 		private List<KeyInformation.VirtualKeyCode> keysPressed = new List<KeyInformation.VirtualKeyCode>();
 
@@ -38,9 +39,20 @@ namespace MyThirdSDL
 		private ContentManager contentManager;
 		private SimulationManager simulationManager;
 		private UserInterfaceManager userInterfaceManager;
+		//		private TrueTypeText isoWorldGridIndexText;
+		//		private TrueTypeText orthoWorldGridIndexText;
+		//		private TrueTypeText thingStatusText;
+		//		private TrueTypeText simulationTimeText;
+		//		private TrueTypeText simulationAgeText;
+		//		private TrueTypeText worldAgeText;
+		//		private SharpDL.Graphics.Color color = new SharpDL.Graphics.Color(255, 165, 0);
 
 		#endregion
 
+		private List<IDrawable> allDrawables = new List<IDrawable>();
+		private Image tileHighlightImage;
+		private Image tileHighlightSelectedImage;
+		private Employee employee;
 		private TiledMap tiledMap;
 
 		#region Constructors
@@ -68,7 +80,8 @@ namespace MyThirdSDL
 			{
 				mouseClickPositionWorldGridIndex = mousePositionWorldGridIndex;
 				mouseClickWorldPosition = new Vector(e.RelativeToWindowX, e.RelativeToWindowY);
-				hasPathPossiblyChanged = true;
+
+				DetermineBestPathForEmployee();
 			}
 		}
 
@@ -77,7 +90,7 @@ namespace MyThirdSDL
 			userInterfaceManager.HandleMouseMovingEvent(sender, e);
 
 			Vector mousePositionIsometric = CoordinateHelper.ScreenSpaceToWorldSpace(e.RelativeToWindowX, e.RelativeToWindowY, 
-				CoordinateHelper.ScreenOffset, CoordinateHelper.ScreenProjectionType.Isometric);
+				                                CoordinateHelper.ScreenOffset, CoordinateHelper.ScreenProjectionType.Isometric);
 			mousePositionWorldGridIndex = CoordinateHelper.WorldSpaceToWorldGridIndex(mousePositionIsometric.X, mousePositionIsometric.Y, tiledMap.TileWidth / 2, tiledMap.TileHeight);
 
 			if (e.RelativeToWindowX < 50 && e.RelativeToWindowX > 0)
@@ -162,17 +175,6 @@ namespace MyThirdSDL
 			userInterfaceManager = new UserInterfaceManager(Renderer, contentManager, new Point(SCREEN_WIDTH, SCREEN_HEIGHT), purchasableItems);
 		}
 
-//		private TrueTypeText isoWorldGridIndexText;
-//		private TrueTypeText orthoWorldGridIndexText;
-//		private TrueTypeText thingStatusText;
-//		private TrueTypeText simulationTimeText;
-//		private TrueTypeText simulationAgeText;
-//		private TrueTypeText worldAgeText;
-		private Image tileHighlightImage;
-		private Image tileHighlightSelectedImage;
-		private Employee employee;
-		//private SharpDL.Graphics.Color color = new SharpDL.Graphics.Color(255, 165, 0);
-
 		/// <summary>
 		/// Update the game state such as positions, health, power ups, ammo, and anything else that is used
 		/// in the simulation parameters.
@@ -186,23 +188,6 @@ namespace MyThirdSDL
 			Camera.Update(mouseOverScreenEdge);
 			simulationManager.Update(gameTime);
 
-			if (mouseClickPositionWorldGridIndex != CoordinateHelper.DefaultVector && hasPathPossiblyChanged)
-			{
-				hasPathPossiblyChanged = false;
-
-				Vector roundedMouseClickIndex = new Vector(
-					(int)(Math.Round(mouseClickPositionWorldGridIndex.X)),
-					(int)(Math.Round(mouseClickPositionWorldGridIndex.Y))
-				);
-
-				try
-				{
-					Queue<MapObject> bestPath = tiledMap.FindBestPath(employee.WorldGridIndex, roundedMouseClickIndex);
-					employee.SetPath(bestPath);
-				}
-				catch { /* show error somewhere, we have chosen an invalid location */ }
-			}
-
 			//isoWorldGridIndexText.UpdateText(String.Format("(Iso) WorldX: {0}, WorldY: {1}", isoMouseWorldGridIndex.X, isoMouseWorldGridIndex.Y));
 			//orthoWorldGridIndexText.UpdateText(String.Format("(X,Y): ({0},{1})", orthoMouseWorldPosition.X, orthoMouseWorldPosition.Y));
 			//thingStatusText.UpdateText(String.Format("{0} Activity: {1}", employee.Name, employee.Activity));
@@ -210,14 +195,9 @@ namespace MyThirdSDL
 			//worldAgeText.UpdateText(String.Format("{0} World Age: {1} years, {2} months, {3} days", employee.Name, 
 			//	employee.WorldAge.Days / 365, employee.WorldAge.Days / 12, employee.WorldAge.Days));
 
-			string simulationTimeText = String.Format("Simulation Time: {0}", simulationManager.SimulationTimeDisplay);
+			string simulationTimeText = simulationManager.SimulationTimeDisplay;
 			userInterfaceManager.Update(gameTime, simulationTimeText);
 		}
-
-		private bool hasPathPossiblyChanged = false;
-
-		private List<IDrawable> userAddedDrawables = new List<IDrawable>();
-		private List<IDrawable> allDrawables = new List<IDrawable>();
 
 		/// <summary>
 		/// Draw the game state such as player textures and positions, enemy textures and positions, map textures, and
@@ -232,44 +212,9 @@ namespace MyThirdSDL
 			allDrawables.Clear();
 			Renderer.ClearScreen();
 
-			TileLayer baseLayer = tiledMap.TileLayers.First(tl => tl.Type == TileLayerType.Base);
-			IEnumerable<Tile> baseTiles = baseLayer.Tiles.Where(t => !t.IsEmpty);
-			foreach (Tile baseTile in baseTiles)
-			{
-				baseTile.Draw(gameTime, Renderer);
-
-				if (CoordinateHelper.AreIndicesEqual(baseTile.WorldGridIndex, mouseClickPositionWorldGridIndex))
-					DrawTileHighlight(tileHighlightSelectedImage, baseTile.ProjectedPosition - Camera.Position);
-
-				if (CoordinateHelper.AreIndicesEqual(baseTile.WorldGridIndex, mousePositionWorldGridIndex))
-					DrawTileHighlight(tileHighlightImage, baseTile.ProjectedPosition - Camera.Position);
-			}
-
-			// collect a list of the drawable objects that need to be depth sorted
-			allDrawables.AddRange(userAddedDrawables);
-
-			// select out the drawable tiles from our height layer
-			TileLayer heightLayer = tiledMap.TileLayers.First(tl => tl.Type == TileLayerType.Height);
-			IEnumerable<Tile> drawableTiles = heightLayer.Tiles.Where(t => !t.IsEmpty);
-			allDrawables.AddRange(drawableTiles);
-
-			// sort the drawables by their depth
-			allDrawables.Sort((d1, d2) => d1.Depth.CompareTo(d2.Depth));
-
-			// draw the drawables!
-			foreach (IDrawable drawable in allDrawables)
-			{
-				drawable.Draw(gameTime, Renderer);
-
-				if (drawable is Tile)
-				{
-					if (CoordinateHelper.AreIndicesEqual(drawable.WorldGridIndex, mouseClickPositionWorldGridIndex))
-						DrawTileHighlight(tileHighlightSelectedImage, drawable.ProjectedPosition - Camera.Position);
-
-					if (CoordinateHelper.AreIndicesEqual(drawable.WorldGridIndex, mousePositionWorldGridIndex))
-						DrawTileHighlight(tileHighlightImage, drawable.ProjectedPosition - Camera.Position);
-				}
-			}
+			DrawBaseTiles(gameTime);
+			SortDrawablesByDrawDepth();
+			DrawHeightTiles(gameTime);
 
 			employee.Draw(gameTime, Renderer);
 
@@ -285,6 +230,58 @@ namespace MyThirdSDL
 			Renderer.RenderPresent();
 		}
 
+		/// <summary>
+		/// Selects out the non-empty height tiles from the height layer in the tile map and sorts them by their draw depth.
+		/// </summary>
+		/// 
+		private void SortDrawablesByDrawDepth()
+		{
+			// select out the drawable tiles from our height layer (walls/objects on top of floor)
+			TileLayer heightLayer = tiledMap.TileLayers.First(tl => tl.Type == TileLayerType.Height);
+			IEnumerable<Tile> drawableTiles = heightLayer.Tiles.Where(t => !t.IsEmpty);
+			allDrawables.AddRange(drawableTiles);
+			// sort the drawables by their depth so they appear correctly on top of each other
+			allDrawables.Sort((d1, d2) => d1.Depth.CompareTo(d2.Depth));
+		}
+
+		/// <summary>
+		/// Draws the base tiles and optionally any tile highlights.
+		/// </summary>
+		/// <param name="gameTime">Game time.</param>
+		private void DrawBaseTiles(GameTime gameTime)
+		{
+			TileLayer baseLayer = tiledMap.TileLayers.First(tl => tl.Type == TileLayerType.Base);
+			IEnumerable<Tile> baseTiles = baseLayer.Tiles.Where(t => !t.IsEmpty);
+			foreach (Tile baseTile in baseTiles)
+			{
+				baseTile.Draw(gameTime, Renderer);
+				if (CoordinateHelper.AreIndicesEqual(baseTile.WorldGridIndex, mouseClickPositionWorldGridIndex))
+					DrawTileHighlight(tileHighlightSelectedImage, baseTile.ProjectedPosition - Camera.Position);
+				if (CoordinateHelper.AreIndicesEqual(baseTile.WorldGridIndex, mousePositionWorldGridIndex))
+					DrawTileHighlight(tileHighlightImage, baseTile.ProjectedPosition - Camera.Position);
+			}
+		}
+
+		/// <summary>
+		/// Selects out the non-empty height tiles from the height layer in the tile map and draws them (must be sorted by draw depth prior to drawing
+		/// or items will appear rendered out of order)
+		/// </summary>
+		/// <param name="gameTime">Game time.</param>
+		private void DrawHeightTiles(GameTime gameTime)
+		{
+			foreach (IDrawable drawable in allDrawables)
+			{
+				drawable.Draw(gameTime, Renderer);
+				if (drawable is Tile)
+				{
+					if (CoordinateHelper.AreIndicesEqual(drawable.WorldGridIndex, mouseClickPositionWorldGridIndex))
+						DrawTileHighlight(tileHighlightSelectedImage, drawable.ProjectedPosition - Camera.Position);
+					if (CoordinateHelper.AreIndicesEqual(drawable.WorldGridIndex, mousePositionWorldGridIndex))
+						DrawTileHighlight(tileHighlightImage, drawable.ProjectedPosition - Camera.Position);
+				}
+			}
+		}
+
 		private void DrawTileHighlight(Image image, Vector position)
 		{
 			Renderer.RenderTexture(
@@ -292,6 +289,28 @@ namespace MyThirdSDL
 				position.X - (image.Texture.Width * 0.5f),
 				position.Y - (image.Texture.Height * 0.75f)
 			);
+		}
+
+		/// <summary>
+		/// If the mouse was clicked on a position that is not the default value, calculate where in the world space the input occurred and find the best path
+		/// between the employee's current position and the clicked position. Uses the A* algorithm to determine said best path. If no path can be found, an exception
+		/// is thrown. This will occur if the user clicks outside the bounds of the map or on a collidable tile in which the employee cannot navigate.
+		/// </summary>
+		private void DetermineBestPathForEmployee()
+		{
+			if (mousePositionWorldGridIndex != CoordinateHelper.DefaultVector)
+			{
+				Vector roundedMouseClickIndex = new Vector((int)(Math.Round(mousePositionWorldGridIndex.X)), (int)(Math.Round(mousePositionWorldGridIndex.Y)));
+				try
+				{
+					Queue<MapObject> bestPath = tiledMap.FindBestPath(employee.WorldGridIndex, roundedMouseClickIndex);
+					employee.SetPath(bestPath);
+				}
+				catch
+				{
+					/*					 show error somewhere, we have chosen an invalid location */
+				}
+			}
 		}
 
 		/// <summary>

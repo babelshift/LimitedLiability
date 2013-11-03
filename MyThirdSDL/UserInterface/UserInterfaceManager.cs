@@ -35,8 +35,8 @@ namespace MyThirdSDL.UserInterface
 
 		#region Diagnostic Items
 
-		private Vector mousePositionAbsolute;
-		private Vector mousePositionIsometric;
+		private List<Label> diagnosticLabels = new List<Label>();
+
 		private Label labelMousePositionAbsolute;
 		private Label labelMousePositionIsometric;
 		private Label labelSimulationTime;
@@ -152,7 +152,7 @@ namespace MyThirdSDL.UserInterface
 
 		public void Update(GameTime gameTime, string simulationTimeText)
 		{
-			labelSimulationTime.Text = simulationTimeText;
+			labelSimulationTime.Text = String.Format("Simulation Time: {0}", simulationTimeText);
 
 			toolboxTray.Update(gameTime);
 
@@ -183,8 +183,8 @@ namespace MyThirdSDL.UserInterface
 
 		public void HandleMouseMovingEvent(object sender, MouseMotionEventArgs e)
 		{
-			mousePositionAbsolute = new Vector(e.RelativeToWindowX, e.RelativeToWindowY);
-			mousePositionIsometric = CoordinateHelper.ScreenSpaceToWorldSpace(e.RelativeToWindowX, e.RelativeToWindowY, 
+			var mousePositionAbsolute = new Vector(e.RelativeToWindowX, e.RelativeToWindowY);
+			var mousePositionIsometric = CoordinateHelper.ScreenSpaceToWorldSpace(e.RelativeToWindowX, e.RelativeToWindowY, 
 				CoordinateHelper.ScreenOffset, CoordinateHelper.ScreenProjectionType.Isometric);
 
 			labelMousePositionAbsolute.Text = String.Format("Mouse Position (Absolute): ({0}, {1})", mousePositionAbsolute.X, mousePositionAbsolute.Y);
