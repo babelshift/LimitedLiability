@@ -115,6 +115,9 @@
     <Compile Include="UserInterface\Tooltip.cs" />
     <Compile Include="UserInterface\UserInterfaceManager.cs" />
     <Compile Include="Descriptors\MobileAgent.cs" />
+    <Compile Include="Descriptors\OfficeDesk.cs" />
+    <Compile Include="EventHelper.cs" />
+    <Compile Include="SimulationMessage.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

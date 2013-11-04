@@ -44,6 +44,14 @@ namespace MyThirdSDL.UserInterface
 		private Label labelEmployeeHealthRaw;
 		private Label labelEmployeeHealthRating;
 
+		private Label labelEmployeeMessages;
+
+		#endregion
+
+		#region Message List
+
+		private List<string> messages = new List<string>();
+
 		#endregion
 
 		public void SetEmployeeHealth(double raw, MyThirdSDL.Descriptors.Necessities.Rating rating)
@@ -62,6 +70,8 @@ namespace MyThirdSDL.UserInterface
 		#endregion
 
 		public MouseModeType MouseMode { get; private set; }
+
+		#region Constructors
 
 		public UserInterfaceManager(Renderer renderer, ContentManager contentManager, Point bottomRightPointOfWindow, IEnumerable<IPurchasable> purchasableItems)
 		{
@@ -92,7 +102,22 @@ namespace MyThirdSDL.UserInterface
 
 			labelEmployeeHealthRaw = controlFactory.CreateLabel(Vector.Zero + new Vector(0, 54), fontPath, fontSizeContent, fontColor, ".");
 			labelEmployeeHealthRating = controlFactory.CreateLabel(Vector.Zero + new Vector(0, 72), fontPath, fontSizeContent, fontColor, ".");
+
+			labelEmployeeMessages = controlFactory.CreateLabel(Vector.Zero + new Vector(0, 90), fontPath, fontSizeContent, fontColor, "NULL");
 		}
+
+		#endregion
+
+		#region Message Events
+
+		public void AddMessage(SimulationMessage message)
+		{
+//			if(!messages.Contains(message))
+//				messages.Add(messages);
+			labelEmployeeMessages.Text = message.Text;
+		}
+
+		#endregion
 
 		#region ToolboxTray Events
 
@@ -179,6 +204,8 @@ namespace MyThirdSDL.UserInterface
 
 			labelEmployeeHealthRating.Draw(gameTime, renderer);
 			labelEmployeeHealthRaw.Draw(gameTime, renderer);
+
+			labelEmployeeMessages.Draw(gameTime, renderer);
 
 			toolboxTray.Draw(gameTime, renderer);
 

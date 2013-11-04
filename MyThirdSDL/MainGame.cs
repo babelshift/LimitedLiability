@@ -136,7 +136,60 @@ namespace MyThirdSDL
 			agentFactory = new AgentFactory(Renderer, contentManager, jobFactory);
 
 			Camera.Position = Vector.Zero;
+
+			simulationManager.EmployeeIsDirty += HandleEmployeeIsDirty;
+			simulationManager.EmployeeIsHungry += HandleEmployeeIsHungry;
+			simulationManager.EmployeeIsSleepy += HandleEmployeeIsSleepy;
+			simulationManager.EmployeeIsThirsty += HandleEmployeeIsThirsty;
+			simulationManager.EmployeeIsUnhappy += HandleEmployeeIsUnhappy;
+			simulationManager.EmployeeIsUnhealthy += HandleEmployeeIsUnhealthy;
+			simulationManager.EmployeeNeedsOfficeDesk += HandleEmployeeNeedsOfficeDesk;
 		}
+
+		#region Employee Events
+
+		private void HandleEmployeeIsUnhappy (object sender, EventArgs e)
+		{
+			// pass message to UI
+			if (sender is Employee)
+			{
+				var employee = sender as Employee;
+				SimulationMessage message = new SimulationMessage(employee.ProjectedPosition, String.Format("{0} is unhappy!", employee.FullName));
+				userInterfaceManager.AddMessage(message);
+			}
+		}
+
+		private void HandleEmployeeNeedsOfficeDesk (object sender, EventArgs e)
+		{
+			// pass message to UI
+		}
+
+		private void HandleEmployeeIsUnhealthy (object sender, EventArgs e)
+		{
+			// pass message to UI
+		}
+
+		private void HandleEmployeeIsSleepy (object sender, EventArgs e)
+		{
+			// pass message to UI
+		}
+
+		private void HandleEmployeeIsThirsty (object sender, EventArgs e)
+		{
+			// pass message to UI
+		}
+
+		private void HandleEmployeeIsHungry (object sender, EventArgs e)
+		{
+			// pass message to UI
+		}
+
+		private void HandleEmployeeIsDirty (object sender, EventArgs e)
+		{
+			// pass message to UI
+		}
+
+		#endregion
 
 		/// <summary>
 		/// Load any content that you will need to use in the update/draw game loop.
@@ -173,9 +226,7 @@ namespace MyThirdSDL
 			purchasableItems.Add(agentFactory.CreateSodaMachine(TimeSpan.Zero));
 			purchasableItems.Add(agentFactory.CreateWaterFountain(TimeSpan.Zero));
 			userInterfaceManager = new UserInterfaceManager(Renderer, contentManager, new Point(SCREEN_WIDTH, SCREEN_HEIGHT), purchasableItems);
-		}
-
-		private Label labelEmployeeHealth;
+   		}
 
 		/// <summary>
 		/// Update the game state such as positions, health, power ups, ammo, and anything else that is used
@@ -316,6 +367,7 @@ namespace MyThirdSDL
 				}
 			}
 		}
+
 
 		/// <summary>
 		/// Unload any content that was used during the update/draw game loop. If you load anything that uses native SDL structures such

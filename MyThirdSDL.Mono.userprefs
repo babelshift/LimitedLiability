@@ -1,16 +1,15 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="MyThirdSDL/Descriptors/AgentFactory.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="MyThirdSDL/Descriptors/Employee.cs">
     <Files>
-      <File FileName="MyThirdSDL/MainGame.cs" Line="153" Column="24" />
-      <File FileName="MyThirdSDL/Camera.cs" Line="34" Column="4" />
-      <File FileName="MyThirdSDL/UserInterface/UserInterfaceManager.cs" Line="136" Column="3" />
-      <File FileName="MyThirdSDL/SimulationManager.cs" Line="47" Column="23" />
-      <File FileName="MyThirdSDL/UserInterface/ControlFactory.cs" Line="1" Column="1" />
-      <File FileName="MyThirdSDL/Descriptors/Agent.cs" Line="1" Column="1" />
-      <File FileName="MyThirdSDL/Descriptors/JobFactory.cs" Line="1" Column="1" />
-      <File FileName="MyThirdSDL/ContentManager.cs" Line="1" Column="1" />
-      <File FileName="MyThirdSDL/Descriptors/AgentFactory.cs" Line="40" Column="1" />
+      <File FileName="MyThirdSDL/Descriptors/Employee.cs" Line="99" Column="41" />
+      <File FileName="MyThirdSDL/Descriptors/Equipment.cs" Line="10" Column="41" />
+      <File FileName="MyThirdSDL/Descriptors/Necessities.cs" Line="100" Column="58" />
+      <File FileName="MyThirdSDL/MainGame.cs" Line="158" Column="28" />
+      <File FileName="MyThirdSDL/UserInterface/UserInterfaceManager.cs" Line="106" Column="131" />
+      <File FileName="MyThirdSDL/Descriptors/SnackMachine.cs" Line="24" Column="4" />
+      <File FileName="MyThirdSDL/SimulationManager.cs" Line="40" Column="3" />
+      <File FileName="MyThirdSDL/SimulationMessage.cs" Line="10" Column="3" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>

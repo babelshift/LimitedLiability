@@ -59,11 +59,6 @@ namespace MyThirdSDL.Descriptors
 			private set { thirstRating = (double)value; }
 		}
 
-		private Rating GetRatingFromDouble(double rating)
-		{
-			return (Rating)((int)Math.Round(rating));
-		}
-
 		public Necessities(Rating blanketRating)
 		{
 			Sleep = blanketRating;
@@ -82,44 +77,48 @@ namespace MyThirdSDL.Descriptors
 			Thirst = thirst;
 		}
 
-		public void AdjustSleep(double sleepRating)
+		public void AdjustSleep(double sleepRatingAdjustment)
 		{
-			if (this.sleepRating + sleepRating > 0)
-				this.sleepRating += sleepRating;
-			else
-				this.sleepRating = 0.0;
+			this.sleepRating = AdjustRating(this.sleepRating, sleepRatingAdjustment);
 		}
 
-		public void AdjustHealth(double healthRating)
+		public void AdjustHealth(double healthRatingAdjustment)
 		{
-			if (this.healthRating + healthRating > 0)
-				this.healthRating += healthRating;
-			else
-				this.healthRating = 0.0;
+			this.healthRating = AdjustRating(this.healthRating, healthRatingAdjustment);
 		}
 
-		public void AdjustHygiene(double hygieneRating)
+		public void AdjustHygiene(double hygieneRatingAdjustment)
 		{
-			if (this.hygieneRating + hygieneRating > 0)
-				this.hygieneRating += hygieneRating;
-			else
-				this.hygieneRating = 0.0;
+			this.hygieneRating = AdjustRating(this.hygieneRating, hygieneRatingAdjustment);
 		}
 
-		public void AdjustHunger(double hungerRating)
+		public void AdjustHunger(double hungerRatingAdjustment)
 		{
-			if (this.hungerRating + hungerRating > 0)
-				this.hungerRating += hungerRating;
-			else
-				this.hungerRating = 0.0;
+			this.hungerRating = AdjustRating(this.hungerRating, hungerRatingAdjustment);
 		}
 
-		public void AdjustThirst(double thirstRating)
+		public void AdjustThirst(double thirstRatingAdjustment)
 		{
-			if (this.thirstRating + thirstRating > 0)
-				this.thirstRating += thirstRating;
+			this.thirstRating = AdjustRating(this.thirstRating, thirstRatingAdjustment);
+		}
+
+		private double AdjustRating(double currentRating, double ratingAdjustment)
+		{
+			double possibleReturnValue = currentRating + ratingAdjustment;
+
+			if (possibleReturnValue >= 0.0 && possibleReturnValue <= 10.0)
+				return possibleReturnValue;
+			else if (possibleReturnValue <= 0.0)
+				return 0.0;
+			else if (possibleReturnValue >= 10.0)
+				return 10.0;
 			else
-				this.thirstRating = 0.0;
+				throw new Exception(String.Format("The rating value was adjusted to a position that has confused the simulation. Value is: {0}", possibleReturnValue));
+		}
+
+		private Rating GetRatingFromDouble(double rating)
+		{
+			return (Rating)((int)Math.Round(rating));
 		}
 	}
 }
