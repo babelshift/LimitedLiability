@@ -148,45 +148,77 @@ namespace MyThirdSDL
 
 		#region Employee Events
 
-		private void HandleEmployeeIsUnhappy (object sender, EventArgs e)
+		private Employee GetEmployeeFromEventSender(object sender)
 		{
-			// pass message to UI
-			if (sender is Employee)
-			{
-				var employee = sender as Employee;
-				SimulationMessage message = new SimulationMessage(employee.ProjectedPosition, String.Format("{0} is unhappy!", employee.FullName));
-				userInterfaceManager.AddMessage(message);
-			}
+			var employee = sender as Employee;
+			if (employee == null)
+				throw new ArgumentException("HandleEmployeeIsUnhappy handler can only work with Employee objects");
+			return employee;
 		}
 
-		private void HandleEmployeeNeedsOfficeDesk (object sender, EventArgs e)
+		private SimulationMessage CreateSimulationMessage(Vector messagePosition, string messageText)
 		{
-			// pass message to UI
+			SimulationMessage simulationMessage = new SimulationMessage(messagePosition, messageText);
+			return simulationMessage;
 		}
 
-		private void HandleEmployeeIsUnhealthy (object sender, EventArgs e)
+		private void SendEmployeeMessageToUserInterface(Employee employee, string messageText)
 		{
-			// pass message to UI
+			var message = CreateSimulationMessage(employee.ProjectedPosition, messageText);
+			userInterfaceManager.AddMessage(message);
 		}
 
-		private void HandleEmployeeIsSleepy (object sender, EventArgs e)
+		private void HandleEmployeeIsUnhappy(object sender, EventArgs e)
 		{
-			// pass message to UI
+			var employee = GetEmployeeFromEventSender(sender);
+
+			// send a message to the UI
+			SendEmployeeMessageToUserInterface(employee, String.Format("{0} is unhappy!", employee.FullName));
 		}
 
-		private void HandleEmployeeIsThirsty (object sender, EventArgs e)
+		private void HandleEmployeeNeedsOfficeDesk(object sender, EventArgs e)
 		{
-			// pass message to UI
+			var employee = GetEmployeeFromEventSender(sender);
+			SendEmployeeMessageToUserInterface(employee, String.Format("{0} needs and office desk to work!", employee.FullName));
 		}
 
-		private void HandleEmployeeIsHungry (object sender, EventArgs e)
+		private void HandleEmployeeIsUnhealthy(object sender, EventArgs e)
 		{
-			// pass message to UI
+			var employee = GetEmployeeFromEventSender(sender);
+			SendEmployeeMessageToUserInterface(employee, String.Format("{0} is unhealthy!", employee.FullName));
 		}
 
-		private void HandleEmployeeIsDirty (object sender, EventArgs e)
+		private void HandleEmployeeIsSleepy(object sender, EventArgs e)
 		{
-			// pass message to UI
+			var employee = GetEmployeeFromEventSender(sender);
+			SendEmployeeMessageToUserInterface(employee, String.Format("{0} is sleepy!", employee.FullName));
+		}
+
+		private void HandleEmployeeIsThirsty(object sender, EventArgs e)
+		{
+			var employee = GetEmployeeFromEventSender(sender);
+
+			// send message to the UI
+			SendEmployeeMessageToUserInterface(employee, String.Format("{0} is thirsty!", employee.FullName));
+
+			// get the list of soda machines currently registered with the simulation
+			var sodaMachines = simulationManager.GetAgentsInSimulationByType<SodaMachine>();
+
+			// find the best path to the closest soda machine to the employee and set the employee on his way towards that soda machine
+			var bestPathToClosestSodaMachine = tiledMap.GetBestPathToClosestAgentByType(employee, sodaMachines);
+			employee.SetPath(bestPathToClosestSodaMachine, true);
+		}
+
+		private void HandleEmployeeIsHungry(object sender, EventArgs e)
+		{
+			var employee = GetEmployeeFromEventSender(sender);
+			SendEmployeeMessageToUserInterface(employee, String.Format("{0} is hungry!", employee.FullName));
+		}
+
+		private void HandleEmployeeIsDirty(object sender, EventArgs e)
+		{
+			var employee = GetEmployeeFromEventSender(sender);
+			SendEmployeeMessageToUserInterface(employee, String.Format("{0} is dirty!", employee.FullName));
 		}
 
 		#endregion
@@ -206,7 +238,9 @@ namespace MyThirdSDL
 			tiledMap = new TiledMap(mapPath, Renderer);
 
 			employee = agentFactory.CreateEmployee(TimeSpan.Zero, new Vector(100, 100));
+			var sodaMachine = agentFactory.CreateSodaMachine(TimeSpan.Zero, new Vector(380, 415));
 			simulationManager.AddAgent(employee);
+			simulationManager.AddAgent(sodaMachine);
 
 			Surface tileHighlightSurface = new Surface(tileHighlightTexturePath, Surface.SurfaceType.PNG);
 			tileHighlightImage = new Image(Renderer, tileHighlightSurface, Image.ImageFormat.PNG);
@@ -226,7 +260,7 @@ namespace MyThirdSDL
 			purchasableItems.Add(agentFactory.CreateSodaMachine(TimeSpan.Zero));
 			purchasableItems.Add(agentFactory.CreateWaterFountain(TimeSpan.Zero));
 			userInterfaceManager = new UserInterfaceManager(Renderer, contentManager, new Point(SCREEN_WIDTH, SCREEN_HEIGHT), purchasableItems);
-   		}
+		}
 
 		/// <summary>
 		/// Update the game state such as positions, health, power ups, ammo, and anything else that is used
@@ -359,7 +393,7 @@ namespace MyThirdSDL
 				try
 				{
 					Queue<MapObject> bestPath = tiledMap.FindBestPath(employee.WorldGridIndex, roundedMouseClickIndex);
-					employee.SetPath(bestPath);
+					employee.SetPath(bestPath, false);
 				}
 				catch
 				{
@@ -367,7 +401,6 @@ namespace MyThirdSDL
 				}
 			}
 		}
-
 
 		/// <summary>
 		/// Unload any content that was used during the update/draw game loop. If you load anything that uses native SDL structures such

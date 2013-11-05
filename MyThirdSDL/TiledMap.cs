@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using MyThirdSDL.Descriptors;
 
 namespace MyThirdSDL
 {
@@ -500,7 +501,7 @@ namespace MyThirdSDL
 		/// </summary>
 		/// <param name="worldGridIndex"></param>
 		/// <returns></returns>
-		public MapObject GetPathNodeAtWorldGridIndex(Vector worldGridIndex)
+		private MapObject GetPathNodeAtWorldGridIndex(Vector worldGridIndex)
 		{
 			IEnumerable<MapObjectLayer> pathNodeLayers = mapObjectLayers.Where(mol => mol.Type == MapObjectLayerType.PathNode);
 			foreach (var pathNodeLayer in pathNodeLayers)
@@ -573,6 +574,36 @@ namespace MyThirdSDL
 			}
 
 			return null;
+		}
+
+		public Queue<MapObject> GetBestPathToClosestAgentByType<T>(Employee employee, IEnumerable<T> agentsToCheck)
+			where T : Agent
+		{
+			var employeeWorldIndex = employee.WorldGridIndex;
+			var employeeOnPathNode = GetPathNodeAtWorldGridIndex(employeeWorldIndex);
+
+			if (agentsToCheck.Count() > 0)
+			{
+				// calculate the closest snack machine's manhatten distance
+				double minimumManhattenDistance = Int32.MaxValue;
+				Vector closestAgentToCheckWorldIndex = Vector.Zero;
+				foreach (var agentToCheck in agentsToCheck)
+				{
+					var agentToFindWorldIndex = agentToCheck.WorldGridIndex;
+					var agentOnPathNode = GetPathNodeAtWorldGridIndex(agentToFindWorldIndex);
+					double manhattenDistance = ManhattanDistance(employeeOnPathNode, agentOnPathNode);
+					if (manhattenDistance < minimumManhattenDistance)
+					{
+						minimumManhattenDistance = manhattenDistance;
+						closestAgentToCheckWorldIndex = agentToFindWorldIndex;
+					}
+				}
+				// tell the agent to path to the closest soda machine (or random if a tie)
+				Queue<MapObject> bestPath = FindBestPath(employee.WorldGridIndex, closestAgentToCheckWorldIndex);
+				return bestPath;
+			}
+			else
+				return new Queue<MapObject>();
 		}
 
 		/// <summary>

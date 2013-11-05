@@ -48,8 +48,11 @@ namespace MyThirdSDL.Descriptors
 
 		#region Movement
 
-		public void SetPath(Queue<MapObject> pathNodes)
+		public void SetPath(Queue<MapObject> pathNodes, bool cancelPreviousPath)
 		{
+			if (cancelPreviousPath)
+				this.pathNodes.Clear();
+
 			if (this.pathNodes == null)
 				this.pathNodes = pathNodes;
 		}

@@ -127,5 +127,11 @@ namespace MyThirdSDL
 					agents.Remove(agent);
 			}
 		}
+	
+		public IEnumerable<T> GetAgentsInSimulationByType<T>()
+			where T : Agent
+		{
+			return agents.Where(a => a.GetType() == typeof(T)).Cast<T>();
+		}
 	}
 }

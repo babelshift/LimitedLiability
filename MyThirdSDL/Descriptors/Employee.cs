@@ -70,6 +70,8 @@ namespace MyThirdSDL.Descriptors
 			AssignedOfficeDesk = officeDesk;
 		}
 
+		private double necessityDecayRate = -0.01;
+
 		public override void Update(GameTime gameTime)
 		{
 			// as time goes on
@@ -78,11 +80,11 @@ namespace MyThirdSDL.Descriptors
 			// we need to slowly increase thirst
 			// we need to slowly reduce hygiene
 			// we need to slowly reduce health / fitness
-			Necessities.AdjustSleep(-0.001);
-			Necessities.AdjustHunger(-0.001);
-			Necessities.AdjustThirst(-0.001);
-			Necessities.AdjustHygiene(-0.001);
-			Necessities.AdjustHealth(-0.001);
+			Necessities.AdjustSleep(necessityDecayRate);
+			Necessities.AdjustHunger(necessityDecayRate);
+			Necessities.AdjustThirst(necessityDecayRate);
+			Necessities.AdjustHygiene(necessityDecayRate);
+			Necessities.AdjustHealth(necessityDecayRate);
 
 			// if hungry, find vending machine / lunch room, eat
 			if (Necessities.Hunger < Necessities.Rating.Neutral)
