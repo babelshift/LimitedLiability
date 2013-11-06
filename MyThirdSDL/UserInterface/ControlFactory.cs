@@ -195,6 +195,12 @@ namespace MyThirdSDL.UserInterface
 			return new Label(position, trueTypeText);
 		}
 
+		public SimulationLabel CreateSimulationLabel(Vector position, string fontPath, int fontSize, Color color, SimulationMessage simulationMessage)
+		{
+			TrueTypeText trueTypeText = TrueTypeTextFactory.CreateTrueTypeText(renderer, fontPath, fontSize, color, simulationMessage.Text);
+			return new SimulationLabel(position, trueTypeText, simulationMessage);
+		}
+
 		public Tooltip CreateTooltip(Vector position, string tooltipFrameTexturePathKey, string labelFontPath, 
 			int labelFontSize, Color labelColor, string labelText)
 		{

@@ -118,6 +118,8 @@
     <Compile Include="Descriptors\OfficeDesk.cs" />
     <Compile Include="EventHelper.cs" />
     <Compile Include="SimulationMessage.cs" />
+    <Compile Include="SimulationMessageFactory.cs" />
+    <Compile Include="UserInterface\SimulationLabel.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

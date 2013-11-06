@@ -32,25 +32,21 @@ namespace MyThirdSDL.UserInterface
 	{
 		private Point bottomRightPointOfWindow;
 		private ControlFactory controlFactory;
+		private ContentManager contentManager;
 
 		#region Diagnostic Items
 
-		private List<Label> diagnosticLabels = new List<Label>();
 		private Label labelMousePositionAbsolute;
 		private Label labelMousePositionIsometric;
 		private Label labelSimulationTime;
-		private Label labelWorldGridIndex;
-
 		private Label labelEmployeeHealthRaw;
 		private Label labelEmployeeHealthRating;
-
-		private Label labelEmployeeMessages;
 
 		#endregion
 
 		#region Message List
 
-		private List<string> messages = new List<string>();
+		private Dictionary<Guid, List<SimulationLabel>> labelMessagesForAgents = new Dictionary<Guid, List<SimulationLabel>>();
 
 		#endregion
 
@@ -69,14 +65,26 @@ namespace MyThirdSDL.UserInterface
 
 		#endregion
 
+		/// <summary>
+		/// Gets the mouse mode.
+		/// </summary>
+		/// <value>The mouse mode.</value>
 		public MouseModeType MouseMode { get; private set; }
 
 		#region Constructors
 
+		/// <summary>
+		/// Initializes a new instance of the <see cref="MyThirdSDL.UserInterface.UserInterfaceManager"/> class.
+		/// </summary>
+		/// <param name="renderer">Renderer.</param>
+		/// <param name="contentManager">Content manager.</param>
+		/// <param name="bottomRightPointOfWindow">Bottom right point of window.</param>
+		/// <param name="purchasableItems">Purchasable items.</param>
 		public UserInterfaceManager(Renderer renderer, ContentManager contentManager, Point bottomRightPointOfWindow, IEnumerable<IPurchasable> purchasableItems)
 		{
 			this.bottomRightPointOfWindow = bottomRightPointOfWindow;
 			this.purchasableItems = purchasableItems;
+			this.contentManager = contentManager;
 
 			MouseMode = MouseModeType.SelectGeneral;
 
@@ -92,9 +100,9 @@ namespace MyThirdSDL.UserInterface
 			toolboxTray.ButtonProductsClicked += ToolboxTray_ButtonProductsClicked;
 			toolboxTray.ButtonMainMenuClicked += ToolboxTray_ButtonMainMenuClicked;
 
-			string fontPath = contentManager.GetContentPath("Arcade");
-			Color fontColor = new Color(255, 165, 0);
-			int fontSizeContent = 16;
+			Color fontColor;
+			int fontSizeContent;
+			var fontPath = GetLabelFontDetails(contentManager, out fontColor, out fontSizeContent);
 
 			labelMousePositionAbsolute = controlFactory.CreateLabel(Vector.Zero, fontPath, fontSizeContent, fontColor, ".");
 			labelMousePositionIsometric = controlFactory.CreateLabel(Vector.Zero + new Vector(0, 18), fontPath, fontSizeContent, fontColor, ".");
@@ -102,19 +110,83 @@ namespace MyThirdSDL.UserInterface
 
 			labelEmployeeHealthRaw = controlFactory.CreateLabel(Vector.Zero + new Vector(0, 54), fontPath, fontSizeContent, fontColor, ".");
 			labelEmployeeHealthRating = controlFactory.CreateLabel(Vector.Zero + new Vector(0, 72), fontPath, fontSizeContent, fontColor, ".");
+		}
 
-			labelEmployeeMessages = controlFactory.CreateLabel(Vector.Zero + new Vector(0, 90), fontPath, fontSizeContent, fontColor, "NULL");
+		/// <summary>
+		/// Gets the label font details.
+		/// </summary>
+		/// <returns>The label font details.</returns>
+		/// <param name="contentManager">Content manager.</param>
+		/// <param name="fontColor">Font color.</param>
+		/// <param name="fontSizeContent">Font size content.</param>
+		private string GetLabelFontDetails(ContentManager contentManager, out Color fontColor, out int fontSizeContent)
+		{
+			string fontPath = contentManager.GetContentPath("Arcade");
+			fontColor = new Color(255, 165, 0);
+			fontSizeContent = 16;
+			return fontPath;
 		}
 
 		#endregion
 
 		#region Message Events
 
-		public void AddMessage(SimulationMessage message)
+		/// <summary>
+		/// Adds the message passed message to the agent's message collection identified byt he passed agent id.
+		/// </summary>
+		/// <param name="agentId">Agent identifier.</param>
+		/// <param name="message">Message.</param>
+		public void AddMessage(Guid agentId, SimulationMessage message)
 		{
-//			if(!messages.Contains(message))
-//				messages.Add(messages);
-			labelEmployeeMessages.Text = message.Text;
+			Color fontColor;
+			int fontSizeContent;
+			var fontPath = GetLabelFontDetails(contentManager, out fontColor, out fontSizeContent);
+
+			var labelMessagesForAgent = GetMessagesByAgentId(agentId);
+
+			// if there isn't already a message of this type in this agent's collection, then add the message
+			if (!AnyMessagesWithTypeForAgent(labelMessagesForAgent, message.Type))
+			{
+				int messageOffsetY = ((labelMessagesForAgent.Count() + 1) * 18) + 72;
+				var labelMessage = controlFactory.CreateSimulationLabel(Vector.Zero + new Vector(0, messageOffsetY), fontPath, fontSizeContent, fontColor, message);
+				labelMessagesForAgent.Add(labelMessage);
+			}
+		}
+
+		/// <summary>
+		/// Determines whether the passed message collection contains any messages with the passed message type.
+		/// </summary>
+		/// <returns><c>true</c> if the passed message collection contains any messages with the passed message type; otherwise, <c>false</c>.</returns>
+		/// <param name="messages">Messages.</param>
+		/// <param name="type">Type.</param>
+		private bool AnyMessagesWithTypeForAgent(IEnumerable<SimulationLabel> messages, SimulationMessage.MessageType type)
+		{
+			if (messages.Any(m => m.SimulationMessage.Type == type))
+				return true;
+			else
+				return false;
+		}
+
+		/// <summary>
+		/// Gets the messages by agent identifier.
+		/// </summary>
+		/// <returns>The messages by agent identifier.</returns>
+		/// <param name="agentId">Agent identifier.</param>
+		private IList<SimulationLabel> GetMessagesByAgentId(Guid agentId)
+		{
+			List<SimulationLabel> labelMessagesForAgent = new List<SimulationLabel>();
+
+			// try to get existing message list for the passed agent id
+			bool success = labelMessagesForAgents.TryGetValue(agentId, out labelMessagesForAgent);
+
+			// if we don't yet have any messages for this agent, create a spot in the dictionary for this agent
+			if (!success)
+			{
+				labelMessagesForAgent = new List<SimulationLabel>();
+				labelMessagesForAgents.Add(agentId, labelMessagesForAgent);
+			}
+
+			return labelMessagesForAgent;
 		}
 
 		#endregion
@@ -201,16 +273,32 @@ namespace MyThirdSDL.UserInterface
 			labelMousePositionAbsolute.Draw(gameTime, renderer);
 			labelMousePositionIsometric.Draw(gameTime, renderer);
 			labelSimulationTime.Draw(gameTime, renderer);
-
 			labelEmployeeHealthRating.Draw(gameTime, renderer);
 			labelEmployeeHealthRaw.Draw(gameTime, renderer);
 
-			labelEmployeeMessages.Draw(gameTime, renderer);
+			DrawAgentMessages(gameTime, renderer);
 
 			toolboxTray.Draw(gameTime, renderer);
 
 			if (isEquipmentMenuOpen)
 				menuEquipment.Draw(gameTime, renderer);
+		}
+
+		/// <summary>
+		/// Draws the agent messages.
+		/// </summary>
+		/// <param name="gameTime">Game time.</param>
+		/// <param name="renderer">Renderer.</param>
+		private void DrawAgentMessages(GameTime gameTime, Renderer renderer)
+		{
+			foreach (var agentId in labelMessagesForAgents.Keys)
+			{
+				List<SimulationLabel> labelMessagesForAgent = new List<SimulationLabel>();
+				bool success = labelMessagesForAgents.TryGetValue(agentId, out labelMessagesForAgent);
+				if (success)
+					foreach (var labelMessage in labelMessagesForAgent)
+						labelMessage.Draw(gameTime, renderer);
+			}
 		}
 
 		#endregion

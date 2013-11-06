@@ -152,20 +152,14 @@ namespace MyThirdSDL
 		{
 			var employee = sender as Employee;
 			if (employee == null)
-				throw new ArgumentException("HandleEmployeeIsUnhappy handler can only work with Employee objects");
+				throw new ArgumentException("HandleEmployee handlers can only work with Employee objects!");
 			return employee;
 		}
 
-		private SimulationMessage CreateSimulationMessage(Vector messagePosition, string messageText)
+		private void SendEmployeeMessageToUserInterface(Employee employee, string messageText, SimulationMessage.MessageType messageType)
 		{
-			SimulationMessage simulationMessage = new SimulationMessage(messagePosition, messageText);
-			return simulationMessage;
-		}
-
-		private void SendEmployeeMessageToUserInterface(Employee employee, string messageText)
-		{
-			var message = CreateSimulationMessage(employee.ProjectedPosition, messageText);
-			userInterfaceManager.AddMessage(message);
+			var message = SimulationMessageFactory.Create(employee.ProjectedPosition, messageText, messageType);
+			userInterfaceManager.AddMessage(employee.ID, message);
 		}
 
 		private void HandleEmployeeIsUnhappy(object sender, EventArgs e)
@@ -173,25 +167,25 @@ namespace MyThirdSDL
 			var employee = GetEmployeeFromEventSender(sender);
 
 			// send a message to the UI
-			SendEmployeeMessageToUserInterface(employee, String.Format("{0} is unhappy!", employee.FullName));
+			SendEmployeeMessageToUserInterface(employee, String.Format("{0} is unhappy!", employee.FullName), SimulationMessage.MessageType.EmployeeIsUnhappy);
 		}
 
 		private void HandleEmployeeNeedsOfficeDesk(object sender, EventArgs e)
 		{
 			var employee = GetEmployeeFromEventSender(sender);
-			SendEmployeeMessageToUserInterface(employee, String.Format("{0} needs and office desk to work!", employee.FullName));
+			SendEmployeeMessageToUserInterface(employee, String.Format("{0} needs and office desk to work!", employee.FullName), SimulationMessage.MessageType.EmployeeNeedsDesk);
 		}
 
 		private void HandleEmployeeIsUnhealthy(object sender, EventArgs e)
 		{
 			var employee = GetEmployeeFromEventSender(sender);
-			SendEmployeeMessageToUserInterface(employee, String.Format("{0} is unhealthy!", employee.FullName));
+			SendEmployeeMessageToUserInterface(employee, String.Format("{0} is unhealthy!", employee.FullName), SimulationMessage.MessageType.EmployeeIsUnhealthy);
 		}
 
 		private void HandleEmployeeIsSleepy(object sender, EventArgs e)
 		{
 			var employee = GetEmployeeFromEventSender(sender);
-			SendEmployeeMessageToUserInterface(employee, String.Format("{0} is sleepy!", employee.FullName));
+			SendEmployeeMessageToUserInterface(employee, String.Format("{0} is sleepy!", employee.FullName), SimulationMessage.MessageType.EmployeeIsSleepy);
 		}
 
 		private void HandleEmployeeIsThirsty(object sender, EventArgs e)
@@ -199,7 +193,7 @@ namespace MyThirdSDL
 			var employee = GetEmployeeFromEventSender(sender);
 
 			// send message to the UI
-			SendEmployeeMessageToUserInterface(employee, String.Format("{0} is thirsty!", employee.FullName));
+			SendEmployeeMessageToUserInterface(employee, String.Format("{0} is thirsty!", employee.FullName), SimulationMessage.MessageType.EmployeeIsThirsty);
 
 			// get the list of soda machines currently registered with the simulation
 			var sodaMachines = simulationManager.GetAgentsInSimulationByType<SodaMachine>();
@@ -213,13 +207,13 @@ namespace MyThirdSDL
 		private void HandleEmployeeIsHungry(object sender, EventArgs e)
 		{
 			var employee = GetEmployeeFromEventSender(sender);
-			SendEmployeeMessageToUserInterface(employee, String.Format("{0} is hungry!", employee.FullName));
+			SendEmployeeMessageToUserInterface(employee, String.Format("{0} is hungry!", employee.FullName), SimulationMessage.MessageType.EmployeeIsHungry);
 		}
 
 		private void HandleEmployeeIsDirty(object sender, EventArgs e)
 		{
 			var employee = GetEmployeeFromEventSender(sender);
-			SendEmployeeMessageToUserInterface(employee, String.Format("{0} is dirty!", employee.FullName));
+			SendEmployeeMessageToUserInterface(employee, String.Format("{0} is dirty!", employee.FullName), SimulationMessage.MessageType.EmployeeIsDirty);
 		}
 
 		#endregion
