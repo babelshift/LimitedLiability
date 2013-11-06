@@ -81,7 +81,7 @@ namespace MyThirdSDL
 				mouseClickPositionWorldGridIndex = mousePositionWorldGridIndex;
 				mouseClickWorldPosition = new Vector(e.RelativeToWindowX, e.RelativeToWindowY);
 
-				DetermineBestPathForEmployee();
+				//DetermineBestPathForEmployee();
 			}
 		}
 
@@ -205,8 +205,9 @@ namespace MyThirdSDL
 			var sodaMachines = simulationManager.GetAgentsInSimulationByType<SodaMachine>();
 
 			// find the best path to the closest soda machine to the employee and set the employee on his way towards that soda machine
-			var bestPathToClosestSodaMachine = tiledMap.GetBestPathToClosestAgentByType(employee, sodaMachines);
-			employee.SetPath(bestPathToClosestSodaMachine, true);
+			var sodaMachine = tiledMap.GetClosestAgentByType<SodaMachine>(employee, sodaMachines);
+			var bestPathToClosestSodaMachine = tiledMap.GetBestPathToAgent(employee, sodaMachine);
+			employee.WalkOnPathTowardsAgent(bestPathToClosestSodaMachine, sodaMachine);
 		}
 
 		private void HandleEmployeeIsHungry(object sender, EventArgs e)
@@ -385,22 +386,22 @@ namespace MyThirdSDL
 		/// between the employee's current position and the clicked position. Uses the A* algorithm to determine said best path. If no path can be found, an exception
 		/// is thrown. This will occur if the user clicks outside the bounds of the map or on a collidable tile in which the employee cannot navigate.
 		/// </summary>
-		private void DetermineBestPathForEmployee()
-		{
-			if (mousePositionWorldGridIndex != CoordinateHelper.DefaultVector)
-			{
-				Vector roundedMouseClickIndex = new Vector((int)(Math.Round(mousePositionWorldGridIndex.X)), (int)(Math.Round(mousePositionWorldGridIndex.Y)));
-				try
-				{
-					Queue<MapObject> bestPath = tiledMap.FindBestPath(employee.WorldGridIndex, roundedMouseClickIndex);
-					employee.SetPath(bestPath, false);
-				}
-				catch
-				{
-					/*					 show error somewhere, we have chosen an invalid location */
-				}
-			}
-		}
+//		private void DetermineBestPathForEmployee()
+//		{
+//			if (mousePositionWorldGridIndex != CoordinateHelper.DefaultVector)
+//			{
+//				Vector roundedMouseClickIndex = new Vector((int)(Math.Round(mousePositionWorldGridIndex.X)), (int)(Math.Round(mousePositionWorldGridIndex.Y)));
+//				try
+//				{
+//					Queue<MapObject> bestPath = tiledMap.FindBestPath(employee.WorldGridIndex, roundedMouseClickIndex);
+//					employee.WalkOnPath(bestPath);
+//				}
+//				catch
+//				{
+//					/*					 show error somewhere, we have chosen an invalid location */
+//				}
+//			}
+//		}
 
 		/// <summary>
 		/// Unload any content that was used during the update/draw game loop. If you load anything that uses native SDL structures such

@@ -150,9 +150,13 @@ namespace MyThirdSDL
 		private List<Tile> tiles = new List<Tile>();
 
 		public string Name { get; private set; }
+
 		public TileLayerType Type { get; private set; }
+
 		public int Width { get; private set; }
+
 		public int Height { get; private set; }
+
 		public IList<Tile> Tiles { get { return tiles; } }
 
 		public TileLayer(string name, int width, int height)
@@ -197,8 +201,11 @@ namespace MyThirdSDL
 		private List<MapObject> neighbors = new List<MapObject>();
 
 		public string Name { get; private set; }
+
 		public MapObjectType Type { get; private set; }
+
 		public Rectangle Bounds { get; set; }
+
 		/// <summary>
 		/// World position is the position within world space that the object exists. This position is defined within the .tmx tiled map file. When in isometric,
 		/// it seems that the first rows of the collection are actually shifted by -32 in both X and Y directions.
@@ -213,7 +220,9 @@ namespace MyThirdSDL
 		///		The tile at [1,0] will be positioned (when shifted) at [32, 0].
 		/// </summary>
 		public Vector WorldPosition { get { return new Vector(Bounds.X + Bounds.Width, Bounds.Y + Bounds.Height); } }
+
 		public Orientation Orientation { get; set; }
+
 		public Rectangle CollisionBox { get { return Bounds; } }
 
 		public Vector WorldGridIndex
@@ -238,11 +247,13 @@ namespace MyThirdSDL
 			Orientation = orientation;
 		}
 
-		public void ResolveCollision(ICollidable i) { }
+		public void ResolveCollision(ICollidable i)
+		{
+		}
 
 		public void AddNeighbor(MapObject mapObject)
 		{
-			if(mapObject != null)
+			if (mapObject != null)
 				neighbors.Add(mapObject);
 		}
 	}
@@ -252,7 +263,9 @@ namespace MyThirdSDL
 		private List<MapObject> mapObjects = new List<MapObject>();
 
 		public string Name { get; private set; }
+
 		public MapObjectLayerType Type { get; private set; }
+
 		public IEnumerable<MapObject> MapObjects { get { return mapObjects; } }
 
 		public MapObjectLayer(string name, MapObjectLayerType type)
@@ -302,6 +315,7 @@ namespace MyThirdSDL
 		public int TileHeight { get; private set; }
 
 		public IEnumerable<TileLayer> TileLayers { get { return tileLayers; } }
+
 		public IEnumerable<MapObjectLayer> MapObjectLayers { get { return mapObjectLayers; } }
 
 		/// <summary>Default constructor creates a map from a .tmx file and creates any associated tileset textures by using the passed renderer.
@@ -473,10 +487,10 @@ namespace MyThirdSDL
 						if (mapOrientation == Orientation.Isometric)
 						{
 							Vector screenPosition = CoordinateHelper.WorldGridIndexToScreenSpace(
-								x, y, TileWidth / 2, TileHeight,
-								CoordinateHelper.ScreenOffset,
-								CoordinateHelper.ScreenProjectionType.Isometric
-							);
+								                        x, y, TileWidth / 2, TileHeight,
+								                        CoordinateHelper.ScreenOffset,
+								                        CoordinateHelper.ScreenProjectionType.Isometric
+							                        );
 
 							projectedPosition = new Vector(screenPosition.X, screenPosition.Y);
 							worldPosition = new Vector(x * TileWidth / 2, y * TileHeight);
@@ -576,7 +590,7 @@ namespace MyThirdSDL
 			return null;
 		}
 
-		public Queue<MapObject> GetBestPathToClosestAgentByType<T>(Employee employee, IEnumerable<T> agentsToCheck)
+		public T GetClosestAgentByType<T>(Employee employee, IEnumerable<T> agentsToCheck)
 			where T : Agent
 		{
 			var employeeWorldIndex = employee.WorldGridIndex;
@@ -586,7 +600,8 @@ namespace MyThirdSDL
 			{
 				// calculate the closest snack machine's manhatten distance
 				double minimumManhattenDistance = Int32.MaxValue;
-				Vector closestAgentToCheckWorldIndex = Vector.Zero;
+				T closestAgent = null;
+
 				foreach (var agentToCheck in agentsToCheck)
 				{
 					var agentToFindWorldIndex = agentToCheck.WorldGridIndex;
@@ -595,15 +610,22 @@ namespace MyThirdSDL
 					if (manhattenDistance < minimumManhattenDistance)
 					{
 						minimumManhattenDistance = manhattenDistance;
-						closestAgentToCheckWorldIndex = agentToFindWorldIndex;
+						closestAgent = agentToCheck;
 					}
 				}
-				// tell the agent to path to the closest soda machine (or random if a tie)
-				Queue<MapObject> bestPath = FindBestPath(employee.WorldGridIndex, closestAgentToCheckWorldIndex);
-				return bestPath;
+
+				return closestAgent;
 			}
 			else
-				return new Queue<MapObject>();
+				return null;
+		}
+
+		public Queue<MapObject> GetBestPathToAgent<T>(Employee employee, T agent)
+			where T : Agent
+		{
+			// tell the agent to path to the closest soda machine (or random if a tie)
+			Queue<MapObject> bestPath = FindBestPath(employee.WorldGridIndex, agent.WorldGridIndex);
+			return bestPath;
 		}
 
 		/// <summary>
@@ -652,5 +674,6 @@ namespace MyThirdSDL
 		}
 
 		#endregion
+
 	}
 }

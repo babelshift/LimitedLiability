@@ -8,6 +8,16 @@ namespace MyThirdSDL.Descriptors
 {
 	public class Necessities
 	{
+		public enum Type
+		{
+			Sleep,
+			Health,
+			Hygiene,
+			Hunger,
+			Thirst,
+			Happiness
+		}
+
 		public enum Rating
 		{
 			Critical = 0,

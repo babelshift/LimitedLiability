@@ -22,6 +22,8 @@ namespace MyThirdSDL.Descriptors
 
 		public Vector Speed { get; private set; }
 
+		public Agent WalkingTowardsAgent { get; private set; }
+
 		public MobileAgent(TimeSpan birthTime, string name, Texture texture, Vector startingPosition, Vector startingSpeed)
 			: base(birthTime, name, texture, startingPosition)
 		{
@@ -48,13 +50,14 @@ namespace MyThirdSDL.Descriptors
 
 		#region Movement
 
-		public void SetPath(Queue<MapObject> pathNodes, bool cancelPreviousPath)
+		public void WalkOnPathTowardsAgent(Queue<MapObject> pathNodes, Agent agent)
 		{
-			if (cancelPreviousPath)
-				this.pathNodes.Clear();
-
-			if (this.pathNodes == null)
+			// if we are not yet walking towards an agent, walk towards it!
+			if (WalkingTowardsAgent == null)
+			{
+				WalkingTowardsAgent = agent;
 				this.pathNodes = pathNodes;
+			}
 		}
 
 		private void Move(GameTime gameTime)
