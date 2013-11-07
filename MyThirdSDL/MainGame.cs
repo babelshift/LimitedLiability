@@ -144,6 +144,13 @@ namespace MyThirdSDL
 			simulationManager.EmployeeIsUnhappy += HandleEmployeeIsUnhappy;
 			simulationManager.EmployeeIsUnhealthy += HandleEmployeeIsUnhealthy;
 			simulationManager.EmployeeNeedsOfficeDesk += HandleEmployeeNeedsOfficeDesk;
+			simulationManager.EmployeeThirstSatisfied += HandleEmployeeThirstSatisfied;
+		}
+
+		private void HandleEmployeeThirstSatisfied (object sender, EventArgs e)
+		{
+			var employee = GetEmployeeFromEventSender(sender);
+			userInterfaceManager.RemoveMessage(employee.ID, SimulationMessage.MessageType.EmployeeIsThirsty);
 		}
 
 		#region Employee Events
@@ -165,8 +172,6 @@ namespace MyThirdSDL
 		private void HandleEmployeeIsUnhappy(object sender, EventArgs e)
 		{
 			var employee = GetEmployeeFromEventSender(sender);
-
-			// send a message to the UI
 			SendEmployeeMessageToUserInterface(employee, String.Format("{0} is unhappy!", employee.FullName), SimulationMessage.MessageType.EmployeeIsUnhappy);
 		}
 
@@ -191,17 +196,7 @@ namespace MyThirdSDL
 		private void HandleEmployeeIsThirsty(object sender, EventArgs e)
 		{
 			var employee = GetEmployeeFromEventSender(sender);
-
-			// send message to the UI
 			SendEmployeeMessageToUserInterface(employee, String.Format("{0} is thirsty!", employee.FullName), SimulationMessage.MessageType.EmployeeIsThirsty);
-
-			// get the list of soda machines currently registered with the simulation
-			var sodaMachines = simulationManager.GetAgentsInSimulationByType<SodaMachine>();
-
-			// find the best path to the closest soda machine to the employee and set the employee on his way towards that soda machine
-			var sodaMachine = tiledMap.GetClosestAgentByType<SodaMachine>(employee, sodaMachines);
-			var bestPathToClosestSodaMachine = tiledMap.GetBestPathToAgent(employee, sodaMachine);
-			employee.WalkOnPathTowardsAgent(bestPathToClosestSodaMachine, sodaMachine);
 		}
 
 		private void HandleEmployeeIsHungry(object sender, EventArgs e)
@@ -231,6 +226,7 @@ namespace MyThirdSDL
 			//string fontPath = contentManager.GetContentPath("Arcade");
 
 			tiledMap = new TiledMap(mapPath, Renderer);
+			simulationManager.CurrentMap = tiledMap;
 
 			employee = agentFactory.CreateEmployee(TimeSpan.Zero, new Vector(100, 100));
 			var sodaMachine = agentFactory.CreateSodaMachine(TimeSpan.Zero, new Vector(380, 415));

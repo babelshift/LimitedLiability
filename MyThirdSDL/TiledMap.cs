@@ -383,7 +383,6 @@ namespace MyThirdSDL
 					MapObject leftNeighbor = pathNodeLayer.GetMapObjectAtWorldGridIndex(leftNeighborIndex);
 					pathNode.AddNeighbor(leftNeighbor);
 
-
 					// get right neighbor
 					Vector rightNeighborIndex = new Vector(pathNodeWorldGridIndex.X + 1, pathNodeWorldGridIndex.Y);
 					MapObject rightNeighbor = pathNodeLayer.GetMapObjectAtWorldGridIndex(rightNeighborIndex);
@@ -515,7 +514,7 @@ namespace MyThirdSDL
 		/// </summary>
 		/// <param name="worldGridIndex"></param>
 		/// <returns></returns>
-		private MapObject GetPathNodeAtWorldGridIndex(Vector worldGridIndex)
+		public MapObject GetPathNodeAtWorldGridIndex(Vector worldGridIndex)
 		{
 			IEnumerable<MapObjectLayer> pathNodeLayers = mapObjectLayers.Where(mol => mol.Type == MapObjectLayerType.PathNode);
 			foreach (var pathNodeLayer in pathNodeLayers)
@@ -524,134 +523,6 @@ namespace MyThirdSDL
 						return pathNode;
 
 			throw new Exception(String.Format("No path node found at [{0},{1}]", worldGridIndex.X, worldGridIndex.Y));
-		}
-
-		/// <summary>
-		/// Finds the nodes at the passed world grid indices and returns a queue of map objects to travel along in order to get from start
-		/// to end.
-		/// </summary>
-		/// <param name="startWorldGridIndex"></param>
-		/// <param name="endWorldGridIndex"></param>
-		/// <returns></returns>
-		public Queue<MapObject> FindBestPath(Vector startWorldGridIndex, Vector endWorldGridIndex)
-		{
-			MapObject start = GetPathNodeAtWorldGridIndex(startWorldGridIndex);
-			MapObject end = GetPathNodeAtWorldGridIndex(endWorldGridIndex);
-			Path<MapObject> bestPath = FindPath<MapObject>(start, end, ExactDistance, ManhattanDistance);
-			IEnumerable<MapObject> bestPathReversed = bestPath.Reverse();
-			Queue<MapObject> result = new Queue<MapObject>();
-			foreach (var bestPathNode in bestPathReversed)
-				result.Enqueue(bestPathNode);
-			return result;
-		}
-
-		/// <summary>
-		/// An implementation of the A* path finding algorithm. Finds the best path betwen the passed start and end nodes while utilizing
-		/// the passed exact distance function and estimated heuristic distance function.
-		/// </summary>
-		/// <typeparam name="Node"></typeparam>
-		/// <param name="start"></param>
-		/// <param name="destination"></param>
-		/// <param name="distance"></param>
-		/// <param name="estimate"></param>
-		/// <returns></returns>
-		private Path<Node> FindPath<Node>(
-			Node start,							// starting node
-			Node destination,					// destination node
-			Func<Node, Node, double> distance,	// takes two nodes and calculates a distance cost between them
-			Func<Node, Node, double> estimate)		// takes a node and calculates an estimated distance between current node
-			where Node : IHasNeighbors<Node>
-		{
-			var closed = new HashSet<Node>();
-			var queue = new PriorityQueue<double, Path<Node>>();
-
-			queue.Enqueue(0, new Path<Node>(start));
-
-			while (!queue.IsEmpty)
-			{
-				var path = queue.Dequeue();
-
-				if (closed.Contains(path.LastStep))
-					continue;
-
-				if (path.LastStep.Equals(destination))
-					return path;
-
-				closed.Add(path.LastStep);
-
-				foreach (Node n in path.LastStep.Neighbors)
-				{
-					double d = distance(path.LastStep, n);
-					var newPath = path.AddStep(n, d);
-					queue.Enqueue(newPath.TotalCost + estimate(n, destination), newPath);
-				}
-			}
-
-			return null;
-		}
-
-		public T GetClosestAgentByType<T>(Employee employee, IEnumerable<T> agentsToCheck)
-			where T : Agent
-		{
-			var employeeWorldIndex = employee.WorldGridIndex;
-			var employeeOnPathNode = GetPathNodeAtWorldGridIndex(employeeWorldIndex);
-
-			if (agentsToCheck.Count() > 0)
-			{
-				// calculate the closest snack machine's manhatten distance
-				double minimumManhattenDistance = Int32.MaxValue;
-				T closestAgent = null;
-
-				foreach (var agentToCheck in agentsToCheck)
-				{
-					var agentToFindWorldIndex = agentToCheck.WorldGridIndex;
-					var agentOnPathNode = GetPathNodeAtWorldGridIndex(agentToFindWorldIndex);
-					double manhattenDistance = ManhattanDistance(employeeOnPathNode, agentOnPathNode);
-					if (manhattenDistance < minimumManhattenDistance)
-					{
-						minimumManhattenDistance = manhattenDistance;
-						closestAgent = agentToCheck;
-					}
-				}
-
-				return closestAgent;
-			}
-			else
-				return null;
-		}
-
-		public Queue<MapObject> GetBestPathToAgent<T>(Employee employee, T agent)
-			where T : Agent
-		{
-			// tell the agent to path to the closest soda machine (or random if a tie)
-			Queue<MapObject> bestPath = FindBestPath(employee.WorldGridIndex, agent.WorldGridIndex);
-			return bestPath;
-		}
-
-		/// <summary>
-		/// The exact distance between two nodes in this game is a single node (1).
-		/// </summary>
-		/// <typeparam name="Node"></typeparam>
-		/// <param name="node1"></param>
-		/// <param name="node2"></param>
-		/// <returns></returns>
-		private double ExactDistance<Node>(Node node1, Node node2)
-			where Node : INode
-		{
-			return 1.0;
-		}
-
-		/// <summary>
-		/// The manhattan distance between two nodes is the distance traveled on a taxicab-like grid where diagonal movement is not allowed.
-		/// </summary>
-		/// <typeparam name="Node"></typeparam>
-		/// <param name="node1"></param>
-		/// <param name="node2"></param>
-		/// <returns></returns>
-		private double ManhattanDistance<Node>(Node node1, Node node2)
-			where Node : INode
-		{
-			return Math.Abs(node1.WorldGridIndex.X - node2.WorldGridIndex.X) + Math.Abs(node1.WorldGridIndex.Y - node2.WorldGridIndex.Y);
 		}
 
 		#region Dispose

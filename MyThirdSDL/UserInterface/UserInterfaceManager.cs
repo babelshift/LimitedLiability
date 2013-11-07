@@ -140,12 +140,12 @@ namespace MyThirdSDL.UserInterface
 		{
 			Color fontColor;
 			int fontSizeContent;
-			var fontPath = GetLabelFontDetails(contentManager, out fontColor, out fontSizeContent);
+			string fontPath = GetLabelFontDetails(contentManager, out fontColor, out fontSizeContent);
 
 			var labelMessagesForAgent = GetMessagesByAgentId(agentId);
 
 			// if there isn't already a message of this type in this agent's collection, then add the message
-			if (!AnyMessagesWithTypeForAgent(labelMessagesForAgent, message.Type))
+			if (!IsAnyMessagesWithTypeForAgent(labelMessagesForAgent, message.Type))
 			{
 				int messageOffsetY = ((labelMessagesForAgent.Count() + 1) * 18) + 72;
 				var labelMessage = controlFactory.CreateSimulationLabel(Vector.Zero + new Vector(0, messageOffsetY), fontPath, fontSizeContent, fontColor, message);
@@ -154,12 +154,27 @@ namespace MyThirdSDL.UserInterface
 		}
 
 		/// <summary>
+		/// Removes a message belonging to the passed agent (by id) where the message type is equal to the passed message type. This method does nothing
+		/// if the agent does not have any messages of the passed message type.
+		/// </summary>
+		/// <param name="agentId">Agent identifier.</param>
+		/// <param name="messageType">Message type.</param>
+		public void RemoveMessage(Guid agentId, SimulationMessage.MessageType messageType)
+		{
+			var labelMessagesForAgent = GetMessagesByAgentId(agentId);
+			var labelMessageToRemove = labelMessagesForAgent.FirstOrDefault(l => l.SimulationMessage.Type == messageType);
+
+			if(labelMessageToRemove != null)
+				labelMessagesForAgent.Remove(labelMessageToRemove);
+		}
+
+		/// <summary>
 		/// Determines whether the passed message collection contains any messages with the passed message type.
 		/// </summary>
 		/// <returns><c>true</c> if the passed message collection contains any messages with the passed message type; otherwise, <c>false</c>.</returns>
 		/// <param name="messages">Messages.</param>
 		/// <param name="type">Type.</param>
-		private bool AnyMessagesWithTypeForAgent(IEnumerable<SimulationLabel> messages, SimulationMessage.MessageType type)
+		private bool IsAnyMessagesWithTypeForAgent(IEnumerable<SimulationLabel> messages, SimulationMessage.MessageType type)
 		{
 			if (messages.Any(m => m.SimulationMessage.Type == type))
 				return true;

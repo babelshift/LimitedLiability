@@ -80,7 +80,7 @@ namespace MyThirdSDL.Descriptors
 
 		#region Utilities
 
-		public void SetSimulationAge(TimeSpan simulationTime)
+		private void SetSimulationAge(TimeSpan simulationTime)
 		{
 			SimulationAge = simulationTime.Subtract(BirthTime);
 		}
@@ -141,6 +141,7 @@ namespace MyThirdSDL.Descriptors
 
 		public virtual void Update(GameTime gameTime)
 		{
+			SetSimulationAge(gameTime.TotalGameTime);
 			WorldGridIndex = GetWorldGridIndex();
 		}
 

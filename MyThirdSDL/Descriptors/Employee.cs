@@ -10,6 +10,7 @@ namespace MyThirdSDL.Descriptors
 {
 	public class Employee : MobileAgent
 	{
+		private double necessityDecayRate = -0.01;
 		private static Vector speed = new Vector(25, 25);
 
 		public string FullName { get { return FirstName + " " + LastName; } }
@@ -52,6 +53,8 @@ namespace MyThirdSDL.Descriptors
 		public event EventHandler<EventArgs> IsUnhappy;
 		public event EventHandler<EventArgs> NeedsOfficeDesk;
 
+		public event EventHandler<EventArgs> ThirstSatisfied;
+
 		public Employee(TimeSpan birthTime, string agentName, Texture texture, Vector position, string firstName, string lastName, int age, DateTime birthday, Skills skills, Job job)
 			: base(birthTime, agentName, texture, position, speed)
 		{
@@ -70,9 +73,31 @@ namespace MyThirdSDL.Descriptors
 			AssignedOfficeDesk = officeDesk;
 		}
 
-		private double necessityDecayRate = -0.01;
+		public void Drink(int thirstEffectiveness)
+		{
+			Necessities.Rating previousThirstRating = Necessities.Thirst;
+			Necessities.AdjustThirst(thirstEffectiveness);
+
+			// if, after drinking, our thirst is above the threshold AND our previous thirst was below the threshold, our thirst has been satisfied, notify subscribers
+			if (Necessities.Thirst >= Necessities.Rating.Neutral && previousThirstRating < Necessities.Rating.Neutral)
+				EventHelper.FireEvent(ThirstSatisfied, this, EventArgs.Empty);
+		}
+
+		public void Eat(int hungerEffectiveness)
+		{
+			Necessities.AdjustHunger(hungerEffectiveness);
+		}
 
 		public override void Update(GameTime gameTime)
+		{
+			AdjustNecessitiesBasedOnDecayRate();
+			CheckIfEmployeeNeedsAnything();
+			CheckIfEmployeeIsUnhappy();
+
+			base.Update(gameTime);
+		}
+
+		private void AdjustNecessitiesBasedOnDecayRate()
 		{
 			// as time goes on
 			// we need to slowly increase sleepiness
@@ -85,23 +110,22 @@ namespace MyThirdSDL.Descriptors
 			Necessities.AdjustThirst(necessityDecayRate);
 			Necessities.AdjustHygiene(necessityDecayRate);
 			Necessities.AdjustHealth(necessityDecayRate);
+		}
 
+		private void CheckIfEmployeeNeedsAnything()
+		{
 			// if hungry, find vending machine / lunch room, eat
 			if (Necessities.Hunger < Necessities.Rating.Neutral)
 				EventHelper.FireEvent(IsHungry, this, EventArgs.Empty);
-
 			// if thirsty, find vending machine / lunch room, drink
 			if (Necessities.Thirst < Necessities.Rating.Neutral)
 				EventHelper.FireEvent(IsThirsty, this, EventArgs.Empty);
-
 			// if dirty, find bathroom, wash, relieve self
 			if (Necessities.Hygiene < Necessities.Rating.Neutral)
 				EventHelper.FireEvent(IsDirty, this, EventArgs.Empty);
-
 			// if unhealthy, find gym/go exercise
 			if (Necessities.Health < Necessities.Rating.Neutral)
 				EventHelper.FireEvent(IsUnhealthy, this, EventArgs.Empty);
-
 			// if sleepy
 			if (Necessities.Sleep < Necessities.Rating.Neutral)
 			{
@@ -117,12 +141,13 @@ namespace MyThirdSDL.Descriptors
 			// else reduce happiness somehow (skills slowly go down?)
 			else
 				EventHelper.FireEvent(NeedsOfficeDesk, this, EventArgs.Empty);
+		}
 
+		private void CheckIfEmployeeIsUnhappy()
+		{
 			// if unhappy, complain, threaten to quit, quit, lash out at office / others
 			if (HappinessRating < (int)Necessities.Rating.Neutral)
 				EventHelper.FireEvent(IsUnhappy, this, EventArgs.Empty);
-
-			base.Update(gameTime);
 		}
 	}
 }
