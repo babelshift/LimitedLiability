@@ -21,6 +21,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>true</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -38,17 +39,21 @@
     <Reference Include="Newtonsoft.Json">
       <HintPath>..\Libs\Newtonsoft.Json.dll</HintPath>
     </Reference>
-    <Reference Include="SharpDL.Events">
+    <Reference Include="SharpDL, Version=1.0.0.0, Culture=neutral, processorArchitecture=AMD64">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Libs\SharpDL.dll</HintPath>
+    </Reference>
+    <Reference Include="SharpDL.Events, Version=1.0.0.0, Culture=neutral, processorArchitecture=AMD64">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\Libs\SharpDL.Events.dll</HintPath>
     </Reference>
-    <Reference Include="SharpDL.Graphics">
+    <Reference Include="SharpDL.Graphics, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\Libs\SharpDL.Graphics.dll</HintPath>
     </Reference>
-    <Reference Include="SharpDL.Input">
+    <Reference Include="SharpDL.Input, Version=1.0.0.0, Culture=neutral, processorArchitecture=AMD64">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\Libs\SharpDL.Input.dll</HintPath>
-    </Reference>
-    <Reference Include="SharpDL.Mono">
-      <HintPath>..\Libs\SharpDL.Mono.dll</HintPath>
     </Reference>
     <Reference Include="SharpTiles">
       <HintPath>..\Libs\SharpTiles.dll</HintPath>
@@ -63,12 +68,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Camera.cs" />
-    <Compile Include="CollisionManager.cs" />
     <Compile Include="ContentManager.cs" />
     <Compile Include="CoordinateHelper.cs" />
     <Compile Include="Descriptors\Agent.cs" />
     <Compile Include="Descriptors\AgentFactory.cs" />
     <Compile Include="Descriptors\IPurchasable.cs" />
+    <Compile Include="Descriptors\MobileAgent.cs" />
+    <Compile Include="Descriptors\OfficeDesk.cs" />
     <Compile Include="Descriptors\TextureStore.cs" />
     <Compile Include="Descriptors\Equipment.cs" />
     <Compile Include="Descriptors\INecessityAffector.cs" />
@@ -83,6 +89,7 @@
     <Compile Include="Descriptors\SodaMachine.cs" />
     <Compile Include="Descriptors\WaterFountain.cs" />
     <Compile Include="Entity.cs" />
+    <Compile Include="EventHelper.cs" />
     <Compile Include="GridManager.cs" />
     <Compile Include="ICollidable.cs" />
     <Compile Include="IDrawable.cs" />
@@ -95,6 +102,8 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SimulationManager.cs" />
+    <Compile Include="SimulationMessage.cs" />
+    <Compile Include="SimulationMessageFactory.cs" />
     <Compile Include="TiledMap.cs" />
     <Compile Include="UserInterface\Button.cs" />
     <Compile Include="UserInterface\ButtonMenuItem.cs" />
@@ -104,6 +113,7 @@
     <Compile Include="UserInterface\Label.cs" />
     <Compile Include="UserInterface\MenuEquipment.cs" />
     <Compile Include="UserInterface\MessageBox.cs" />
+    <Compile Include="UserInterface\SimulationLabel.cs" />
     <Compile Include="UserInterface\ToolboxTray.cs" />
     <Compile Include="UserInterface\Tooltip.cs" />
     <Compile Include="UserInterface\UserInterfaceManager.cs" />
@@ -276,7 +286,8 @@
     </PostBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
-    <PreBuildEvent>copy "$(SolutionDir)Libs\*.*" "$(TargetDir)"</PreBuildEvent>
+    <PreBuildEvent>copy "$(SolutionDir)Libs\*.*" "$(TargetDir)"
+copy "$(SolutionDir)Libs\x86\Windows\*.*" "$(TargetDir)"</PreBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
