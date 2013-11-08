@@ -1,15 +1,34 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="MyThirdSDL/UserInterface/UserInterfaceManager.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="../SharpDL/SharpDL.Graphics/Texture.cs">
     <Files>
-      <File FileName="MyThirdSDL/Descriptors/Employee.cs" Line="101" Column="41" />
-      <File FileName="MyThirdSDL/MainGame.cs" Line="191" Column="57" />
-      <File FileName="MyThirdSDL/UserInterface/UserInterfaceManager.cs" Line="155" Column="3" />
-      <File FileName="MyThirdSDL/SimulationManager.cs" Line="107" Column="54" />
+      <File FileName="MyThirdSDL/Descriptors/Employee.cs" Line="83" Column="67" />
+      <File FileName="MyThirdSDL/MainGame.cs" Line="128" Column="1" />
+      <File FileName="MyThirdSDL/UserInterface/UserInterfaceManager.cs" Line="107" Column="54" />
+      <File FileName="MyThirdSDL/SimulationManager.cs" Line="76" Column="22" />
+      <File FileName="MyThirdSDL/TiledMap.cs" Line="226" Column="20" />
+      <File FileName="MyThirdSDL/Descriptors/Agent.cs" Line="18" Column="4" />
+      <File FileName="MyThirdSDL/Descriptors/Necessities.cs" Line="110" Column="3" />
+      <File FileName="MyThirdSDL/Descriptors/MobileAgent.cs" Line="27" Column="3" />
+      <File FileName="MyThirdSDL/ICollidable.cs" Line="12" Column="13" />
+      <File FileName="MyThirdSDL/Descriptors/SodaMachine.cs" Line="28" Column="28" />
+      <File FileName="MyThirdSDL/UserInterface/Label.cs" Line="11" Column="24" />
+      <File FileName="../SharpDL/SharpDL.Graphics/Texture.cs" Line="130" Column="1" />
+      <File FileName="MyThirdSDL/UserInterface/Control.cs" Line="11" Column="2" />
+      <File FileName="../SharpDL/SharpDL.Graphics/Renderer.cs" Line="14" Column="2" />
+      <File FileName="MyThirdSDL/UserInterface/ControlFactory.cs" Line="194" Column="64" />
+      <File FileName="../SharpDL/SharpDL.Graphics/TrueTypeTextFactory.cs" Line="15" Column="42" />
+      <File FileName="../SharpDL/SharpDL.Graphics/TrueTypeText.cs" Line="46" Column="1" />
+      <File FileName="../SharpDL/SharpDL.Graphics/Font.cs" Line="44" Column="7" />
+      <File FileName="../SharpDL/SharpDL/Game.cs" Line="304" Column="1" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
-    <BreakpointStore />
+    <BreakpointStore>
+      <Breakpoint file="/home/justin/Documents/git/SharpDL/SharpDL.Graphics/Texture.cs" line="130" column="1" />
+      <Breakpoint file="/home/justin/Documents/git/SharpDL/SharpDL.Graphics/Texture.cs" line="119" column="1" />
+      <Breakpoint file="/home/justin/Documents/git/SharpDL/SharpDL.Graphics/Texture.cs" line="125" column="1" />
+    </BreakpointStore>
   </MonoDevelop.Ide.DebuggingService.Breakpoints>
   <MonoDevelop.Ide.DebuggingService.PinnedWatches />
 </Properties>

@@ -10,7 +10,7 @@ namespace MyThirdSDL
 	public interface ICollidable
 	{
 		Rectangle CollisionBox { get; }
-		Vector WorldPosition { get; }
-		void ResolveCollision(ICollidable i);
+		//Vector WorldPosition { get; }
+		//void ResolveCollision(ICollidable i);
 	}
 }

@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace MyThirdSDL.Descriptors
 {
-	public abstract class Agent : IDrawable
+	public abstract class Agent : IDrawable, ICollidable
 	{
 		public enum AgentState
 		{
@@ -21,7 +21,7 @@ namespace MyThirdSDL.Descriptors
 
 		private Texture Texture { get; set; }
 
-		protected Rectangle CollisionBox
+		public Rectangle CollisionBox
 		{
 			get
 			{

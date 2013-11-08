@@ -60,13 +60,24 @@ namespace MyThirdSDL
 			{
 				agent.Update(gameTime);
 
-				// if agent is walking towards agent
-				// if agent has reached its walking destination
-				// perform action based on destination reached
-				// if soda machine, drink
-				// if snack machine, eat
+				if (agent is Employee)
+				{
+					var mobileAgent = agent as Employee;
 
-				//if(agent.
+					// if agent is walking towards agent
+					// if agent has reached its walking destination
+					if (mobileAgent.IsWalkingTowardsAgent && mobileAgent.IsAtFinalDestination)
+					{
+						var walkingTowardsAgent = mobileAgent.WalkingTowardsAgent;
+						// if soda machine, drink
+						if (walkingTowardsAgent is SodaMachine)
+						{
+							var sodaMachine = walkingTowardsAgent as SodaMachine;
+							mobileAgent.Drink(sodaMachine.ThirstEffectiveness);
+							mobileAgent.ResetWalkingTowardsAgent();
+						}
+					}
+				}
 			}
 		}
 

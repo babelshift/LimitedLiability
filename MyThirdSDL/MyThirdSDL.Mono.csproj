@@ -23,11 +23,6 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <CustomCommands>
-      <CustomCommands>
-        <Command type="AfterBuild" command="cp ${SolutionDir}/Libs/*.* ${TargetDir}" externalConsole="True" />
-      </CustomCommands>
-    </CustomCommands>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -52,25 +47,12 @@
     <Reference Include="Newtonsoft.Json">
       <HintPath>..\Libs\Newtonsoft.Json.dll</HintPath>
     </Reference>
-    <Reference Include="SharpDL.Events">
-      <HintPath>..\Libs\SharpDL.Events.dll</HintPath>
-    </Reference>
-    <Reference Include="SharpDL.Graphics">
-      <HintPath>..\Libs\SharpDL.Graphics.dll</HintPath>
-    </Reference>
-    <Reference Include="SharpDL.Input">
-      <HintPath>..\Libs\SharpDL.Input.dll</HintPath>
-    </Reference>
-    <Reference Include="SharpDL.Mono">
-      <HintPath>..\Libs\SharpDL.Mono.dll</HintPath>
-    </Reference>
     <Reference Include="SharpTiles">
       <HintPath>..\Libs\SharpTiles.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Camera.cs" />
-    <Compile Include="CollisionManager.cs" />
     <Compile Include="ContentManager.cs" />
     <Compile Include="CoordinateHelper.cs" />
     <Compile Include="Descriptors\Agent.cs" />

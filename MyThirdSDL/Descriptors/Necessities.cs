@@ -34,10 +34,10 @@ namespace MyThirdSDL.Descriptors
 		}
 
 		private double sleepRating;
-		public double healthRating;
+		private double healthRating;
 		private double hygieneRating;
 		private double hungerRating;
-		private double thirstRating;
+		public double thirstRating;
 
 		public Rating Sleep
 		{ 

@@ -24,6 +24,30 @@ namespace MyThirdSDL.Descriptors
 
 		public Agent WalkingTowardsAgent { get; private set; }
 
+		public bool IsWalkingTowardsAgent { get { return WalkingTowardsAgent != null; } }
+
+		public bool IsAtFinalDestination
+		{
+			get
+			{
+ 				if (CollisionBox.Intersects(WalkingTowardsAgent.CollisionBox))
+					return true;
+				else
+					return false;
+			}
+		}
+
+		private bool IsAtDestination
+		{
+			get
+			{
+				if (currentDestination == CoordinateHelper.DefaultVector || CollisionBox.Contains(new Point((int)currentDestination.X, (int)currentDestination.Y)))
+					return true;
+				else
+					return false;
+			}
+		}
+
 		public MobileAgent(TimeSpan birthTime, string name, Texture texture, Vector startingPosition, Vector startingSpeed)
 			: base(birthTime, name, texture, startingPosition)
 		{
@@ -64,10 +88,10 @@ namespace MyThirdSDL.Descriptors
 		{
 			if (State == AgentState.Active)
 			{
-				if (IsAtDestination())
+				if (IsAtDestination)
 					SetNextDestinationNode();
 
-				if (!IsAtDestination())
+				if (!IsAtDestination)
 					Move(gameTime.ElapsedGameTime.TotalSeconds);
 				else
 				{
@@ -96,19 +120,16 @@ namespace MyThirdSDL.Descriptors
 			ChangeActivity(AgentActivity.Idle);
 		}
 
-		private bool IsAtDestination()
+		public void ResetWalkingTowardsAgent()
 		{
-			if (currentDestination == CoordinateHelper.DefaultVector || CollisionBox.Contains(new Point((int)currentDestination.X, (int)currentDestination.Y)))
-				return true;
-			else
-				return false;
+			WalkingTowardsAgent = null;
 		}
 
 		private void SetNextDestinationNode()
 		{
 			if (pathNodes != null)
-			if (pathNodes.Count() > 0)
-				currentDestination = pathNodes.Dequeue().WorldPosition;
+				if (pathNodes.Count() > 0)
+					currentDestination = pathNodes.Dequeue().WorldPosition;
 		}
 
 		private Vector GetMovementDirection()

@@ -102,7 +102,7 @@ namespace MyThirdSDL.UserInterface
 
 			Color fontColor;
 			int fontSizeContent;
-			var fontPath = GetLabelFontDetails(contentManager, out fontColor, out fontSizeContent);
+			string fontPath = GetLabelFontDetails(contentManager, out fontColor, out fontSizeContent);
 
 			labelMousePositionAbsolute = controlFactory.CreateLabel(Vector.Zero, fontPath, fontSizeContent, fontColor, ".");
 			labelMousePositionIsometric = controlFactory.CreateLabel(Vector.Zero + new Vector(0, 18), fontPath, fontSizeContent, fontColor, ".");

@@ -25,7 +25,7 @@ namespace MyThirdSDL.Descriptors
 			HealthEffectiveness = -1;
 			HygieneEffectiveness = 0;
 			SleepEffectiveness = 1;
-			ThirstEffectiveness = 2;
+			ThirstEffectiveness = 10;
 			HungerEffectiveness = 0;
 		}
 	}
