@@ -158,13 +158,13 @@ namespace MyThirdSDL
 		private void HandleEmployeeHungerSatisfied (object sender, EventArgs e)
 		{
 			var employee = GetEmployeeFromEventSender(sender);
-			userInterfaceManager.RemoveMessage(employee.ID, SimulationMessage.MessageType.EmployeeIsHungry);
+			userInterfaceManager.RemoveMessage(employee.ID, SimulationMessageType.EmployeeIsHungry);
 		}
 
 		private void HandleEmployeeThirstSatisfied (object sender, EventArgs e)
 		{
 			var employee = GetEmployeeFromEventSender(sender);
-			userInterfaceManager.RemoveMessage(employee.ID, SimulationMessage.MessageType.EmployeeIsThirsty);
+			userInterfaceManager.RemoveMessage(employee.ID, SimulationMessageType.EmployeeIsThirsty);
 		}
 
 		#region Employee Events
@@ -177,7 +177,7 @@ namespace MyThirdSDL
 			return employee;
 		}
 
-		private void SendEmployeeMessageToUserInterface(object sender, string messageText, SimulationMessage.MessageType messageType)
+		private void SendEmployeeMessageToUserInterface(object sender, string messageText, SimulationMessageType messageType)
 		{
 			var employee = GetEmployeeFromEventSender(sender);
 			var message = SimulationMessageFactory.Create(employee.ProjectedPosition, messageText, messageType);
@@ -186,37 +186,37 @@ namespace MyThirdSDL
 
 		private void HandleEmployeeIsUnhappy(object sender, EventArgs e)
 		{
-			SendEmployeeMessageToUserInterface(sender, String.Format("{0} is unhappy!", employee.FullName), SimulationMessage.MessageType.EmployeeIsUnhappy);
+			SendEmployeeMessageToUserInterface(sender, String.Format("{0} is unhappy!", employee.FullName), SimulationMessageType.EmployeeIsUnhappy);
 		}
 
 		private void HandleEmployeeNeedsOfficeDesk(object sender, EventArgs e)
 		{
-			SendEmployeeMessageToUserInterface(sender, String.Format("{0} needs and office desk to work!", employee.FullName), SimulationMessage.MessageType.EmployeeNeedsDesk);
+			SendEmployeeMessageToUserInterface(sender, String.Format("{0} needs and office desk to work!", employee.FullName), SimulationMessageType.EmployeeNeedsDesk);
 		}
 
 		private void HandleEmployeeIsUnhealthy(object sender, EventArgs e)
 		{
-			SendEmployeeMessageToUserInterface(sender, String.Format("{0} is unhealthy!", employee.FullName), SimulationMessage.MessageType.EmployeeIsUnhealthy);
+			SendEmployeeMessageToUserInterface(sender, String.Format("{0} is unhealthy!", employee.FullName), SimulationMessageType.EmployeeIsUnhealthy);
 		}
 
 		private void HandleEmployeeIsSleepy(object sender, EventArgs e)
 		{
-			SendEmployeeMessageToUserInterface(sender, String.Format("{0} is sleepy!", employee.FullName), SimulationMessage.MessageType.EmployeeIsSleepy);
+			SendEmployeeMessageToUserInterface(sender, String.Format("{0} is sleepy!", employee.FullName), SimulationMessageType.EmployeeIsSleepy);
 		}
 
 		private void HandleEmployeeIsThirsty(object sender, EventArgs e)
 		{
-			SendEmployeeMessageToUserInterface(sender, String.Format("{0} is thirsty!", employee.FullName), SimulationMessage.MessageType.EmployeeIsThirsty);
+			SendEmployeeMessageToUserInterface(sender, String.Format("{0} is thirsty!", employee.FullName), SimulationMessageType.EmployeeIsThirsty);
 		}
 
 		private void HandleEmployeeIsHungry(object sender, EventArgs e)
 		{
-			SendEmployeeMessageToUserInterface(sender, String.Format("{0} is hungry!", employee.FullName), SimulationMessage.MessageType.EmployeeIsHungry);
+			SendEmployeeMessageToUserInterface(sender, String.Format("{0} is hungry!", employee.FullName), SimulationMessageType.EmployeeIsHungry);
 		}
 
 		private void HandleEmployeeIsDirty(object sender, EventArgs e)
 		{
-			SendEmployeeMessageToUserInterface(sender, String.Format("{0} is dirty!", employee.FullName), SimulationMessage.MessageType.EmployeeIsDirty);
+			SendEmployeeMessageToUserInterface(sender, String.Format("{0} is dirty!", employee.FullName), SimulationMessageType.EmployeeIsDirty);
 		}
 
 		#endregion
@@ -289,8 +289,8 @@ namespace MyThirdSDL
 			string simulationTimeText = simulationManager.SimulationTimeDisplay;
 			userInterfaceManager.Update(gameTime, simulationTimeText);
 
-			userInterfaceManager.SetEmployeeThirstDisplay(employee.Necessities.thirstRating, employee.Necessities.Thirst);
-			userInterfaceManager.SetEmployeeHungerDisplay(employee.Necessities.hungerRating, employee.Necessities.Hunger);
+			userInterfaceManager.SetEmployeeThirstDisplay((double)employee.Necessities.Thirst, employee.Necessities.Thirst);
+			userInterfaceManager.SetEmployeeHungerDisplay((double)employee.Necessities.Hunger, employee.Necessities.Hunger);
 		}
 
 		/// <summary>

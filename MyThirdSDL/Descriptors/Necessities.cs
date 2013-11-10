@@ -8,6 +8,8 @@ namespace MyThirdSDL.Descriptors
 {
 	public class Necessities
 	{
+		private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
 		public enum Type
 		{
 			Sleep,
@@ -36,8 +38,8 @@ namespace MyThirdSDL.Descriptors
 		private double sleepRating;
 		private double healthRating;
 		private double hygieneRating;
-		public double hungerRating;
-		public double thirstRating;
+		private double hungerRating;
+		private double thirstRating;
 
 		public Rating Sleep
 		{ 
@@ -115,6 +117,8 @@ namespace MyThirdSDL.Descriptors
 		private double AdjustRating(double currentRating, double ratingAdjustment)
 		{
 			double possibleReturnValue = currentRating + ratingAdjustment;
+
+			//log.Debug(String.Format("Current Rating: {0}, Rating Adjustment: {1}, New Rating: {2},", currentRating, ratingAdjustment, possibleReturnValue));
 
 			if (possibleReturnValue >= 0.0 && possibleReturnValue <= 10.0)
 				return possibleReturnValue;

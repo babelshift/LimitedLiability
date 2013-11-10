@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace MyThirdSDL
+namespace MyThirdSDL.Descriptors
 {
 	public enum ActionType
 	{
@@ -11,19 +11,24 @@ namespace MyThirdSDL
 
     public class Action
     {
-		private List<ITriggerSubscriber> subscribers = new List<ITriggerSubscriber>();
+		private List<Subscription> subscriptions = new List<Subscription>();
 
 		public ActionType Type { get; private set; }
-		public IEnumerable<ITriggerSubscriber> Subscribers { get { return subscribers; } }
+		public IEnumerable<Subscription> Subscriptions { get { return subscriptions; } }
 
 		public Action(ActionType type)
         {
 			Type = type;
         }
 
-		public void AddSubscriber(ITriggerSubscriber subscriber)
+		public void AddSubscription(ITriggerSubscriber subscriber, SubscriptionType subscriptionType)
 		{
-			subscribers.Add(subscriber);
+			subscriptions.Add(new Subscription(subscriber, subscriptionType));
+		}
+
+		public void RemoveSubscription(ITriggerSubscriber subscriber)
+		{
+			subscriptions.RemoveAll(s => s.Subscriber.ID == subscriber.ID);
 		}
     }
 }

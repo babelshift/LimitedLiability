@@ -1,16 +1,6 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="MyThirdSDL/UserInterface/UserInterfaceManager.cs">
-    <Files>
-      <File FileName="MyThirdSDL/Descriptors/SodaMachine.cs" Line="1" Column="1" />
-      <File FileName="MyThirdSDL/SimulationManager.cs" Line="90" Column="51" />
-      <File FileName="MyThirdSDL/Descriptors/AgentFactory.cs" Line="1" Column="1" />
-      <File FileName="MyThirdSDL/MainGame.cs" Line="166" Column="3" />
-      <File FileName="MyThirdSDL/UserInterface/UserInterfaceManager.cs" Line="164" Column="61" />
-      <File FileName="MyThirdSDL/Descriptors/Employee.cs" Line="1" Column="1" />
-      <File FileName="MyThirdSDL/Descriptors/IAction.cs" Line="11" Column="1" />
-    </Files>
-  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.Workbench />
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
     <BreakpointStore>
       <Breakpoint file="/home/justin/Documents/git/SharpDL/SharpDL.Graphics/Texture.cs" line="130" column="1" />

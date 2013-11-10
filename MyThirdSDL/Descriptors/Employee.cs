@@ -11,6 +11,8 @@ namespace MyThirdSDL.Descriptors
 {
 	public class Employee : MobileAgent, ITriggerSubscriber
 	{
+		private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
 		private double necessityDecayRate = -0.01;
 		private static Vector speed = new Vector(25, 25);
 
@@ -80,6 +82,8 @@ namespace MyThirdSDL.Descriptors
 			Necessities.Rating previousThirstRating = Necessities.Thirst;
 			Necessities.AdjustThirst(thirstEffectiveness);
 
+			log.Debug(String.Format("Employee named {0} just drank to increase thirst need from {1} to {2}.", FullName, previousThirstRating, Necessities.Thirst));
+
 			// if, after drinking, our thirst is above the threshold AND our previous thirst was below the threshold, our thirst has been satisfied, notify subscribers
 			if (Necessities.Thirst >= Necessities.Rating.Neutral && previousThirstRating < Necessities.Rating.Neutral)
 				EventHelper.FireEvent(ThirstSatisfied, this, EventArgs.Empty);
@@ -87,8 +91,10 @@ namespace MyThirdSDL.Descriptors
 
 		public void Eat(int hungerEffectiveness)
 		{
-			Necessities.Rating previousHungerRating = Necessities.Thirst;
+			Necessities.Rating previousHungerRating = Necessities.Hunger;
 			Necessities.AdjustHunger(hungerEffectiveness);
+
+			log.Debug(String.Format("Employee named {0} just ate to increase hunger need from {1} to {2}.", FullName, previousHungerRating, Necessities.Hunger));
 
 			// if, after eating, our hunger is above the threshold AND our previous hunger was below the threshold, our hunger has been satisfied, notify subscribers
 			if (Necessities.Hunger >= Necessities.Rating.Neutral && previousHungerRating < Necessities.Rating.Neutral)

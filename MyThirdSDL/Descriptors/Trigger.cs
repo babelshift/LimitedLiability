@@ -28,17 +28,30 @@ namespace MyThirdSDL.Descriptors
 				Action action;
 				bool success = actions.TryGetValue(actionKey, out action);
 				if (success)
-					foreach (var subscriber in action.Subscribers)
+				{
+					List<Subscription> subscriptionsToRemove = new List<Subscription>();
+					foreach (var subscription in action.Subscriptions)
+					{
+						var subscriber = subscription.Subscriber;
 						subscriber.ReactToAction(action.Type, affector);
+
+						// if the subscriber only subscribed to be notified once, queue them to be removed once the notifications are complete
+						if (subscription.Type == SubscriptionType.Once)
+							subscriptionsToRemove.Add(subscription);
+					}
+
+					foreach(var subscription in subscriptionsToRemove)
+						action.RemoveSubscription(subscription.Subscriber);
+				}
 			}
 		}
 
-		public void AddSubscriberToActionByType(ITriggerSubscriber subscriber, ActionType actionType)
+		public void AddSubscriptionToActionByType(ITriggerSubscriber subscriber, SubscriptionType subscriptionType, ActionType actionType)
 		{
 			Action action;
 			bool success = actions.TryGetValue(actionType, out action);
 			if (success)
-				action.AddSubscriber(subscriber);
+				action.AddSubscription(subscriber, subscriptionType);
 		}
     }
 }

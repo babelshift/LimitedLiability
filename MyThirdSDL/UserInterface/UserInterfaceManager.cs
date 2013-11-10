@@ -48,7 +48,8 @@ namespace MyThirdSDL.UserInterface
 
 		#region Message List
 
-		private ConcurrentDictionary<Guid, ConcurrentBag<SimulationLabel>> agentLabelMessageDictionary = new ConcurrentDictionary<Guid, ConcurrentBag<SimulationLabel>>();
+		private ConcurrentDictionary<Guid, ConcurrentDictionary<SimulationMessageType, SimulationLabel>> labelMessagesForMultipleAgents 
+			= new ConcurrentDictionary<Guid, ConcurrentDictionary<SimulationMessageType, SimulationLabel>>();
 
 		#endregion
 
@@ -152,14 +153,13 @@ namespace MyThirdSDL.UserInterface
 			int fontSizeContent;
 			string fontPath = GetLabelFontDetails(contentManager, out fontColor, out fontSizeContent);
 
-			var labelMessagesForAgent = GetMessagesByAgentId(agentId);
+			var labelMessagesForSingleAgent = GetMessagesByAgentId(agentId);
 
-			// if there isn't already a message of this type in this agent's collection, then add the message
-			if (!IsAnyMessagesWithTypeForAgent(labelMessagesForAgent, message.Type))
+			if(!labelMessagesForSingleAgent.ContainsKey(message.Type))
 			{
-				int messageOffsetY = ((labelMessagesForAgent.Count() + 1) * 18) + 108;
+				int messageOffsetY = ((labelMessagesForSingleAgent.Count() + 1) * 18) + 108;
 				SimulationLabel labelMessage = controlFactory.CreateSimulationLabel(Vector.Zero + new Vector(0, messageOffsetY), fontPath, fontSizeContent, fontColor, message);
-				labelMessagesForAgent.Add(labelMessage);
+				labelMessagesForSingleAgent.TryAdd(message.Type, labelMessage);
 			}
 		}
 
@@ -169,47 +169,30 @@ namespace MyThirdSDL.UserInterface
 		/// </summary>
 		/// <param name="agentId">Agent identifier.</param>
 		/// <param name="messageType">Message type.</param>
-		public void RemoveMessage(Guid agentId, SimulationMessage.MessageType messageType)
+		public void RemoveMessage(Guid agentId, SimulationMessageType messageType)
 		{
-			var agentLabelMessageBag = GetMessagesByAgentId(agentId);
-			SimulationLabel labelMessageToRemove = agentLabelMessageBag.FirstOrDefault(l => l.SimulationMessage.Type == messageType);
+			var labelMessagesForSingleAgent = GetMessagesByAgentId(agentId);
 
-			// we need to use a concurrent collection here so that our removal of an object doesn't interfere with drawing/updating that object on another thread
-			if(labelMessageToRemove != null)
-				agentLabelMessageBag.TryTake(out labelMessageToRemove);
+			SimulationLabel labelMessageToRemove;
+			labelMessagesForSingleAgent.TryRemove(messageType, out labelMessageToRemove);
 		}
-
-		/// <summary>
-		/// Determines whether the passed message collection contains any messages with the passed message type.
-		/// </summary>
-		/// <returns><c>true</c> if the passed message collection contains any messages with the passed message type; otherwise, <c>false</c>.</returns>
-		/// <param name="messages">Messages.</param>
-		/// <param name="type">Type.</param>
-		private bool IsAnyMessagesWithTypeForAgent(IEnumerable<SimulationLabel> messages, SimulationMessage.MessageType type)
-		{
-			if (messages.Any(m => m.SimulationMessage.Type == type))
-				return true;
-			else
-				return false;
-		}
-
 		/// <summary>
 		/// Gets the messages by agent identifier.
 		/// </summary>
 		/// <returns>The messages by agent identifier.</returns>
 		/// <param name="agentId">Agent identifier.</param>
-		private ConcurrentBag<SimulationLabel> GetMessagesByAgentId(Guid agentId)
+		private ConcurrentDictionary<SimulationMessageType, SimulationLabel> GetMessagesByAgentId(Guid agentId)
 		{
-			ConcurrentBag<SimulationLabel> labelMessagesForAgent = new ConcurrentBag<SimulationLabel>();
+			ConcurrentDictionary<SimulationMessageType, SimulationLabel> labelMessagesForAgent = new ConcurrentDictionary<SimulationMessageType, SimulationLabel>();
 
 			// try to get existing message list for the passed agent id
-			bool success = agentLabelMessageDictionary.TryGetValue(agentId, out labelMessagesForAgent);
+			bool success = labelMessagesForMultipleAgents.TryGetValue(agentId, out labelMessagesForAgent);
 
 			// if we don't yet have any messages for this agent, create a spot in the dictionary for this agent
 			if (!success)
 			{
-				labelMessagesForAgent = new ConcurrentBag<SimulationLabel>();
-				agentLabelMessageDictionary.TryAdd(agentId, labelMessagesForAgent);
+				labelMessagesForAgent = new ConcurrentDictionary<SimulationMessageType, SimulationLabel>();
+				labelMessagesForMultipleAgents.TryAdd(agentId, labelMessagesForAgent);
 			}
 
 			return labelMessagesForAgent;
@@ -319,13 +302,21 @@ namespace MyThirdSDL.UserInterface
 		/// <param name="renderer">Renderer.</param>
 		private void DrawAgentMessages(GameTime gameTime, Renderer renderer)
 		{
-			foreach (var agentId in agentLabelMessageDictionary.Keys)
+			foreach (var agentId in labelMessagesForMultipleAgents.Keys)
 			{
-				ConcurrentBag<SimulationLabel> labelMessagesForAgent = new ConcurrentBag<SimulationLabel>();
-				bool success = agentLabelMessageDictionary.TryGetValue(agentId, out labelMessagesForAgent);
+				ConcurrentDictionary<SimulationMessageType, SimulationLabel> labelMessagesForSingleAgent;
+				bool success = labelMessagesForMultipleAgents.TryGetValue(agentId, out labelMessagesForSingleAgent);
 				if (success)
-					foreach (var labelMessage in labelMessagesForAgent)
-						labelMessage.Draw(gameTime, renderer);
+				{
+					foreach (var labelMessageKey in labelMessagesForSingleAgent.Keys)
+					{
+						SimulationLabel labelMessage;
+						success = labelMessagesForSingleAgent.TryGetValue(labelMessageKey, out labelMessage);
+
+						if(success)
+							labelMessage.Draw(gameTime, renderer);
+					}
+				}
 			}
 		}
 

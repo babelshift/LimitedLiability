@@ -239,9 +239,9 @@ namespace MyThirdSDL
 				{
 					var triggerable = closestAgent as ITriggerable;
 					if(closestAgent is SodaMachine)
-						triggerable.Trigger.AddSubscriberToActionByType(mobileAgent, ActionType.DispenseDrink);
+						triggerable.Trigger.AddSubscriptionToActionByType(mobileAgent, SubscriptionType.Once, ActionType.DispenseDrink);
 					if(closestAgent is SnackMachine)
-						triggerable.Trigger.AddSubscriberToActionByType(mobileAgent, ActionType.DispenseFood);
+						triggerable.Trigger.AddSubscriptionToActionByType(mobileAgent, SubscriptionType.Once, ActionType.DispenseFood);
 				}
 
 				if (closestAgent != null)
