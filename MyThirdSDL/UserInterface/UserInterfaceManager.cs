@@ -46,7 +46,7 @@ namespace MyThirdSDL.UserInterface
 
 		#region Message List
 
-		private Dictionary<Guid, List<SimulationLabel>> labelMessagesForAgents = new Dictionary<Guid, List<SimulationLabel>>();
+		private ConcurrentDictionary<Guid, ConcurrentBag<SimulationLabel>> agentLabelMessageDictionary = new ConcurrentDictionary<Guid, ConcurrentBag<SimulationLabel>>();
 
 		#endregion
 
@@ -148,7 +148,7 @@ namespace MyThirdSDL.UserInterface
 			if (!IsAnyMessagesWithTypeForAgent(labelMessagesForAgent, message.Type))
 			{
 				int messageOffsetY = ((labelMessagesForAgent.Count() + 1) * 18) + 72;
-				var labelMessage = controlFactory.CreateSimulationLabel(Vector.Zero + new Vector(0, messageOffsetY), fontPath, fontSizeContent, fontColor, message);
+				SimulationLabel labelMessage = controlFactory.CreateSimulationLabel(Vector.Zero + new Vector(0, messageOffsetY), fontPath, fontSizeContent, fontColor, message);
 				labelMessagesForAgent.Add(labelMessage);
 			}
 		}
@@ -161,11 +161,12 @@ namespace MyThirdSDL.UserInterface
 		/// <param name="messageType">Message type.</param>
 		public void RemoveMessage(Guid agentId, SimulationMessage.MessageType messageType)
 		{
-			var labelMessagesForAgent = GetMessagesByAgentId(agentId);
-			var labelMessageToRemove = labelMessagesForAgent.FirstOrDefault(l => l.SimulationMessage.Type == messageType);
+			var agentLabelMessageBag = GetMessagesByAgentId(agentId);
+			SimulationLabel labelMessageToRemove = agentLabelMessageBag.FirstOrDefault(l => l.SimulationMessage.Type == messageType);
 
+			// we need to use a concurrent collection here so that our removal of an object doesn't interfere with drawing/updating that object on another thread
 			if(labelMessageToRemove != null)
-				labelMessagesForAgent.Remove(labelMessageToRemove);
+				agentLabelMessageBag.TryTake(out labelMessageToRemove);
 		}
 
 		/// <summary>
@@ -187,18 +188,18 @@ namespace MyThirdSDL.UserInterface
 		/// </summary>
 		/// <returns>The messages by agent identifier.</returns>
 		/// <param name="agentId">Agent identifier.</param>
-		private IList<SimulationLabel> GetMessagesByAgentId(Guid agentId)
+		private ConcurrentBag<SimulationLabel> GetMessagesByAgentId(Guid agentId)
 		{
-			List<SimulationLabel> labelMessagesForAgent = new List<SimulationLabel>();
+			ConcurrentBag<SimulationLabel> labelMessagesForAgent = new ConcurrentBag<SimulationLabel>();
 
 			// try to get existing message list for the passed agent id
-			bool success = labelMessagesForAgents.TryGetValue(agentId, out labelMessagesForAgent);
+			bool success = agentLabelMessageDictionary.TryGetValue(agentId, out labelMessagesForAgent);
 
 			// if we don't yet have any messages for this agent, create a spot in the dictionary for this agent
 			if (!success)
 			{
-				labelMessagesForAgent = new List<SimulationLabel>();
-				labelMessagesForAgents.Add(agentId, labelMessagesForAgent);
+				labelMessagesForAgent = new ConcurrentBag<SimulationLabel>();
+				agentLabelMessageDictionary.TryAdd(agentId, labelMessagesForAgent);
 			}
 
 			return labelMessagesForAgent;
@@ -306,10 +307,10 @@ namespace MyThirdSDL.UserInterface
 		/// <param name="renderer">Renderer.</param>
 		private void DrawAgentMessages(GameTime gameTime, Renderer renderer)
 		{
-			foreach (var agentId in labelMessagesForAgents.Keys)
+			foreach (var agentId in agentLabelMessageDictionary.Keys)
 			{
-				List<SimulationLabel> labelMessagesForAgent = new List<SimulationLabel>();
-				bool success = labelMessagesForAgents.TryGetValue(agentId, out labelMessagesForAgent);
+				ConcurrentBag<SimulationLabel> labelMessagesForAgent = new ConcurrentBag<SimulationLabel>();
+				bool success = agentLabelMessageDictionary.TryGetValue(agentId, out labelMessagesForAgent);
 				if (success)
 					foreach (var labelMessage in labelMessagesForAgent)
 						labelMessage.Draw(gameTime, renderer);

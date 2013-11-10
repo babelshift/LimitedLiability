@@ -10,6 +10,8 @@ namespace MyThirdSDL.UserInterface
 {
 	public class ControlFactory
 	{
+		private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
 		private Renderer renderer;
 		private ContentManager contentManager;
 		private TextureStore textureStore;
@@ -191,12 +193,16 @@ namespace MyThirdSDL.UserInterface
 
 		public Label CreateLabel(Vector position, string fontPath, int fontSize, Color color, string text)
 		{
+			if (log.IsDebugEnabled)
+				log.Debug(String.Format("Creating label at ({0},{1}) with text: {2}", position.X, position.Y, text));
 			TrueTypeText trueTypeText = TrueTypeTextFactory.CreateTrueTypeText(renderer, fontPath, fontSize, color, text);
 			return new Label(position, trueTypeText);
 		}
 
 		public SimulationLabel CreateSimulationLabel(Vector position, string fontPath, int fontSize, Color color, SimulationMessage simulationMessage)
 		{
+			if (log.IsDebugEnabled)
+				log.Debug(String.Format("Creating simulation label at ({0},{1}) with type: {2} and text: {3}", position.X, position.Y, simulationMessage.Type, simulationMessage.Text));
 			TrueTypeText trueTypeText = TrueTypeTextFactory.CreateTrueTypeText(renderer, fontPath, fontSize, color, simulationMessage.Text);
 			return new SimulationLabel(position, trueTypeText, simulationMessage);
 		}

@@ -5,10 +5,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using SharpDL;
+using System.Collections.Concurrent;
 
 namespace MyThirdSDL.Descriptors
 {
-	public class Employee : MobileAgent
+	public class Employee : MobileAgent, ITriggerSubscriber
 	{
 		private double necessityDecayRate = -0.01;
 		private static Vector speed = new Vector(25, 25);
@@ -90,11 +91,23 @@ namespace MyThirdSDL.Descriptors
 
 		public override void Update(GameTime gameTime)
 		{
+			base.Update(gameTime);
+
 			AdjustNecessitiesBasedOnDecayRate();
 			CheckIfEmployeeNeedsAnything();
 			CheckIfEmployeeIsUnhappy();
 
-			base.Update(gameTime);
+			if (IsWalkingTowardsAgent && IsAtFinalDestination)
+			{
+				// if soda machine, drink
+				if (WalkingTowardsAgent is ITriggerable)
+				{
+					var triggerable = WalkingTowardsAgent as ITriggerable;
+					triggerable.ExecuteTrigger();
+				}
+
+				ResetWalkingTowardsAgent();
+			}
 		}
 
 		private void AdjustNecessitiesBasedOnDecayRate()
@@ -148,6 +161,19 @@ namespace MyThirdSDL.Descriptors
 			// if unhappy, complain, threaten to quit, quit, lash out at office / others
 			if (HappinessRating < (int)Necessities.Rating.Neutral)
 				EventHelper.FireEvent(IsUnhappy, this, EventArgs.Empty);
+		}
+
+		/// <summary>
+		/// Reacts to an action fired as the result of a trigger.
+		/// </summary>
+		/// <param name="actionType">Action type.</param>
+		/// <param name="affector">Affector.</param>
+		public override void ReactToAction(ActionType actionType, NecessityAffector affector) 
+		{
+			if (actionType == ActionType.DispenseDrink)
+				Drink(affector.ThirstEffectiveness);
+			else if (actionType == ActionType.DispenseFood)
+				Eat(affector.HungerEffectiveness);
 		}
 	}
 }

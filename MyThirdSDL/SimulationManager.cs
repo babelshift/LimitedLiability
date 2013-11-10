@@ -60,24 +60,24 @@ namespace MyThirdSDL
 			{
 				agent.Update(gameTime);
 
-				if (agent is Employee)
-				{
-					var mobileAgent = agent as Employee;
-
-					// if agent is walking towards agent
-					// if agent has reached its walking destination
-					if (mobileAgent.IsWalkingTowardsAgent && mobileAgent.IsAtFinalDestination)
-					{
-						var walkingTowardsAgent = mobileAgent.WalkingTowardsAgent;
-						// if soda machine, drink
-						if (walkingTowardsAgent is SodaMachine)
-						{
-							var sodaMachine = walkingTowardsAgent as SodaMachine;
-							mobileAgent.Drink(sodaMachine.ThirstEffectiveness);
-							mobileAgent.ResetWalkingTowardsAgent();
-						}
-					}
-				}
+//				if (agent is Employee)
+//				{
+//					var mobileAgent = agent as Employee;
+//
+//					// if agent is walking towards agent
+//					// if agent has reached its walking destination
+//					if (mobileAgent.IsWalkingTowardsAgent && mobileAgent.IsAtFinalDestination)
+//					{
+//						var walkingTowardsAgent = mobileAgent.WalkingTowardsAgent;
+//						// if soda machine, drink
+//						if (walkingTowardsAgent is SodaMachine)
+//						{
+//							var sodaMachine = walkingTowardsAgent as SodaMachine;
+//							mobileAgent.Drink(sodaMachine.ThirstEffectiveness);
+//							mobileAgent.ResetWalkingTowardsAgent();
+//						}
+//					}
+//				}
 			}
 		}
 
@@ -111,7 +111,7 @@ namespace MyThirdSDL
 		{
 			var employee = GetEmployeeFromEventSender(sender);
 			EventHelper.FireEvent(EmployeeIsHungry, sender, e);
-			WalkMobileAgentToClosest<SnackMachine>(employee);
+			//WalkMobileAgentToClosest<SnackMachine>(employee);
 		}
 
 		private void HandleIsDirty(object sender, EventArgs e)
@@ -222,6 +222,17 @@ namespace MyThirdSDL
 			{
 				// find the best path to the closest soda machine to the employee and set the employee on his way towards that soda machine
 				var closestAgent = GetClosestAgentByType<T>(mobileAgent, agentsToCheck);
+
+				if (closestAgent is ITriggerable)
+				{
+					var triggerable = closestAgent as ITriggerable;
+					if(closestAgent is SodaMachine)
+					{
+						var sodaMachine = closestAgent as SodaMachine;
+						triggerable.Trigger.AddSubscriberToActionByType(mobileAgent, ActionType.DispenseDrink);
+					}
+				}
+
 
 				if (closestAgent != null)
 				{

@@ -23,6 +23,12 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <CustomCommands>
+      <CustomCommands>
+        <Command type="AfterBuild" command="cp &quot;${SolutionDir}/Libs/x86-64/Linux/Mint 15&quot;/*.* ${TargetDir}" externalConsole="True" />
+        <Command type="AfterBuild" command="cp &quot;${SolutionDir}/Libs&quot;/*.* ${TargetDir}" externalConsole="True" />
+      </CustomCommands>
+    </CustomCommands>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -50,6 +56,21 @@
     <Reference Include="SharpTiles">
       <HintPath>..\Libs\SharpTiles.dll</HintPath>
     </Reference>
+    <Reference Include="SharpDL">
+      <HintPath>..\Libs\SharpDL.dll</HintPath>
+    </Reference>
+    <Reference Include="SharpDL.Events">
+      <HintPath>..\Libs\SharpDL.Events.dll</HintPath>
+    </Reference>
+    <Reference Include="SharpDL.Graphics">
+      <HintPath>..\Libs\SharpDL.Graphics.dll</HintPath>
+    </Reference>
+    <Reference Include="SharpDL.Input">
+      <HintPath>..\Libs\SharpDL.Input.dll</HintPath>
+    </Reference>
+    <Reference Include="log4net">
+      <HintPath>..\Libs\log4net.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Camera.cs" />
@@ -60,7 +81,6 @@
     <Compile Include="Descriptors\IPurchasable.cs" />
     <Compile Include="Descriptors\TextureStore.cs" />
     <Compile Include="Descriptors\Equipment.cs" />
-    <Compile Include="Descriptors\INecessityAffector.cs" />
     <Compile Include="Descriptors\ISkillsAffector.cs" />
     <Compile Include="Descriptors\Job.cs" />
     <Compile Include="Descriptors\JobFactory.cs" />
@@ -71,7 +91,6 @@
     <Compile Include="Descriptors\SnackMachine.cs" />
     <Compile Include="Descriptors\SodaMachine.cs" />
     <Compile Include="Descriptors\WaterFountain.cs" />
-    <Compile Include="Entity.cs" />
     <Compile Include="GridManager.cs" />
     <Compile Include="ICollidable.cs" />
     <Compile Include="IDrawable.cs" />
@@ -79,7 +98,6 @@
     <Compile Include="MainGame.cs" />
     <Compile Include="Path.cs" />
     <Compile Include="Descriptors\Employee.cs" />
-    <Compile Include="Player.cs" />
     <Compile Include="PriorityQueue.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -102,6 +120,12 @@
     <Compile Include="SimulationMessage.cs" />
     <Compile Include="SimulationMessageFactory.cs" />
     <Compile Include="UserInterface\SimulationLabel.cs" />
+    <Compile Include="Descriptors\Trigger.cs" />
+    <Compile Include="Descriptors\Action.cs" />
+    <Compile Include="Descriptors\ITriggerSubscriber.cs" />
+    <Compile Include="Descriptors\ITriggerable.cs" />
+    <Compile Include="Descriptors\NecessityAffector.cs" />
+    <Compile Include="Descriptors\IAffectsNecessities.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

@@ -7,26 +7,29 @@ using System.Threading.Tasks;
 
 namespace MyThirdSDL.Descriptors
 {
-	public class SodaMachine : Equipment, IPurchasable
+	public class SodaMachine : Equipment, IPurchasable, ITriggerable
 	{
 		private const int price = 50;
 		private const string name = "Soda Machine";
 
-		public int HealthEffectiveness { get; private set; }
-		public int HygieneEffectiveness { get; private set; }
-		public int SleepEffectiveness { get; private set; }
-		public int ThirstEffectiveness { get; private set; }
-		public int HungerEffectiveness { get; private set; }
+		public NecessityAffector NecessityAffector { get; private set; }
 		public string IconTextureKey { get { return "IconSoda"; } }
+
+		public Trigger Trigger { get; private set; }
 
 		public SodaMachine(TimeSpan birthTime, Texture texture, Vector startingPosition)
 			: base(birthTime, name, texture, startingPosition, price)
 		{
-			HealthEffectiveness = -1;
-			HygieneEffectiveness = 0;
-			SleepEffectiveness = 1;
-			ThirstEffectiveness = 10;
-			HungerEffectiveness = 0;
+			NecessityAffector = new NecessityAffector(-1, 0, 1, 10, 0);
+
+			Trigger = new Trigger();
+			Action dispenseDrink = new Action(ActionType.DispenseDrink);
+			Trigger.AddAction(dispenseDrink);
+		}
+
+		public void ExecuteTrigger()
+		{
+			Trigger.Execute(NecessityAffector);
 		}
 	}
 }

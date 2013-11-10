@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace MyThirdSDL.Descriptors
 {
-	public class MobileAgent : Agent
+	public abstract class MobileAgent : Agent, ITriggerSubscriber
 	{
 		public enum AgentActivity
 		{
@@ -61,6 +61,8 @@ namespace MyThirdSDL.Descriptors
 			if (Activity != activity)
 				Activity = activity;
 		}
+
+		public abstract void ReactToAction(ActionType actionType, NecessityAffector affector);
 
 		#region Game Loop
 

@@ -9,6 +9,8 @@ namespace MyThirdSDL.Descriptors
 {
 	public class AgentFactory
 	{
+		private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
 		private List<string> firstNames = new List<string>();
 		private Random random = new Random();
 		private TextureStore textureStore;
@@ -47,6 +49,9 @@ namespace MyThirdSDL.Descriptors
 			Job job = jobFactory.CreateJob(skills);
 
 			Employee employee = new Employee(birthTime, "Employee " + employeeNumber, texture, position, firstName, "Smith", age, DateTime.Now, skills, job);
+
+			if (log.IsDebugEnabled)
+				log.Debug(String.Format("Employee has been created with name: {0}", employee.FullName));
 
 			return employee;
 		}
@@ -104,6 +109,8 @@ namespace MyThirdSDL.Descriptors
 
 		private T CreateAgent<T>(TimeSpan birthTime, string texturePathKey, Vector position)
 		{
+			if (log.IsDebugEnabled)
+				log.Debug(String.Format("Creating agent of type {0} at ({1},{2}) with birth time: {3}", typeof(T), position.X, position.Y, birthTime));
 			Texture texture = GetTextureFromStore(texturePathKey);
 			return (T)Activator.CreateInstance(typeof(T), birthTime, texture, position);
 		}

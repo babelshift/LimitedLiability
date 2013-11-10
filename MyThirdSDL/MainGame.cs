@@ -14,6 +14,7 @@ namespace MyThirdSDL
 {
 	public class MainGame : Game
 	{
+		private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
 		#region Constants
 
@@ -66,6 +67,9 @@ namespace MyThirdSDL
 			KeyReleased += MainGame_KeyReleased;
 			MouseMoving += MainGame_MouseMoving;
 			MouseButtonPressed += MainGame_MouseButtonPressed;
+
+			if (log.IsDebugEnabled)
+				log.Debug("Game class has been constructed.");
 		}
 
 		#endregion
@@ -145,6 +149,9 @@ namespace MyThirdSDL
 			simulationManager.EmployeeIsUnhealthy += HandleEmployeeIsUnhealthy;
 			simulationManager.EmployeeNeedsOfficeDesk += HandleEmployeeNeedsOfficeDesk;
 			simulationManager.EmployeeThirstSatisfied += HandleEmployeeThirstSatisfied;
+
+			if (log.IsDebugEnabled)
+				log.Debug("Game loop Initialize has been completed.");
 		}
 
 		private void HandleEmployeeThirstSatisfied (object sender, EventArgs e)
@@ -224,8 +231,10 @@ namespace MyThirdSDL
 
 			employee = agentFactory.CreateEmployee(TimeSpan.Zero, new Vector(100, 100));
 			var sodaMachine = agentFactory.CreateSodaMachine(TimeSpan.Zero, new Vector(380, 415));
+			var snackMachine = agentFactory.CreateSnackMachine(TimeSpan.Zero, new Vector(640, 290));
 			simulationManager.AddAgent(employee);
 			simulationManager.AddAgent(sodaMachine);
+			simulationManager.AddAgent(snackMachine);
 
 			Surface tileHighlightSurface = new Surface(tileHighlightTexturePath, Surface.SurfaceType.PNG);
 			tileHighlightImage = new Image(Renderer, tileHighlightSurface, Image.ImageFormat.PNG);
@@ -245,6 +254,9 @@ namespace MyThirdSDL
 			purchasableItems.Add(agentFactory.CreateSodaMachine(TimeSpan.Zero));
 			purchasableItems.Add(agentFactory.CreateWaterFountain(TimeSpan.Zero));
 			userInterfaceManager = new UserInterfaceManager(Renderer, contentManager, new Point(SCREEN_WIDTH, SCREEN_HEIGHT), purchasableItems);
+
+			if (log.IsDebugEnabled)
+				log.Debug("Game loop LoadContent has been completed.");
 		}
 
 		/// <summary>
