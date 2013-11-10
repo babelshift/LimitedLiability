@@ -55,6 +55,7 @@ namespace MyThirdSDL.Descriptors
 		public event EventHandler<EventArgs> NeedsOfficeDesk;
 
 		public event EventHandler<EventArgs> ThirstSatisfied;
+		public event EventHandler<EventArgs> HungerSatisfied;
 
 		public Employee(TimeSpan birthTime, string agentName, Texture texture, Vector position, string firstName, string lastName, int age, DateTime birthday, Skills skills, Job job)
 			: base(birthTime, agentName, texture, position, speed)
@@ -86,7 +87,12 @@ namespace MyThirdSDL.Descriptors
 
 		public void Eat(int hungerEffectiveness)
 		{
+			Necessities.Rating previousHungerRating = Necessities.Thirst;
 			Necessities.AdjustHunger(hungerEffectiveness);
+
+			// if, after eating, our hunger is above the threshold AND our previous hunger was below the threshold, our hunger has been satisfied, notify subscribers
+			if (Necessities.Hunger >= Necessities.Rating.Neutral && previousHungerRating < Necessities.Rating.Neutral)
+				EventHelper.FireEvent(HungerSatisfied, this, EventArgs.Empty);
 		}
 
 		public override void Update(GameTime gameTime)
@@ -96,18 +102,6 @@ namespace MyThirdSDL.Descriptors
 			AdjustNecessitiesBasedOnDecayRate();
 			CheckIfEmployeeNeedsAnything();
 			CheckIfEmployeeIsUnhappy();
-
-			if (IsWalkingTowardsAgent && IsAtFinalDestination)
-			{
-				// if soda machine, drink
-				if (WalkingTowardsAgent is ITriggerable)
-				{
-					var triggerable = WalkingTowardsAgent as ITriggerable;
-					triggerable.ExecuteTrigger();
-				}
-
-				ResetWalkingTowardsAgent();
-			}
 		}
 
 		private void AdjustNecessitiesBasedOnDecayRate()

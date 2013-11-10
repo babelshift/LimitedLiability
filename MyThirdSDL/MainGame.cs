@@ -149,9 +149,16 @@ namespace MyThirdSDL
 			simulationManager.EmployeeIsUnhealthy += HandleEmployeeIsUnhealthy;
 			simulationManager.EmployeeNeedsOfficeDesk += HandleEmployeeNeedsOfficeDesk;
 			simulationManager.EmployeeThirstSatisfied += HandleEmployeeThirstSatisfied;
+			simulationManager.EmployeeHungerSatisfied += HandleEmployeeHungerSatisfied;;
 
 			if (log.IsDebugEnabled)
 				log.Debug("Game loop Initialize has been completed.");
+		}
+
+		private void HandleEmployeeHungerSatisfied (object sender, EventArgs e)
+		{
+			var employee = GetEmployeeFromEventSender(sender);
+			userInterfaceManager.RemoveMessage(employee.ID, SimulationMessage.MessageType.EmployeeIsHungry);
 		}
 
 		private void HandleEmployeeThirstSatisfied (object sender, EventArgs e)
@@ -282,7 +289,8 @@ namespace MyThirdSDL
 			string simulationTimeText = simulationManager.SimulationTimeDisplay;
 			userInterfaceManager.Update(gameTime, simulationTimeText);
 
-			userInterfaceManager.SetEmployeeHealth(employee.Necessities.thirstRating, employee.Necessities.Thirst);
+			userInterfaceManager.SetEmployeeThirstDisplay(employee.Necessities.thirstRating, employee.Necessities.Thirst);
+			userInterfaceManager.SetEmployeeHungerDisplay(employee.Necessities.hungerRating, employee.Necessities.Hunger);
 		}
 
 		/// <summary>

@@ -37,6 +37,7 @@ namespace MyThirdSDL
 		public event EventHandler<EventArgs> EmployeeNeedsOfficeDesk;
 
 		public event EventHandler<EventArgs> EmployeeThirstSatisfied;
+		public event EventHandler<EventArgs> EmployeeHungerSatisfied;
 
 		#endregion
 
@@ -104,14 +105,18 @@ namespace MyThirdSDL
 		{
 			var employee = GetEmployeeFromEventSender(sender);
 			EventHelper.FireEvent(EmployeeIsThirsty, sender, e);
-			WalkMobileAgentToClosest<SodaMachine>(employee);
+
+			if(!employee.IsWalkingTowardsAgent)
+				WalkMobileAgentToClosest<SodaMachine>(employee);
 		}
 
 		private void HandleIsHungry(object sender, EventArgs e)
 		{
 			var employee = GetEmployeeFromEventSender(sender);
 			EventHelper.FireEvent(EmployeeIsHungry, sender, e);
-			//WalkMobileAgentToClosest<SnackMachine>(employee);
+
+			if(!employee.IsWalkingTowardsAgent)
+				WalkMobileAgentToClosest<SnackMachine>(employee);
 		}
 
 		private void HandleIsDirty(object sender, EventArgs e)
@@ -157,12 +162,18 @@ namespace MyThirdSDL
 					employee.NeedsOfficeDesk += HandleNeedsOfficeDesk;
 
 					employee.ThirstSatisfied += HandleThirstSatisfied;
+					employee.HungerSatisfied += HandleHungerSatisfied;
 
 					agents.Add(employee);
 				}
 				else
 					agents.Add(agent);
 			}
+		}
+
+		private void HandleHungerSatisfied (object sender, EventArgs e)
+		{
+			EventHelper.FireEvent(EmployeeHungerSatisfied, sender, e);
 		}
 
 		private void HandleThirstSatisfied (object sender, EventArgs e)
@@ -194,6 +205,7 @@ namespace MyThirdSDL
 					employee.NeedsOfficeDesk -= EmployeeNeedsOfficeDesk;
 
 					employee.ThirstSatisfied -= HandleThirstSatisfied;
+					employee.HungerSatisfied -= HandleHungerSatisfied;
 
 					agents.Remove(employee);
 				}
@@ -227,17 +239,15 @@ namespace MyThirdSDL
 				{
 					var triggerable = closestAgent as ITriggerable;
 					if(closestAgent is SodaMachine)
-					{
-						var sodaMachine = closestAgent as SodaMachine;
 						triggerable.Trigger.AddSubscriberToActionByType(mobileAgent, ActionType.DispenseDrink);
-					}
+					if(closestAgent is SnackMachine)
+						triggerable.Trigger.AddSubscriberToActionByType(mobileAgent, ActionType.DispenseFood);
 				}
-
 
 				if (closestAgent != null)
 				{
-					var bestPathToClosestSodaMachine = GetBestPathToAgent(mobileAgent, closestAgent);
-					mobileAgent.WalkOnPathTowardsAgent(bestPathToClosestSodaMachine, closestAgent);
+					var bestPathToClosestAgent = GetBestPathToAgent(mobileAgent, closestAgent);
+					mobileAgent.AddIntent(new Intent(closestAgent, bestPathToClosestAgent));
 				}
 			}
 		}

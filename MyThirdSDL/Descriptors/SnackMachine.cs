@@ -20,7 +20,7 @@ namespace MyThirdSDL.Descriptors
 		public SnackMachine(TimeSpan birthTime, Texture texture, Vector startingPosition)
 			: base(birthTime, name, texture, startingPosition, price)
 		{
-			NecessityAffector = new NecessityAffector(-1, 0, 0, 0, 2);
+			NecessityAffector = new NecessityAffector(-1, 0, 0, 0, 10);
 
 			Trigger = new Trigger();
 			Action dispenseFood = new Action(ActionType.DispenseFood);

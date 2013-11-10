@@ -126,6 +126,7 @@
     <Compile Include="Descriptors\ITriggerable.cs" />
     <Compile Include="Descriptors\NecessityAffector.cs" />
     <Compile Include="Descriptors\IAffectsNecessities.cs" />
+    <Compile Include="Descriptors\Intent.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

@@ -39,8 +39,10 @@ namespace MyThirdSDL.UserInterface
 		private Label labelMousePositionAbsolute;
 		private Label labelMousePositionIsometric;
 		private Label labelSimulationTime;
-		private Label labelEmployeeHealthRaw;
-		private Label labelEmployeeHealthRating;
+		private Label labelEmployeeThirstRaw;
+		private Label labelEmployeeThirstRating;
+		private Label labelEmployeeHungerRaw;
+		private Label labelEmployeeHungerRating;
 
 		#endregion
 
@@ -50,10 +52,16 @@ namespace MyThirdSDL.UserInterface
 
 		#endregion
 
-		public void SetEmployeeHealth(double raw, MyThirdSDL.Descriptors.Necessities.Rating rating)
+		public void SetEmployeeThirstDisplay(double raw, MyThirdSDL.Descriptors.Necessities.Rating rating)
 		{
-			labelEmployeeHealthRaw.Text = raw.ToString();
-			labelEmployeeHealthRating.Text = rating.ToString();
+			labelEmployeeThirstRaw.Text = raw.ToString();
+			labelEmployeeThirstRating.Text = rating.ToString();
+		}
+
+		public void SetEmployeeHungerDisplay(double raw, MyThirdSDL.Descriptors.Necessities.Rating rating)
+		{
+			labelEmployeeHungerRaw.Text = raw.ToString();
+			labelEmployeeHungerRating.Text = rating.ToString();
 		}
 
 		#region Controls
@@ -108,8 +116,10 @@ namespace MyThirdSDL.UserInterface
 			labelMousePositionIsometric = controlFactory.CreateLabel(Vector.Zero + new Vector(0, 18), fontPath, fontSizeContent, fontColor, ".");
 			labelSimulationTime = controlFactory.CreateLabel(Vector.Zero + new Vector(0, 36), fontPath, fontSizeContent, fontColor, ".");
 
-			labelEmployeeHealthRaw = controlFactory.CreateLabel(Vector.Zero + new Vector(0, 54), fontPath, fontSizeContent, fontColor, ".");
-			labelEmployeeHealthRating = controlFactory.CreateLabel(Vector.Zero + new Vector(0, 72), fontPath, fontSizeContent, fontColor, ".");
+			labelEmployeeThirstRaw = controlFactory.CreateLabel(Vector.Zero + new Vector(0, 54), fontPath, fontSizeContent, fontColor, ".");
+			labelEmployeeThirstRating = controlFactory.CreateLabel(Vector.Zero + new Vector(0, 72), fontPath, fontSizeContent, fontColor, ".");
+			labelEmployeeHungerRaw = controlFactory.CreateLabel(Vector.Zero + new Vector(0, 90), fontPath, fontSizeContent, fontColor, ".");
+			labelEmployeeHungerRating = controlFactory.CreateLabel(Vector.Zero + new Vector(0, 108), fontPath, fontSizeContent, fontColor, ".");
 		}
 
 		/// <summary>
@@ -147,7 +157,7 @@ namespace MyThirdSDL.UserInterface
 			// if there isn't already a message of this type in this agent's collection, then add the message
 			if (!IsAnyMessagesWithTypeForAgent(labelMessagesForAgent, message.Type))
 			{
-				int messageOffsetY = ((labelMessagesForAgent.Count() + 1) * 18) + 72;
+				int messageOffsetY = ((labelMessagesForAgent.Count() + 1) * 18) + 108;
 				SimulationLabel labelMessage = controlFactory.CreateSimulationLabel(Vector.Zero + new Vector(0, messageOffsetY), fontPath, fontSizeContent, fontColor, message);
 				labelMessagesForAgent.Add(labelMessage);
 			}
@@ -289,8 +299,10 @@ namespace MyThirdSDL.UserInterface
 			labelMousePositionAbsolute.Draw(gameTime, renderer);
 			labelMousePositionIsometric.Draw(gameTime, renderer);
 			labelSimulationTime.Draw(gameTime, renderer);
-			labelEmployeeHealthRating.Draw(gameTime, renderer);
-			labelEmployeeHealthRaw.Draw(gameTime, renderer);
+			labelEmployeeThirstRating.Draw(gameTime, renderer);
+			labelEmployeeThirstRaw.Draw(gameTime, renderer);
+			labelEmployeeHungerRating.Draw(gameTime, renderer);
+			labelEmployeeHungerRaw.Draw(gameTime, renderer);
 
 			DrawAgentMessages(gameTime, renderer);
 
