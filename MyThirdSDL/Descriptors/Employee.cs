@@ -12,7 +12,6 @@ namespace MyThirdSDL.Descriptors
 	public class Employee : MobileAgent, ITriggerSubscriber
 	{
 		private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-
 		private double necessityDecayRate = -0.01;
 		private static Vector speed = new Vector(25, 25);
 
@@ -55,7 +54,6 @@ namespace MyThirdSDL.Descriptors
 		public event EventHandler<EventArgs> IsThirsty;
 		public event EventHandler<EventArgs> IsUnhappy;
 		public event EventHandler<EventArgs> NeedsOfficeDesk;
-
 		public event EventHandler<EventArgs> ThirstSatisfied;
 		public event EventHandler<EventArgs> HungerSatisfied;
 
@@ -105,24 +103,58 @@ namespace MyThirdSDL.Descriptors
 		{
 			base.Update(gameTime);
 
-			AdjustNecessitiesBasedOnDecayRate();
+			// if we are actively walking towards something and we are at the final destination (the thing we are walking towards)
+			// then we should take an action and get the next intent
+			if (IsWalkingTowardsAgent && IsAtFinalWalkToDestination)
+			{
+				// if we are walking towards something triggerable, then trigger it now that we are at it
+				if (walkingTowardsAgent is ITriggerable)
+				{
+					var triggerable = walkingTowardsAgent as ITriggerable;
+					triggerable.ExecuteTrigger();
+				}
+
+				// if we are walking towards something that affects our necessities (such as a soda machine or water fountain, get its effectiveness
+				// and adjust our necessities accordingly
+				if (walkingTowardsAgent is IAffectsNecessities)
+				{
+					var necessityAffector = walkingTowardsAgent as IAffectsNecessities;
+					AdjustNecessities(necessityAffector.NecessityAffector);
+				}
+
+				// we are done walking towards the intended agent
+				walkingTowardsAgent = null;
+
+				// get the next intent in our queue now that we've completed this intent
+				Intent nextIntent = GetNextIntent();
+
+				// if we have another intent, perform it, otherwise clear our walking towards destination because have no other intents
+				if (nextIntent != null)
+					WalkOnPathTowardsAgent(nextIntent.PathNodesToAgent, nextIntent.WalkToAgent);
+			}
+
+			AdjustNecessities(necessityDecayRate);
 			CheckIfEmployeeNeedsAnything();
 			CheckIfEmployeeIsUnhappy();
+
 		}
 
-		private void AdjustNecessitiesBasedOnDecayRate()
+		private void AdjustNecessities(double necessityEffect)
 		{
-			// as time goes on
-			// we need to slowly increase sleepiness
-			// we need to slowly increase hunger
-			// we need to slowly increase thirst
-			// we need to slowly reduce hygiene
-			// we need to slowly reduce health / fitness
-			Necessities.AdjustSleep(necessityDecayRate);
-			Necessities.AdjustHunger(necessityDecayRate);
-			Necessities.AdjustThirst(necessityDecayRate);
-			Necessities.AdjustHygiene(necessityDecayRate);
-			Necessities.AdjustHealth(necessityDecayRate);
+			Necessities.AdjustSleep(necessityEffect);
+			Necessities.AdjustHunger(necessityEffect);
+			Necessities.AdjustThirst(necessityEffect);
+			Necessities.AdjustHygiene(necessityEffect);
+			Necessities.AdjustHealth(necessityEffect);
+		}
+
+		private void AdjustNecessities(NecessityAffector necessityEffect)
+		{
+			Necessities.AdjustSleep(necessityEffect.SleepEffectiveness);
+			Eat(necessityEffect.HungerEffectiveness);
+			Drink(necessityEffect.ThirstEffectiveness);
+			Necessities.AdjustHygiene(necessityEffect.HygieneEffectiveness);
+			Necessities.AdjustHealth(necessityEffect.HealthEffectiveness);
 		}
 
 		private void CheckIfEmployeeNeedsAnything()
@@ -168,7 +200,7 @@ namespace MyThirdSDL.Descriptors
 		/// </summary>
 		/// <param name="actionType">Action type.</param>
 		/// <param name="affector">Affector.</param>
-		public override void ReactToAction(ActionType actionType, NecessityAffector affector) 
+		public override void ReactToAction(ActionType actionType, NecessityAffector affector)
 		{
 			if (actionType == ActionType.DispenseDrink)
 				Drink(affector.ThirstEffectiveness);

@@ -27,7 +27,6 @@ namespace MyThirdSDL
 
 		private Vector mouseClickPositionWorldGridIndex = CoordinateHelper.DefaultVector;
 		private Vector mousePositionWorldGridIndex = CoordinateHelper.DefaultVector;
-		private Vector mouseClickWorldPosition = CoordinateHelper.DefaultVector;
 		private MouseOverScreenEdge mouseOverScreenEdge;
 		private List<KeyInformation.VirtualKeyCode> keysPressed = new List<KeyInformation.VirtualKeyCode>();
 
@@ -53,7 +52,7 @@ namespace MyThirdSDL
 		private List<IDrawable> allDrawables = new List<IDrawable>();
 		private Image tileHighlightImage;
 		private Image tileHighlightSelectedImage;
-		private Employee employee;
+		private List<Employee> employees = new List<Employee>();
 		private TiledMap tiledMap;
 
 		#region Constructors
@@ -83,9 +82,6 @@ namespace MyThirdSDL
 			if (e.MouseButton == MouseButtonCode.Left)
 			{
 				mouseClickPositionWorldGridIndex = mousePositionWorldGridIndex;
-				mouseClickWorldPosition = new Vector(e.RelativeToWindowX, e.RelativeToWindowY);
-
-				//DetermineBestPathForEmployee();
 			}
 		}
 
@@ -158,13 +154,13 @@ namespace MyThirdSDL
 		private void HandleEmployeeHungerSatisfied (object sender, EventArgs e)
 		{
 			var employee = GetEmployeeFromEventSender(sender);
-			userInterfaceManager.RemoveMessage(employee.ID, SimulationMessageType.EmployeeIsHungry);
+			userInterfaceManager.RemoveMessageForAgentByType(employee.ID, SimulationMessageType.EmployeeIsHungry);
 		}
 
 		private void HandleEmployeeThirstSatisfied (object sender, EventArgs e)
 		{
 			var employee = GetEmployeeFromEventSender(sender);
-			userInterfaceManager.RemoveMessage(employee.ID, SimulationMessageType.EmployeeIsThirsty);
+			userInterfaceManager.RemoveMessageForAgentByType(employee.ID, SimulationMessageType.EmployeeIsThirsty);
 		}
 
 		#region Employee Events
@@ -177,46 +173,52 @@ namespace MyThirdSDL
 			return employee;
 		}
 
-		private void SendEmployeeMessageToUserInterface(object sender, string messageText, SimulationMessageType messageType)
+		private void SendEmployeeMessageToUserInterface(Employee employee, string messageText, SimulationMessageType messageType)
 		{
-			var employee = GetEmployeeFromEventSender(sender);
 			var message = SimulationMessageFactory.Create(employee.ProjectedPosition, messageText, messageType);
-			userInterfaceManager.AddMessage(employee.ID, message);
+			userInterfaceManager.AddMessageForAgent(employee.ID, message);
 		}
 
 		private void HandleEmployeeIsUnhappy(object sender, EventArgs e)
 		{
-			SendEmployeeMessageToUserInterface(sender, String.Format("{0} is unhappy!", employee.FullName), SimulationMessageType.EmployeeIsUnhappy);
+			var employee = GetEmployeeFromEventSender(sender);
+			SendEmployeeMessageToUserInterface(employee, String.Format("{0} is unhappy!", employee.FullName), SimulationMessageType.EmployeeIsUnhappy);
 		}
 
 		private void HandleEmployeeNeedsOfficeDesk(object sender, EventArgs e)
 		{
-			SendEmployeeMessageToUserInterface(sender, String.Format("{0} needs and office desk to work!", employee.FullName), SimulationMessageType.EmployeeNeedsDesk);
+			var employee = GetEmployeeFromEventSender(sender);
+			SendEmployeeMessageToUserInterface(employee, String.Format("{0} needs and office desk to work!", employee.FullName), SimulationMessageType.EmployeeNeedsDesk);
 		}
 
 		private void HandleEmployeeIsUnhealthy(object sender, EventArgs e)
 		{
-			SendEmployeeMessageToUserInterface(sender, String.Format("{0} is unhealthy!", employee.FullName), SimulationMessageType.EmployeeIsUnhealthy);
+			var employee = GetEmployeeFromEventSender(sender);
+			SendEmployeeMessageToUserInterface(employee, String.Format("{0} is unhealthy!", employee.FullName), SimulationMessageType.EmployeeIsUnhealthy);
 		}
 
 		private void HandleEmployeeIsSleepy(object sender, EventArgs e)
 		{
-			SendEmployeeMessageToUserInterface(sender, String.Format("{0} is sleepy!", employee.FullName), SimulationMessageType.EmployeeIsSleepy);
+			var employee = GetEmployeeFromEventSender(sender);
+			SendEmployeeMessageToUserInterface(employee, String.Format("{0} is sleepy!", employee.FullName), SimulationMessageType.EmployeeIsSleepy);
 		}
 
 		private void HandleEmployeeIsThirsty(object sender, EventArgs e)
 		{
-			SendEmployeeMessageToUserInterface(sender, String.Format("{0} is thirsty!", employee.FullName), SimulationMessageType.EmployeeIsThirsty);
+			var employee = GetEmployeeFromEventSender(sender);
+			SendEmployeeMessageToUserInterface(employee, String.Format("{0} is thirsty!", employee.FullName), SimulationMessageType.EmployeeIsThirsty);
 		}
 
 		private void HandleEmployeeIsHungry(object sender, EventArgs e)
 		{
-			SendEmployeeMessageToUserInterface(sender, String.Format("{0} is hungry!", employee.FullName), SimulationMessageType.EmployeeIsHungry);
+			var employee = GetEmployeeFromEventSender(sender);
+			SendEmployeeMessageToUserInterface(employee, String.Format("{0} is hungry!", employee.FullName), SimulationMessageType.EmployeeIsHungry);
 		}
 
 		private void HandleEmployeeIsDirty(object sender, EventArgs e)
 		{
-			SendEmployeeMessageToUserInterface(sender, String.Format("{0} is dirty!", employee.FullName), SimulationMessageType.EmployeeIsDirty);
+			var employee = GetEmployeeFromEventSender(sender);
+			SendEmployeeMessageToUserInterface(employee, String.Format("{0} is dirty!", employee.FullName), SimulationMessageType.EmployeeIsDirty);
 		}
 
 		#endregion
@@ -236,12 +238,20 @@ namespace MyThirdSDL
 			tiledMap = new TiledMap(mapPath, Renderer);
 			simulationManager.CurrentMap = tiledMap;
 
-			employee = agentFactory.CreateEmployee(TimeSpan.Zero, new Vector(100, 100));
-			var sodaMachine = agentFactory.CreateSodaMachine(TimeSpan.Zero, new Vector(380, 415));
-			var snackMachine = agentFactory.CreateSnackMachine(TimeSpan.Zero, new Vector(640, 290));
-			simulationManager.AddAgent(employee);
+			Employee employee1 = agentFactory.CreateEmployee(TimeSpan.Zero, new Vector(100, 100));
+			Employee employee2 = agentFactory.CreateEmployee(TimeSpan.Zero, new Vector(200, 300));
+			Employee employee3 = agentFactory.CreateEmployee(TimeSpan.Zero, new Vector(100, 700));
+			employees.Add(employee1);
+			employees.Add(employee2);
+			employees.Add(employee3);
+
+			SodaMachine sodaMachine = agentFactory.CreateSodaMachine(TimeSpan.Zero, new Vector(380, 415));
+			SnackMachine snackMachine = agentFactory.CreateSnackMachine(TimeSpan.Zero, new Vector(640, 290));
+			SnackMachine snackMachine2 = agentFactory.CreateSnackMachine(TimeSpan.Zero, new Vector(200, 700));
+			simulationManager.AddAgents(employees);
 			simulationManager.AddAgent(sodaMachine);
 			simulationManager.AddAgent(snackMachine);
+			//simulationManager.AddAgent(snackMachine2);
 
 			Surface tileHighlightSurface = new Surface(tileHighlightTexturePath, Surface.SurfaceType.PNG);
 			tileHighlightImage = new Image(Renderer, tileHighlightSurface, Image.ImageFormat.PNG);
@@ -289,8 +299,8 @@ namespace MyThirdSDL
 			string simulationTimeText = simulationManager.SimulationTimeDisplay;
 			userInterfaceManager.Update(gameTime, simulationTimeText);
 
-			userInterfaceManager.SetEmployeeThirstDisplay((double)employee.Necessities.Thirst, employee.Necessities.Thirst);
-			userInterfaceManager.SetEmployeeHungerDisplay((double)employee.Necessities.Hunger, employee.Necessities.Hunger);
+			//userInterfaceManager.SetEmployeeThirstDisplay((double)employee.Necessities.Thirst, employee.Necessities.Thirst);
+			//userInterfaceManager.SetEmployeeHungerDisplay((double)employee.Necessities.Hunger, employee.Necessities.Hunger);
 		}
 
 		/// <summary>
@@ -310,7 +320,8 @@ namespace MyThirdSDL
 			SortDrawablesByDrawDepth();
 			DrawHeightTiles(gameTime);
 
-			employee.Draw(gameTime, Renderer);
+			foreach(var employee in employees)
+				employee.Draw(gameTime, Renderer);
 
 			//Renderer.RenderTexture(isoWorldGridIndexText.Texture, 0, 0);
 			//Renderer.RenderTexture(orthoWorldGridIndexText.Texture, 0, 18);
@@ -384,28 +395,6 @@ namespace MyThirdSDL
 				position.Y - (image.Texture.Height * 0.75f)
 			);
 		}
-
-		/// <summary>
-		/// If the mouse was clicked on a position that is not the default value, calculate where in the world space the input occurred and find the best path
-		/// between the employee's current position and the clicked position. Uses the A* algorithm to determine said best path. If no path can be found, an exception
-		/// is thrown. This will occur if the user clicks outside the bounds of the map or on a collidable tile in which the employee cannot navigate.
-		/// </summary>
-//		private void DetermineBestPathForEmployee()
-//		{
-//			if (mousePositionWorldGridIndex != CoordinateHelper.DefaultVector)
-//			{
-//				Vector roundedMouseClickIndex = new Vector((int)(Math.Round(mousePositionWorldGridIndex.X)), (int)(Math.Round(mousePositionWorldGridIndex.Y)));
-//				try
-//				{
-//					Queue<MapObject> bestPath = tiledMap.FindBestPath(employee.WorldGridIndex, roundedMouseClickIndex);
-//					employee.WalkOnPath(bestPath);
-//				}
-//				catch
-//				{
-//					/*					 show error somewhere, we have chosen an invalid location */
-//				}
-//			}
-//		}
 
 		/// <summary>
 		/// Unload any content that was used during the update/draw game loop. If you load anything that uses native SDL structures such

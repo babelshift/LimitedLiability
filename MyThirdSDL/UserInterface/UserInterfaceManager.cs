@@ -48,8 +48,10 @@ namespace MyThirdSDL.UserInterface
 
 		#region Message List
 
-		private ConcurrentDictionary<Guid, ConcurrentDictionary<SimulationMessageType, SimulationLabel>> labelMessagesForMultipleAgents 
-			= new ConcurrentDictionary<Guid, ConcurrentDictionary<SimulationMessageType, SimulationLabel>>();
+		private Dictionary<Guid, Dictionary<SimulationMessageType, SimulationLabel>> labelMessagesForMultipleAgents 
+			= new Dictionary<Guid, Dictionary<SimulationMessageType, SimulationLabel>>();
+
+		private List<Label> labels = new List<Label>();
 
 		#endregion
 
@@ -114,13 +116,20 @@ namespace MyThirdSDL.UserInterface
 			string fontPath = GetLabelFontDetails(contentManager, out fontColor, out fontSizeContent);
 
 			labelMousePositionAbsolute = controlFactory.CreateLabel(Vector.Zero, fontPath, fontSizeContent, fontColor, ".");
-			labelMousePositionIsometric = controlFactory.CreateLabel(Vector.Zero + new Vector(0, 18), fontPath, fontSizeContent, fontColor, ".");
-			labelSimulationTime = controlFactory.CreateLabel(Vector.Zero + new Vector(0, 36), fontPath, fontSizeContent, fontColor, ".");
+			labelMousePositionIsometric = controlFactory.CreateLabel(Vector.Zero, fontPath, fontSizeContent, fontColor, ".");
+			labelSimulationTime = controlFactory.CreateLabel(Vector.Zero, fontPath, fontSizeContent, fontColor, ".");
+			labelEmployeeThirstRaw = controlFactory.CreateLabel(Vector.Zero, fontPath, fontSizeContent, fontColor, ".");
+			labelEmployeeThirstRating = controlFactory.CreateLabel(Vector.Zero, fontPath, fontSizeContent, fontColor, ".");
+			labelEmployeeHungerRaw = controlFactory.CreateLabel(Vector.Zero, fontPath, fontSizeContent, fontColor, ".");
+			labelEmployeeHungerRating = controlFactory.CreateLabel(Vector.Zero, fontPath, fontSizeContent, fontColor, ".");
 
-			labelEmployeeThirstRaw = controlFactory.CreateLabel(Vector.Zero + new Vector(0, 54), fontPath, fontSizeContent, fontColor, ".");
-			labelEmployeeThirstRating = controlFactory.CreateLabel(Vector.Zero + new Vector(0, 72), fontPath, fontSizeContent, fontColor, ".");
-			labelEmployeeHungerRaw = controlFactory.CreateLabel(Vector.Zero + new Vector(0, 90), fontPath, fontSizeContent, fontColor, ".");
-			labelEmployeeHungerRating = controlFactory.CreateLabel(Vector.Zero + new Vector(0, 108), fontPath, fontSizeContent, fontColor, ".");
+			labels.Add(labelMousePositionAbsolute);
+			labels.Add(labelMousePositionIsometric);
+			labels.Add(labelSimulationTime);
+			labels.Add(labelEmployeeThirstRaw);
+			labels.Add(labelEmployeeThirstRating);
+			labels.Add(labelEmployeeHungerRaw);
+			labels.Add(labelEmployeeHungerRating);
 		}
 
 		/// <summary>
@@ -147,19 +156,23 @@ namespace MyThirdSDL.UserInterface
 		/// </summary>
 		/// <param name="agentId">Agent identifier.</param>
 		/// <param name="message">Message.</param>
-		public void AddMessage(Guid agentId, SimulationMessage message)
+		public void AddMessageForAgent(Guid agentId, SimulationMessage message)
 		{
-			Color fontColor;
-			int fontSizeContent;
-			string fontPath = GetLabelFontDetails(contentManager, out fontColor, out fontSizeContent);
+			// try to get any messages already added for this agent
+			var labelMessagesForSingleAgent = GetMessagesForAgent(agentId);
 
-			var labelMessagesForSingleAgent = GetMessagesByAgentId(agentId);
+			// if there are no messages for this agent in the collection, create a message collection for this agent
+			if (!labelMessagesForMultipleAgents.ContainsKey(agentId))
+				labelMessagesForMultipleAgents.Add(agentId, labelMessagesForSingleAgent);
 
+			// if there are no messages of the passed type in the agent's message collection, add it to his collection
 			if(!labelMessagesForSingleAgent.ContainsKey(message.Type))
 			{
-				int messageOffsetY = ((labelMessagesForSingleAgent.Count() + 1) * 18) + 108;
-				SimulationLabel labelMessage = controlFactory.CreateSimulationLabel(Vector.Zero + new Vector(0, messageOffsetY), fontPath, fontSizeContent, fontColor, message);
-				labelMessagesForSingleAgent.TryAdd(message.Type, labelMessage);
+				Color fontColor;
+				int fontSizeContent;
+				string fontPath = GetLabelFontDetails(contentManager, out fontColor, out fontSizeContent);
+				SimulationLabel labelMessage = controlFactory.CreateSimulationLabel(Vector.Zero, fontPath, fontSizeContent, fontColor, message);
+				labelMessagesForSingleAgent.Add(message.Type, labelMessage);
 			}
 		}
 
@@ -169,33 +182,25 @@ namespace MyThirdSDL.UserInterface
 		/// </summary>
 		/// <param name="agentId">Agent identifier.</param>
 		/// <param name="messageType">Message type.</param>
-		public void RemoveMessage(Guid agentId, SimulationMessageType messageType)
+		public void RemoveMessageForAgentByType(Guid agentId, SimulationMessageType messageType)
 		{
-			var labelMessagesForSingleAgent = GetMessagesByAgentId(agentId);
-
-			SimulationLabel labelMessageToRemove;
-			labelMessagesForSingleAgent.TryRemove(messageType, out labelMessageToRemove);
+			var labelMessagesForSingleAgent = GetMessagesForAgent(agentId);
+			labelMessagesForSingleAgent.Remove(messageType);
 		}
 		/// <summary>
 		/// Gets the messages by agent identifier.
 		/// </summary>
 		/// <returns>The messages by agent identifier.</returns>
 		/// <param name="agentId">Agent identifier.</param>
-		private ConcurrentDictionary<SimulationMessageType, SimulationLabel> GetMessagesByAgentId(Guid agentId)
+		private Dictionary<SimulationMessageType, SimulationLabel> GetMessagesForAgent(Guid agentId)
 		{
-			ConcurrentDictionary<SimulationMessageType, SimulationLabel> labelMessagesForAgent = new ConcurrentDictionary<SimulationMessageType, SimulationLabel>();
+			Dictionary<SimulationMessageType, SimulationLabel> labelMessagesForSingleAgent;
+			bool success = labelMessagesForMultipleAgents.TryGetValue(agentId, out labelMessagesForSingleAgent);
 
-			// try to get existing message list for the passed agent id
-			bool success = labelMessagesForMultipleAgents.TryGetValue(agentId, out labelMessagesForAgent);
-
-			// if we don't yet have any messages for this agent, create a spot in the dictionary for this agent
-			if (!success)
-			{
-				labelMessagesForAgent = new ConcurrentDictionary<SimulationMessageType, SimulationLabel>();
-				labelMessagesForMultipleAgents.TryAdd(agentId, labelMessagesForAgent);
-			}
-
-			return labelMessagesForAgent;
+			if (success)
+				return labelMessagesForSingleAgent;
+			else
+				return new Dictionary<SimulationMessageType, SimulationLabel>();
 		}
 
 		#endregion
@@ -279,45 +284,29 @@ namespace MyThirdSDL.UserInterface
 
 		public void Draw(GameTime gameTime, Renderer renderer)
 		{
-			labelMousePositionAbsolute.Draw(gameTime, renderer);
-			labelMousePositionIsometric.Draw(gameTime, renderer);
-			labelSimulationTime.Draw(gameTime, renderer);
-			labelEmployeeThirstRating.Draw(gameTime, renderer);
-			labelEmployeeThirstRaw.Draw(gameTime, renderer);
-			labelEmployeeHungerRating.Draw(gameTime, renderer);
-			labelEmployeeHungerRaw.Draw(gameTime, renderer);
+			int i = 0;
 
-			DrawAgentMessages(gameTime, renderer);
+			foreach (var label in labels)
+			{
+				label.Position = new Vector(0, i * 18);
+				label.Draw(gameTime, renderer);
+				i++;
+			}
+
+			foreach (var labelMessagesForSingleAgent in labelMessagesForMultipleAgents.Values)
+			{
+				foreach (var labelMessage in labelMessagesForSingleAgent.Values)
+				{
+					labelMessage.Position = new Vector(0, i * 18);
+					labelMessage.Draw(gameTime, renderer);
+					i++;
+				}
+			}
 
 			toolboxTray.Draw(gameTime, renderer);
 
 			if (isEquipmentMenuOpen)
 				menuEquipment.Draw(gameTime, renderer);
-		}
-
-		/// <summary>
-		/// Draws the agent messages.
-		/// </summary>
-		/// <param name="gameTime">Game time.</param>
-		/// <param name="renderer">Renderer.</param>
-		private void DrawAgentMessages(GameTime gameTime, Renderer renderer)
-		{
-			foreach (var agentId in labelMessagesForMultipleAgents.Keys)
-			{
-				ConcurrentDictionary<SimulationMessageType, SimulationLabel> labelMessagesForSingleAgent;
-				bool success = labelMessagesForMultipleAgents.TryGetValue(agentId, out labelMessagesForSingleAgent);
-				if (success)
-				{
-					foreach (var labelMessageKey in labelMessagesForSingleAgent.Keys)
-					{
-						SimulationLabel labelMessage;
-						success = labelMessagesForSingleAgent.TryGetValue(labelMessageKey, out labelMessage);
-
-						if(success)
-							labelMessage.Draw(gameTime, renderer);
-					}
-				}
-			}
 		}
 
 		#endregion

@@ -19,7 +19,7 @@ namespace MyThirdSDL.Descriptors
 		private ConcurrentQueue<Intent> intents = new ConcurrentQueue<Intent>();
 		private Queue<MapObject> pathNodes;
 		private Vector currentDestination;
-		private Agent walkingTowardsAgent;
+		protected Agent walkingTowardsAgent;
 
 		public AgentActivity Activity { get; private set; }
 
@@ -27,7 +27,7 @@ namespace MyThirdSDL.Descriptors
 
 		public bool IsWalkingTowardsAgent { get { return walkingTowardsAgent != null; } }
 
-		private bool IsAtFinalWalkToDestination
+		protected bool IsAtFinalWalkToDestination
 		{
 			get
 			{
@@ -71,28 +71,6 @@ namespace MyThirdSDL.Descriptors
 		{
 			Move(gameTime);
 
-			// if we are actively walking towards something and we are at the final destination (the thing we are walking towards)
-			// then we should take an action and get the next intent
-			if (IsWalkingTowardsAgent && IsAtFinalWalkToDestination)
-			{
-				// if we are walking towards something triggerable, then trigger it now that we are at it
-				if (walkingTowardsAgent is ITriggerable)
-				{
-					var triggerable = walkingTowardsAgent as ITriggerable;
-					triggerable.ExecuteTrigger();
-				}
-
-				// we are done walking towards the intended agent
-				walkingTowardsAgent = null;
-
-				// get the next intent in our queue now that we've completed this intent
-				Intent nextIntent = GetNextIntent();
-
-				// if we have another intent, perform it, otherwise clear our walking towards destination because have no other intents
-				if (nextIntent != null)
-					WalkOnPathTowardsAgent(nextIntent.PathNodesToAgent, nextIntent.WalkToAgent);
-			}
-
 			base.Update(gameTime);
 		}
 
@@ -100,7 +78,7 @@ namespace MyThirdSDL.Descriptors
 
 		#region Movement
 
-		private Intent GetNextIntent()
+		protected Intent GetNextIntent()
 		{
 			Intent intent = null;
 
@@ -124,7 +102,7 @@ namespace MyThirdSDL.Descriptors
 			}
 		}
 
-		private void WalkOnPathTowardsAgent(Queue<MapObject> pathNodes, Agent agent)
+		protected void WalkOnPathTowardsAgent(Queue<MapObject> pathNodes, Agent agent)
 		{
 			// if we are not yet walking towards an agent, walk towards it!
 			if (walkingTowardsAgent == null)

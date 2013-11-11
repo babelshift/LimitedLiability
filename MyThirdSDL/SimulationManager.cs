@@ -139,6 +139,12 @@ namespace MyThirdSDL
 
 		#endregion
 
+		public void AddAgents(IEnumerable<Agent> agents)
+		{
+			foreach (var agent in agents)
+				AddAgent(agent);
+		}
+
 		/// <summary>
 		/// Adds the passed agent to the simulation (agent will be updated in the game loop). Will also subscribe to all agent events and bubble them accordingly.
 		/// </summary>

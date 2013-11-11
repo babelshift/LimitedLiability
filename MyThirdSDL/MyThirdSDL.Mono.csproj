@@ -128,7 +128,6 @@
     <Compile Include="Descriptors\IAffectsNecessities.cs" />
     <Compile Include="Descriptors\Intent.cs" />
     <Compile Include="Descriptors\Subscription.cs" />
-    <Compile Include="SimulationNotificationDictionary.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
