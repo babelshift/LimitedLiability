@@ -191,7 +191,7 @@ namespace MyThirdSDL
 		private void HandleEmployeeNeedsOfficeDesk(object sender, EventArgs e)
 		{
 			var employee = GetEmployeeFromEventSender(sender);
-			SendEmployeeMessageToUserInterface(employee, String.Format("{0} needs and office desk to work!", employee.FullName), SimulationMessageType.EmployeeNeedsDesk);
+			//SendEmployeeMessageToUserInterface(employee, String.Format("{0} needs and office desk to work!", employee.FullName), SimulationMessageType.EmployeeNeedsDesk);
 		}
 
 		private void HandleEmployeeIsUnhealthy(object sender, EventArgs e)
@@ -209,13 +209,13 @@ namespace MyThirdSDL
 		private void HandleEmployeeIsThirsty(object sender, EventArgs e)
 		{
 			var employee = GetEmployeeFromEventSender(sender);
-			SendEmployeeMessageToUserInterface(employee, String.Format("{0} is thirsty!", employee.FullName), SimulationMessageType.EmployeeIsThirsty);
+			//SendEmployeeMessageToUserInterface(employee, String.Format("{0} is thirsty!", employee.FullName), SimulationMessageType.EmployeeIsThirsty);
 		}
 
 		private void HandleEmployeeIsHungry(object sender, EventArgs e)
 		{
 			var employee = GetEmployeeFromEventSender(sender);
-			SendEmployeeMessageToUserInterface(employee, String.Format("{0} is hungry!", employee.FullName), SimulationMessageType.EmployeeIsHungry);
+			//SendEmployeeMessageToUserInterface(employee, String.Format("{0} is hungry!", employee.FullName), SimulationMessageType.EmployeeIsHungry);
 		}
 
 		private void HandleEmployeeIsDirty(object sender, EventArgs e)
@@ -243,7 +243,7 @@ namespace MyThirdSDL
 
 			var pathNodes = tiledMap.GetPathNodes();
 			Random random = new Random();
-			for (int i = 0; i < 50; i++)
+			for (int i = 0; i < 1000; i++)
 			{
 				int x = random.Next(0, pathNodes.Count);
 				var pathNode = pathNodes[x];
@@ -266,11 +266,11 @@ namespace MyThirdSDL
 			simulationManager.AddAgent(snackMachine);
 			simulationManager.AddAgent(snackMachine2);
 
-			Surface tileHighlightSurface = new Surface(tileHighlightTexturePath, Surface.SurfaceType.PNG);
-			tileHighlightImage = new Image(Renderer, tileHighlightSurface, Image.ImageFormat.PNG);
+			Surface tileHighlightSurface = new Surface(tileHighlightTexturePath, SurfaceType.PNG);
+			tileHighlightImage = new Image(Renderer, tileHighlightSurface, ImageFormat.PNG);
 
-			Surface tileHightlightSelectedSurface = new Surface(tileHighlightSelectedTexturePath, Surface.SurfaceType.PNG);
-			tileHighlightSelectedImage = new Image(Renderer, tileHightlightSelectedSurface, Image.ImageFormat.PNG);
+			Surface tileHightlightSelectedSurface = new Surface(tileHighlightSelectedTexturePath, SurfaceType.PNG);
+			tileHighlightSelectedImage = new Image(Renderer, tileHightlightSelectedSurface, ImageFormat.PNG);
 
 //			isoWorldGridIndexText = TrueTypeTextFactory.CreateTrueTypeText(Renderer, fontPath, 16, color);
 //			orthoWorldGridIndexText = TrueTypeTextFactory.CreateTrueTypeText(Renderer, fontPath, 16, color);

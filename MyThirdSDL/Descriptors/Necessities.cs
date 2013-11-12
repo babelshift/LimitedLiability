@@ -8,8 +8,6 @@ namespace MyThirdSDL.Descriptors
 {
 	public class Necessities
 	{
-		private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-
 		public enum Type
 		{
 			Sleep,

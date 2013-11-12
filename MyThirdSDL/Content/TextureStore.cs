@@ -32,7 +32,7 @@ namespace MyThirdSDL.Content
 
 		private Texture CreateTexture(string texturePath)
 		{
-			Surface surface = new Surface(texturePath, Surface.SurfaceType.PNG);
+			Surface surface = new Surface(texturePath, SurfaceType.PNG);
 			Texture texture = new Texture(renderer, surface);
 			return texture;
 		}

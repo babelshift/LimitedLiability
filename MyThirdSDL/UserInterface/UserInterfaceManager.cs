@@ -189,7 +189,7 @@ namespace MyThirdSDL.UserInterface
 			var labelMessagesForSingleAgent = GetMessagesForAgent(agentId);
 			SimulationLabel labelToRemove;
 			labelMessagesForSingleAgent.TryRemove(messageType, out labelToRemove);
-			labelToRemove.Dispose();
+			if(labelToRemove != null) labelToRemove.Dispose();
 		}
 
 		/// <summary>
