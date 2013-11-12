@@ -1,6 +1,6 @@
 using System;
 
-namespace MyThirdSDL.Descriptors
+namespace MyThirdSDL.Simulation
 {
 	public enum SubscriptionType
 	{

@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MyThirdSDL.Descriptors
+namespace MyThirdSDL.Agents
 {
 	public abstract class Equipment : Agent
 	{

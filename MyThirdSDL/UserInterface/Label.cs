@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace MyThirdSDL.UserInterface
 {
-	public class Label : Control
+	public class Label : Control, IDisposable
 	{
 		private TrueTypeText trueTypeText;
 
@@ -22,6 +22,24 @@ namespace MyThirdSDL.UserInterface
 			: base(trueTypeText.Texture, position)
 		{
 			this.trueTypeText = trueTypeText;
+		}
+
+		public override void Dispose()
+		{
+			Dispose(true);
+			GC.SuppressFinalize(this);
+			base.Dispose();
+		}
+
+		~Label()
+		{
+			Dispose(false);
+		}
+
+		private void Dispose(bool disposing)
+		{
+			if (trueTypeText != null)
+				trueTypeText.Dispose();
 		}
 	}
 }

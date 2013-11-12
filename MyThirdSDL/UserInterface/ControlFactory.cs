@@ -1,10 +1,12 @@
-﻿using MyThirdSDL.Descriptors;
-using SharpDL.Graphics;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using SharpDL.Graphics;
+using MyThirdSDL.Content;
+using MyThirdSDL.Descriptors;
+using MyThirdSDL.Simulation;
 
 namespace MyThirdSDL.UserInterface
 {

@@ -1,7 +1,6 @@
 using System;
-using MyThirdSDL.Descriptors;
 
-namespace MyThirdSDL
+namespace MyThirdSDL.Simulation
 {
     public interface ITriggerable
     {

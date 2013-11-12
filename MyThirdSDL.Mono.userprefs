@@ -2,26 +2,27 @@
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
   <MonoDevelop.Ide.Workbench ActiveDocument="MyThirdSDL/MainGame.cs">
     <Files>
-      <File FileName="MyThirdSDL/Descriptors/MobileAgent.cs" Line="22" Column="12" />
-      <File FileName="MyThirdSDL/Descriptors/Employee.cs" Line="119" Column="1" />
-      <File FileName="MyThirdSDL/MainGame.cs" Line="254" Column="6" />
-      <File FileName="MyThirdSDL/SimulationManager.cs" Line="182" Column="1" />
-      <File FileName="MyThirdSDL/UserInterface/UserInterfaceManager.cs" Line="187" Column="1" />
-      <File FileName="../../../Downloads/mono/mono-3.2.3/mcs/class/corlib/System.Collections.Generic/Dictionary.cs" Line="602" Column="1" />
-      <File FileName="MyThirdSDL/EventHelper.cs" Line="10" Column="1" />
-      <File FileName="MyThirdSDL/Descriptors/Trigger.cs" Line="24" Column="18" />
-      <File FileName="MyThirdSDL/Descriptors/Equipment.cs" Line="11" Column="3" />
-      <File FileName="MyThirdSDL/Descriptors/SodaMachine.cs" Line="22" Column="29" />
-      <File FileName="MyThirdSDL/Descriptors/ITriggerSubscriber.cs" Line="9" Column="8" />
-      <File FileName="MyThirdSDL/Descriptors/SnackMachine.cs" Line="18" Column="5" />
-      <File FileName="MyThirdSDL/Descriptors/ITriggerable.cs" Line="9" Column="8" />
+      <File FileName="MyThirdSDL/MainGame.cs" Line="136" Column="22" />
+      <File FileName="MyThirdSDL/SimulationManager.cs" Line="45" Column="44" />
+      <File FileName="MyThirdSDL/EventHelper.cs" Line="11" Column="1" />
+      <File FileName="MyThirdSDL/Descriptors/Employee.cs" Line="129" Column="50" />
+      <File FileName="MyThirdSDL/Descriptors/MobileAgent.cs" Line="23" Column="27" />
+      <File FileName="MyThirdSDL/TiledMap.cs" Line="528" Column="15" />
+      <File FileName="MyThirdSDL/Descriptors/Agent.cs" Line="26" Column="7" />
+      <File FileName="MyThirdSDL/Content/ContentReference.json" Line="10" Column="70" />
+      <File FileName="MyThirdSDL/Descriptors/Intention.cs" Line="38" Column="1" />
+      <File FileName="MyThirdSDL/UserInterface/UserInterfaceManager.cs" Line="190" Column="4" />
+      <File FileName="MyThirdSDL/UserInterface/SimulationLabel.cs" Line="11" Column="34" />
+      <File FileName="MyThirdSDL/UserInterface/Label.cs" Line="42" Column="1" />
+      <File FileName="MyThirdSDL/UserInterface/Control.cs" Line="62" Column="4" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
     <BreakpointStore>
-      <Breakpoint file="/home/justin/Documents/git/SharpDL/SharpDL.Graphics/Texture.cs" line="130" column="1" />
-      <Breakpoint file="/home/justin/Documents/git/SharpDL/SharpDL.Graphics/Texture.cs" line="119" column="1" />
-      <Breakpoint file="/home/justin/Documents/git/SharpDL/SharpDL.Graphics/Texture.cs" line="125" column="1" />
+      <Breakpoint file="/home/justin/Documents/git/SharpDL/SharpDL.Graphics/Texture.cs" line="121" column="1" />
+      <Breakpoint file="/home/justin/Documents/git/SharpDL/SharpDL.Graphics/TrueTypeText.cs" line="41" column="1" />
+      <Breakpoint file="/home/justin/Documents/git/MyThirdSDL/MyThirdSDL/UserInterface/Label.cs" line="36" column="1" />
+      <Breakpoint file="/home/justin/Documents/git/MyThirdSDL/MyThirdSDL/UserInterface/Control.cs" line="57" column="1" />
     </BreakpointStore>
   </MonoDevelop.Ide.DebuggingService.Breakpoints>
   <MonoDevelop.Ide.DebuggingService.PinnedWatches />

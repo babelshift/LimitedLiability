@@ -1,11 +1,12 @@
-﻿using SharpDL.Graphics;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using SharpDL.Graphics;
+using MyThirdSDL.Descriptors;
 
-namespace MyThirdSDL.Descriptors
+namespace MyThirdSDL.Agents
 {
 	public class WaterFountain : Equipment, IPurchasable
 	{

@@ -8,7 +8,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System.IO;
 
-namespace MyThirdSDL
+namespace MyThirdSDL.Content
 {
 	public class ContentManager
 	{

@@ -9,6 +9,8 @@ using System.Collections.Concurrent;
 using MyThirdSDL.Descriptors;
 using SharpDL.Events;
 using SharpDL.Input;
+using MyThirdSDL.Content;
+using MyThirdSDL.Simulation;
 
 namespace MyThirdSDL.UserInterface
 {
@@ -48,8 +50,8 @@ namespace MyThirdSDL.UserInterface
 
 		#region Message List
 
-		private Dictionary<Guid, Dictionary<SimulationMessageType, SimulationLabel>> labelMessagesForMultipleAgents 
-			= new Dictionary<Guid, Dictionary<SimulationMessageType, SimulationLabel>>();
+		private ConcurrentDictionary<Guid, ConcurrentDictionary<SimulationMessageType, SimulationLabel>> labelMessagesForMultipleAgents 
+			= new ConcurrentDictionary<Guid, ConcurrentDictionary<SimulationMessageType, SimulationLabel>>();
 
 		private List<Label> labels = new List<Label>();
 
@@ -163,7 +165,7 @@ namespace MyThirdSDL.UserInterface
 
 			// if there are no messages for this agent in the collection, create a message collection for this agent
 			if (!labelMessagesForMultipleAgents.ContainsKey(agentId))
-				labelMessagesForMultipleAgents.Add(agentId, labelMessagesForSingleAgent);
+				labelMessagesForMultipleAgents.TryAdd(agentId, labelMessagesForSingleAgent);
 
 			// if there are no messages of the passed type in the agent's message collection, add it to his collection
 			if(!labelMessagesForSingleAgent.ContainsKey(message.Type))
@@ -172,7 +174,7 @@ namespace MyThirdSDL.UserInterface
 				int fontSizeContent;
 				string fontPath = GetLabelFontDetails(contentManager, out fontColor, out fontSizeContent);
 				SimulationLabel labelMessage = controlFactory.CreateSimulationLabel(Vector.Zero, fontPath, fontSizeContent, fontColor, message);
-				labelMessagesForSingleAgent.Add(message.Type, labelMessage);
+				labelMessagesForSingleAgent.TryAdd(message.Type, labelMessage);
 			}
 		}
 
@@ -185,22 +187,25 @@ namespace MyThirdSDL.UserInterface
 		public void RemoveMessageForAgentByType(Guid agentId, SimulationMessageType messageType)
 		{
 			var labelMessagesForSingleAgent = GetMessagesForAgent(agentId);
-			labelMessagesForSingleAgent.Remove(messageType);
+			SimulationLabel labelToRemove;
+			labelMessagesForSingleAgent.TryRemove(messageType, out labelToRemove);
+			labelToRemove.Dispose();
 		}
+
 		/// <summary>
 		/// Gets the messages by agent identifier.
 		/// </summary>
 		/// <returns>The messages by agent identifier.</returns>
 		/// <param name="agentId">Agent identifier.</param>
-		private Dictionary<SimulationMessageType, SimulationLabel> GetMessagesForAgent(Guid agentId)
+		private ConcurrentDictionary<SimulationMessageType, SimulationLabel> GetMessagesForAgent(Guid agentId)
 		{
-			Dictionary<SimulationMessageType, SimulationLabel> labelMessagesForSingleAgent;
+			ConcurrentDictionary<SimulationMessageType, SimulationLabel> labelMessagesForSingleAgent;
 			bool success = labelMessagesForMultipleAgents.TryGetValue(agentId, out labelMessagesForSingleAgent);
 
 			if (success)
 				return labelMessagesForSingleAgent;
 			else
-				return new Dictionary<SimulationMessageType, SimulationLabel>();
+				return new ConcurrentDictionary<SimulationMessageType, SimulationLabel>();
 		}
 
 		#endregion

@@ -9,6 +9,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using MyThirdSDL.Agents;
+using MyThirdSDL.Content;
+using MyThirdSDL.Simulation;
 
 namespace MyThirdSDL
 {
@@ -238,20 +241,30 @@ namespace MyThirdSDL
 			tiledMap = new TiledMap(mapPath, Renderer);
 			simulationManager.CurrentMap = tiledMap;
 
-			Employee employee1 = agentFactory.CreateEmployee(TimeSpan.Zero, new Vector(100, 100));
-			Employee employee2 = agentFactory.CreateEmployee(TimeSpan.Zero, new Vector(200, 300));
-			Employee employee3 = agentFactory.CreateEmployee(TimeSpan.Zero, new Vector(100, 700));
-			employees.Add(employee1);
-			employees.Add(employee2);
-			employees.Add(employee3);
+			var pathNodes = tiledMap.GetPathNodes();
+			Random random = new Random();
+			for (int i = 0; i < 50; i++)
+			{
+				int x = random.Next(0, pathNodes.Count);
+				var pathNode = pathNodes[x];
+				Employee employee = agentFactory.CreateEmployee(TimeSpan.Zero, new Vector(pathNode.WorldPosition.X, pathNode.WorldPosition.Y));
+				simulationManager.AddAgent(employee);
+			}
 
-			SodaMachine sodaMachine = agentFactory.CreateSodaMachine(TimeSpan.Zero, new Vector(380, 415));
-			SnackMachine snackMachine = agentFactory.CreateSnackMachine(TimeSpan.Zero, new Vector(640, 290));
-			SnackMachine snackMachine2 = agentFactory.CreateSnackMachine(TimeSpan.Zero, new Vector(200, 700));
+			var pathNode1 = tiledMap.GetPathNodeAtWorldGridIndex(new Vector(3, 15));
+			var pathNode2 = tiledMap.GetPathNodeAtWorldGridIndex(new Vector(15, 9));
+			var pathNode3 = tiledMap.GetPathNodeAtWorldGridIndex(new Vector(20, 9));
+			var pathNode4 = tiledMap.GetPathNodeAtWorldGridIndex(new Vector(4, 10));
+
+			SodaMachine sodaMachine = agentFactory.CreateSodaMachine(TimeSpan.Zero, new Vector(pathNode3.WorldPosition.X, pathNode3.WorldPosition.Y));
+			SodaMachine sodaMachine2 = agentFactory.CreateSodaMachine(TimeSpan.Zero, new Vector(pathNode4.WorldPosition.X, pathNode4.WorldPosition.Y));
+			SnackMachine snackMachine = agentFactory.CreateSnackMachine(TimeSpan.Zero, new Vector(pathNode2.WorldPosition.X, pathNode2.WorldPosition.Y));
+			SnackMachine snackMachine2 = agentFactory.CreateSnackMachine(TimeSpan.Zero, new Vector(pathNode1.WorldPosition.X, pathNode1.WorldPosition.Y));
 			simulationManager.AddAgents(employees);
 			simulationManager.AddAgent(sodaMachine);
+			simulationManager.AddAgent(sodaMachine2);
 			simulationManager.AddAgent(snackMachine);
-			//simulationManager.AddAgent(snackMachine2);
+			simulationManager.AddAgent(snackMachine2);
 
 			Surface tileHighlightSurface = new Surface(tileHighlightTexturePath, Surface.SurfaceType.PNG);
 			tileHighlightImage = new Image(Renderer, tileHighlightSurface, Image.ImageFormat.PNG);
@@ -317,11 +330,9 @@ namespace MyThirdSDL
 			Renderer.ClearScreen();
 
 			DrawBaseTiles(gameTime);
+			allDrawables.AddRange(simulationManager.TrackedAgents);
 			SortDrawablesByDrawDepth();
 			DrawHeightTiles(gameTime);
-
-			foreach(var employee in employees)
-				employee.Draw(gameTime, Renderer);
 
 			//Renderer.RenderTexture(isoWorldGridIndexText.Texture, 0, 0);
 			//Renderer.RenderTexture(orthoWorldGridIndexText.Texture, 0, 18);

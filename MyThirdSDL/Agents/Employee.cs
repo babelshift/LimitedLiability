@@ -1,13 +1,15 @@
-﻿using SharpDL.Graphics;
-using System;
+﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using SharpDL.Graphics;
+using MyThirdSDL.Simulation;
+using MyThirdSDL.Descriptors;
 using SharpDL;
-using System.Collections.Concurrent;
 
-namespace MyThirdSDL.Descriptors
+namespace MyThirdSDL.Agents
 {
 	public class Employee : MobileAgent, ITriggerSubscriber
 	{
@@ -108,35 +110,45 @@ namespace MyThirdSDL.Descriptors
 			if (IsWalkingTowardsAgent && IsAtFinalWalkToDestination)
 			{
 				// if we are walking towards something triggerable, then trigger it now that we are at it
-				if (walkingTowardsAgent is ITriggerable)
+				if (WalkingTowardsAgent is ITriggerable)
 				{
-					var triggerable = walkingTowardsAgent as ITriggerable;
+					var triggerable = WalkingTowardsAgent as ITriggerable;
 					triggerable.ExecuteTrigger();
 				}
 
 				// if we are walking towards something that affects our necessities (such as a soda machine or water fountain, get its effectiveness
 				// and adjust our necessities accordingly
-				if (walkingTowardsAgent is IAffectsNecessities)
+				if (WalkingTowardsAgent is SodaMachine)
 				{
-					var necessityAffector = walkingTowardsAgent as IAffectsNecessities;
-					AdjustNecessities(necessityAffector.NecessityAffector);
+					var sodaMachine = WalkingTowardsAgent as SodaMachine;
+
+					if (CurrentIntention.Type == IntentionType.BuyDrink)
+					{
+						var necessityAffector = sodaMachine.DispenseDrink();
+						AdjustNecessities(necessityAffector);
+					}
+				}
+				else if (WalkingTowardsAgent is SnackMachine)
+				{
+					var snackMachine = WalkingTowardsAgent as SnackMachine;
+
+					if (CurrentIntention.Type == IntentionType.BuySnack)
+					{
+						var necessityAffector = snackMachine.DispenseFood();
+						AdjustNecessities(necessityAffector);
+					}
 				}
 
 				// we are done walking towards the intended agent
-				walkingTowardsAgent = null;
+				ResetWalkingTowardsAgent();
+				ResetIntention();
 
-				// get the next intent in our queue now that we've completed this intent
-				Intent nextIntent = GetNextIntent();
-
-				// if we have another intent, perform it, otherwise clear our walking towards destination because have no other intents
-				if (nextIntent != null)
-					WalkOnPathTowardsAgent(nextIntent.PathNodesToAgent, nextIntent.WalkToAgent);
+				SetNextIntention();
 			}
 
 			AdjustNecessities(necessityDecayRate);
 			CheckIfEmployeeNeedsAnything();
 			CheckIfEmployeeIsUnhappy();
-
 		}
 
 		private void AdjustNecessities(double necessityEffect)

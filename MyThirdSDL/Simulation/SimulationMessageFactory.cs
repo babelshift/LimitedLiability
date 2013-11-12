@@ -1,7 +1,7 @@
 using System;
 using SharpDL.Graphics;
 
-namespace MyThirdSDL
+namespace MyThirdSDL.Simulation
 {
 	public static class SimulationMessageFactory
     {

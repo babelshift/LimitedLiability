@@ -1,7 +1,8 @@
 using System;
 using System.Collections.Generic;
+using MyThirdSDL.Descriptors;
 
-namespace MyThirdSDL.Descriptors
+namespace MyThirdSDL.Simulation
 {
 	public enum ActionType
 	{

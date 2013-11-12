@@ -1,13 +1,15 @@
-﻿using MyThirdSDL.Descriptors;
-using SharpDL;
-using SharpDL.Graphics;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using SharpDL.Graphics;
+using MyThirdSDL.Agents;
+using MyThirdSDL.Descriptors;
+using MyThirdSDL.Content;
+using SharpDL;
 
-namespace MyThirdSDL
+namespace MyThirdSDL.Simulation
 {
 	public class SimulationManager
 	{
@@ -26,6 +28,8 @@ namespace MyThirdSDL
 
 		public TiledMap CurrentMap { get; set; }
 
+		public IEnumerable<Agent> TrackedAgents { get { return agents; } }
+
 		#region Public Simulation Events
 
 		public event EventHandler<EventArgs> EmployeeIsSleepy;
@@ -35,7 +39,6 @@ namespace MyThirdSDL
 		public event EventHandler<EventArgs> EmployeeIsThirsty;
 		public event EventHandler<EventArgs> EmployeeIsUnhappy;
 		public event EventHandler<EventArgs> EmployeeNeedsOfficeDesk;
-
 		public event EventHandler<EventArgs> EmployeeThirstSatisfied;
 		public event EventHandler<EventArgs> EmployeeHungerSatisfied;
 
@@ -88,7 +91,8 @@ namespace MyThirdSDL
 		{
 			var employee = GetEmployeeFromEventSender(sender);
 			EventHelper.FireEvent(EmployeeNeedsOfficeDesk, sender, e);
-			WalkMobileAgentToClosest<OfficeDesk>(employee);
+			if (!employee.IsWalkingTowardsAgent)
+				WalkMobileAgentToClosest<OfficeDesk>(employee);
 		}
 
 		private void HandleIsUnhappy(object sender, EventArgs e)
@@ -106,7 +110,7 @@ namespace MyThirdSDL
 			var employee = GetEmployeeFromEventSender(sender);
 			EventHelper.FireEvent(EmployeeIsThirsty, sender, e);
 
-			if(!employee.IsWalkingTowardsAgent)
+			if (!employee.IsWalkingTowardsAgent)
 				WalkMobileAgentToClosest<SodaMachine>(employee);
 		}
 
@@ -115,7 +119,7 @@ namespace MyThirdSDL
 			var employee = GetEmployeeFromEventSender(sender);
 			EventHelper.FireEvent(EmployeeIsHungry, sender, e);
 
-			if(!employee.IsWalkingTowardsAgent)
+			if (!employee.IsWalkingTowardsAgent)
 				WalkMobileAgentToClosest<SnackMachine>(employee);
 		}
 
@@ -177,12 +181,12 @@ namespace MyThirdSDL
 			}
 		}
 
-		private void HandleHungerSatisfied (object sender, EventArgs e)
+		private void HandleHungerSatisfied(object sender, EventArgs e)
 		{
 			EventHelper.FireEvent(EmployeeHungerSatisfied, sender, e);
 		}
 
-		private void HandleThirstSatisfied (object sender, EventArgs e)
+		private void HandleThirstSatisfied(object sender, EventArgs e)
 		{
 			EventHelper.FireEvent(EmployeeThirstSatisfied, sender, e);
 		}
@@ -241,19 +245,27 @@ namespace MyThirdSDL
 				// find the best path to the closest soda machine to the employee and set the employee on his way towards that soda machine
 				var closestAgent = GetClosestAgentByType<T>(mobileAgent, agentsToCheck);
 
-				if (closestAgent is ITriggerable)
-				{
-					var triggerable = closestAgent as ITriggerable;
-					if(closestAgent is SodaMachine)
-						triggerable.Trigger.AddSubscriptionToActionByType(mobileAgent, SubscriptionType.Once, ActionType.DispenseDrink);
-					if(closestAgent is SnackMachine)
-						triggerable.Trigger.AddSubscriptionToActionByType(mobileAgent, SubscriptionType.Once, ActionType.DispenseFood);
-				}
-
 				if (closestAgent != null)
 				{
+					if (closestAgent is ITriggerable)
+					{
+						var triggerable = closestAgent as ITriggerable;
+						if (closestAgent is SodaMachine)
+							triggerable.Trigger.AddSubscriptionToActionByType(mobileAgent, SubscriptionType.Once, ActionType.DispenseDrink);
+						if (closestAgent is SnackMachine)
+							triggerable.Trigger.AddSubscriptionToActionByType(mobileAgent, SubscriptionType.Once, ActionType.DispenseFood);
+					}
+
+					IntentionType intentionType = IntentionType.Unknown;
+
+					if (typeof(T).Equals(typeof(SodaMachine)))
+						intentionType = IntentionType.BuyDrink;
+					else if (typeof(T).Equals(typeof(SnackMachine)))
+						intentionType = IntentionType.BuySnack;
+
 					var bestPathToClosestAgent = GetBestPathToAgent(mobileAgent, closestAgent);
-					mobileAgent.AddIntent(new Intent(closestAgent, bestPathToClosestAgent));
+
+					mobileAgent.AddIntention(new Intention(closestAgent, bestPathToClosestAgent, intentionType));
 				}
 			}
 		}

@@ -1,8 +1,8 @@
 using System;
-using System.Collections.Generic;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
 
-namespace MyThirdSDL.Descriptors
+namespace MyThirdSDL.Simulation
 {
     public class Trigger
     {

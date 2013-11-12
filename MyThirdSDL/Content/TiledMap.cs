@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using MyThirdSDL.Descriptors;
 
-namespace MyThirdSDL
+namespace MyThirdSDL.Content
 {
 	public enum TileLayerType
 	{
@@ -523,6 +523,17 @@ namespace MyThirdSDL
 						return pathNode;
 
 			throw new Exception(String.Format("No path node found at [{0},{1}]", worldGridIndex.X, worldGridIndex.Y));
+		}
+
+		public IList<MapObject> GetPathNodes()
+		{
+			IEnumerable<MapObjectLayer> pathNodeLayers = mapObjectLayers.Where(mol => mol.Type == MapObjectLayerType.PathNode);
+			List<MapObject> pathNodes = new List<MapObject>();
+			foreach (var pathNodeLayer in pathNodeLayers)
+				foreach (var pathNode in pathNodeLayer.MapObjects)
+					pathNodes.Add(pathNode);
+
+			return pathNodes;
 		}
 
 		#region Dispose

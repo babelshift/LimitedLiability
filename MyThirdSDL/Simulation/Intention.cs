@@ -1,10 +1,20 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using MyThirdSDL;
+using MyThirdSDL.Agents;
+using MyThirdSDL.Content;
 
-namespace MyThirdSDL.Descriptors
+namespace MyThirdSDL.Simulation
 {
+	public enum IntentionType
+	{
+		Unknown,
+		BuyDrink,
+		BuySnack,
+		KickEquipment,
+		PunchCoworker
+	}
+
 	/// <summary>
 	/// Intents are used by MobileAgents to perform activities. These are usually
 	/// stored in a queue to be performed in sequential order when the MobileAgent completes the previous Intent. For example, an Employee can be thirsty
@@ -12,18 +22,20 @@ namespace MyThirdSDL.Descriptors
 	/// Intent could be "Go to a Vending Machine and Eat." Intents should point to another Agent so that the MobileAgent can path to it and optionally
 	/// set off the trigger for the Agent (if the Agent is Triggerable).
 	/// </summary>
-    public class Intent
+    public class Intention
     {
 		public Agent WalkToAgent { get; private set; }
 		public Queue<MapObject> PathNodesToAgent { get; private set; }
+		public IntentionType Type { get; private set; }
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="MyThirdSDL.Intent"/> class. 
 		/// </summary>
-		public Intent(Agent walkToAgent, Queue<MapObject> pathNodesToAgent)
+		public Intention(Agent walkToAgent, Queue<MapObject> pathNodesToAgent, IntentionType type)
         {
 			WalkToAgent = walkToAgent;
 			PathNodesToAgent = pathNodesToAgent;
+			Type = type;
         }
     }
 }

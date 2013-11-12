@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using MyThirdSDL.Descriptors;
 
-namespace MyThirdSDL.Descriptors
+namespace MyThirdSDL.Agents
 {
 	public class Job
 	{

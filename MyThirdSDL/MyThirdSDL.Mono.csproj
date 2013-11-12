@@ -56,6 +56,9 @@
     <Reference Include="SharpTiles">
       <HintPath>..\Libs\SharpTiles.dll</HintPath>
     </Reference>
+    <Reference Include="log4net">
+      <HintPath>..\Libs\log4net.dll</HintPath>
+    </Reference>
     <Reference Include="SharpDL">
       <HintPath>..\Libs\SharpDL.dll</HintPath>
     </Reference>
@@ -68,41 +71,23 @@
     <Reference Include="SharpDL.Input">
       <HintPath>..\Libs\SharpDL.Input.dll</HintPath>
     </Reference>
-    <Reference Include="log4net">
-      <HintPath>..\Libs\log4net.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Camera.cs" />
-    <Compile Include="ContentManager.cs" />
     <Compile Include="CoordinateHelper.cs" />
-    <Compile Include="Descriptors\Agent.cs" />
-    <Compile Include="Descriptors\AgentFactory.cs" />
     <Compile Include="Descriptors\IPurchasable.cs" />
-    <Compile Include="Descriptors\TextureStore.cs" />
-    <Compile Include="Descriptors\Equipment.cs" />
     <Compile Include="Descriptors\ISkillsAffector.cs" />
-    <Compile Include="Descriptors\Job.cs" />
-    <Compile Include="Descriptors\JobFactory.cs" />
-    <Compile Include="Descriptors\Library.cs" />
     <Compile Include="Descriptors\Necessities.cs" />
-    <Compile Include="Descriptors\Room.cs" />
     <Compile Include="Descriptors\Skills.cs" />
-    <Compile Include="Descriptors\SnackMachine.cs" />
-    <Compile Include="Descriptors\SodaMachine.cs" />
-    <Compile Include="Descriptors\WaterFountain.cs" />
     <Compile Include="GridManager.cs" />
     <Compile Include="ICollidable.cs" />
     <Compile Include="IDrawable.cs" />
     <Compile Include="INode.cs" />
     <Compile Include="MainGame.cs" />
     <Compile Include="Path.cs" />
-    <Compile Include="Descriptors\Employee.cs" />
     <Compile Include="PriorityQueue.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SimulationManager.cs" />
-    <Compile Include="TiledMap.cs" />
     <Compile Include="UserInterface\Button.cs" />
     <Compile Include="UserInterface\ButtonMenuItem.cs" />
     <Compile Include="UserInterface\Control.cs" />
@@ -114,20 +99,35 @@
     <Compile Include="UserInterface\ToolboxTray.cs" />
     <Compile Include="UserInterface\Tooltip.cs" />
     <Compile Include="UserInterface\UserInterfaceManager.cs" />
-    <Compile Include="Descriptors\MobileAgent.cs" />
-    <Compile Include="Descriptors\OfficeDesk.cs" />
     <Compile Include="EventHelper.cs" />
-    <Compile Include="SimulationMessage.cs" />
-    <Compile Include="SimulationMessageFactory.cs" />
     <Compile Include="UserInterface\SimulationLabel.cs" />
-    <Compile Include="Descriptors\Trigger.cs" />
-    <Compile Include="Descriptors\Action.cs" />
-    <Compile Include="Descriptors\ITriggerSubscriber.cs" />
-    <Compile Include="Descriptors\ITriggerable.cs" />
     <Compile Include="Descriptors\NecessityAffector.cs" />
     <Compile Include="Descriptors\IAffectsNecessities.cs" />
-    <Compile Include="Descriptors\Intent.cs" />
-    <Compile Include="Descriptors\Subscription.cs" />
+    <Compile Include="Simulation\Action.cs" />
+    <Compile Include="Simulation\Intention.cs" />
+    <Compile Include="Simulation\ITriggerable.cs" />
+    <Compile Include="Simulation\ITriggerSubscriber.cs" />
+    <Compile Include="Simulation\Trigger.cs" />
+    <Compile Include="Agents\Agent.cs" />
+    <Compile Include="Agents\AgentFactory.cs" />
+    <Compile Include="Agents\Employee.cs" />
+    <Compile Include="Agents\Equipment.cs" />
+    <Compile Include="Agents\Job.cs" />
+    <Compile Include="Agents\JobFactory.cs" />
+    <Compile Include="Agents\Library.cs" />
+    <Compile Include="Agents\MobileAgent.cs" />
+    <Compile Include="Agents\OfficeDesk.cs" />
+    <Compile Include="Agents\Room.cs" />
+    <Compile Include="Agents\SnackMachine.cs" />
+    <Compile Include="Agents\SodaMachine.cs" />
+    <Compile Include="Agents\WaterFountain.cs" />
+    <Compile Include="Content\TextureStore.cs" />
+    <Compile Include="Content\ContentManager.cs" />
+    <Compile Include="Content\TiledMap.cs" />
+    <Compile Include="Simulation\SimulationManager.cs" />
+    <Compile Include="Simulation\SimulationMessage.cs" />
+    <Compile Include="Simulation\SimulationMessageFactory.cs" />
+    <Compile Include="Simulation\Subscription.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -289,6 +289,15 @@
     <Content Include="Content\Images\User Interface\TooltipFrame.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Content\Images\thingBox.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Images\Equipment\SodaMachineBox.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Images\Equipment\SnackMachine2.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
@@ -298,4 +307,8 @@
   <Target Name="AfterBuild">
   </Target>
   -->
+  <ItemGroup>
+    <Folder Include="Agents\" />
+    <Folder Include="Simulation\" />
+  </ItemGroup>
 </Project>

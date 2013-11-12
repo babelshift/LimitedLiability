@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace MyThirdSDL.UserInterface
 {
-	public abstract class Control
+	public abstract class Control : IDisposable
 	{
 		private Guid ID { get; set; }
 
@@ -44,6 +44,23 @@ namespace MyThirdSDL.UserInterface
 		{
 			if (Texture != null)
 				renderer.RenderTexture(Texture, Position.X, Position.Y);
+		}
+
+		public virtual void Dispose()
+		{
+			Dispose(true);
+			GC.SuppressFinalize(this);
+		}
+
+		~Control()
+		{
+			Dispose(false);
+		}
+
+		private void Dispose(bool disposing)
+		{
+			if(Texture != null)
+				Texture.Dispose();
 		}
 	}
 }

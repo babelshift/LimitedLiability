@@ -1,11 +1,12 @@
-﻿using SharpDL.Graphics;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using SharpDL.Graphics;
+using MyThirdSDL.Descriptors;
 
-namespace MyThirdSDL.Descriptors
+namespace MyThirdSDL.Agents
 {
 	public class SnackMachine : Equipment, IPurchasable//, ITriggerable
 	{
@@ -25,6 +26,11 @@ namespace MyThirdSDL.Descriptors
 			//Trigger = new Trigger();
 			//Action dispenseFood = new Action(ActionType.DispenseFood);
 			//Trigger.AddAction(dispenseFood);
+		}
+
+		public NecessityAffector DispenseFood()
+		{
+			return NecessityAffector;
 		}
 
 		//public void ExecuteTrigger()

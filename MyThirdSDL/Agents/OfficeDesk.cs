@@ -1,7 +1,8 @@
 using System;
+using MyThirdSDL.Descriptors;
 using SharpDL.Graphics;
 
-namespace MyThirdSDL.Descriptors
+namespace MyThirdSDL.Agents
 {
 	public class OfficeDesk : Equipment, IPurchasable
 	{
