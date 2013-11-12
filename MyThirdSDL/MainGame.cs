@@ -243,7 +243,7 @@ namespace MyThirdSDL
 
 			var pathNodes = tiledMap.GetPathNodes();
 			Random random = new Random();
-			for (int i = 0; i < 1000; i++)
+			for (int i = 0; i < 100; i++)
 			{
 				int x = random.Next(0, pathNodes.Count);
 				var pathNode = pathNodes[x];

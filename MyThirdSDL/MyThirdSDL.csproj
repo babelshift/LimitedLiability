@@ -36,6 +36,10 @@
     <StartupObject>MyThirdSDL.Program</StartupObject>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="log4net, Version=1.2.12.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Libs\log4net.dll</HintPath>
+    </Reference>
     <Reference Include="Newtonsoft.Json">
       <HintPath>..\Libs\Newtonsoft.Json.dll</HintPath>
     </Reference>
@@ -67,28 +71,38 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Agents\Agent.cs" />
+    <Compile Include="Agents\AgentFactory.cs" />
+    <Compile Include="Agents\Employee.cs" />
+    <Compile Include="Agents\Equipment.cs" />
+    <Compile Include="Agents\Job.cs" />
+    <Compile Include="Agents\JobFactory.cs" />
+    <Compile Include="Agents\Library.cs" />
+    <Compile Include="Agents\MobileAgent.cs" />
+    <Compile Include="Agents\OfficeDesk.cs" />
+    <Compile Include="Agents\Room.cs" />
+    <Compile Include="Agents\SnackMachine.cs" />
+    <Compile Include="Agents\SodaMachine.cs" />
+    <Compile Include="Agents\WaterFountain.cs" />
     <Compile Include="Camera.cs" />
-    <Compile Include="ContentManager.cs" />
+    <Compile Include="Content\ContentManager.cs" />
+    <Compile Include="Content\TextureStore.cs" />
+    <Compile Include="Content\TiledMap.cs" />
     <Compile Include="CoordinateHelper.cs" />
-    <Compile Include="Descriptors\Agent.cs" />
-    <Compile Include="Descriptors\AgentFactory.cs" />
-    <Compile Include="Descriptors\IPurchasable.cs" />
-    <Compile Include="Descriptors\MobileAgent.cs" />
-    <Compile Include="Descriptors\OfficeDesk.cs" />
-    <Compile Include="Descriptors\TextureStore.cs" />
-    <Compile Include="Descriptors\Equipment.cs" />
-    <Compile Include="Descriptors\INecessityAffector.cs" />
-    <Compile Include="Descriptors\ISkillsAffector.cs" />
-    <Compile Include="Descriptors\Job.cs" />
-    <Compile Include="Descriptors\JobFactory.cs" />
-    <Compile Include="Descriptors\Library.cs" />
-    <Compile Include="Descriptors\Necessities.cs" />
-    <Compile Include="Descriptors\Room.cs" />
-    <Compile Include="Descriptors\Skills.cs" />
-    <Compile Include="Descriptors\SnackMachine.cs" />
-    <Compile Include="Descriptors\SodaMachine.cs" />
-    <Compile Include="Descriptors\WaterFountain.cs" />
-    <Compile Include="Entity.cs" />
+    <Compile Include="Descriptors\IAffectsNecessities.cs" />
+    <Compile Include="Descriptors\IPurchasable.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Descriptors\ISkillsAffector.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Descriptors\Necessities.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Descriptors\NecessityAffector.cs" />
+    <Compile Include="Descriptors\Skills.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="EventHelper.cs" />
     <Compile Include="GridManager.cs" />
     <Compile Include="ICollidable.cs" />
@@ -96,44 +110,73 @@
     <Compile Include="INode.cs" />
     <Compile Include="MainGame.cs" />
     <Compile Include="Path.cs" />
-    <Compile Include="Descriptors\Employee.cs" />
-    <Compile Include="Player.cs" />
     <Compile Include="PriorityQueue.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SimulationManager.cs" />
-    <Compile Include="SimulationMessage.cs" />
-    <Compile Include="SimulationMessageFactory.cs" />
-    <Compile Include="TiledMap.cs" />
-    <Compile Include="UserInterface\Button.cs" />
-    <Compile Include="UserInterface\ButtonMenuItem.cs" />
-    <Compile Include="UserInterface\Control.cs" />
-    <Compile Include="UserInterface\ControlFactory.cs" />
-    <Compile Include="UserInterface\Icon.cs" />
-    <Compile Include="UserInterface\Label.cs" />
-    <Compile Include="UserInterface\MenuEquipment.cs" />
-    <Compile Include="UserInterface\MessageBox.cs" />
-    <Compile Include="UserInterface\SimulationLabel.cs" />
-    <Compile Include="UserInterface\ToolboxTray.cs" />
-    <Compile Include="UserInterface\Tooltip.cs" />
-    <Compile Include="UserInterface\UserInterfaceManager.cs" />
+    <Compile Include="Simulation\Action.cs" />
+    <Compile Include="Simulation\Intention.cs" />
+    <Compile Include="Simulation\ITriggerable.cs" />
+    <Compile Include="Simulation\ITriggerSubscriber.cs" />
+    <Compile Include="Simulation\SimulationManager.cs" />
+    <Compile Include="Simulation\SimulationMessage.cs" />
+    <Compile Include="Simulation\SimulationMessageFactory.cs" />
+    <Compile Include="Simulation\Subscription.cs" />
+    <Compile Include="Simulation\Trigger.cs" />
+    <Compile Include="UserInterface\Button.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="UserInterface\ButtonMenuItem.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="UserInterface\Control.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="UserInterface\ControlFactory.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="UserInterface\Icon.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="UserInterface\Label.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="UserInterface\MenuEquipment.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="UserInterface\MessageBox.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="UserInterface\SimulationLabel.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="UserInterface\ToolboxTray.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="UserInterface\Tooltip.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="UserInterface\UserInterfaceManager.cs">
+      <SubType>Code</SubType>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
-    <None Include="Content\ContentReference.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Content\Fonts\Arcade N.ttf">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
     <Compile Include="IHasNeighbors.cs" />
-    <None Include="Content\Maps\Map1.tmx">
+    <Content Include="Content\ContentReference.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Fonts\Arcade N.ttf">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <None Include="Content\Images\User Interface\Prototype.pdn" />
+    <None Include="Content\Images\User Interface\ToolboxTray.pdn" />
+    <None Include="Content\Maps\Map1.tmx">
       <SubType>Designer</SubType>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="Content\Maps\Map2.tmx">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <SubType>Designer</SubType>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="packages.config" />
   </ItemGroup>
@@ -141,13 +184,19 @@
     <Content Include="Content\Images\CubeTileSheet.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Images\Equipment\WaterFountain.png">
+    <Content Include="Content\Images\Equipment\SnackMachine.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Images\Equipment\SnackMachine2.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\Images\Equipment\SodaMachine.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Images\Equipment\SnackMachine.png">
+    <Content Include="Content\Images\Equipment\SodaMachineBox.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Images\Equipment\WaterFountain.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\Images\playerCollisionBox.png">
@@ -157,6 +206,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\Images\thing.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Images\thingBox.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\Images\tileCollisionBox.png">
@@ -243,10 +295,10 @@
     <Content Include="Content\Images\User Interface\IconToothbrush.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Images\User Interface\IconWatch.png">
+    <Content Include="Content\Images\User Interface\IconWarning.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Images\User Interface\IconWarning.png">
+    <Content Include="Content\Images\User Interface\IconWatch.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\Images\User Interface\IconWater.png">
