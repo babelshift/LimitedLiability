@@ -13,7 +13,7 @@ namespace MyThirdSDL.Simulation
 {
 	public class SimulationManager
 	{
-		private List<Agent> agents = new List<Agent>();
+		private Dictionary<System.Type, List<Agent>> trackedAgents = new Dictionary<Type, List<Agent>>();
 
 		public string SimulationTimeDisplay
 		{
@@ -28,7 +28,21 @@ namespace MyThirdSDL.Simulation
 
 		public TiledMap CurrentMap { get; set; }
 
-		public IEnumerable<Agent> TrackedAgents { get { return agents; } }
+		/// <summary>
+		/// Returns an enumerable of all tracked agents in the simulation.
+		/// </summary>
+		/// <value>The tracked agents.</value>
+		public IEnumerable<Agent> TrackedAgents
+		{ 
+			get
+			{
+				IEnumerable<List<Agent>> agentLists = trackedAgents.Values.AsEnumerable();
+				List<Agent> agents = new List<Agent>();
+				foreach (var agentList in agentLists)
+					agents.AddRange(agentList);
+				return agents;
+			} 
+		}
 
 		#region Public Simulation Events
 
@@ -48,10 +62,6 @@ namespace MyThirdSDL.Simulation
 
 		#endregion
 
-		public SimulationManager()
-		{
-		}
-
 		/// <summary>
 		/// Updates the simulation by setting the simulation time and updating all tracked agents.
 		/// </summary>
@@ -60,9 +70,9 @@ namespace MyThirdSDL.Simulation
 		{
 			SimulationTime = gameTime.TotalGameTime;
 
-			foreach (var agent in agents)
-			{
-				agent.Update(gameTime);
+			foreach (var agentList in trackedAgents.Values)
+				foreach (var agent in agentList)
+					agent.Update(gameTime);
 
 //				if (agent is Employee)
 //				{
@@ -82,7 +92,7 @@ namespace MyThirdSDL.Simulation
 //						}
 //					}
 //				}
-			}
+
 		}
 
 		#region Employee Events
@@ -141,8 +151,40 @@ namespace MyThirdSDL.Simulation
 			return employee;
 		}
 
+		private void HandleHungerSatisfied(object sender, EventArgs e)
+		{
+			EventHelper.FireEvent(EmployeeHungerSatisfied, sender, e);
+		}
+
+		private void HandleThirstSatisfied(object sender, EventArgs e)
+		{
+			EventHelper.FireEvent(EmployeeThirstSatisfied, sender, e);
+		}
+
 		#endregion
 
+		#region Agent Tracking
+
+		/// <summary>
+		/// Determines whether the passed agent is already tracked by the simulation. The passed type T is used as a key.
+		/// </summary>
+		/// <returns><c>true</c> if this instance is agent already tracked the specified agent; otherwise, <c>false</c>.</returns>
+		/// <param name="agent">Agent.</param>
+		/// <typeparam name="T">The 1st type parameter.</typeparam>
+		private bool IsAgentAlreadyTracked<T>(T agent)
+			where T : Agent
+		{
+			IEnumerable<T> agentsForType = GetTrackedAgentsByType<T>();
+			if (agentsForType.Any(a => a.ID == agent.ID))
+				return true;
+
+			return false;
+		}
+
+		/// <summary>
+		/// Adds the passed collection of agents to the simulation.
+		/// </summary>
+		/// <param name="agents">Agents.</param>
 		public void AddAgents(IEnumerable<Agent> agents)
 		{
 			foreach (var agent in agents)
@@ -153,9 +195,10 @@ namespace MyThirdSDL.Simulation
 		/// Adds the passed agent to the simulation (agent will be updated in the game loop). Will also subscribe to all agent events and bubble them accordingly.
 		/// </summary>
 		/// <param name="agent">Agent.</param>
-		public void AddAgent(Agent agent)
+		public void AddAgent<T>(T agent)
+			where T : Agent
 		{
-			if (!agents.Any(a => a.ID == agent.ID))
+			if (!IsAgentAlreadyTracked<T>(agent))
 			{
 				agent.Activate();
 
@@ -174,30 +217,54 @@ namespace MyThirdSDL.Simulation
 					employee.ThirstSatisfied += HandleThirstSatisfied;
 					employee.HungerSatisfied += HandleHungerSatisfied;
 
-					agents.Add(employee);
+					StartTrackingAgent<T>(employee);
 				}
 				else
-					agents.Add(agent);
+					StartTrackingAgent<T>(agent);
 			}
 		}
 
-		private void HandleHungerSatisfied(object sender, EventArgs e)
+		/// <summary>
+		/// Starts tracking the agent in the simulation. The type T is used as a key.
+		/// </summary>
+		/// <param name="agent">Agent.</param>
+		/// <typeparam name="T">The 1st type parameter.</typeparam>
+		private void StartTrackingAgent<T>(Agent agent)
+			where T : Agent
 		{
-			EventHelper.FireEvent(EmployeeHungerSatisfied, sender, e);
+			List<Agent> agentsForType;
+			bool success = trackedAgents.TryGetValue(typeof(T), out agentsForType);
+			if (success)
+				agentsForType.Add(agent);
+			else
+			{
+				agentsForType = new List<Agent>();
+				agentsForType.Add(agent);
+				trackedAgents.Add(typeof(T), agentsForType);
+			}
 		}
 
-		private void HandleThirstSatisfied(object sender, EventArgs e)
+		/// <summary>
+		/// Stops tracking the agent identified by the passed Guid ID. The type T is used as a key.
+		/// </summary>
+		/// <param name="agentId">Agent identifier.</param>
+		/// <typeparam name="T">The 1st type parameter.</typeparam>
+		private void StopTrackingAgent<T>(Guid agentId)
 		{
-			EventHelper.FireEvent(EmployeeThirstSatisfied, sender, e);
+			List<Agent> agentsForType;
+			bool success = trackedAgents.TryGetValue(typeof(T), out agentsForType);
+			if (success)
+				agentsForType.RemoveAll(a => a.ID == agentId);
 		}
 
 		/// <summary>
 		/// Removes an agent identified by the passed Guid from the simulation. Will also unsubscribe the simulation from any events the agent fires.
 		/// </summary>
 		/// <param name="agentId">Agent identifier.</param>
-		public void RemoveAgent(Guid agentId)
+		public void RemoveAgent<T>(Guid agentId)
+			where T : Agent
 		{
-			var agent = agents.FirstOrDefault(a => a.ID == agentId);
+			var agent = GetTrackedAgent<T>(agentId);
 			if (agent != null)
 			{
 				agent.Deactivate();
@@ -216,19 +283,49 @@ namespace MyThirdSDL.Simulation
 
 					employee.ThirstSatisfied -= HandleThirstSatisfied;
 					employee.HungerSatisfied -= HandleHungerSatisfied;
-
-					agents.Remove(employee);
 				}
-				else
-					agents.Remove(agent);
+
+				StopTrackingAgent<T>(agentId);
 			}
 		}
 
-		private IEnumerable<T> GetAgentsInSimulationByType<T>()
+		/// <summary>
+		/// Returns the tracked agent identified by the passed Guid ID. The type T is used as a key. If the passed Guid does not match to any tracked agents,
+		/// null is returned.
+		/// </summary>
+		/// <returns>The tracked agent.</returns>
+		/// <param name="agentId">Agent identifier.</param>
+		/// <typeparam name="T">The 1st type parameter.</typeparam>
+		private T GetTrackedAgent<T>(Guid agentId)
 			where T : Agent
 		{
-			return agents.Where(a => a.GetType() == typeof(T)).Cast<T>();
+			IEnumerable<T> agentsForType = GetTrackedAgentsByType<T>();
+			var agent = agentsForType.FirstOrDefault(a => a.ID == agentId);
+
+			if (agent != null)
+				return (T)agent;
+
+			return null;
 		}
+
+		/// <summary>
+		/// Gets all tracked agents in the simulation identified by the type T (used as a key). If no agents exist in the simulation with type T, an empty
+		/// list is returned.
+		/// </summary>
+		/// <returns>The tracked agents by type.</returns>
+		/// <typeparam name="T">The 1st type parameter.</typeparam>
+		private IEnumerable<T> GetTrackedAgentsByType<T>()
+			where T : Agent
+		{
+			List<Agent> agentsForType;
+			bool success = trackedAgents.TryGetValue(typeof(T), out agentsForType);
+			if (success)
+				return agentsForType.Cast<T>();
+			else
+				return new List<T>();
+		}
+
+		#endregion
 
 		/// <summary>
 		/// Walks the passed mobile agent to the closest agent of type T.
@@ -238,7 +335,7 @@ namespace MyThirdSDL.Simulation
 		public void WalkMobileAgentToClosest<T>(MobileAgent mobileAgent)
 			where T : Agent
 		{
-			var agentsToCheck = GetAgentsInSimulationByType<T>();
+			var agentsToCheck = GetTrackedAgentsByType<T>();
 
 			if (agentsToCheck.Count() > 0)
 			{
