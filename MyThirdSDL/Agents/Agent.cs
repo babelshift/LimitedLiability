@@ -10,13 +10,6 @@ namespace MyThirdSDL.Agents
 {
 	public abstract class Agent : IDrawable, ICollidable
 	{
-		public enum AgentState
-		{
-			Unknown,
-			Active,
-			Inactive
-		}
-
 		#region Members 
 
 		private Texture Texture { get; set; }

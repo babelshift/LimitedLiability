@@ -12,7 +12,8 @@ namespace MyThirdSDL.Simulation
 		BuyDrink,
 		BuySnack,
 		KickEquipment,
-		PunchCoworker
+		PunchCoworker,
+		GoToDesk
 	}
 
 	/// <summary>

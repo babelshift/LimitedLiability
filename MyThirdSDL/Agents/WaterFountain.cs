@@ -13,13 +13,13 @@ namespace MyThirdSDL.Agents
 		private const int price = 25;
 		private const string name = "Water Fountain";
 
-		public NecessityAffector NecessityAffector { get; private set; }
+		public NecessityEffects NecessityEffects { get; private set; }
 		public string IconTextureKey { get { return "IconWater"; } }
 
 		public WaterFountain(TimeSpan birthTime, Texture texture, Vector startingPosition)
 			: base(birthTime, name, texture, startingPosition, price)
 		{
-			NecessityAffector = new NecessityAffector(1, 0, 0, 1, 0);
+			NecessityEffects = new NecessityEffects(1, 0, 0, 1, 0);
 		}
 	}
 }

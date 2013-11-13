@@ -146,7 +146,7 @@ namespace MyThirdSDL
 			simulationManager.EmployeeIsThirsty += HandleEmployeeIsThirsty;
 			simulationManager.EmployeeIsUnhappy += HandleEmployeeIsUnhappy;
 			simulationManager.EmployeeIsUnhealthy += HandleEmployeeIsUnhealthy;
-			simulationManager.EmployeeNeedsOfficeDesk += HandleEmployeeNeedsOfficeDesk;
+			simulationManager.EmployeeNeedsOfficeDeskAssignment += HandleEmployeeNeedsOfficeDesk;
 			simulationManager.EmployeeThirstSatisfied += HandleEmployeeThirstSatisfied;
 			simulationManager.EmployeeHungerSatisfied += HandleEmployeeHungerSatisfied;;
 
@@ -243,7 +243,7 @@ namespace MyThirdSDL
 
 			var pathNodes = tiledMap.GetPathNodes();
 			Random random = new Random();
-			for (int i = 0; i < 100; i++)
+			for (int i = 0; i < 1; i++)
 			{
 				int x = random.Next(0, pathNodes.Count);
 				var pathNode = pathNodes[x];
@@ -255,16 +255,19 @@ namespace MyThirdSDL
 			var pathNode2 = tiledMap.GetPathNodeAtWorldGridIndex(new Vector(15, 9));
 			var pathNode3 = tiledMap.GetPathNodeAtWorldGridIndex(new Vector(20, 9));
 			var pathNode4 = tiledMap.GetPathNodeAtWorldGridIndex(new Vector(4, 10));
+			var pathNode5 = tiledMap.GetPathNodeAtWorldGridIndex(new Vector(3, 21));
 
 			SodaMachine sodaMachine = agentFactory.CreateSodaMachine(TimeSpan.Zero, new Vector(pathNode3.WorldPosition.X, pathNode3.WorldPosition.Y));
 			SodaMachine sodaMachine2 = agentFactory.CreateSodaMachine(TimeSpan.Zero, new Vector(pathNode4.WorldPosition.X, pathNode4.WorldPosition.Y));
 			SnackMachine snackMachine = agentFactory.CreateSnackMachine(TimeSpan.Zero, new Vector(pathNode2.WorldPosition.X, pathNode2.WorldPosition.Y));
 			SnackMachine snackMachine2 = agentFactory.CreateSnackMachine(TimeSpan.Zero, new Vector(pathNode1.WorldPosition.X, pathNode1.WorldPosition.Y));
+			OfficeDesk officeDesk = agentFactory.CreateOfficeDesk(TimeSpan.Zero, new Vector(pathNode5.WorldPosition.X, pathNode5.WorldPosition.Y));
 			simulationManager.AddAgents(employees);
 			simulationManager.AddAgent(sodaMachine);
 			simulationManager.AddAgent(sodaMachine2);
 			simulationManager.AddAgent(snackMachine);
 			simulationManager.AddAgent(snackMachine2);
+			simulationManager.AddAgent(officeDesk);
 
 			Surface tileHighlightSurface = new Surface(tileHighlightTexturePath, SurfaceType.PNG);
 			tileHighlightImage = new Image(Renderer, tileHighlightSurface, ImageFormat.PNG);

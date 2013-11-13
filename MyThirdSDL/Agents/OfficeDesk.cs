@@ -9,14 +9,23 @@ namespace MyThirdSDL.Agents
 		private const int price = 50;
 		private const string name = "Office Desk";
 
-		public NecessityAffector NecessityAffector { get; private set; }
+		public NecessityEffects NecessityEffects { get; private set; }
 		public string IconTextureKey { get { return "IconOfficeDesk"; } }
+
+		public Employee AssignedEmployee { get; private set; }
+
+		public bool IsAssignedToAnEmployee { get { return AssignedEmployee != null; } }
 
 		public OfficeDesk(TimeSpan birthTime, Texture texture, Vector startingPosition)
 			: base(birthTime, name, texture, startingPosition, price)
 		{
-			NecessityAffector = new NecessityAffector(0, 0, -1, 0, 0);
+			NecessityEffects = new NecessityEffects(0, 0, -2, 0, 0);
         }
+
+		public void AssignEmployee(Employee employee)
+		{
+			AssignedEmployee = employee;
+		}
     }
 }
 

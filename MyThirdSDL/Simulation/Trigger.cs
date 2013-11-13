@@ -21,7 +21,7 @@ namespace MyThirdSDL.Simulation
 				actions.TryAdd(action.Type, action);
 		}
 
-		public void Execute(NecessityAffector affector)
+		public void Execute(NecessityEffects affector)
 		{
 			foreach (var actionKey in actions.Keys)
 			{

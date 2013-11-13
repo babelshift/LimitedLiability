@@ -8,7 +8,8 @@
 		{ "key": "TileHighlightSelected",		"value": "Images/tileHighlightSelected.png" },
 		{ "key": "SnackMachine",				"value": "Images/Equipment/SnackMachine2.png" },
 		{ "key": "SodaMachine",					"value": "Images/Equipment/SodaMachine.png" },
-		{ "key": "WaterFountain",				"value": "Images/Equipment/SodaMachineBox.png" },
+		{ "key": "WaterFountain",				"value": "Images/Equipment/WaterFountain.png" },
+		{ "key": "OfficeDesk",					"value": "Images/Equipment/OfficeDesk.png" },
 
 		{ "key": "MessageBoxFrame",				"value": "Images/User Interface/MessageBoxFrame.png" },
 		{ "key": "ToolboxTray",					"value": "Images/User Interface/ToolboxTray.png" },

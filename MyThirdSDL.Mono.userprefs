@@ -1,11 +1,19 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="MyThirdSDL/MainGame.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="MyThirdSDL/Content/TiledMap.cs">
     <Files>
-      <File FileName="MyThirdSDL/MainGame.cs" Line="246" Column="28" />
-      <File FileName="MyThirdSDL/Content/TiledMap.cs" Line="330" Column="39" />
-      <File FileName="MyThirdSDL/UserInterface/ControlFactory.cs" Line="199" Column="106" />
-      <File FileName="MyThirdSDL/UserInterface/UserInterfaceManager.cs" Line="192" Column="30" />
+      <File FileName="MyThirdSDL/Agents/OfficeDesk.cs" Line="17" Column="82" />
+      <File FileName="MyThirdSDL/Agents/Employee.cs" Line="188" Column="6" />
+      <File FileName="MyThirdSDL/Agents/MobileAgent.cs" Line="158" Column="1" />
+      <File FileName="MyThirdSDL/Agents/AgentActivity.cs" Line="5" Column="23" />
+      <File FileName="MyThirdSDL/Agents/Agent.cs" Line="12" Column="3" />
+      <File FileName="MyThirdSDL/Agents/AgentState.cs" Line="10" Column="3" />
+      <File FileName="MyThirdSDL/MainGame.cs" Line="258" Column="73" />
+      <File FileName="MyThirdSDL/Simulation/Intention.cs" Line="40" Column="1" />
+      <File FileName="MyThirdSDL/Content/TiledMap.cs" Line="525" Column="1" />
+      <File FileName="MyThirdSDL/Simulation/SimulationManager.cs" Line="143" Column="1" />
+      <File FileName="MyThirdSDL/Descriptors/Necessities.cs" Line="91" Column="1" />
+      <File FileName="MyThirdSDL/EventHelper.cs" Line="11" Column="1" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
@@ -16,5 +24,7 @@
       <Breakpoint file="/home/justin/Documents/git/MyThirdSDL/MyThirdSDL/UserInterface/Control.cs" line="57" column="1" />
     </BreakpointStore>
   </MonoDevelop.Ide.DebuggingService.Breakpoints>
-  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches>
+    <Watch file="MyThirdSDL/Agents/MobileAgent.cs" line="53" offsetX="518" offsetY="936" expression="intentions" liveUpdate="False" />
+  </MonoDevelop.Ide.DebuggingService.PinnedWatches>
 </Properties>

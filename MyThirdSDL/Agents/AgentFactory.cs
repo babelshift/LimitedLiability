@@ -79,6 +79,16 @@ namespace MyThirdSDL.Agents
 
 		#endregion
 
+		public OfficeDesk CreateOfficeDesk(TimeSpan birthTime)
+		{
+			return CreateOfficeDesk(birthTime, Vector.Zero);
+		}
+
+		public OfficeDesk CreateOfficeDesk(TimeSpan birthTime, Vector position)
+		{
+			return CreateAgent<OfficeDesk>(birthTime, "OfficeDesk", position);
+		}
+
 		public SnackMachine CreateSnackMachine(TimeSpan birthTime)
 		{
 			return CreateSnackMachine(birthTime, Vector.Zero);

@@ -14,8 +14,8 @@ namespace MyThirdSDL.Agents
 	public class Employee : MobileAgent, ITriggerSubscriber
 	{
 		private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-		private double necessityDecayRate = -0.01;
-		private static Vector speed = new Vector(25, 25);
+		private double necessityDecayRate = -0.005;
+		private static Vector speed = new Vector(50, 50);
 
 		public string FullName { get { return FirstName + " " + LastName; } }
 
@@ -34,6 +34,10 @@ namespace MyThirdSDL.Agents
 		public Skills Skills { get; private set; }
 
 		public OfficeDesk AssignedOfficeDesk { get; private set; }
+
+		public bool IsAssignedAnOfficeDesk { get { return AssignedOfficeDesk != null; } }
+
+		public bool IsAtOfficeDesk { get; private set; }
 
 		public int HappinessRating
 		{
@@ -55,7 +59,8 @@ namespace MyThirdSDL.Agents
 		public event EventHandler<EventArgs> IsHungry;
 		public event EventHandler<EventArgs> IsThirsty;
 		public event EventHandler<EventArgs> IsUnhappy;
-		public event EventHandler<EventArgs> NeedsOfficeDesk;
+		public event EventHandler<EventArgs> NeedsOfficeDeskAssignment;
+		public event EventHandler<EventArgs> IsIdle;
 		public event EventHandler<EventArgs> ThirstSatisfied;
 		public event EventHandler<EventArgs> HungerSatisfied;
 
@@ -75,6 +80,25 @@ namespace MyThirdSDL.Agents
 		public void AssignOfficeDesk(OfficeDesk officeDesk)
 		{
 			AssignedOfficeDesk = officeDesk;
+			officeDesk.AssignEmployee(this);
+		}
+
+		private void AdjustNecessities(double necessityEffect)
+		{
+			Necessities.AdjustSleep(necessityEffect);
+			Necessities.AdjustHunger(necessityEffect);
+			Necessities.AdjustThirst(necessityEffect);
+			Necessities.AdjustHygiene(necessityEffect);
+			Necessities.AdjustHealth(necessityEffect);
+		}
+
+		private void AdjustNecessities(NecessityEffects necessityEffect)
+		{
+			Necessities.AdjustSleep(necessityEffect.SleepEffectiveness);
+			Eat(necessityEffect.HungerEffectiveness);
+			Drink(necessityEffect.ThirstEffectiveness);
+			Necessities.AdjustHygiene(necessityEffect.HygieneEffectiveness);
+			Necessities.AdjustHealth(necessityEffect.HealthEffectiveness);
 		}
 
 		public void Drink(int thirstEffectiveness)
@@ -124,8 +148,8 @@ namespace MyThirdSDL.Agents
 
 					if (CurrentIntention.Type == IntentionType.BuyDrink)
 					{
-						var necessityAffector = sodaMachine.DispenseDrink();
-						AdjustNecessities(necessityAffector);
+						var necessityEffect = sodaMachine.DispenseDrink();
+						AdjustNecessities(necessityEffect);
 					}
 				}
 				else if (WalkingTowardsAgent is SnackMachine)
@@ -134,39 +158,47 @@ namespace MyThirdSDL.Agents
 
 					if (CurrentIntention.Type == IntentionType.BuySnack)
 					{
-						var necessityAffector = snackMachine.DispenseFood();
-						AdjustNecessities(necessityAffector);
+						var necessityEffect = snackMachine.DispenseFood();
+						AdjustNecessities(necessityEffect);
 					}
+				}
+				else if (WalkingTowardsAgent is OfficeDesk)
+				{
+					var officeDesk = WalkingTowardsAgent as OfficeDesk;
+
+					if (CurrentIntention.Type == IntentionType.GoToDesk)
+						if(!IsAssignedAnOfficeDesk)
+							if(!officeDesk.IsAssignedToAnEmployee)
+								AssignOfficeDesk(officeDesk);
+
+					IsAtOfficeDesk = true;
 				}
 
 				// we are done walking towards the intended agent
 				ResetWalkingTowardsAgent();
 				ResetIntention();
-
 				SetNextIntention();
 			}
+
+			// if our intention queue is empty (we have no current intention, try to work at our desk)
+			if (CurrentIntention == null)
+			{
+				// if we are assigned an office desk and we are at our office desk, indicate that we are working at our office desk
+				if (IsAssignedAnOfficeDesk)
+				{
+					if (IsAtOfficeDesk)
+						ChangeActivity(AgentActivity.WorkingAtDesk);
+					else
+						EventHelper.FireEvent(IsIdle, this, EventArgs.Empty);
+				}
+			}
+			// if we have an intention, then we need something, so we are not at our office desk anymore
+			else
+				IsAtOfficeDesk = false;
 
 			AdjustNecessities(necessityDecayRate);
 			CheckIfEmployeeNeedsAnything();
 			CheckIfEmployeeIsUnhappy();
-		}
-
-		private void AdjustNecessities(double necessityEffect)
-		{
-			Necessities.AdjustSleep(necessityEffect);
-			Necessities.AdjustHunger(necessityEffect);
-			Necessities.AdjustThirst(necessityEffect);
-			Necessities.AdjustHygiene(necessityEffect);
-			Necessities.AdjustHealth(necessityEffect);
-		}
-
-		private void AdjustNecessities(NecessityAffector necessityEffect)
-		{
-			Necessities.AdjustSleep(necessityEffect.SleepEffectiveness);
-			Eat(necessityEffect.HungerEffectiveness);
-			Drink(necessityEffect.ThirstEffectiveness);
-			Necessities.AdjustHygiene(necessityEffect.HygieneEffectiveness);
-			Necessities.AdjustHealth(necessityEffect.HealthEffectiveness);
 		}
 
 		private void CheckIfEmployeeNeedsAnything()
@@ -191,13 +223,9 @@ namespace MyThirdSDL.Agents
 				// if after work hours, leave work
 			}
 
-			// if after all the needs have been met and if desk/office is available, go to desk/office and work 
-			if (AssignedOfficeDesk != null)
-			{
-			}
 			// else reduce happiness somehow (skills slowly go down?)
-			else
-				EventHelper.FireEvent(NeedsOfficeDesk, this, EventArgs.Empty);
+			if (!IsAssignedAnOfficeDesk)
+				EventHelper.FireEvent(NeedsOfficeDeskAssignment, this, EventArgs.Empty);
 		}
 
 		private void CheckIfEmployeeIsUnhappy()
@@ -212,7 +240,7 @@ namespace MyThirdSDL.Agents
 		/// </summary>
 		/// <param name="actionType">Action type.</param>
 		/// <param name="affector">Affector.</param>
-		public override void ReactToAction(ActionType actionType, NecessityAffector affector)
+		public override void ReactToAction(ActionType actionType, NecessityEffects affector)
 		{
 			if (actionType == ActionType.DispenseDrink)
 				Drink(affector.ThirstEffectiveness);

@@ -52,7 +52,7 @@ namespace MyThirdSDL.Simulation
 		public event EventHandler<EventArgs> EmployeeIsHungry;
 		public event EventHandler<EventArgs> EmployeeIsThirsty;
 		public event EventHandler<EventArgs> EmployeeIsUnhappy;
-		public event EventHandler<EventArgs> EmployeeNeedsOfficeDesk;
+		public event EventHandler<EventArgs> EmployeeNeedsOfficeDeskAssignment;
 		public event EventHandler<EventArgs> EmployeeThirstSatisfied;
 		public event EventHandler<EventArgs> EmployeeHungerSatisfied;
 
@@ -97,12 +97,35 @@ namespace MyThirdSDL.Simulation
 
 		#region Employee Events
 
-		private void HandleNeedsOfficeDesk(object sender, EventArgs e)
+		private void WalkEmployeeToAssignedOfficeDesk(Employee employee)
+		{
+			IntentionType intentionType = IntentionType.GoToDesk;
+			Agent walkFromAgent;
+
+			Intention finalIntention = employee.FinalIntention;
+
+			// if we have a final intention currently queued up, then we want to calculate the path from that position
+			if (finalIntention != null)
+				walkFromAgent = finalIntention.WalkToAgent;
+			// otherwise, we want to calculate the path from our current position
+			else
+				walkFromAgent = employee;
+
+			var bestPathToClosestAgent = GetBestPathToAgent(walkFromAgent, employee.AssignedOfficeDesk);
+			employee.AddIntention(new Intention(employee.AssignedOfficeDesk, bestPathToClosestAgent, intentionType));
+		}
+
+		private void HandleIsIdle(object sender, EventArgs e)
 		{
 			var employee = GetEmployeeFromEventSender(sender);
-			EventHelper.FireEvent(EmployeeNeedsOfficeDesk, sender, e);
-			if (!employee.IsWalkingTowardsAgent)
-				WalkMobileAgentToClosest<OfficeDesk>(employee);
+			WalkEmployeeToAssignedOfficeDesk(employee);
+		}
+
+		private void HandleNeedsOfficeDeskAssignment(object sender, EventArgs e)
+		{
+			var employee = GetEmployeeFromEventSender(sender);
+			EventHelper.FireEvent(EmployeeNeedsOfficeDeskAssignment, sender, e);
+			WalkMobileAgentToClosest<OfficeDesk>(employee);
 		}
 
 		private void HandleIsUnhappy(object sender, EventArgs e)
@@ -119,18 +142,14 @@ namespace MyThirdSDL.Simulation
 		{
 			var employee = GetEmployeeFromEventSender(sender);
 			EventHelper.FireEvent(EmployeeIsThirsty, sender, e);
-
-			if (!employee.IsWalkingTowardsAgent)
-				WalkMobileAgentToClosest<SodaMachine>(employee);
+			WalkMobileAgentToClosest<SodaMachine>(employee);
 		}
 
 		private void HandleIsHungry(object sender, EventArgs e)
 		{
 			var employee = GetEmployeeFromEventSender(sender);
 			EventHelper.FireEvent(EmployeeIsHungry, sender, e);
-
-			if (!employee.IsWalkingTowardsAgent)
-				WalkMobileAgentToClosest<SnackMachine>(employee);
+			WalkMobileAgentToClosest<SnackMachine>(employee);
 		}
 
 		private void HandleIsDirty(object sender, EventArgs e)
@@ -212,7 +231,8 @@ namespace MyThirdSDL.Simulation
 					employee.IsThirsty += HandleIsThirsty;
 					employee.IsUnhealthy += HandleIsUnhealthy;
 					employee.IsUnhappy += HandleIsUnhappy;
-					employee.NeedsOfficeDesk += HandleNeedsOfficeDesk;
+					employee.NeedsOfficeDeskAssignment += HandleNeedsOfficeDeskAssignment;
+					employee.IsIdle += HandleIsIdle;
 
 					employee.ThirstSatisfied += HandleThirstSatisfied;
 					employee.HungerSatisfied += HandleHungerSatisfied;
@@ -279,7 +299,8 @@ namespace MyThirdSDL.Simulation
 					employee.IsThirsty -= EmployeeIsThirsty;
 					employee.IsUnhealthy -= EmployeeIsUnhealthy;
 					employee.IsUnhappy -= EmployeeIsUnhappy;
-					employee.NeedsOfficeDesk -= EmployeeNeedsOfficeDesk;
+					employee.NeedsOfficeDeskAssignment -= EmployeeNeedsOfficeDeskAssignment;
+					employee.IsIdle += HandleIsIdle;
 
 					employee.ThirstSatisfied -= HandleThirstSatisfied;
 					employee.HungerSatisfied -= HandleHungerSatisfied;
@@ -335,34 +356,54 @@ namespace MyThirdSDL.Simulation
 		public void WalkMobileAgentToClosest<T>(MobileAgent mobileAgent)
 			where T : Agent
 		{
-			var agentsToCheck = GetTrackedAgentsByType<T>();
+			IntentionType intentionType = IntentionType.Unknown;
 
-			if (agentsToCheck.Count() > 0)
+			if (typeof(T).Equals(typeof(SodaMachine)))
+				intentionType = IntentionType.BuyDrink;
+			else if (typeof(T).Equals(typeof(SnackMachine)))
+				intentionType = IntentionType.BuySnack;
+			else if (typeof(T).Equals(typeof(OfficeDesk)))
+				intentionType = IntentionType.GoToDesk;
+
+			// if we don't already intend to perform that intention, proceed
+			if (!mobileAgent.IsAlreadyIntention(intentionType))
 			{
-				// find the best path to the closest soda machine to the employee and set the employee on his way towards that soda machine
-				var closestAgent = GetClosestAgentByType<T>(mobileAgent, agentsToCheck);
+				var agentsToCheck = GetTrackedAgentsByType<T>();
 
-				if (closestAgent != null)
+				// if there are agents by that type to head towards, proceed
+				if (agentsToCheck.Count() > 0)
 				{
-					if (closestAgent is ITriggerable)
+					// find the best path to the closest soda machine to the employee and set the employee on his way towards that soda machine
+					var closestAgent = GetClosestAgentByType<T>(mobileAgent, agentsToCheck);
+
+					// if there is an actual closest agent in the simulation, proceed
+					if (closestAgent != null)
 					{
-						var triggerable = closestAgent as ITriggerable;
-						if (closestAgent is SodaMachine)
-							triggerable.Trigger.AddSubscriptionToActionByType(mobileAgent, SubscriptionType.Once, ActionType.DispenseDrink);
-						if (closestAgent is SnackMachine)
-							triggerable.Trigger.AddSubscriptionToActionByType(mobileAgent, SubscriptionType.Once, ActionType.DispenseFood);
+						// if this is a triggerable, subscribe to the trigger now that we intend to go to it
+//						if (closestAgent is ITriggerable)
+//						{
+//							var triggerable = closestAgent as ITriggerable;
+//							if (closestAgent is SodaMachine)
+//								triggerable.Trigger.AddSubscriptionToActionByType(mobileAgent, SubscriptionType.Once, ActionType.DispenseDrink);
+//							if (closestAgent is SnackMachine)
+//								triggerable.Trigger.AddSubscriptionToActionByType(mobileAgent, SubscriptionType.Once, ActionType.DispenseFood);
+//						}
+
+						Agent walkFromAgent;
+
+						Intention finalIntention = mobileAgent.FinalIntention;
+
+						// if we have a final intention currently queued up, then we want to calculate the path from that position
+						if (finalIntention != null)
+							walkFromAgent = finalIntention.WalkToAgent;
+						// otherwise, we want to calculate the path from our current position
+						else
+							walkFromAgent = mobileAgent;
+
+						var bestPathToClosestAgent = GetBestPathToAgent(walkFromAgent, closestAgent);
+
+						mobileAgent.AddIntention(new Intention(closestAgent, bestPathToClosestAgent, intentionType));
 					}
-
-					IntentionType intentionType = IntentionType.Unknown;
-
-					if (typeof(T).Equals(typeof(SodaMachine)))
-						intentionType = IntentionType.BuyDrink;
-					else if (typeof(T).Equals(typeof(SnackMachine)))
-						intentionType = IntentionType.BuySnack;
-
-					var bestPathToClosestAgent = GetBestPathToAgent(mobileAgent, closestAgent);
-
-					mobileAgent.AddIntention(new Intention(closestAgent, bestPathToClosestAgent, intentionType));
 				}
 			}
 		}
@@ -477,7 +518,7 @@ namespace MyThirdSDL.Simulation
 		/// <param name="mobileAgent">Mobile agent.</param>
 		/// <param name="agent">Agent.</param>
 		/// <typeparam name="T">The 1st type parameter.</typeparam>
-		private Queue<MapObject> GetBestPathToAgent<T>(MobileAgent mobileAgent, T agent)
+		private Queue<MapObject> GetBestPathToAgent<T>(Agent mobileAgent, T agent)
 			where T : Agent
 		{
 			// tell the agent to path to the closest soda machine (or random if a tie)

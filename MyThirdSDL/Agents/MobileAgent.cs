@@ -11,14 +11,8 @@ namespace MyThirdSDL.Agents
 {
 	public abstract class MobileAgent : Agent, ITriggerSubscriber
 	{
-		public enum AgentActivity
-		{
-			Unknown,
-			Walking,
-			Idle
-		}
-
-		private ConcurrentQueue<Intention> intentions = new ConcurrentQueue<Intention>();
+		private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+		private Queue<Intention> intentions = new Queue<Intention>();
 		private Queue<MapObject> pathNodes;
 		private Vector currentDestination;
 
@@ -30,18 +24,22 @@ namespace MyThirdSDL.Agents
 
 		protected Agent WalkingTowardsAgent;
 
-		protected Intention CurrentIntention { get; private set; }
+		public Intention CurrentIntention { get; private set; }
 
-		protected bool IsAtFinalWalkToDestination
-		{
-			get
-			{
-				if (CollisionBox.Intersects(WalkingTowardsAgent.CollisionBox))
-					return true;
+		public bool HasCurrentIntention { get { return CurrentIntention != null; } }
+
+		public Intention FinalIntention 
+		{ 
+			get 
+			{ 
+				if (intentions.Count > 0)
+					return intentions.Peek();
 				else
-					return false;
-			}
+					return CurrentIntention;
+			} 
 		}
+
+		protected bool IsAtFinalWalkToDestination { get { return CollisionBox.Intersects(WalkingTowardsAgent.CollisionBox); } }
 
 		private bool IsAtPathNodeDestination
 		{
@@ -54,6 +52,18 @@ namespace MyThirdSDL.Agents
 			}
 		}
 
+		public bool IsAlreadyIntention(IntentionType type)
+		{
+			bool isAlreadyIntention = false;
+			if (intentions.Any(i => i.Type == type))
+				isAlreadyIntention = true;
+			if (HasCurrentIntention)
+				if (CurrentIntention.Type == type)
+					isAlreadyIntention = true;
+
+			return isAlreadyIntention;
+		}
+
 		public MobileAgent(TimeSpan birthTime, string name, Texture texture, Vector startingPosition, Vector startingSpeed)
 			: base(birthTime, name, texture, startingPosition)
 		{
@@ -62,13 +72,17 @@ namespace MyThirdSDL.Agents
 			Speed = startingSpeed;
 		}
 
-		private void ChangeActivity(AgentActivity activity)
+		protected void ChangeActivity(AgentActivity activity)
 		{
 			if (Activity != activity)
+			{
+				if (log.IsDebugEnabled)
+					log.Debug(String.Format("Activity changed to from {0} to {1}.", Activity, activity));
 				Activity = activity;
+			}
 		}
 
-		public abstract void ReactToAction(ActionType actionType, NecessityAffector affector);
+		public abstract void ReactToAction(ActionType actionType, NecessityEffects affector);
 
 		#region Game Loop
 
@@ -93,21 +107,38 @@ namespace MyThirdSDL.Agents
 			CurrentIntention = null;
 		}
 
+		protected Intention GetNextIntention()
+		{
+			Intention intention = null;
+
+			if (intentions.Count > 0)
+				intention = intentions.Peek();
+
+			return intention;
+		}
+
 		/// <summary>
 		/// Sets the next intention for the agent to perform.
 		/// </summary>
 		protected void SetNextIntention()
 		{
-			if (CurrentIntention == null)
+			if (!HasCurrentIntention)
 			{
 				Intention intention = null;
 
 				if (intentions.Count > 0)
-					intentions.TryDequeue(out intention);
+					intention = intentions.Dequeue();
 
 				// if we have another intent, perform it, otherwise clear our walking towards destination because have no other intents
 				if (intention != null)
 				{
+					if (intention.Type == IntentionType.BuyDrink)
+						ChangeActivity(AgentActivity.WalkingToDrink);
+					else if (intention.Type == IntentionType.BuySnack)
+						ChangeActivity(AgentActivity.WalkingToFood);
+					else if (intention.Type == IntentionType.GoToDesk)
+						ChangeActivity(AgentActivity.WalkingToDesk);
+
 					CurrentIntention = intention;
 					WalkOnPathTowardsAgent(CurrentIntention.PathNodesToAgent, CurrentIntention.WalkToAgent);
 				}
@@ -177,7 +208,7 @@ namespace MyThirdSDL.Agents
 
 		private void Move(double dt)
 		{
-			ChangeActivity(AgentActivity.Walking);
+			//ChangeActivity(AgentActivity.Walking);
 			Vector direction = GetMovementDirection();
 			WorldPosition += new Vector((float)(direction.X * Speed.X * dt), (float)(direction.Y * Speed.Y * dt));
 		}
@@ -186,7 +217,7 @@ namespace MyThirdSDL.Agents
 		{
 			pathNodes = null;
 			currentDestination = CoordinateHelper.DefaultVector;
-			ChangeActivity(AgentActivity.Idle);
+			//ChangeActivity(AgentActivity.Idle);
 		}
 
 		private void SetNextDestinationNode()

@@ -13,20 +13,20 @@ namespace MyThirdSDL.Agents
 		private const int price = 50;
 		private const string name = "Soda Machine";
 
-		public NecessityAffector NecessityAffector { get; private set; }
+		public NecessityEffects NecessityEffects { get; private set; }
 		public string IconTextureKey { get { return "IconSoda"; } }
 
 		//public Trigger Trigger { get; private set; }
 
-		public NecessityAffector DispenseDrink()
+		public NecessityEffects DispenseDrink()
 		{
-			return NecessityAffector;
+			return NecessityEffects;
 		}
 
 		public SodaMachine(TimeSpan birthTime, Texture texture, Vector startingPosition)
 			: base(birthTime, name, texture, startingPosition, price)
 		{
-			NecessityAffector = new NecessityAffector(-1, 0, 1, 10, 0);
+			NecessityEffects = new NecessityEffects(-1, 0, 1, 10, 0);
 
 			//Trigger = new Trigger();
 			//Action dispenseDrink = new Action(ActionType.DispenseDrink);
