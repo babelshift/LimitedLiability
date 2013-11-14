@@ -14,7 +14,7 @@ namespace MyThirdSDL.Agents
 	public class Employee : MobileAgent, ITriggerSubscriber
 	{
 		private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-		private double necessityDecayRate = -0.005;
+		private double necessityDecayRate = -0.001;
 		private static Vector speed = new Vector(50, 50);
 
 		public string FullName { get { return FirstName + " " + LastName; } }
@@ -131,20 +131,20 @@ namespace MyThirdSDL.Agents
 
 			// if we are actively walking towards something and we are at the final destination (the thing we are walking towards)
 			// then we should take an action and get the next intent
-			if (IsWalkingTowardsAgent && IsAtFinalWalkToDestination)
+			if (HasCurrentIntention && IsAtFinalWalkToDestination)
 			{
 				// if we are walking towards something triggerable, then trigger it now that we are at it
-				if (WalkingTowardsAgent is ITriggerable)
+				if (CurrentIntention.WalkToAgent is ITriggerable)
 				{
-					var triggerable = WalkingTowardsAgent as ITriggerable;
+					var triggerable = CurrentIntention.WalkToAgent as ITriggerable;
 					triggerable.ExecuteTrigger();
 				}
 
 				// if we are walking towards something that affects our necessities (such as a soda machine or water fountain, get its effectiveness
 				// and adjust our necessities accordingly
-				if (WalkingTowardsAgent is SodaMachine)
+				if (CurrentIntention.WalkToAgent is SodaMachine)
 				{
-					var sodaMachine = WalkingTowardsAgent as SodaMachine;
+					var sodaMachine = CurrentIntention.WalkToAgent as SodaMachine;
 
 					if (CurrentIntention.Type == IntentionType.BuyDrink)
 					{
@@ -152,9 +152,9 @@ namespace MyThirdSDL.Agents
 						AdjustNecessities(necessityEffect);
 					}
 				}
-				else if (WalkingTowardsAgent is SnackMachine)
+				else if (CurrentIntention.WalkToAgent is SnackMachine)
 				{
-					var snackMachine = WalkingTowardsAgent as SnackMachine;
+					var snackMachine = CurrentIntention.WalkToAgent as SnackMachine;
 
 					if (CurrentIntention.Type == IntentionType.BuySnack)
 					{
@@ -162,26 +162,29 @@ namespace MyThirdSDL.Agents
 						AdjustNecessities(necessityEffect);
 					}
 				}
-				else if (WalkingTowardsAgent is OfficeDesk)
+				else if (CurrentIntention.WalkToAgent is OfficeDesk)
 				{
-					var officeDesk = WalkingTowardsAgent as OfficeDesk;
+					var officeDesk = CurrentIntention.WalkToAgent as OfficeDesk;
 
+					// if we are going to a desk and we are not assigned to a desk and our target desk is not already assigned, assign this desk to ourself
 					if (CurrentIntention.Type == IntentionType.GoToDesk)
 						if(!IsAssignedAnOfficeDesk)
 							if(!officeDesk.IsAssignedToAnEmployee)
 								AssignOfficeDesk(officeDesk);
 
-					IsAtOfficeDesk = true;
+					// we are now at our office desk
+					if(officeDesk.ID == AssignedOfficeDesk.ID)
+						IsAtOfficeDesk = true;
 				}
 
 				// we are done walking towards the intended agent
-				ResetWalkingTowardsAgent();
+				//ResetWalkingTowardsAgent();
 				ResetIntention();
-				SetNextIntention();
+				StartNextIntention();
 			}
 
-			// if our intention queue is empty (we have no current intention, try to work at our desk)
-			if (CurrentIntention == null)
+			// if we have no current intention, try to work at our desk
+			if (!HasCurrentIntention)
 			{
 				// if we are assigned an office desk and we are at our office desk, indicate that we are working at our office desk
 				if (IsAssignedAnOfficeDesk)

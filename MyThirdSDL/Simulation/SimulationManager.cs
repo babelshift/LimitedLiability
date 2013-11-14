@@ -97,24 +97,6 @@ namespace MyThirdSDL.Simulation
 
 		#region Employee Events
 
-		private void WalkEmployeeToAssignedOfficeDesk(Employee employee)
-		{
-			IntentionType intentionType = IntentionType.GoToDesk;
-			Agent walkFromAgent;
-
-			Intention finalIntention = employee.FinalIntention;
-
-			// if we have a final intention currently queued up, then we want to calculate the path from that position
-			if (finalIntention != null)
-				walkFromAgent = finalIntention.WalkToAgent;
-			// otherwise, we want to calculate the path from our current position
-			else
-				walkFromAgent = employee;
-
-			var bestPathToClosestAgent = GetBestPathToAgent(walkFromAgent, employee.AssignedOfficeDesk);
-			employee.AddIntention(new Intention(employee.AssignedOfficeDesk, bestPathToClosestAgent, intentionType));
-		}
-
 		private void HandleIsIdle(object sender, EventArgs e)
 		{
 			var employee = GetEmployeeFromEventSender(sender);
@@ -389,23 +371,41 @@ namespace MyThirdSDL.Simulation
 //								triggerable.Trigger.AddSubscriptionToActionByType(mobileAgent, SubscriptionType.Once, ActionType.DispenseFood);
 //						}
 
-						Agent walkFromAgent;
-
-						Intention finalIntention = mobileAgent.FinalIntention;
-
-						// if we have a final intention currently queued up, then we want to calculate the path from that position
-						if (finalIntention != null)
-							walkFromAgent = finalIntention.WalkToAgent;
-						// otherwise, we want to calculate the path from our current position
+						// we only want to add a "go to office desk" intention if the desk is not assigned to someone
+						if (closestAgent is OfficeDesk)
+						{
+							var closestOfficeDesk = closestAgent as OfficeDesk;
+							if(!closestOfficeDesk.IsAssignedToAnEmployee)
+								AddIntentionToAgent(mobileAgent, closestAgent, intentionType);
+						}
 						else
-							walkFromAgent = mobileAgent;
-
-						var bestPathToClosestAgent = GetBestPathToAgent(walkFromAgent, closestAgent);
-
-						mobileAgent.AddIntention(new Intention(closestAgent, bestPathToClosestAgent, intentionType));
+							AddIntentionToAgent(mobileAgent, closestAgent, intentionType);
 					}
 				}
 			}
+		}
+			
+		private void WalkEmployeeToAssignedOfficeDesk(Employee employee)
+		{
+			AddIntentionToAgent(employee, employee.AssignedOfficeDesk, IntentionType.GoToDesk);
+		}
+
+		private void AddIntentionToAgent(MobileAgent fromAgent, Agent toAgent, IntentionType intentionType)
+		{
+			Agent walkFromAgent;
+
+			Intention finalIntention = fromAgent.FinalIntention;
+
+			// if we have a final intention currently queued up, then we want to calculate the path from that position
+			if (finalIntention != null)
+				walkFromAgent = finalIntention.WalkToAgent;
+			// otherwise, we want to calculate the path from our current position
+			else
+				walkFromAgent = fromAgent;
+
+			var bestPathToClosestAgent = GetBestPathToAgent(walkFromAgent, toAgent);
+
+			fromAgent.AddIntention(new Intention(toAgent, bestPathToClosestAgent, intentionType));
 		}
 
 		#region Path Finding

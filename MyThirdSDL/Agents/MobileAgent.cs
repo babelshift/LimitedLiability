@@ -20,17 +20,13 @@ namespace MyThirdSDL.Agents
 
 		public Vector Speed { get; private set; }
 
-		public bool IsWalkingTowardsAgent { get { return WalkingTowardsAgent != null; } }
-
-		protected Agent WalkingTowardsAgent;
-
 		public Intention CurrentIntention { get; private set; }
 
 		public bool HasCurrentIntention { get { return CurrentIntention != null; } }
 
-		public Intention FinalIntention 
+		public Intention FinalIntention
 		{ 
-			get 
+			get
 			{ 
 				if (intentions.Count > 0)
 					return intentions.Peek();
@@ -39,7 +35,7 @@ namespace MyThirdSDL.Agents
 			} 
 		}
 
-		protected bool IsAtFinalWalkToDestination { get { return CollisionBox.Intersects(WalkingTowardsAgent.CollisionBox); } }
+		protected bool IsAtFinalWalkToDestination { get { return CollisionBox.Intersects(CurrentIntention.WalkToAgent.CollisionBox); } }
 
 		private bool IsAtPathNodeDestination
 		{
@@ -55,8 +51,10 @@ namespace MyThirdSDL.Agents
 		public bool IsAlreadyIntention(IntentionType type)
 		{
 			bool isAlreadyIntention = false;
+
 			if (intentions.Any(i => i.Type == type))
 				isAlreadyIntention = true;
+
 			if (HasCurrentIntention)
 				if (CurrentIntention.Type == type)
 					isAlreadyIntention = true;
@@ -97,30 +95,15 @@ namespace MyThirdSDL.Agents
 
 		#region Movement
 
-		protected void ResetWalkingTowardsAgent()
-		{
-			WalkingTowardsAgent = null;
-		}
-
 		protected void ResetIntention()
 		{
 			CurrentIntention = null;
 		}
 
-		protected Intention GetNextIntention()
-		{
-			Intention intention = null;
-
-			if (intentions.Count > 0)
-				intention = intentions.Peek();
-
-			return intention;
-		}
-
 		/// <summary>
 		/// Sets the next intention for the agent to perform.
 		/// </summary>
-		protected void SetNextIntention()
+		protected void StartNextIntention()
 		{
 			if (!HasCurrentIntention)
 			{
@@ -139,8 +122,7 @@ namespace MyThirdSDL.Agents
 					else if (intention.Type == IntentionType.GoToDesk)
 						ChangeActivity(AgentActivity.WalkingToDesk);
 
-					CurrentIntention = intention;
-					WalkOnPathTowardsAgent(CurrentIntention.PathNodesToAgent, CurrentIntention.WalkToAgent);
+					WalkOnPathTowardsIntendedAgent(intention.PathNodesToAgent, intention);
 				}
 				else
 					CurrentIntention = null;
@@ -154,19 +136,13 @@ namespace MyThirdSDL.Agents
 		/// <param name="intention">Intention.</param>
 		public void AddIntention(Intention intention)
 		{
-			// only add this intent if we don't already have an intent to walk to the agent
-			if (!intentions.Any(i => i.WalkToAgent.ID == intention.WalkToAgent.ID))
-			{
-				// if we aren't currently walking anywhere then this is most likely the first intent, perform that intent immediately
-				if (WalkingTowardsAgent == null)
-				{
-					intentions.Enqueue(intention);
-					SetNextIntention();
-				}
-				// otherwise, if we aren't already walking towards the intention, queue it up
-				else if (WalkingTowardsAgent.ID != intention.WalkToAgent.ID)
-					intentions.Enqueue(intention);
-			}
+			// TODO: This only checks if we intend based on intention type
+			// TODO: Sometimes, we might want to perform the same type intention more than once in a row such as talking to a coworker
+			if (!IsAlreadyIntention(intention.Type))
+				intentions.Enqueue(intention);
+
+			if (!HasCurrentIntention)
+				StartNextIntention();
 		}
 
 		/// <summary>
@@ -174,12 +150,12 @@ namespace MyThirdSDL.Agents
 		/// </summary>
 		/// <param name="pathNodes">Path nodes.</param>
 		/// <param name="agent">Agent.</param>
-		protected void WalkOnPathTowardsAgent(Queue<MapObject> pathNodes, Agent agent)
+		protected void WalkOnPathTowardsIntendedAgent(Queue<MapObject> pathNodes, Intention intention)
 		{
 			// if we are not yet walking towards an agent, walk towards it!
-			if (WalkingTowardsAgent == null)
+			if (!HasCurrentIntention)
 			{
-				WalkingTowardsAgent = agent;
+				CurrentIntention = intention;
 				this.pathNodes = pathNodes;
 			}
 		}
@@ -223,7 +199,7 @@ namespace MyThirdSDL.Agents
 		private void SetNextDestinationNode()
 		{
 			if (pathNodes != null)
-			if (pathNodes.Count() > 0)
+				if (pathNodes.Count() > 0)
 				currentDestination = pathNodes.Dequeue().WorldPosition;
 		}
 

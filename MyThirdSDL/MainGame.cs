@@ -243,7 +243,7 @@ namespace MyThirdSDL
 
 			var pathNodes = tiledMap.GetPathNodes();
 			Random random = new Random();
-			for (int i = 0; i < 1; i++)
+			for (int i = 0; i < 2; i++)
 			{
 				int x = random.Next(0, pathNodes.Count);
 				var pathNode = pathNodes[x];
@@ -333,7 +333,6 @@ namespace MyThirdSDL
 			Renderer.ClearScreen();
 
 			DrawBaseTiles(gameTime);
-			allDrawables.AddRange(simulationManager.TrackedAgents);
 			SortDrawablesByDrawDepth();
 			DrawHeightTiles(gameTime);
 
@@ -359,6 +358,7 @@ namespace MyThirdSDL
 			TileLayer heightLayer = tiledMap.TileLayers.First(tl => tl.Type == TileLayerType.Height);
 			IEnumerable<Tile> drawableTiles = heightLayer.Tiles.Where(t => !t.IsEmpty);
 			allDrawables.AddRange(drawableTiles);
+			allDrawables.AddRange(simulationManager.TrackedAgents);
 			// sort the drawables by their depth so they appear correctly on top of each other
 			allDrawables.Sort((d1, d2) => d1.Depth.CompareTo(d2.Depth));
 		}

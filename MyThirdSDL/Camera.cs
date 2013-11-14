@@ -46,14 +46,14 @@ namespace MyThirdSDL
 		/// <param name="edge">Edge.</param>
 		public static void Update(MouseOverScreenEdge edge)
 		{
-			if (edge == MouseOverScreenEdge.Top)
-				MoveUp();
-			else if (edge == MouseOverScreenEdge.Bottom)
-				MoveDown();
-			else if (edge == MouseOverScreenEdge.Left)
-				MoveLeft();
-			else if (edge == MouseOverScreenEdge.Right)
-				MoveRight();
+//			if (edge == MouseOverScreenEdge.Top)
+//				MoveUp();
+//			else if (edge == MouseOverScreenEdge.Bottom)
+//				MoveDown();
+//			else if (edge == MouseOverScreenEdge.Left)
+//				MoveLeft();
+//			else if (edge == MouseOverScreenEdge.Right)
+//				MoveRight();
 		}
 	}
 }
