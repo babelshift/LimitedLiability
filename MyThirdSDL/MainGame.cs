@@ -148,11 +148,18 @@ namespace MyThirdSDL
 			simulationManager.EmployeeIsUnhealthy += HandleEmployeeIsUnhealthy;
 			simulationManager.EmployeeNeedsOfficeDeskAssignment += HandleEmployeeNeedsOfficeDesk;
 			simulationManager.EmployeeThirstSatisfied += HandleEmployeeThirstSatisfied;
-			simulationManager.EmployeeHungerSatisfied += HandleEmployeeHungerSatisfied;;
+			simulationManager.EmployeeHungerSatisfied += HandleEmployeeHungerSatisfied;
+
+            simulationManager.EmployeeClicked += simulationManager_EmployeeClicked;
 
 			if (log.IsDebugEnabled)
 				log.Debug("Game loop Initialize has been completed.");
 		}
+
+        private void simulationManager_EmployeeClicked(object sender, EmployeeClickedEventArgs e)
+        {
+            userInterfaceManager.SetEmployeeBeingInspected(e.Employee);
+        }
 
 		private void HandleEmployeeHungerSatisfied (object sender, EventArgs e)
 		{
