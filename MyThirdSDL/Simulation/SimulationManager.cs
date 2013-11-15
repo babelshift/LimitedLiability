@@ -81,49 +81,33 @@ namespace MyThirdSDL.Simulation
                     if (agent is Employee)
                     {
                         var employee = agent as Employee;
-                        Point clickedPoint = new Point(mouseState.X, mouseState.Y);
-                        Vector clickedWorldSpacePoint =
-                            CoordinateHelper.ScreenSpaceToWorldSpace(
-                                clickedPoint.X, clickedPoint.Y,
-                                CoordinateHelper.ScreenOffset,
-                                CoordinateHelper.ScreenProjectionType.Isometric
-                            );
-                        if (employee.CollisionBox.Contains(new Point((int)clickedWorldSpacePoint.X, (int)clickedWorldSpacePoint.Y))
-                            && mouseState.ButtonsPressed.Contains(MouseButtonCode.Left))
-                        {
-                            OnEmployeeClicked(this, new EmployeeClickedEventArgs(employee));
-                        }
+                        
+						// if the agent being updated is an employee and that agent is being clicked on by the user, fire the event telling subscribers of such
+						// we can use this event to react to the user interacting with the employees to do things like display their inspection information
+						if (IsEmployeeClicked(mouseState, employee))
+							EventHelper.FireEvent<EmployeeClickedEventArgs>(EmployeeClicked, this, new EmployeeClickedEventArgs(employee));
                     }
                 }
             }
-
-
-//				if (agent is Employee)
-//				{
-//					var mobileAgent = agent as Employee;
-//
-//					// if agent is walking towards agent
-//					// if agent has reached its walking destination
-//					if (mobileAgent.IsWalkingTowardsAgent && mobileAgent.IsAtFinalDestination)
-//					{
-//						var walkingTowardsAgent = mobileAgent.WalkingTowardsAgent;
-//						// if soda machine, drink
-//						if (walkingTowardsAgent is SodaMachine)
-//						{
-//							var sodaMachine = walkingTowardsAgent as SodaMachine;
-//							mobileAgent.Drink(sodaMachine.ThirstEffectiveness);
-//							mobileAgent.ResetWalkingTowardsAgent();
-//						}
-//					}
-//				}
-
 		}
 
-        private void OnEmployeeClicked(object sender, EmployeeClickedEventArgs e)
-        {
-            if (EmployeeClicked != null)
-                EmployeeClicked(sender, e);
-        }
+		/// <summary>
+		/// Determines whether this employee is clicked based on the passed mouse state by translating the screen coordinates to world space and checking the agent's collision box.
+		/// </summary>
+		/// <returns><c>true</c> if this the passed employee is clicked based on the passed mouse state; otherwise, <c>false</c>.</returns>
+		/// <param name="mouseState">Mouse state.</param>
+		/// <param name="employee">Employee.</param>
+		private bool IsEmployeeClicked(MouseState mouseState, Employee employee)
+		{
+			Point clickedPoint = new Point(mouseState.X, mouseState.Y);
+			Vector clickedWorldSpacePoint = CoordinateHelper.ScreenSpaceToWorldSpace(
+				clickedPoint.X, clickedPoint.Y,
+				CoordinateHelper.ScreenOffset,
+				CoordinateHelper.ScreenProjectionType.Isometric
+			);
+
+			return employee.CollisionBox.Contains(new Point((int)clickedWorldSpacePoint.X, (int)clickedWorldSpacePoint.Y)) && mouseState.ButtonsPressed.Contains(MouseButtonCode.Left);
+		}
 
         public event EventHandler<EmployeeClickedEventArgs> EmployeeClicked;
 
