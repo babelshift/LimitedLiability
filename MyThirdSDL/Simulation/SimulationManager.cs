@@ -355,7 +355,18 @@ namespace MyThirdSDL.Simulation
 			List<Agent> agentsForType;
 			bool success = trackedAgents.TryGetValue(typeof(T), out agentsForType);
 			if (success)
-				return agentsForType.Cast<T>();
+			{
+				// TODO: this is ugly as hell, i'm switching on a type in a generic method and double casting a list
+				// we want to remove assigned office desks from the list of get tracked agents because they should be considered taken
+//				if (typeof(T).Equals(typeof(OfficeDesk)))
+//				{
+//					var officeDesks = agentsForType.Cast<OfficeDesk>().ToList();
+//					officeDesks.RemoveAll(o => o.IsAssignedToAnEmployee == true);
+//					return officeDesks.Cast<T>();
+//				}
+//				else
+					return agentsForType.Cast<T>();
+			}
 			else
 				return new List<T>();
 		}
@@ -527,6 +538,14 @@ namespace MyThirdSDL.Simulation
 
 				foreach (var agentToCheck in agentsToCheck)
 				{
+					// we want to remove assigned office desks from the list of closest agents because they should be considered taken, so skip over them
+					if (agentToCheck is OfficeDesk)
+					{
+						var officeDesk = agentToCheck as OfficeDesk;
+						if (officeDesk.IsAssignedToAnEmployee)
+							continue;
+					}
+
 					var agentToFindWorldIndex = agentToCheck.WorldGridIndex;
 					var agentOnPathNode = CurrentMap.GetPathNodeAtWorldGridIndex(agentToFindWorldIndex);
 					double manhattenDistance = ManhattanDistance(employeeOnPathNode, agentOnPathNode);
