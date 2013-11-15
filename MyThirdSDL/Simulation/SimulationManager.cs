@@ -8,6 +8,7 @@ using MyThirdSDL.Agents;
 using MyThirdSDL.Descriptors;
 using MyThirdSDL.Content;
 using SharpDL;
+using SharpDL.Input;
 
 namespace MyThirdSDL.Simulation
 {
@@ -70,9 +71,32 @@ namespace MyThirdSDL.Simulation
 		{
 			SimulationTime = gameTime.TotalGameTime;
 
+            MouseState mouseState = Mouse.GetState();
 			foreach (var agentList in trackedAgents.Values)
+            {
 				foreach (var agent in agentList)
+                {
 					agent.Update(gameTime);
+
+                    if (agent is Employee)
+                    {
+                        var employee = agent as Employee;
+                        Point clickedPoint = new Point(mouseState.X, mouseState.Y);
+                        Vector clickedWorldSpacePoint =
+                            CoordinateHelper.ScreenSpaceToWorldSpace(
+                                clickedPoint.X, clickedPoint.Y,
+                                CoordinateHelper.ScreenOffset,
+                                CoordinateHelper.ScreenProjectionType.Isometric
+                            );
+                        if (employee.CollisionBox.Contains(new Point((int)clickedWorldSpacePoint.X, (int)clickedWorldSpacePoint.Y))
+                            && mouseState.ButtonsPressed.Contains(MouseButtonCode.Left))
+                        {
+                            OnEmployeeClicked(this, new EmployeeClickedEventArgs(employee));
+                        }
+                    }
+                }
+            }
+
 
 //				if (agent is Employee)
 //				{
@@ -94,6 +118,14 @@ namespace MyThirdSDL.Simulation
 //				}
 
 		}
+
+        private void OnEmployeeClicked(object sender, EmployeeClickedEventArgs e)
+        {
+            if (EmployeeClicked != null)
+                EmployeeClicked(sender, e);
+        }
+
+        public event EventHandler<EmployeeClickedEventArgs> EmployeeClicked;
 
 		#region Employee Events
 
