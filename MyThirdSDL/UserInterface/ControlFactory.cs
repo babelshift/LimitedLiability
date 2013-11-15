@@ -53,23 +53,21 @@ namespace MyThirdSDL.UserInterface
             Icon iconNeedsMenu = CreateIcon(new Vector(position.X + 362, position.Y + 5), "IconStatistics");
             Icon iconSkillsMenu = CreateIcon(new Vector(position.X + 505, position.Y + 5), "IconPenPaper");
 
-            Label labelMainMenu = CreateLabel(new Vector(position.X + 38, position.Y + 15), fontPath, fontSizeContent, fontColor, "Inspect Employee");
-            Label labelNeedsMenu = CreateLabel(new Vector(position.X + 400, position.Y + 15), fontPath, fontSizeContent, fontColor, "Needs");
-            Label labelSkillsMenu = CreateLabel(new Vector(position.X + 538, position.Y + 15), fontPath, fontSizeContent, fontColor, "Skills");
+			Label labelMainMenu = CreateLabel(new Vector(position.X + 38, position.Y + 15), fontPath, fontSizeTitle, fontColor, "Inspect Employee");
+			Label labelNeedsMenu = CreateLabel(new Vector(position.X + 400, position.Y + 15), fontPath, fontSizeTitle, fontColor, "Needs");
+			Label labelSkillsMenu = CreateLabel(new Vector(position.X + 538, position.Y + 15), fontPath, fontSizeTitle, fontColor, "Skills");
 
-            Icon iconMoney = CreateIcon(new Vector(position.X + 362, position.Y + 50), "IconMoney");
-            Icon iconHealth = CreateIcon(new Vector(position.X + 362, position.Y + 80), "IconMedkit");
-            Icon iconHygiene = CreateIcon(new Vector(position.X + 362, position.Y + 110), "IconToothbrush");
-            Icon iconSleep = CreateIcon(new Vector(position.X + 362, position.Y + 140), "IconPersonTired");
-            Icon iconThirst = CreateIcon(new Vector(position.X + 362, position.Y + 170), "IconSoda");
-            Icon iconHunger = CreateIcon(new Vector(position.X + 362, position.Y + 200), "IconChicken");
+			Icon iconHealth = CreateIcon(new Vector(position.X + 362, position.Y + 50), "IconMedkit");
+			Icon iconHygiene = CreateIcon(new Vector(position.X + 362, position.Y + 80), "IconToothbrush");
+			Icon iconSleep = CreateIcon(new Vector(position.X + 362, position.Y + 110), "IconPersonTired");
+			Icon iconThirst = CreateIcon(new Vector(position.X + 362, position.Y + 140), "IconSoda");
+			Icon iconHunger = CreateIcon(new Vector(position.X + 362, position.Y + 170), "IconChicken");
 
-            Label labelMoney = CreateLabel(new Vector(position.X + 395, position.Y + 60), fontPath, fontSizeContent, fontColor, "N/A");
-            Label labelHealth = CreateLabel(new Vector(position.X + 395, position.Y + 90), fontPath, fontSizeContent, fontColor, "N/A");
-            Label labelHygiene = CreateLabel(new Vector(position.X + 395, position.Y + 120), fontPath, fontSizeContent, fontColor, "N/A");
-            Label labelSleep = CreateLabel(new Vector(position.X + 395, position.Y + 150), fontPath, fontSizeContent, fontColor, "N/A");
-            Label labelThirst = CreateLabel(new Vector(position.X + 395, position.Y + 180), fontPath, fontSizeContent, fontColor, "N/A");
-            Label labelHunger = CreateLabel(new Vector(position.X + 395, position.Y + 210), fontPath, fontSizeContent, fontColor, "N/A");
+			Label labelHealth = CreateLabel(new Vector(position.X + 395, position.Y + 60), fontPath, fontSizeContent, fontColor, "N/A");
+			Label labelHygiene = CreateLabel(new Vector(position.X + 395, position.Y + 90), fontPath, fontSizeContent, fontColor, "N/A");
+			Label labelSleep = CreateLabel(new Vector(position.X + 395, position.Y + 120), fontPath, fontSizeContent, fontColor, "N/A");
+			Label labelThirst = CreateLabel(new Vector(position.X + 395, position.Y + 150), fontPath, fontSizeContent, fontColor, "N/A");
+			Label labelHunger = CreateLabel(new Vector(position.X + 395, position.Y + 180), fontPath, fontSizeContent, fontColor, "N/A");
 
             Icon iconCommunication = CreateIcon(new Vector(position.X + 508, position.Y + 50), "IconCommunication");
             Icon iconLeadership = CreateIcon(new Vector(position.X + 508, position.Y + 80), "IconLeadership");
@@ -95,14 +93,15 @@ namespace MyThirdSDL.UserInterface
             Label labelSalaryValue = CreateLabel(new Vector(position.X + 110, position.Y + 150), fontPath, fontSizeContent, fontColor, "N/A");
             Label labelStatusValue = CreateLabel(new Vector(position.X + 110, position.Y + 180), fontPath, fontSizeContent, fontColor, "N/A");
             Label labelBirthValue = CreateLabel(new Vector(position.X + 110, position.Y + 210), fontPath, fontSizeContent, fontColor, "N/A");
-            Label labelMoodValue = CreateLabel(new Vector(position.X + 110, position.Y + 240), fontPath, fontSizeContent, fontColor, "N/A");
 
-            Icon iconMood = CreateIcon(new Vector(position.X + 110, position.Y + 230), "IconPersonAngry");
+			Icon iconMoodHappy = CreateIcon(new Vector(position.X + 110, position.Y + 230), "IconPersonHappy");
+			Icon iconMoodAngry = CreateIcon(new Vector(position.X + 110, position.Y + 230), "IconPersonAngry");
             
 			Button buttonCloseWindow = CreateButton(new Vector(position.X + 600, position.Y - 47), "ButtonSquare", "ButtonSquareHover", "IconWindowClose", "IconWindowClose");
 
             MenuInspectEmployee menuInspectEmployee = new MenuInspectEmployee(texture, position, buttonCloseWindow,
-                labelNameValue, labelAgeValue, labelJobValue, labelSalaryValue, labelStatusValue, labelBirthValue, iconMood);
+				labelNameValue, labelAgeValue, labelJobValue, labelSalaryValue, labelStatusValue, labelBirthValue, iconMoodHappy, iconMoodAngry,
+				labelHealth, labelHygiene, labelSleep, labelThirst, labelHunger, labelCommunication, labelCreativity, labelLeadership, labelIntelligence);
 
             menuInspectEmployee.AddControl(iconMainMenu);
             menuInspectEmployee.AddControl(iconNeedsMenu);
@@ -112,29 +111,27 @@ namespace MyThirdSDL.UserInterface
             menuInspectEmployee.AddControl(labelNeedsMenu);
             menuInspectEmployee.AddControl(labelSkillsMenu);
 
-            menuInspectEmployee.AddControl(iconMoney);
             menuInspectEmployee.AddControl(iconHealth);
             menuInspectEmployee.AddControl(iconHygiene);
             menuInspectEmployee.AddControl(iconSleep);
             menuInspectEmployee.AddControl(iconThirst);
             menuInspectEmployee.AddControl(iconHunger);
 
-            menuInspectEmployee.AddControl(labelMoney);
-            menuInspectEmployee.AddControl(labelHealth);
-            menuInspectEmployee.AddControl(labelHygiene);
-            menuInspectEmployee.AddControl(labelSleep);
-            menuInspectEmployee.AddControl(labelThirst);
-            menuInspectEmployee.AddControl(labelHunger);
+//            menuInspectEmployee.AddControl(labelHealth);
+//            menuInspectEmployee.AddControl(labelHygiene);
+//            menuInspectEmployee.AddControl(labelSleep);
+//            menuInspectEmployee.AddControl(labelThirst);
+//            menuInspectEmployee.AddControl(labelHunger);
 
             menuInspectEmployee.AddControl(iconCommunication);
             menuInspectEmployee.AddControl(iconLeadership);
             menuInspectEmployee.AddControl(iconCreativity);
             menuInspectEmployee.AddControl(iconIntelligence);
 
-            menuInspectEmployee.AddControl(labelCommunication);
-            menuInspectEmployee.AddControl(labelLeadership);
-            menuInspectEmployee.AddControl(labelCreativity);
-            menuInspectEmployee.AddControl(labelIntelligence);
+//            menuInspectEmployee.AddControl(labelCommunication);
+//            menuInspectEmployee.AddControl(labelLeadership);
+//            menuInspectEmployee.AddControl(labelCreativity);
+//            menuInspectEmployee.AddControl(labelIntelligence);
 
             menuInspectEmployee.AddControl(labelName);
             menuInspectEmployee.AddControl(labelAge);
@@ -142,7 +139,7 @@ namespace MyThirdSDL.UserInterface
             menuInspectEmployee.AddControl(labelSalary);
             menuInspectEmployee.AddControl(labelStatus);
             menuInspectEmployee.AddControl(labelBirth);
-            menuInspectEmployee.AddControl(labelMood);
+			menuInspectEmployee.AddControl(labelMood);
 
             //menuInspectEmployee.AddControl(labelNameValue);
             //menuInspectEmployee.AddControl(labelAgeValue);

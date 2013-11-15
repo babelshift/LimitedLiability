@@ -55,7 +55,8 @@
 		{ "key": "IconCreativity",				"value": "Images/User Interface/IconCreativity.png" },
 		{ "key": "IconLeadership",				"value": "Images/User Interface/IconLeadership.png" },
 		{ "key": "IconCommunication",			"value": "Images/User Interface/IconCommunication.png" },
-		{ "key": "IconPersonAngry",				"value": "Images/User Interface/IconPersonAngry.png" }
+		{ "key": "IconPersonAngry",				"value": "Images/User Interface/IconPersonAngry.png" },
+		{ "key": "IconPersonHappy",				"value": "Images/User Interface/IconPersonHappy.png" }
 	],
 	"maps": [
 		{ "key": "Map1",						"value": "Maps/Map1.tmx" },

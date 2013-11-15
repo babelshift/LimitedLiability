@@ -40,13 +40,11 @@ namespace MyThirdSDL.UserInterface
 		#region Controls
 
 		private ToolboxTray toolboxTray;
-
 		private MenuEquipment menuEquipment;
-        private IEnumerable<IPurchasable> purchasableItems;
-        private bool isMenuEquipmentOpen = false;
-
-        private MenuInspectEmployee menuInspectEmployee;
-        private bool isMenuInspectEmployeeOpen = false;
+		private IEnumerable<IPurchasable> purchasableItems;
+		private bool isMenuEquipmentOpen = false;
+		private MenuInspectEmployee menuInspectEmployee;
+		private bool isMenuInspectEmployeeOpen = false;
 
 		#endregion
 
@@ -153,7 +151,7 @@ namespace MyThirdSDL.UserInterface
 			var labelMessagesForSingleAgent = GetMessagesForAgent(agentId);
 			SimulationLabel labelToRemove;
 			bool success = labelMessagesForSingleAgent.TryGetValue(messageType, out labelToRemove);
-			if(success)
+			if (success)
 			{
 				labelToRemove.Dispose();
 				labelMessagesForSingleAgent.Remove(messageType);
@@ -207,78 +205,103 @@ namespace MyThirdSDL.UserInterface
 
 		private void ToolboxTray_ButtonSelectRoomClicked(object sender, EventArgs e)
 		{
-            if (!isMenuInspectEmployeeOpen)
-            {
-                ClearMenusOpen();
-
-                if (menuInspectEmployee == null)
-                {
-                    Vector menuPosition = new Vector(bottomRightPointOfWindow.X, bottomRightPointOfWindow.Y);
-                    menuInspectEmployee = controlFactory.CreateMenuInspectEmployee(menuPosition);
-                    menuInspectEmployee.ButtonCloseWindowClicked += menuInspectEmployee_ButtonCloseWindowClicked;
-                }
-
-                MouseMode = MouseModeType.SelectRoom;
-
-                isMenuInspectEmployeeOpen = true;
-            }
 		}
-
-        private void menuInspectEmployee_ButtonCloseWindowClicked(object sender, EventArgs e)
-        {
-            throw new NotImplementedException();
-        }
 
 		private void ToolboxTray_ButtonSelectEquipmentClicked(object sender, EventArgs e)
 		{
 			if (!isMenuEquipmentOpen)
-            {
-                ClearMenusOpen();
+			{
+				ClearMenusOpen();
 
 				if (menuEquipment == null)
 				{
 					Vector menuPosition = new Vector(bottomRightPointOfWindow.X, bottomRightPointOfWindow.Y);
 					menuEquipment = controlFactory.CreateMenuEquipment(menuPosition, purchasableItems);
 					menuEquipment.ButtonCloseWindowClicked += menuEquipment_ButtonCloseWindowClicked;
+					menuEquipment.ButtonConfirmWindowClicked += menuEquipment_ButtonConfirmWindowClicked;
 				}
 
 				MouseMode = MouseModeType.SelectEquipment;
 
-				isMenuEquipmentOpen = true;
+				ShowMenuEquipment();
 			}
 		}
 
-        private void ClearMenusOpen()
-        {
-            isMenuInspectEmployeeOpen = false;
-            isMenuEquipmentOpen = false;
-        }
+		private void ClearMenusOpen()
+		{
+			HideMenuInspectEmployee();
+			HideMenuEquipment();
+		}
+
+		private void CreateMenuInspectEmployee()
+		{
+			if (!isMenuInspectEmployeeOpen)
+			{
+				ClearMenusOpen();
+				if (menuInspectEmployee == null)
+				{
+					Vector menuPosition = new Vector(bottomRightPointOfWindow.X, bottomRightPointOfWindow.Y);
+					menuInspectEmployee = controlFactory.CreateMenuInspectEmployee(menuPosition);
+					menuInspectEmployee.ButtonCloseWindowClicked += menuInspectEmployee_ButtonCloseWindowClicked;
+				}
+				MouseMode = MouseModeType.SelectRoom;
+
+				ShowMenuInspectEmployee();
+			}
+		}
 
 		#endregion
 
-        #region Menu Inspect Employee Events
+		#region Menu Inspect Employee Events
 
-        public void SetEmployeeBeingInspected(Employee employee)
-        {
-            if (menuInspectEmployee != null)
-            {
-                menuInspectEmployee.SetNameDisplay(employee.Name);
-                menuInspectEmployee.SetAgeDisplay(employee.Age);
-                menuInspectEmployee.SetJobDisplay(employee.Job);
-                menuInspectEmployee.SetSalaryDisplay(employee.Job.Salary);
-                menuInspectEmployee.SetStatusDisplay(employee.Activity.ToString());
-                menuInspectEmployee.SetBirthDisplay(employee.Birthday);
-                menuInspectEmployee.SetMood(employee.HappinessRating);
-            }
-        }
+		public void SetEmployeeBeingInspected(Employee employee)
+		{
+			ClearMenusOpen();
 
-        #endregion
+			CreateMenuInspectEmployee();
 
-        #region Menu Equipment Events
+			menuInspectEmployee.SetInfoValues(employee);
+			menuInspectEmployee.SetNeedsValues(employee.Necessities);
+			menuInspectEmployee.SetSkillsValues(employee.Skills);
+		}
 
-        private void menuEquipment_ButtonCloseWindowClicked(object sender, EventArgs e)
+		private void ShowMenuInspectEmployee()
+		{
+			isMenuInspectEmployeeOpen = true;
+		}
+
+		private void HideMenuInspectEmployee()
+		{
+			isMenuInspectEmployeeOpen = false;
+		}
+
+		private void menuInspectEmployee_ButtonCloseWindowClicked(object sender, EventArgs e)
+		{
+			HideMenuInspectEmployee();
+		}
+
+		#endregion
+
+		#region Menu Equipment Events
+
+		private void ShowMenuEquipment()
+		{
+			isMenuEquipmentOpen = true;
+		}
+
+		private void HideMenuEquipment()
 		{
 			isMenuEquipmentOpen = false;
+		}
+
+		private void menuEquipment_ButtonConfirmWindowClicked(object sender, EventArgs e)
+		{
+			HideMenuEquipment();
+		}
+
+		private void menuEquipment_ButtonCloseWindowClicked(object sender, EventArgs e)
+		{
+			HideMenuEquipment();
 		}
 
 		private void ToolboxTray_ButtonSelectGeneralClicked(object sender, EventArgs e)
@@ -299,8 +322,8 @@ namespace MyThirdSDL.UserInterface
 			if (isMenuEquipmentOpen)
 				menuEquipment.Update(gameTime);
 
-            if (isMenuInspectEmployeeOpen)
-                menuInspectEmployee.Update(gameTime);
+			if (isMenuInspectEmployeeOpen)
+				menuInspectEmployee.Update(gameTime);
 		}
 
 		public void Draw(GameTime gameTime, Renderer renderer)
@@ -329,8 +352,8 @@ namespace MyThirdSDL.UserInterface
 			if (isMenuEquipmentOpen)
 				menuEquipment.Draw(gameTime, renderer);
 
-            if (isMenuInspectEmployeeOpen)
-                menuInspectEmployee.Draw(gameTime, renderer);
+			if (isMenuInspectEmployeeOpen)
+				menuInspectEmployee.Draw(gameTime, renderer);
 		}
 
 		#endregion

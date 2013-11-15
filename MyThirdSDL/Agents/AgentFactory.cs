@@ -47,10 +47,11 @@ namespace MyThirdSDL.Agents
 			int employeeNumber = GetNextEmployeeNumber();
 			string firstName = GetRandomFirstName();
 			int age = GetRandomAge();
+			DateTime birthday = DateTime.Now.Subtract(TimeSpan.FromDays(age * 365));
 			Skills skills = Skills.GetRandomSkills();
 			Job job = jobFactory.CreateJob(skills);
 
-			Employee employee = new Employee(birthTime, "Employee " + employeeNumber, texture, position, firstName, "Smith", age, DateTime.Now, skills, job);
+			Employee employee = new Employee(birthTime, "Employee " + employeeNumber, texture, position, firstName, "Smith", age, birthday, skills, job);
 
 			if (log.IsDebugEnabled)
 				log.Debug(String.Format("Employee has been created with name: {0}", employee.FullName));
