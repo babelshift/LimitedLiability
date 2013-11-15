@@ -172,9 +172,10 @@ namespace MyThirdSDL.Agents
 							if(!officeDesk.IsAssignedToAnEmployee)
 								AssignOfficeDesk(officeDesk);
 
-					// we are now at our office desk
-					if(officeDesk.ID == AssignedOfficeDesk.ID)
-						IsAtOfficeDesk = true;
+					// if we are assigned an office desk, we are now at our office desk
+					if(IsAssignedAnOfficeDesk)
+						if(officeDesk.ID == AssignedOfficeDesk.ID)
+							IsAtOfficeDesk = true;
 				}
 
 				// we are done walking towards the intended agent

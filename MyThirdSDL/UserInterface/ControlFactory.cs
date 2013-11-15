@@ -54,7 +54,7 @@ namespace MyThirdSDL.UserInterface
 			Icon iconMainMenu = CreateIcon(new Vector(position.X + 3, position.Y + 5), "IconHandTruck");
 			Icon iconInfoMenu = CreateIcon(new Vector(position.X + 365, position.Y + 5), "IconStatistics");
 			Label labelMainMenu = CreateLabel(new Vector(position.X + 38, position.Y + 15), fontPath, fontSizeTitle, fontColor, "Equipment");
-			Label labelInfoMenu = CreateLabel(new Vector(position.X + 400, position.Y + 15), fontPath, fontSizeContent, fontColor, "Info");
+			Label labelInfoMenu = CreateLabel(new Vector(position.X + 400, position.Y + 15), fontPath, fontSizeTitle, fontColor, "Info");
 
 			Icon iconMoney = CreateIcon(new Vector(position.X + 365, position.Y + 50), "IconMoney");
 			Icon iconHealth = CreateIcon(new Vector(position.X + 365, position.Y + 80), "IconMedkit");
