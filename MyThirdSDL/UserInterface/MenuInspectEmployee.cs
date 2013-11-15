@@ -58,19 +58,19 @@ namespace MyThirdSDL.UserInterface
 
 		public void SetNeedsValues(Necessities necessities)
 		{
-			labelHealthValue.Text = ((int)necessities.Health).ToString();
-			labelHygieneValue.Text = ((int)necessities.Hygiene).ToString();
-			labelSleepValue.Text = ((int)necessities.Sleep).ToString();
-			labelHungerValue.Text = ((int)necessities.Hunger).ToString();
-			labelThirstValue.Text = ((int)necessities.Thirst).ToString();
+			labelHealthValue.Text = String.Format("{0} {1}", (int)necessities.Health, necessities.HealthToString());
+			labelHygieneValue.Text = String.Format("{0} {1}", (int)necessities.Hygiene, necessities.HygieneToString());
+			labelSleepValue.Text = String.Format("{0} {1}", (int)necessities.Sleep, necessities.SleepToString());
+			labelHungerValue.Text = String.Format("{0} {1}", (int)necessities.Hunger, necessities.HungerToString());
+			labelThirstValue.Text = String.Format("{0} {1}", (int)necessities.Thirst, necessities.ThirstToString());
 		}
 
-		public void SetSkillsValues(Skills Skills)
+		public void SetSkillsValues(Skills skills)
 		{
-			labelCommunicationValue.Text = ((int)Skills.Communication).ToString();
-			labelLeadershipValue.Text = ((int)Skills.Leadership).ToString();
-			labelCreativityValue.Text = ((int)Skills.Creativity).ToString();
-			labelIntelligenceValue.Text = ((int)Skills.Intelligence).ToString();
+			labelCommunicationValue.Text = String.Format("{0} {1}", (int)skills.Communication, skills.CommunicationToString());
+			labelLeadershipValue.Text = String.Format("{0} {1}", (int)skills.Leadership, skills.LeadershipToString());
+			labelCreativityValue.Text = String.Format("{0} {1}", (int)skills.Creativity, skills.CreativityToString());
+			labelIntelligenceValue.Text = String.Format("{0} {1}", (int)skills.Intelligence, skills.IntelligenceToString());
 		}
 
         List<Label> labelValues = new List<Label>();

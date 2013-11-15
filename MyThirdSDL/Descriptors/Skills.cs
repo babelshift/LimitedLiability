@@ -46,6 +46,39 @@ namespace MyThirdSDL.Descriptors
 			Leadership = leadership;
 		}
 
+		private string RatingToString(Rating rating)
+		{
+			int ratingRaw = (int)rating;
+			if (ratingRaw < 4)
+				return "Bad";
+			else if (ratingRaw >= 4 && ratingRaw <= 6)
+				return "OK";
+			else if (ratingRaw > 6)
+				return "Good";
+			else
+				return "???";
+		}
+
+		public string IntelligenceToString()
+		{
+			return RatingToString(Intelligence);
+		}
+
+		public string CreativityToString()
+		{
+			return RatingToString(Creativity);
+		}
+
+		public string CommunicationToString()
+		{
+			return RatingToString(Communication);
+		}
+
+		public string LeadershipToString()
+		{
+			return RatingToString(Leadership);
+		}
+
 		public void AdjustIntelligence(int intelligence)
 		{
 			Intelligence += intelligence;

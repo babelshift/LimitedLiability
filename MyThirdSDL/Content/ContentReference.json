@@ -3,7 +3,7 @@
 		{ "key": "Arcade",						"value": "Fonts/Arcade N.ttf" }  
 	], 
 	"textures": [
-		{ "key": "Employee1",					"value": "Images/thing.png" },
+		{ "key": "Employee1",					"value": "Images/playerIsoBox.png" },
 		{ "key": "TileHighlight2",				"value": "Images/tileHighlight2.png" },
 		{ "key": "TileHighlightSelected",		"value": "Images/tileHighlightSelected.png" },
 		{ "key": "SnackMachine",				"value": "Images/Equipment/SnackMachine2.png" },

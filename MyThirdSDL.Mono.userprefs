@@ -1,15 +1,8 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="MyThirdSDL/UserInterface/ControlFactory.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="MyThirdSDL/Simulation/SimulationManager.cs">
     <Files>
-      <File FileName="MyThirdSDL/MainGame.cs" Line="258" Column="73" />
-      <File FileName="MyThirdSDL/Content/ContentReference.json" Line="36" Column="94" />
-      <File FileName="MyThirdSDL/UserInterface/MenuEquipment.cs" Line="216" Column="1" />
-      <File FileName="MyThirdSDL/Agents/Employee.cs" Line="30" Column="12" />
-      <File FileName="MyThirdSDL/Agents/Agent.cs" Line="1" Column="1" />
-      <File FileName="MyThirdSDL/Agents/MobileAgent.cs" Line="1" Column="1" />
-      <File FileName="MyThirdSDL/Agents/Job.cs" Line="10" Column="2" />
-      <File FileName="MyThirdSDL/UserInterface/ControlFactory.cs" Line="60" Column="94" />
+      <File FileName="MyThirdSDL/Simulation/SimulationManager.cs" Line="300" Column="77" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>

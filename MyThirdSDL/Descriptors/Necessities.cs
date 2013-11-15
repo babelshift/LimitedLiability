@@ -87,6 +87,44 @@ namespace MyThirdSDL.Descriptors
 			Thirst = thirst;
 		}
 
+		private string RatingToString(Rating rating)
+		{
+			int ratingRaw = (int)rating;
+			if (ratingRaw < 4)
+				return "Bad";
+			else if (ratingRaw >= 4 && ratingRaw <= 6)
+				return "OK";
+			else if (ratingRaw > 6)
+				return "Good";
+			else
+				return "???";
+		}
+
+		public string SleepToString()
+		{
+			return RatingToString(Sleep);
+		}
+
+		public string HealthToString()
+		{
+			return RatingToString(Health);
+		}
+
+		public string HygieneToString()
+		{
+			return RatingToString(Hygiene);
+		}
+
+		public string HungerToString()
+		{
+			return RatingToString(Hunger);
+		}
+
+		public string ThirstToString()
+		{
+			return RatingToString(Thirst);
+		}
+
 		public void AdjustSleep(double sleepRatingAdjustment)
 		{
 			this.sleepRating = AdjustRating(this.sleepRating, sleepRatingAdjustment);
