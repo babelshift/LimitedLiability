@@ -137,6 +137,7 @@
     <Compile Include="Agents\AgentMetaData.cs" />
     <Compile Include="Descriptors\NecessityEffect.cs" />
     <Compile Include="Descriptors\SkillEffect.cs" />
+    <Compile Include="Agents\TrashBin.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -329,6 +330,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Agents\AgentReference.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Images\User Interface\IconBin.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>

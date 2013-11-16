@@ -82,6 +82,17 @@ namespace MyThirdSDL.Agents
 
 		#endregion
 
+		public TrashBin CreateTrashBin(TimeSpan birthTime)
+		{
+			return CreateTrashBin(birthTime, Vector.Zero);
+		}
+
+		public TrashBin CreateTrashBin(TimeSpan birthTime, Vector position)
+		{
+			AgentMetaData agentMetaData = agentManager.GetAgentMetaData("TrashBin");
+			return CreateAgent<TrashBin>(birthTime, "TrashBin", position, agentMetaData);
+		}
+
 		public OfficeDesk CreateOfficeDesk(TimeSpan birthTime)
 		{
 			return CreateOfficeDesk(birthTime, Vector.Zero);

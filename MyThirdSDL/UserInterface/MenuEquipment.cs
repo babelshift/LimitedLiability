@@ -44,8 +44,6 @@ namespace MyThirdSDL.UserInterface
 		private Button buttonCloseWindow;
 		private Button buttonConfirmWindow;
 
-		private List<ButtonMenuItem> buttonMenuItems = new List<ButtonMenuItem>();
-
 		#endregion
 
 		#region Events
@@ -94,12 +92,17 @@ namespace MyThirdSDL.UserInterface
 
 		#region Game Loop
 
+		private int currentDisplayedPage = 1;
+
 		public override void Update(GameTime gameTime)
 		{
 			base.Update(gameTime);
 
-			foreach (var buttonMenuItem in buttonMenuItems)
-				buttonMenuItem.Update(gameTime);
+			List<ButtonMenuItem> buttonMenuItemsOnCurrentPage = new List<ButtonMenuItem>();
+			bool success = buttonMenuItemPages.TryGetValue(currentDisplayedPage, out buttonMenuItemsOnCurrentPage);
+			if (success)
+				foreach (var buttonMenuItem in buttonMenuItemsOnCurrentPage)
+					buttonMenuItem.Update(gameTime);
 
 			buttonArrowCircleLeft.Update(gameTime);
 			buttonArrowCircleRight.Update(gameTime);
@@ -132,8 +135,11 @@ namespace MyThirdSDL.UserInterface
 			buttonCloseWindow.Draw(gameTime, renderer);
 			buttonConfirmWindow.Draw(gameTime, renderer);
 
-			foreach (var buttonMenuItem in buttonMenuItems)
-				buttonMenuItem.Draw(gameTime, renderer);
+			List<ButtonMenuItem> buttonMenuItemsOnCurrentPage = new List<ButtonMenuItem>();
+			bool success = buttonMenuItemPages.TryGetValue(currentDisplayedPage, out buttonMenuItemsOnCurrentPage);
+			if (success)
+				foreach (var buttonMenuItem in buttonMenuItemsOnCurrentPage)
+					buttonMenuItem.Draw(gameTime, renderer);
 		}
 
 		#endregion
@@ -142,33 +148,64 @@ namespace MyThirdSDL.UserInterface
 
 		public void AddButtonMenuItem(ButtonMenuItem buttonMenuItem)
 		{
-			int buttonMenuItemCount = buttonMenuItems.Count;
+			// the last page number will indicate the key in which we check for the next items to add
+			int lastPageNumber = buttonMenuItemPages.Keys.Count();
+			int itemsOnLastPageCount = 0;
+			List<ButtonMenuItem> buttonMenuItemsOnLastPage = new List<ButtonMenuItem>();
+			bool success = buttonMenuItemPages.TryGetValue(lastPageNumber, out buttonMenuItemsOnLastPage);
+			if (success)
+			{
+				// if there are pages in this page collection and the last page contains less than 4 entries, add the new entry to that page
+				if (buttonMenuItemsOnLastPage.Count < 4)
+				{
+					buttonMenuItemsOnLastPage.Add(buttonMenuItem);
+					itemsOnLastPageCount = buttonMenuItemsOnLastPage.Count;
+				}
+				// if there are 4 items on the last page, create a new page and add the item
+				else
+				{
+					buttonMenuItemsOnLastPage = new List<ButtonMenuItem>();
+					buttonMenuItemsOnLastPage.Add(buttonMenuItem);
+					buttonMenuItemPages.Add(lastPageNumber + 1, buttonMenuItemsOnLastPage);
+					itemsOnLastPageCount = buttonMenuItemsOnLastPage.Count;
+				}
+			}
+			else
+			{
+				// if there are no pages, create an entry and add the first page
+				buttonMenuItemsOnLastPage = new List<ButtonMenuItem>();
+				buttonMenuItemsOnLastPage.Add(buttonMenuItem);
+				buttonMenuItemPages.Add(1, buttonMenuItemsOnLastPage);
+				itemsOnLastPageCount = buttonMenuItemsOnLastPage.Count;
+			}
 
 			Vector buttonMenuItemPosition = Vector.Zero;
 
-			if (buttonMenuItemCount == 0)
+			if (itemsOnLastPageCount == 1)
 				buttonMenuItemPosition = new Vector(Position.X + 10, Position.Y + 50);
-			else if (buttonMenuItemCount == 1)
+			else if (itemsOnLastPageCount == 2)
 				buttonMenuItemPosition = new Vector(Position.X + 10, Position.Y + 100);
-			else if (buttonMenuItemCount == 2)
+			else if (itemsOnLastPageCount == 3)
 				buttonMenuItemPosition = new Vector(Position.X + 10, Position.Y + 150);
-			else if (buttonMenuItemCount == 3)
+			else if (itemsOnLastPageCount == 4)
 				buttonMenuItemPosition = new Vector(Position.X + 10, Position.Y + 200);
-			else if (buttonMenuItemCount >= 4)
+			else if (itemsOnLastPageCount >= 5)
 				return;
 
 			buttonMenuItem.Position = buttonMenuItemPosition;
 			buttonMenuItem.Clicked += buttonMenuItem_Clicked;
-			buttonMenuItems.Add(buttonMenuItem);
 		}
+
+		private Dictionary<int, List<ButtonMenuItem>> buttonMenuItemPages = new Dictionary<int, List<ButtonMenuItem>>();
 
 		private void buttonMenuItem_Clicked(object sender, PurchasableItemClickedEventArgs e)
 		{
 			ButtonMenuItem clickedButtonMenuItem = sender as ButtonMenuItem;
 			if (clickedButtonMenuItem != null)
 			{
-				foreach (var buttonMenuItem in buttonMenuItems)
-					buttonMenuItem.ToggleOff();
+				foreach (var buttonMenuItemPage in buttonMenuItemPages.Values)
+					foreach(var buttonMenuItem in buttonMenuItemPage)
+						buttonMenuItem.ToggleOff();
 				clickedButtonMenuItem.ToggleOn();
 			}
 
@@ -208,12 +245,14 @@ namespace MyThirdSDL.UserInterface
 
 		private void buttonArrowCircleRight_Clicked(object sender, EventArgs e)
 		{
-			throw new NotImplementedException();
+			if(currentDisplayedPage < buttonMenuItemPages.Keys.Count)
+				currentDisplayedPage++;
 		}
 
 		private void buttonArrowCircleLeft_Clicked(object sender, EventArgs e)
 		{
-			throw new NotImplementedException();
+			if(currentDisplayedPage > 1)
+				currentDisplayedPage--;
 		}
 
 		#endregion
