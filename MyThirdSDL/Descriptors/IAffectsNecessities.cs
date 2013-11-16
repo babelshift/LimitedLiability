@@ -8,6 +8,6 @@ namespace MyThirdSDL.Descriptors
 {
 	public interface IAffectsNecessities
 	{
-		NecessityEffects NecessityEffects { get; }
+		NecessityEffect NecessityEffect { get; }
 	}
 }

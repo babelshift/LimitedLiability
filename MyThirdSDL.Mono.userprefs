@@ -1,8 +1,15 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="MyThirdSDL/Simulation/SimulationManager.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="MyThirdSDL/Agents/OfficeDesk.cs">
     <Files>
-      <File FileName="MyThirdSDL/Simulation/SimulationManager.cs" Line="300" Column="77" />
+      <File FileName="MyThirdSDL/Agents/Equipment.cs" Line="10" Column="41" />
+      <File FileName="MyThirdSDL/Agents/Library.cs" Line="31" Column="1" />
+      <File FileName="MyThirdSDL/Agents/SodaMachine.cs" Line="24" Column="38" />
+      <File FileName="MyThirdSDL/Agents/SnackMachine.cs" Line="24" Column="49" />
+      <File FileName="MyThirdSDL/Agents/WaterFountain.cs" Line="24" Column="49" />
+      <File FileName="MyThirdSDL/Descriptors/NecessityEffect.cs" Line="7" Column="20" />
+      <File FileName="MyThirdSDL/Descriptors/SkillEffect.cs" Line="22" Column="1" />
+      <File FileName="MyThirdSDL/Agents/OfficeDesk.cs" Line="20" Column="49" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>

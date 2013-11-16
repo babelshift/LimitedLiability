@@ -80,7 +80,7 @@ namespace MyThirdSDL.Agents
 			}
 		}
 
-		public abstract void ReactToAction(ActionType actionType, NecessityEffects affector);
+		public abstract void ReactToAction(ActionType actionType, NecessityEffect affector);
 
 		#region Game Loop
 

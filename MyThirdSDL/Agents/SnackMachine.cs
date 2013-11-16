@@ -8,35 +8,30 @@ using MyThirdSDL.Descriptors;
 
 namespace MyThirdSDL.Agents
 {
-	public class SnackMachine : Equipment, IPurchasable//, ITriggerable
+	public class SnackMachine : Equipment, IPurchasable
 	{
 		public string IconTextureKey { get; private set; }
 
-		public NecessityEffects NecessityEffects { get; private set; }
+		public NecessityEffect NecessityEffect { get; private set; }
 
-		public SkillEffects SkillEffects { get; private set; }
+		public SkillEffect SkillEffect { get; private set; }
 
 		public Employee AssignedEmployee { get; private set; }
 
 		public bool IsAssignedToAnEmployee { get { return AssignedEmployee != null; } }
 
 		public SnackMachine(TimeSpan birthTime, Texture texture, Vector startingPosition, 
-			string name, int price, string iconKey, NecessityEffects necessityEffect, SkillEffects skillEffect)
+			string name, int price, string iconTextureKey, NecessityEffect necessityEffect, SkillEffect skillEffect)
 			: base(birthTime, name, texture, startingPosition, price)
 		{
-			NecessityEffects = necessityEffect;
-			SkillEffects = skillEffect;
-			IconTextureKey = iconKey;
+			NecessityEffect = necessityEffect;
+			SkillEffect = skillEffect;
+			IconTextureKey = iconTextureKey;
 		}
 
-		public NecessityEffects DispenseFood()
+		public NecessityEffect DispenseFood()
 		{
-			return NecessityEffects;
+			return NecessityEffect;
 		}
-
-		//public void ExecuteTrigger()
-		//{
-		//	Trigger.Execute(NecessityAffector);
-		//}
 	}
 }

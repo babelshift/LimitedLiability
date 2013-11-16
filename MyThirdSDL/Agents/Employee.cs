@@ -92,7 +92,7 @@ namespace MyThirdSDL.Agents
 			Necessities.AdjustHealth(necessityEffect);
 		}
 
-		private void AdjustNecessities(NecessityEffects necessityEffect)
+		private void AdjustNecessities(NecessityEffect necessityEffect)
 		{
 			Necessities.AdjustSleep(necessityEffect.SleepEffectiveness);
 			Eat(necessityEffect.HungerEffectiveness);
@@ -244,7 +244,7 @@ namespace MyThirdSDL.Agents
 		/// </summary>
 		/// <param name="actionType">Action type.</param>
 		/// <param name="affector">Affector.</param>
-		public override void ReactToAction(ActionType actionType, NecessityEffects affector)
+		public override void ReactToAction(ActionType actionType, NecessityEffect affector)
 		{
 			if (actionType == ActionType.DispenseDrink)
 				Drink(affector.ThirstEffectiveness);

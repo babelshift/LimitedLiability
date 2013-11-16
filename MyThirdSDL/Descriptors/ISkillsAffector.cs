@@ -8,6 +8,6 @@ namespace MyThirdSDL.Descriptors
 {
 	public interface ISkillsAffector
 	{
-		SkillEffects SkillEffects { get; }
+		SkillEffect SkillEffect { get; }
 	}
 }

@@ -173,11 +173,11 @@ namespace MyThirdSDL.UserInterface
 			}
 
 			labelMoney.Text = e.PurchasableItem.Price.ToString();
-			labelHealth.Text = e.PurchasableItem.NecessityEffects.HealthEffectiveness.ToString();
-			labelHunger.Text = e.PurchasableItem.NecessityEffects.HungerEffectiveness.ToString();
-			labelHygiene.Text = e.PurchasableItem.NecessityEffects.HygieneEffectiveness.ToString();
-			labelSleep.Text = e.PurchasableItem.NecessityEffects.SleepEffectiveness.ToString();
-			labelThirst.Text = e.PurchasableItem.NecessityEffects.ThirstEffectiveness.ToString();
+			labelHealth.Text = e.PurchasableItem.NecessityEffect.HealthEffectiveness.ToString();
+			labelHunger.Text = e.PurchasableItem.NecessityEffect.HungerEffectiveness.ToString();
+			labelHygiene.Text = e.PurchasableItem.NecessityEffect.HygieneEffectiveness.ToString();
+			labelSleep.Text = e.PurchasableItem.NecessityEffect.SleepEffectiveness.ToString();
+			labelThirst.Text = e.PurchasableItem.NecessityEffect.ThirstEffectiveness.ToString();
 		}
 
 		#endregion

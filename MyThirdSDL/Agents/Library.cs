@@ -15,16 +15,16 @@ namespace MyThirdSDL.Agents
 		private const int price = 500;
 		private const string name = "Library";
 
-		public NecessityEffects NecessityEffects { get; private set; }
-		public SkillEffects SkillEffects { get; private set; }
+		public NecessityEffect NecessityEffect { get; private set; }
+		public SkillEffect SkillEffect { get; private set; }
 
 		public string IconTextureKey { get { return "IconLibrary"; } }
 
 		public Library(TimeSpan birthTime, string agentName, Texture texture, Vector position)
 			: base(birthTime, name, texture, position, widthInTiles, heightInTiles, price)
 		{
-			NecessityEffects = new NecessityEffects(0, 0, -1, 0, 0);
-			SkillEffects = new SkillEffects(1, 1, 0, 0);
+			NecessityEffect = new NecessityEffect(0, 0, -1, 0, 0);
+			SkillEffect = new SkillEffect(1, 1, 0, 0);
 		}
 	}
 }

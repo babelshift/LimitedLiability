@@ -20,8 +20,8 @@ namespace MyThirdSDL
 			foreach (var equipment in o["equipment"])
 			{
 				AgentMetaData agentMetaData = null;
-				NecessityEffects necessityEffectData = null;
-				SkillEffects skillEffectData = null;
+				NecessityEffect necessityEffectData = null;
+				SkillEffect skillEffectData = null;
 
 				string key = equipment["key"].ToString();
 				string name = equipment["name"].ToString();
@@ -36,7 +36,7 @@ namespace MyThirdSDL
 					int thirst = Int32.Parse(necessityEffect["thirst"].ToString());
 					int hunger = Int32.Parse(necessityEffect["hunger"].ToString());
 
-					necessityEffectData = new NecessityEffects(health, hygiene, sleep, thirst, hunger);
+					necessityEffectData = new NecessityEffect(health, hygiene, sleep, thirst, hunger);
 				}
 
 				foreach (var skillEffect in equipment["skillEffect"])
@@ -46,7 +46,7 @@ namespace MyThirdSDL
 					int communication = Int32.Parse(skillEffect["communication"].ToString());
 					int leadership = Int32.Parse(skillEffect["leadership"].ToString());
 
-					skillEffectData = new SkillEffects(intelligence, creativity, communication, leadership);
+					skillEffectData = new SkillEffect(intelligence, creativity, communication, leadership);
 				}
 
 				agentMetaData = new AgentMetaData(price, name, iconKey, necessityEffectData, skillEffectData);
