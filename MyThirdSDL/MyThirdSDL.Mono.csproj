@@ -134,6 +134,9 @@
     <Compile Include="Agents\AgentState.cs" />
     <Compile Include="Simulation\EmployeeClickedEventArgs.cs" />
     <Compile Include="UserInterface\MenuInspectEmployee.cs" />
+    <Compile Include="Descriptors\SkillEffects.cs" />
+    <Compile Include="Agents\AgentManager.cs" />
+    <Compile Include="Agents\AgentMetaData.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -323,6 +326,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\Images\User Interface\IconPersonHappy.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Agents\AgentReference.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>

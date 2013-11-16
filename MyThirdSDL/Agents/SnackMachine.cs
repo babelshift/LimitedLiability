@@ -10,22 +10,23 @@ namespace MyThirdSDL.Agents
 {
 	public class SnackMachine : Equipment, IPurchasable//, ITriggerable
 	{
-		private const int price = 50;
-		private const string name = "Snack Machine";
+		public string IconTextureKey { get; private set; }
 
 		public NecessityEffects NecessityEffects { get; private set; }
-		public string IconTextureKey { get { return "IconPizza"; } }
 
-		//public Trigger Trigger { get; private set; }
+		public SkillEffects SkillEffects { get; private set; }
 
-		public SnackMachine(TimeSpan birthTime, Texture texture, Vector startingPosition)
+		public Employee AssignedEmployee { get; private set; }
+
+		public bool IsAssignedToAnEmployee { get { return AssignedEmployee != null; } }
+
+		public SnackMachine(TimeSpan birthTime, Texture texture, Vector startingPosition, 
+			string name, int price, string iconKey, NecessityEffects necessityEffect, SkillEffects skillEffect)
 			: base(birthTime, name, texture, startingPosition, price)
 		{
-			NecessityEffects = new NecessityEffects(-1, 0, 0, 0, 10);
-
-			//Trigger = new Trigger();
-			//Action dispenseFood = new Action(ActionType.DispenseFood);
-			//Trigger.AddAction(dispenseFood);
+			NecessityEffects = necessityEffect;
+			SkillEffects = skillEffect;
+			IconTextureKey = iconKey;
 		}
 
 		public NecessityEffects DispenseFood()

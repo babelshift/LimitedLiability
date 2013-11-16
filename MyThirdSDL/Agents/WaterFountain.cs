@@ -10,16 +10,23 @@ namespace MyThirdSDL.Agents
 {
 	public class WaterFountain : Equipment, IPurchasable
 	{
-		private const int price = 25;
-		private const string name = "Water Fountain";
+		public string IconTextureKey { get; private set; }
 
 		public NecessityEffects NecessityEffects { get; private set; }
-		public string IconTextureKey { get { return "IconWater"; } }
 
-		public WaterFountain(TimeSpan birthTime, Texture texture, Vector startingPosition)
+		public SkillEffects SkillEffects { get; private set; }
+
+		public Employee AssignedEmployee { get; private set; }
+
+		public bool IsAssignedToAnEmployee { get { return AssignedEmployee != null; } }
+
+		public WaterFountain(TimeSpan birthTime, Texture texture, Vector startingPosition, 
+			string name, int price, string iconKey, NecessityEffects necessityEffect, SkillEffects skillEffect)
 			: base(birthTime, name, texture, startingPosition, price)
 		{
-			NecessityEffects = new NecessityEffects(1, 0, 0, 1, 0);
+			NecessityEffects = necessityEffect;
+			SkillEffects = skillEffect;
+			IconTextureKey = iconKey;
 		}
 	}
 }

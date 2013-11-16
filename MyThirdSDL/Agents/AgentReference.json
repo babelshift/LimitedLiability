@@ -1,0 +1,31 @@
+{
+	"equipment": [
+		{ 
+			"key": "OfficeDesk", "name": "Office Desk", "price": "50", "icon": "IconOfficeDesk", 
+				"necessityEffect": [ { "health":  "0", "hygiene": "0", "sleep": "-2", "thirst": "0", "hunger": "0" } ],
+				"skillEffect": [ { "intelligence": "0", "creativity": "0", "communication": "0", "leadership": "0" } ]
+		},
+		{ 
+			"key": "SnackMachine", "name": "Snack Machine", "price": "50", "icon": "IconPizza", 
+				"necessityEffect": [ { "health":  "-1", "hygiene": "0", "sleep": "0", "thirst": "0", "hunger": "10" } ],
+				"skillEffect": [ { "intelligence": "0", "creativity": "0", "communication": "0", "leadership": "0" } ]
+		},
+		{ 
+			"key": "SodaMachine", "name": "Soda Machine", "price": "50", "icon": "IconSoda", 
+				"necessityEffect": [ { "health":  "-1", "hygiene": "0", "sleep": "10", "thirst": "10", "hunger": "0" } ],
+				"skillEffect": [ { "intelligence": "0", "creativity": "0", "communication": "0", "leadership": "0" } ]
+		},
+		{ 
+			"key": "WaterFountain", "name": "Water Fountain", "price": "25", "icon": "IconWater", 
+				"necessityEffect": [ { "health":  "10", "hygiene": "0", "sleep": "0", "thirst": "10", "hunger": "0" } ],
+				"skillEffect": [ { "intelligence": "0", "creativity": "0", "communication": "0", "leadership": "0" } ]
+		}
+	],
+	"rooms": [
+		{
+			"key": "Library", "name": "Library", "price": "500", "icon": "IconLibrary", 
+				"necessityEffect": [ { "health":  "0", "hygiene": "0", "sleep": "-1", "thirst": "0", "hunger": "0" } ],
+				"skillEffect": [ { "intelligence": "1", "creativity": "1", "communication": "0", "leadership": "0" } ]
+		}
+	]
+}

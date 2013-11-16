@@ -8,9 +8,6 @@ namespace MyThirdSDL.Descriptors
 {
 	public interface ISkillsAffector
 	{
-		int IntelligenceEffectiveness { get; }
-		int CreativityEffectiveness { get; }
-		int CommunicationEffectiveness { get; }
-		int LeadershipEffectiveness { get; }
+		SkillEffects SkillEffects { get; }
 	}
 }

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace MyThirdSDL.Descriptors
 {
-	public interface IPurchasable : IAffectsNecessities
+	public interface IPurchasable : IAffectsNecessities, ISkillsAffector
 	{
 		string Name { get; }
 		int Price { get; }

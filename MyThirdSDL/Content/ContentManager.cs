@@ -25,14 +25,14 @@ namespace MyThirdSDL.Content
 				var keyValuePair = GetKeyValuePair(font);
 				contentReference.Add(keyValuePair.Key, keyValuePair.Value);
 			}
-			foreach (var font in o["textures"])
+			foreach (var texture in o["textures"])
 			{
-				var keyValuePair = GetKeyValuePair(font);
+				var keyValuePair = GetKeyValuePair(texture);
 				contentReference.Add(keyValuePair.Key, keyValuePair.Value);
 			}
-			foreach (var font in o["maps"])
+			foreach (var map in o["maps"])
 			{
-				var keyValuePair = GetKeyValuePair(font);
+				var keyValuePair = GetKeyValuePair(map);
 				contentReference.Add(keyValuePair.Key, keyValuePair.Value);
 			} 
 		}

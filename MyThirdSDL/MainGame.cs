@@ -40,6 +40,7 @@ namespace MyThirdSDL
 		private JobFactory jobFactory;
 		private AgentFactory agentFactory;
 		private ContentManager contentManager;
+		private AgentManager agentManager;
 		private SimulationManager simulationManager;
 		private UserInterfaceManager userInterfaceManager;
 		//		private TrueTypeText isoWorldGridIndexText;
@@ -136,7 +137,8 @@ namespace MyThirdSDL
 			contentManager = new ContentManager();
 			simulationManager = new SimulationManager();
 			jobFactory = new JobFactory();
-			agentFactory = new AgentFactory(Renderer, contentManager, jobFactory);
+			agentManager = new AgentManager();
+			agentFactory = new AgentFactory(Renderer, agentManager, contentManager, jobFactory);
 
 			Camera.Position = Vector.Zero;
 

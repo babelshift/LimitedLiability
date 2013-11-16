@@ -8,23 +8,23 @@ using SharpDL.Graphics;
 
 namespace MyThirdSDL.Agents
 {
-	public class Library : Room, ISkillsAffector
+	public class Library : Room, IPurchasable
 	{
-		private const int WIDTH_IN_TILES = 5;
-		private const int HEIGHT_IN_TILES = 5;
+		private const int widthInTiles = 5;
+		private const int heightInTiles = 5;
+		private const int price = 500;
+		private const string name = "Library";
 
-		public int IntelligenceEffectiveness { get; private set; }
-		public int CreativityEffectiveness { get; private set; }
-		public int CommunicationEffectiveness { get; private set; }
-		public int LeadershipEffectiveness { get; private set; }
+		public NecessityEffects NecessityEffects { get; private set; }
+		public SkillEffects SkillEffects { get; private set; }
+
+		public string IconTextureKey { get { return "IconLibrary"; } }
 
 		public Library(TimeSpan birthTime, string agentName, Texture texture, Vector position)
-			: base(birthTime, agentName, texture, position, WIDTH_IN_TILES, HEIGHT_IN_TILES)
+			: base(birthTime, name, texture, position, widthInTiles, heightInTiles, price)
 		{
-			IntelligenceEffectiveness = 1;
-			CreativityEffectiveness = 1;
-			CommunicationEffectiveness = 0;
-			LeadershipEffectiveness = 0;
+			NecessityEffects = new NecessityEffects(0, 0, -1, 0, 0);
+			SkillEffects = new SkillEffects(1, 1, 0, 0);
 		}
 	}
 }

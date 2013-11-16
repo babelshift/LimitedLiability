@@ -10,27 +10,28 @@ namespace MyThirdSDL.Agents
 {
 	public class SodaMachine : Equipment, IPurchasable//, ITriggerable
 	{
-		private const int price = 50;
-		private const string name = "Soda Machine";
+		public string IconTextureKey { get; private set; }
 
 		public NecessityEffects NecessityEffects { get; private set; }
-		public string IconTextureKey { get { return "IconSoda"; } }
 
-		//public Trigger Trigger { get; private set; }
+		public SkillEffects SkillEffects { get; private set; }
+
+		public Employee AssignedEmployee { get; private set; }
+
+		public bool IsAssignedToAnEmployee { get { return AssignedEmployee != null; } }
+
+		public SodaMachine(TimeSpan birthTime, Texture texture, Vector startingPosition, 
+			string name, int price, string iconKey, NecessityEffects necessityEffect, SkillEffects skillEffect)
+			: base(birthTime, name, texture, startingPosition, price)
+		{
+			NecessityEffects = necessityEffect;
+			SkillEffects = skillEffect;
+			IconTextureKey = iconKey;
+		}
 
 		public NecessityEffects DispenseDrink()
 		{
 			return NecessityEffects;
-		}
-
-		public SodaMachine(TimeSpan birthTime, Texture texture, Vector startingPosition)
-			: base(birthTime, name, texture, startingPosition, price)
-		{
-			NecessityEffects = new NecessityEffects(-1, 0, 1, 10, 0);
-
-			//Trigger = new Trigger();
-			//Action dispenseDrink = new Action(ActionType.DispenseDrink);
-			//Trigger.AddAction(dispenseDrink);
 		}
 
 //		public void ExecuteTrigger()

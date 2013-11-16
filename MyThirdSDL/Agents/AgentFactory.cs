@@ -16,13 +16,14 @@ namespace MyThirdSDL.Agents
 		private List<string> firstNames = new List<string>();
 		private Random random = new Random();
 		private TextureStore textureStore;
+		private AgentManager agentManager;
 		private ContentManager contentManager;
 		private JobFactory jobFactory;
 		private Renderer renderer;
 		private int currentEmployeeNumber = 0;
 		private int currentEquipmentNumber = 0;
 
-		public AgentFactory(Renderer renderer, ContentManager contentManager, JobFactory jobFactory)
+		public AgentFactory(Renderer renderer, AgentManager agentManager, ContentManager contentManager, JobFactory jobFactory)
 		{
 			firstNames.Add("Justin");
 			firstNames.Add("Joanne");
@@ -32,6 +33,7 @@ namespace MyThirdSDL.Agents
 			firstNames.Add("Adam");
 
 			this.renderer = renderer;
+			this.agentManager = agentManager;
 			this.contentManager = contentManager;
 			this.jobFactory = jobFactory;
 			this.textureStore = new TextureStore(renderer);
@@ -87,7 +89,8 @@ namespace MyThirdSDL.Agents
 
 		public OfficeDesk CreateOfficeDesk(TimeSpan birthTime, Vector position)
 		{
-			return CreateAgent<OfficeDesk>(birthTime, "OfficeDesk", position);
+			AgentMetaData agentMetaData = agentManager.GetAgentMetaData("OfficeDesk");
+			return CreateAgent<OfficeDesk>(birthTime, "OfficeDesk", position, agentMetaData);
 		}
 
 		public SnackMachine CreateSnackMachine(TimeSpan birthTime)
@@ -97,7 +100,8 @@ namespace MyThirdSDL.Agents
 
 		public SnackMachine CreateSnackMachine(TimeSpan birthTime, Vector position)
 		{
-			return CreateAgent<SnackMachine>(birthTime, "SnackMachine", position);
+			AgentMetaData agentMetaData = agentManager.GetAgentMetaData("SnackMachine");
+			return CreateAgent<SnackMachine>(birthTime, "SnackMachine", position, agentMetaData);
 		}
 
 		public SodaMachine CreateSodaMachine(TimeSpan birthTime)
@@ -107,7 +111,8 @@ namespace MyThirdSDL.Agents
 
 		public SodaMachine CreateSodaMachine(TimeSpan birthTime, Vector position)
 		{
-			return CreateAgent<SodaMachine>(birthTime, "SodaMachine", position);
+			AgentMetaData agentMetaData = agentManager.GetAgentMetaData("SodaMachine");
+			return CreateAgent<SodaMachine>(birthTime, "SodaMachine", position, agentMetaData);
 		}
 
 		public WaterFountain CreateWaterFountain(TimeSpan birthTime)
@@ -117,15 +122,17 @@ namespace MyThirdSDL.Agents
 
 		public WaterFountain CreateWaterFountain(TimeSpan birthTime, Vector position)
 		{
-			return CreateAgent<WaterFountain>(birthTime, "WaterFountain", position);
+			AgentMetaData agentMetaData = agentManager.GetAgentMetaData("WaterFountain");
+			return CreateAgent<WaterFountain>(birthTime, "WaterFountain", position, agentMetaData);
 		}
 
-		private T CreateAgent<T>(TimeSpan birthTime, string texturePathKey, Vector position)
+		private T CreateAgent<T>(TimeSpan birthTime, string texturePathKey, Vector position, AgentMetaData agentMetaData)
 		{
 			if (log.IsDebugEnabled)
 				log.Debug(String.Format("Creating agent of type {0} at ({1},{2}) with birth time: {3}", typeof(T), position.X, position.Y, birthTime));
 			Texture texture = GetTextureFromStore(texturePathKey);
-			return (T)Activator.CreateInstance(typeof(T), birthTime, texture, position);
+			return (T)Activator.CreateInstance(typeof(T), birthTime, texture, position, 
+				agentMetaData.Name, agentMetaData.Price, agentMetaData.IconKey, agentMetaData.NecessityEffect, agentMetaData.SkillEffect);
 		}
 
 		private Texture GetTextureFromStore(string texturePathKey)
