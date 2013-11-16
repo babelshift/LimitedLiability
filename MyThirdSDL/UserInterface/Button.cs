@@ -16,6 +16,7 @@ namespace MyThirdSDL.UserInterface
 		private Texture textureHover;
 
 		protected bool IsHovered { get; private set; }
+
 		protected bool IsClicked { get; private set; }
 
 		public Tooltip Tooltip { get; set; }
@@ -32,11 +33,18 @@ namespace MyThirdSDL.UserInterface
 			this.iconHover = iconHover;
 		}
 
-		protected bool GetClicked(MouseState mouseState)
+		private MouseState mouseStateCurrent;
+		private MouseState mouseStatePrevious;
+
+		private bool GetClicked(MouseState mouseStateCurrent, MouseState mouseStatePrevious)
 		{
 			if (IsHovered)
-				if (mouseState.ButtonsPressed.Contains(MouseButtonCode.Left))
+			{
+				// if the curren state does not have a left click and the previous state does have a left click, then the user released the mouse
+				if (!mouseStateCurrent.ButtonsPressed.Contains(MouseButtonCode.Left)
+				     && mouseStatePrevious.ButtonsPressed.Contains(MouseButtonCode.Left))
 					return true;
+			}
 
 			return false;
 		}
@@ -45,13 +53,15 @@ namespace MyThirdSDL.UserInterface
 		{
 			base.Update(gameTime);
 
-			MouseState mouseState = Mouse.GetState();
-			if (Bounds.Contains(new Point(mouseState.X, mouseState.Y)))
+			mouseStatePrevious = mouseStateCurrent;
+			mouseStateCurrent = Mouse.GetState();
+
+			if (Bounds.Contains(new Point(mouseStateCurrent.X, mouseStateCurrent.Y)))
 				IsHovered = true;
 			else
 				IsHovered = false;
 
-			IsClicked = GetClicked(mouseState);
+			IsClicked = GetClicked(mouseStateCurrent, mouseStatePrevious);
 
 			if (IsClicked)
 				OnClicked(EventArgs.Empty);
@@ -62,8 +72,8 @@ namespace MyThirdSDL.UserInterface
 			if (IsPressed || IsHovered)
 			{
 				if (IsHovered)
-					if (Tooltip != null)
-						Tooltip.Draw(gameTime, renderer);
+				if (Tooltip != null)
+					Tooltip.Draw(gameTime, renderer);
 
 				if (textureHover != null)
 					renderer.RenderTexture(textureHover, (int)Position.X, (int)Position.Y);

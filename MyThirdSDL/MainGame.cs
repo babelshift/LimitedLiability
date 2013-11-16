@@ -300,6 +300,13 @@ namespace MyThirdSDL
 			purchasableItems.Add(agentFactory.CreateWaterFountain(TimeSpan.Zero));
 			purchasableItems.Add(agentFactory.CreateOfficeDesk(TimeSpan.Zero));
 			purchasableItems.Add(agentFactory.CreateTrashBin(TimeSpan.Zero));
+			purchasableItems.Add(agentFactory.CreateSnackMachine(TimeSpan.Zero));
+			purchasableItems.Add(agentFactory.CreateSodaMachine(TimeSpan.Zero));
+			purchasableItems.Add(agentFactory.CreateWaterFountain(TimeSpan.Zero));
+			purchasableItems.Add(agentFactory.CreateOfficeDesk(TimeSpan.Zero));
+			purchasableItems.Add(agentFactory.CreateTrashBin(TimeSpan.Zero));
+			purchasableItems.Add(agentFactory.CreateSodaMachine(TimeSpan.Zero));
+			purchasableItems.Add(agentFactory.CreateWaterFountain(TimeSpan.Zero));
 			userInterfaceManager = new UserInterfaceManager(Renderer, contentManager, new Point(SCREEN_WIDTH, SCREEN_HEIGHT), purchasableItems);
 
 			if (log.IsDebugEnabled)

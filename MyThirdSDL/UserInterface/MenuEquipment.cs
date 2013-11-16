@@ -11,6 +11,8 @@ namespace MyThirdSDL.UserInterface
 {
 	public class MenuEquipment : Control
 	{
+		private const int itemsPerPage = 4;
+
 		#region Header Controls 
 
 		private Icon iconMainMenu;
@@ -156,18 +158,14 @@ namespace MyThirdSDL.UserInterface
 			if (success)
 			{
 				// if there are pages in this page collection and the last page contains less than 4 entries, add the new entry to that page
-				if (buttonMenuItemsOnLastPage.Count < 4)
-				{
+				if (buttonMenuItemsOnLastPage.Count < itemsPerPage)
 					buttonMenuItemsOnLastPage.Add(buttonMenuItem);
-					itemsOnLastPageCount = buttonMenuItemsOnLastPage.Count;
-				}
 				// if there are 4 items on the last page, create a new page and add the item
 				else
 				{
 					buttonMenuItemsOnLastPage = new List<ButtonMenuItem>();
 					buttonMenuItemsOnLastPage.Add(buttonMenuItem);
 					buttonMenuItemPages.Add(lastPageNumber + 1, buttonMenuItemsOnLastPage);
-					itemsOnLastPageCount = buttonMenuItemsOnLastPage.Count;
 				}
 			}
 			else
@@ -176,9 +174,9 @@ namespace MyThirdSDL.UserInterface
 				buttonMenuItemsOnLastPage = new List<ButtonMenuItem>();
 				buttonMenuItemsOnLastPage.Add(buttonMenuItem);
 				buttonMenuItemPages.Add(1, buttonMenuItemsOnLastPage);
-				itemsOnLastPageCount = buttonMenuItemsOnLastPage.Count;
 			}
 
+			itemsOnLastPageCount = buttonMenuItemsOnLastPage.Count;
 			Vector buttonMenuItemPosition = Vector.Zero;
 
 			if (itemsOnLastPageCount == 1)
@@ -189,7 +187,7 @@ namespace MyThirdSDL.UserInterface
 				buttonMenuItemPosition = new Vector(Position.X + 10, Position.Y + 150);
 			else if (itemsOnLastPageCount == 4)
 				buttonMenuItemPosition = new Vector(Position.X + 10, Position.Y + 200);
-			else if (itemsOnLastPageCount >= 5)
+			else if (itemsOnLastPageCount >= itemsPerPage + 1)
 				return;
 
 			buttonMenuItem.Position = buttonMenuItemPosition;
