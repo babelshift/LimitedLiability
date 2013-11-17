@@ -12,6 +12,7 @@ using System.Threading.Tasks;
 using MyThirdSDL.Agents;
 using MyThirdSDL.Content;
 using MyThirdSDL.Simulation;
+using MyThirdSDL.Screens;
 
 namespace MyThirdSDL
 {
@@ -43,13 +44,7 @@ namespace MyThirdSDL
 		private AgentManager agentManager;
 		private SimulationManager simulationManager;
 		private UserInterfaceManager userInterfaceManager;
-		//		private TrueTypeText isoWorldGridIndexText;
-		//		private TrueTypeText orthoWorldGridIndexText;
-		//		private TrueTypeText thingStatusText;
-		//		private TrueTypeText simulationTimeText;
-		//		private TrueTypeText simulationAgeText;
-		//		private TrueTypeText worldAgeText;
-		//		private SharpDL.Graphics.Color color = new SharpDL.Graphics.Color(255, 165, 0);
+		private ScreenManager screenManager;
 
 		#endregion
 
@@ -58,6 +53,8 @@ namespace MyThirdSDL
 		private Image tileHighlightSelectedImage;
 		private List<Employee> employees = new List<Employee>();
 		private TiledMap tiledMap;
+		private bool isMouseInsideWindowBounds = true;
+		private bool isWindowFocused = true;
 
 		#region Constructors
 
@@ -66,10 +63,14 @@ namespace MyThirdSDL
 		/// </summary>
 		public MainGame()
 		{
-			KeyPressed += MainGame_KeyPressed;
-			KeyReleased += MainGame_KeyReleased;
-			MouseMoving += MainGame_MouseMoving;
-			MouseButtonPressed += MainGame_MouseButtonPressed;
+			KeyPressed += HandleKeyPressed;
+			KeyReleased += HandleKeyReleased;
+			MouseMoving += HandleMouseMoving;
+			MouseButtonPressed += HandleMouseButtonPressed;
+			WindowEntered += (object sender, WindowEventArgs e) => isMouseInsideWindowBounds = true;
+			WindowLeave += (object sender, WindowEventArgs e) => isMouseInsideWindowBounds = false;
+			WindowFocusLost += (object sender, WindowEventArgs e) => isWindowFocused = false;
+			WindowFocusGained += (object sender, WindowEventArgs e) => isWindowFocused = true;
 
 			if (log.IsDebugEnabled)
 				log.Debug("Game class has been constructed.");
@@ -79,7 +80,7 @@ namespace MyThirdSDL
 
 		#region Event Handlers
 
-		private void MainGame_MouseButtonPressed(object sender, MouseButtonEventArgs e)
+		private void HandleMouseButtonPressed(object sender, MouseButtonEventArgs e)
 		{
 			userInterfaceManager.HandleMouseButtonPressedEvent(sender, e);
 
@@ -89,7 +90,7 @@ namespace MyThirdSDL
 			}
 		}
 
-		private void MainGame_MouseMoving(object sender, MouseMotionEventArgs e)
+		private void HandleMouseMoving(object sender, MouseMotionEventArgs e)
 		{
 			userInterfaceManager.HandleMouseMovingEvent(sender, e);
 
@@ -109,13 +110,13 @@ namespace MyThirdSDL
 				mouseOverScreenEdge = MouseOverScreenEdge.None;
 		}
 
-		private void MainGame_KeyPressed(object sender, KeyboardEventArgs e)
+		private void HandleKeyPressed(object sender, KeyboardEventArgs e)
 		{
 			if (!keysPressed.Contains(e.KeyInformation.VirtualKey))
 				keysPressed.Add(e.KeyInformation.VirtualKey);
 		}
 
-		private void MainGame_KeyReleased(object sender, KeyboardEventArgs e)
+		private void HandleKeyReleased(object sender, KeyboardEventArgs e)
 		{
 			if (keysPressed.Contains(e.KeyInformation.VirtualKey))
 				keysPressed.Remove(e.KeyInformation.VirtualKey);
@@ -139,6 +140,7 @@ namespace MyThirdSDL
 			jobFactory = new JobFactory();
 			agentManager = new AgentManager();
 			agentFactory = new AgentFactory(Renderer, agentManager, contentManager, jobFactory);
+			screenManager = new ScreenManager(contentManager);
 
 			Camera.Position = Vector.Zero;
 
@@ -152,24 +154,24 @@ namespace MyThirdSDL
 			simulationManager.EmployeeThirstSatisfied += HandleEmployeeThirstSatisfied;
 			simulationManager.EmployeeHungerSatisfied += HandleEmployeeHungerSatisfied;
 
-            simulationManager.EmployeeClicked += simulationManager_EmployeeClicked;
+			simulationManager.EmployeeClicked += HandleEmployeeClicked;
 
 			if (log.IsDebugEnabled)
 				log.Debug("Game loop Initialize has been completed.");
 		}
 
-        private void simulationManager_EmployeeClicked(object sender, EmployeeClickedEventArgs e)
-        {
-            userInterfaceManager.SetEmployeeBeingInspected(e.Employee);
-        }
+		private void HandleEmployeeClicked(object sender, EmployeeClickedEventArgs e)
+		{
+			userInterfaceManager.SetEmployeeBeingInspected(e.Employee);
+		}
 
-		private void HandleEmployeeHungerSatisfied (object sender, EventArgs e)
+		private void HandleEmployeeHungerSatisfied(object sender, EventArgs e)
 		{
 			var employee = GetEmployeeFromEventSender(sender);
 			userInterfaceManager.RemoveMessageForAgentByType(employee.ID, SimulationMessageType.EmployeeIsHungry);
 		}
 
-		private void HandleEmployeeThirstSatisfied (object sender, EventArgs e)
+		private void HandleEmployeeThirstSatisfied(object sender, EventArgs e)
 		{
 			var employee = GetEmployeeFromEventSender(sender);
 			userInterfaceManager.RemoveMessageForAgentByType(employee.ID, SimulationMessageType.EmployeeIsThirsty);
@@ -287,13 +289,6 @@ namespace MyThirdSDL
 			Surface tileHightlightSelectedSurface = new Surface(tileHighlightSelectedTexturePath, SurfaceType.PNG);
 			tileHighlightSelectedImage = new Image(Renderer, tileHightlightSelectedSurface, ImageFormat.PNG);
 
-//			isoWorldGridIndexText = TrueTypeTextFactory.CreateTrueTypeText(Renderer, fontPath, 16, color);
-//			orthoWorldGridIndexText = TrueTypeTextFactory.CreateTrueTypeText(Renderer, fontPath, 16, color);
-//			thingStatusText = TrueTypeTextFactory.CreateTrueTypeText(Renderer, fontPath, 16, color);
-//			simulationTimeText = TrueTypeTextFactory.CreateTrueTypeText(Renderer, fontPath, 16, color);
-//			simulationAgeText = TrueTypeTextFactory.CreateTrueTypeText(Renderer, fontPath, 16, color);
-//			worldAgeText = TrueTypeTextFactory.CreateTrueTypeText(Renderer, fontPath, 16, color);
-
 			List<IPurchasable> purchasableItems = new List<IPurchasable>();
 			purchasableItems.Add(agentFactory.CreateSnackMachine(TimeSpan.Zero));
 			purchasableItems.Add(agentFactory.CreateSodaMachine(TimeSpan.Zero));
@@ -316,7 +311,7 @@ namespace MyThirdSDL
 
 		IPurchasable selectedPurchasableItem;
 
-		private void HandlePurchasableItemSelected (object sender, PurchasableItemSelectedEventArgs e)
+		private void HandlePurchasableItemSelected(object sender, PurchasableItemSelectedEventArgs e)
 		{
 			selectedPurchasableItem = e.PurchasableItem;
 		}
@@ -332,6 +327,7 @@ namespace MyThirdSDL
 		protected override void Update(GameTime gameTime)
 		{
 			InputHelper.Update();
+			screenManager.Update(gameTime, !isWindowFocused);
 			Camera.Update(mouseOverScreenEdge);
 			simulationManager.Update(gameTime);
 
@@ -340,34 +336,19 @@ namespace MyThirdSDL
 				if (InputHelper.CurrentMouseState.ButtonsPressed != null && InputHelper.PreviousMouseState.ButtonsPressed != null)
 				{
 					if (!InputHelper.CurrentMouseState.ButtonsPressed.Contains(MouseButtonCode.Left)
-						&& InputHelper.PreviousMouseState.ButtonsPressed.Contains(MouseButtonCode.Left))
+					    && InputHelper.PreviousMouseState.ButtonsPressed.Contains(MouseButtonCode.Left))
 					{
-						Vector clickedWorldSpacePoint = CoordinateHelper.ScreenSpaceToWorldSpace(
-							InputHelper.ClickedMousePoint.X, InputHelper.ClickedMousePoint.Y,
-							                               CoordinateHelper.ScreenOffset,
-							                               CoordinateHelper.ScreenProjectionType.Isometric
-						                               );
 						if (selectedPurchasableItem is SodaMachine)
 						{
-							var sodaMachine = agentFactory.CreateSodaMachine(simulationManager.SimulationTime, new Vector(clickedWorldSpacePoint.X, clickedWorldSpacePoint.Y));
+							var sodaMachine = agentFactory.CreateSodaMachine(simulationManager.SimulationTime, InputHelper.ClickedWorldSpacePoint);
 							simulationManager.AddAgent(sodaMachine);
 						}
 					}
 				}
 			}
 
-			//isoWorldGridIndexText.UpdateText(String.Format("(Iso) WorldX: {0}, WorldY: {1}", isoMouseWorldGridIndex.X, isoMouseWorldGridIndex.Y));
-			//orthoWorldGridIndexText.UpdateText(String.Format("(X,Y): ({0},{1})", orthoMouseWorldPosition.X, orthoMouseWorldPosition.Y));
-			//thingStatusText.UpdateText(String.Format("{0} Activity: {1}", employee.Name, employee.Activity));
-			//simulationAgeText.UpdateText(String.Format("{0} Simulation Age: {1}", employee.Name, employee.SimulationAge));
-			//worldAgeText.UpdateText(String.Format("{0} World Age: {1} years, {2} months, {3} days", employee.Name, 
-			//	employee.WorldAge.Days / 365, employee.WorldAge.Days / 12, employee.WorldAge.Days));
-
 			string simulationTimeText = simulationManager.SimulationTimeDisplay;
 			userInterfaceManager.Update(gameTime, simulationTimeText);
-
-			//userInterfaceManager.SetEmployeeThirstDisplay((double)employee.Necessities.Thirst, employee.Necessities.Thirst);
-			//userInterfaceManager.SetEmployeeHungerDisplay((double)employee.Necessities.Hunger, employee.Necessities.Hunger);
 		}
 
 		/// <summary>
@@ -387,16 +368,9 @@ namespace MyThirdSDL
 			SortDrawablesByDrawDepth();
 			DrawHeightTiles(gameTime);
 
-			//Renderer.RenderTexture(isoWorldGridIndexText.Texture, 0, 0);
-			//Renderer.RenderTexture(orthoWorldGridIndexText.Texture, 0, 18);
-			//Renderer.RenderTexture(thingStatusText.Texture, 0, 36);
-			//Renderer.RenderTexture(simulationTimeText.Texture, 0, 54);
-			//Renderer.RenderTexture(simulationAgeText.Texture, 0, 72);
-			//Renderer.RenderTexture(worldAgeText.Texture, 0, 90);
-
 			userInterfaceManager.Draw(gameTime, Renderer);
 
-			if(userInterfaceManager.MouseMode == MouseMode.SelectEquipment)
+			if (userInterfaceManager.MouseMode == MouseMode.SelectEquipment)
 			{
 				Renderer.RenderTexture(selectedPurchasableItem.Texture, 
 					InputHelper.ClickedMousePoint.X - selectedPurchasableItem.Texture.Width / 2, 

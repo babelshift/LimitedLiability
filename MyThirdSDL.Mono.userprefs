@@ -1,15 +1,12 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="MyThirdSDL/MainGame.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="MyThirdSDL/Screens/MainMenuScreen.cs">
     <Files>
-      <File FileName="MyThirdSDL/UserInterface/MenuEquipment.cs" Line="200" Column="77" />
-      <File FileName="MyThirdSDL/UserInterface/ButtonMenuItem.cs" Line="81" Column="27" />
-      <File FileName="MyThirdSDL/UserInterface/UserInterfaceManager.cs" Line="246" Column="6" />
-      <File FileName="MyThirdSDL/MainGame.cs" Line="338" Column="39" />
-      <File FileName="MyThirdSDL/Simulation/SimulationManager.cs" Line="109" Column="1" />
-      <File FileName="../../../Downloads/mono/mono-3.2.3/mcs/class/System.Core/System.Linq/Check.cs" Line="38" Column="1" />
-      <File FileName="../../../Downloads/mono/mono-3.2.3/mcs/class/System.Core/System.Linq/Enumerable.cs" Line="611" Column="1" />
-      <File FileName="MyThirdSDL/UserInterface/Button.cs" Line="91" Column="18" />
+      <File FileName="MyThirdSDL/Screens/ScreenManager.cs" Line="47" Column="4" />
+      <File FileName="MyThirdSDL/Screens/Screen.cs" Line="160" Column="9" />
+      <File FileName="MyThirdSDL/MainGame.cs" Line="340" Column="7" />
+      <File FileName="MyThirdSDL/Screens/MainMenuScreen.cs" Line="3" Column="29" />
+      <File FileName="MyThirdSDL/Screens/MainGameScreen.cs" Line="3" Column="29" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>

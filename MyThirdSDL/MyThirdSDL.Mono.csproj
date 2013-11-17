@@ -140,6 +140,11 @@
     <Compile Include="UserInterface\PurchasableItemSelectedEventArgs.cs" />
     <Compile Include="UserInterface\MouseMode.cs" />
     <Compile Include="InputHelper.cs" />
+    <Compile Include="Screens\ScreenManager.cs" />
+    <Compile Include="Screens\Screen.cs" />
+    <Compile Include="Screens\ScreenState.cs" />
+    <Compile Include="Screens\MainMenuScreen.cs" />
+    <Compile Include="Screens\MainGameScreen.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -349,5 +354,6 @@
   <ItemGroup>
     <Folder Include="Agents\" />
     <Folder Include="Simulation\" />
+    <Folder Include="Screens\" />
   </ItemGroup>
 </Project>
