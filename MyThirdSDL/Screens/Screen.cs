@@ -1,5 +1,7 @@
 using System;
 using SharpDL;
+using SharpDL.Graphics;
+using MyThirdSDL.Content;
 
 namespace MyThirdSDL.Screens
 {
@@ -12,6 +14,17 @@ namespace MyThirdSDL.Screens
 	/// </summary>
 	public abstract class Screen
 	{
+		private bool isPopup = false;
+		private TimeSpan transitionOnTime = TimeSpan.Zero;
+		private TimeSpan transitionOffTime = TimeSpan.Zero;
+		private float transitionPosition = 1;
+		private ScreenState screenState = ScreenState.TransitionOn;
+		private bool otherWindowHasFocus;
+
+		protected ContentManager ContentManager { get; private set; }
+
+		#region Properties
+
 		/// <summary>
 		/// Normally when one screen is brought up over the top of another,
 		/// the first screen will transition off to make room for the new
@@ -25,8 +38,6 @@ namespace MyThirdSDL.Screens
 			protected set { isPopup = value; }
 		}
 
-		bool isPopup = false;
-
 		/// <summary>
 		/// Indicates how long the screen takes to
 		/// transition on when it is activated.
@@ -36,8 +47,6 @@ namespace MyThirdSDL.Screens
 			get { return transitionOnTime; }
 			protected set { transitionOnTime = value; }
 		}
-
-		TimeSpan transitionOnTime = TimeSpan.Zero;
 
 		/// <summary>
 		/// Indicates how long the screen takes to
@@ -49,8 +58,6 @@ namespace MyThirdSDL.Screens
 			protected set { transitionOffTime = value; }
 		}
 
-		TimeSpan transitionOffTime = TimeSpan.Zero;
-
 		/// <summary>
 		/// Gets the current position of the screen transition, ranging
 		/// from zero (fully active, no transition) to one (transitioned
@@ -61,8 +68,6 @@ namespace MyThirdSDL.Screens
 			get { return transitionPosition; }
 			protected set { transitionPosition = value; }
 		}
-
-		float transitionPosition = 1;
 
 		/// <summary>
 		/// Gets the current alpha of the screen transition, ranging
@@ -82,8 +87,6 @@ namespace MyThirdSDL.Screens
 			get { return screenState; }
 			protected set { screenState = value; }
 		}
-
-		ScreenState screenState = ScreenState.TransitionOn;
 
 		/// <summary>
 		/// There are two possible reasons why a screen might be transitioning
@@ -108,8 +111,6 @@ namespace MyThirdSDL.Screens
 			}
 		}
 
-		private bool otherWindowHasFocus;
-
 		/// <summary>
 		/// Gets the manager that this screen belongs to.
 		/// </summary>
@@ -124,6 +125,13 @@ namespace MyThirdSDL.Screens
 		/// </summary>
 		public bool IsSerializable { get; private set; }
 
+		#endregion
+
+		public Screen(ContentManager contentManager)
+		{
+			ContentManager = contentManager;
+		}
+
 		/// <summary>
 		/// Activates the screen. Called when the screen is added to the screen manager or if the game resumes
 		/// from being paused or tombstoned.
@@ -132,7 +140,7 @@ namespace MyThirdSDL.Screens
 		/// True if the game was preserved during deactivation, false if the screen is just being added or if the game was tombstoned.
 		/// On Xbox and Windows this will always be false.
 		/// </param>
-		public virtual void Activate(bool instancePreserved)
+		public virtual void Activate(Renderer renderer)
 		{
 		}
 
@@ -242,7 +250,7 @@ namespace MyThirdSDL.Screens
 		/// <summary>
 		/// This is called when the screen should draw itself.
 		/// </summary>
-		public virtual void Draw(GameTime gameTime)
+		public virtual void Draw(GameTime gameTime, Renderer renderer)
 		{
 		}
 

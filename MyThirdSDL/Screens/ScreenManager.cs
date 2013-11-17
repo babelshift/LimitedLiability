@@ -36,14 +36,14 @@ namespace MyThirdSDL.Screens
 
 		#region Initialization
 
-		private ContentManager contentManager;
+		private Renderer renderer;
 
 		/// <summary>
 		/// Constructs a new screen manager component.
 		/// </summary>
-		public ScreenManager(ContentManager contentManager)
+		public ScreenManager(Renderer renderer)
 		{
-			this.contentManager = contentManager;
+			this.renderer = renderer;
 		}
 
 		/// <summary>
@@ -62,7 +62,7 @@ namespace MyThirdSDL.Screens
 			// Tell each of the screens to load their content.
 			foreach (Screen screen in screens)
 			{
-				screen.Activate(false);
+				screen.Activate(renderer);
 			}
 		}
 
@@ -139,7 +139,7 @@ namespace MyThirdSDL.Screens
 		/// <summary>
 		/// Prints a list of all the screens, for debugging.
 		/// </summary>
-		void TraceScreens()
+		private void TraceScreens()
 		{
 			List<string> screenNames = new List<string>();
 
@@ -153,7 +153,7 @@ namespace MyThirdSDL.Screens
 		/// <summary>
 		/// Tells each screen to draw itself.
 		/// </summary>
-		public void Draw(GameTime gameTime)
+		public void Draw(GameTime gameTime, Renderer renderer)
 		{
 			//spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, null, null, null, null, Resolution.getTransformationMatrix());
 			//MenuBackground.Draw(spriteBatch, Color.White);
@@ -164,7 +164,7 @@ namespace MyThirdSDL.Screens
 				if (screen.ScreenState == ScreenState.Hidden)
 					continue;
 
-				screen.Draw(gameTime);
+				screen.Draw(gameTime, renderer);
 			}
 		}
 
@@ -183,7 +183,7 @@ namespace MyThirdSDL.Screens
 			// If we have a graphics device, tell the screen to load content.
 			if (IsInitialized)
 			{
-				screen.Activate(false);
+				screen.Activate(renderer);
 			}
 
 			screens.Add(screen);

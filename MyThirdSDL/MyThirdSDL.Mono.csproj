@@ -65,11 +65,11 @@
     <Reference Include="SharpDL.Events">
       <HintPath>..\Libs\SharpDL.Events.dll</HintPath>
     </Reference>
-    <Reference Include="SharpDL.Graphics">
-      <HintPath>..\Libs\SharpDL.Graphics.dll</HintPath>
-    </Reference>
     <Reference Include="SharpDL.Input">
       <HintPath>..\Libs\SharpDL.Input.dll</HintPath>
+    </Reference>
+    <Reference Include="SharpDL.Graphics">
+      <HintPath>..\Libs\SharpDL.Graphics.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -139,12 +139,16 @@
     <Compile Include="Agents\TrashBin.cs" />
     <Compile Include="UserInterface\PurchasableItemSelectedEventArgs.cs" />
     <Compile Include="UserInterface\MouseMode.cs" />
-    <Compile Include="InputHelper.cs" />
     <Compile Include="Screens\ScreenManager.cs" />
     <Compile Include="Screens\Screen.cs" />
     <Compile Include="Screens\ScreenState.cs" />
     <Compile Include="Screens\MainMenuScreen.cs" />
     <Compile Include="Screens\MainGameScreen.cs" />
+    <Compile Include="Screens\ScreenFactory.cs" />
+    <Compile Include="GameState.cs" />
+    <Compile Include="Screens\LoadingScreen.cs" />
+    <Compile Include="MouseHelper.cs" />
+    <Compile Include="KeyboardHelper.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

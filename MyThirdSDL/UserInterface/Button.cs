@@ -50,12 +50,12 @@ namespace MyThirdSDL.UserInterface
 		{
 			base.Update(gameTime);
 
-			if (Bounds.Contains(InputHelper.ClickedMousePoint))
+			if (Bounds.Contains(MouseHelper.ClickedMousePoint))
 				IsHovered = true;
 			else
 				IsHovered = false;
 
-			IsClicked = GetClicked(InputHelper.CurrentMouseState, InputHelper.PreviousMouseState);
+			IsClicked = GetClicked(MouseHelper.CurrentMouseState, MouseHelper.PreviousMouseState);
 
 			if (IsClicked)
 				OnClicked(EventArgs.Empty);

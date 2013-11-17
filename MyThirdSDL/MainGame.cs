@@ -22,39 +22,28 @@ namespace MyThirdSDL
 
 		#region Constants
 
-		private const int SCREEN_WIDTH = 1440;
-		private const int SCREEN_HEIGHT = 900;
+		public static readonly int SCREEN_WIDTH = 1440;
+		public static readonly int SCREEN_HEIGHT = 900;
 
 		#endregion
 
 		#region Input Data
 
-		private Vector mouseClickPositionWorldGridIndex = CoordinateHelper.DefaultVector;
-		private Vector mousePositionWorldGridIndex = CoordinateHelper.DefaultVector;
 		private MouseOverScreenEdge mouseOverScreenEdge;
-		private List<KeyInformation.VirtualKeyCode> keysPressed = new List<KeyInformation.VirtualKeyCode>();
 
 		#endregion
 
 		#region Factories and Managers
 
-		private JobFactory jobFactory;
-		private AgentFactory agentFactory;
 		private ContentManager contentManager;
-		private AgentManager agentManager;
-		private SimulationManager simulationManager;
-		private UserInterfaceManager userInterfaceManager;
 		private ScreenManager screenManager;
+		private ScreenFactory screenFactory;
 
 		#endregion
 
-		private List<IDrawable> allDrawables = new List<IDrawable>();
-		private Image tileHighlightImage;
-		private Image tileHighlightSelectedImage;
-		private List<Employee> employees = new List<Employee>();
-		private TiledMap tiledMap;
 		private bool isMouseInsideWindowBounds = true;
 		private bool isWindowFocused = true;
+		private GameState currentGameState;
 
 		#region Constructors
 
@@ -63,10 +52,10 @@ namespace MyThirdSDL
 		/// </summary>
 		public MainGame()
 		{
-			KeyPressed += HandleKeyPressed;
-			KeyReleased += HandleKeyReleased;
-			MouseMoving += HandleMouseMoving;
-			MouseButtonPressed += HandleMouseButtonPressed;
+//			KeyPressed += HandleKeyPressed;
+//			KeyReleased += HandleKeyReleased;
+			//MouseMoving += HandleMouseMoving;
+			//MouseButtonPressed += HandleMouseButtonClicked;
 			WindowEntered += (object sender, WindowEventArgs e) => isMouseInsideWindowBounds = true;
 			WindowLeave += (object sender, WindowEventArgs e) => isMouseInsideWindowBounds = false;
 			WindowFocusLost += (object sender, WindowEventArgs e) => isWindowFocused = false;
@@ -80,47 +69,45 @@ namespace MyThirdSDL
 
 		#region Event Handlers
 
-		private void HandleMouseButtonPressed(object sender, MouseButtonEventArgs e)
-		{
-			userInterfaceManager.HandleMouseButtonPressedEvent(sender, e);
-
-			if (e.MouseButton == MouseButtonCode.Left)
-			{
-				mouseClickPositionWorldGridIndex = mousePositionWorldGridIndex;
-			}
-		}
-
-		private void HandleMouseMoving(object sender, MouseMotionEventArgs e)
-		{
-			userInterfaceManager.HandleMouseMovingEvent(sender, e);
-
-			Vector mousePositionIsometric = CoordinateHelper.ScreenSpaceToWorldSpace(e.RelativeToWindowX, e.RelativeToWindowY, 
-				                                CoordinateHelper.ScreenOffset, CoordinateHelper.ScreenProjectionType.Isometric);
-			mousePositionWorldGridIndex = CoordinateHelper.WorldSpaceToWorldGridIndex(mousePositionIsometric.X, mousePositionIsometric.Y, tiledMap.TileWidth / 2, tiledMap.TileHeight);
-
-			if (e.RelativeToWindowX < 50 && e.RelativeToWindowX > 0)
-				mouseOverScreenEdge = MouseOverScreenEdge.Left;
-			else if (e.RelativeToWindowX > SCREEN_WIDTH - 50 && e.RelativeToWindowX < SCREEN_WIDTH - 1)
-				mouseOverScreenEdge = MouseOverScreenEdge.Right;
-			else if (e.RelativeToWindowY < 50 && e.RelativeToWindowY > 0)
-				mouseOverScreenEdge = MouseOverScreenEdge.Top;
-			else if (e.RelativeToWindowY > SCREEN_HEIGHT - 50 && e.RelativeToWindowY < SCREEN_HEIGHT - 1)
-				mouseOverScreenEdge = MouseOverScreenEdge.Bottom;
-			else
-				mouseOverScreenEdge = MouseOverScreenEdge.None;
-		}
-
-		private void HandleKeyPressed(object sender, KeyboardEventArgs e)
-		{
-			if (!keysPressed.Contains(e.KeyInformation.VirtualKey))
-				keysPressed.Add(e.KeyInformation.VirtualKey);
-		}
-
-		private void HandleKeyReleased(object sender, KeyboardEventArgs e)
-		{
-			if (keysPressed.Contains(e.KeyInformation.VirtualKey))
-				keysPressed.Remove(e.KeyInformation.VirtualKey);
-		}
+		//		private void HandleMouseButtonClicked(object sender, MouseButtonEventArgs e)
+		//		{
+		//			userInterfaceManager.HandleMouseButtonPressedEvent(sender, e);
+		//
+		//			if (e.MouseButton == MouseButtonCode.Left)
+		//			{
+		//				mouseClickPositionWorldGridIndex = mousePositionWorldGridIndex;
+		//			}
+		//		}
+		//		private void HandleMouseMoving(object sender, MouseMotionEventArgs e)
+		//		{
+		//			userInterfaceManager.HandleMouseMovingEvent(sender, e);
+		//
+		//			Vector mousePositionIsometric = CoordinateHelper.ScreenSpaceToWorldSpace(e.RelativeToWindowX, e.RelativeToWindowY,
+		//				                                CoordinateHelper.ScreenOffset, CoordinateHelper.ScreenProjectionType.Isometric);
+		//			mousePositionWorldGridIndex = CoordinateHelper.WorldSpaceToWorldGridIndex(mousePositionIsometric.X, mousePositionIsometric.Y, tiledMap.TileWidth / 2, tiledMap.TileHeight);
+		//
+		//			if (e.RelativeToWindowX < 50 && e.RelativeToWindowX > 0)
+		//				mouseOverScreenEdge = MouseOverScreenEdge.Left;
+		//			else if (e.RelativeToWindowX > SCREEN_WIDTH - 50 && e.RelativeToWindowX < SCREEN_WIDTH - 1)
+		//				mouseOverScreenEdge = MouseOverScreenEdge.Right;
+		//			else if (e.RelativeToWindowY < 50 && e.RelativeToWindowY > 0)
+		//				mouseOverScreenEdge = MouseOverScreenEdge.Top;
+		//			else if (e.RelativeToWindowY > SCREEN_HEIGHT - 50 && e.RelativeToWindowY < SCREEN_HEIGHT - 1)
+		//				mouseOverScreenEdge = MouseOverScreenEdge.Bottom;
+		//			else
+		//				mouseOverScreenEdge = MouseOverScreenEdge.None;
+		//		}
+//		private void HandleKeyPressed(object sender, KeyboardEventArgs e)
+//		{
+//			if (!keysPressed.Contains(e.KeyInformation.VirtualKey))
+//				keysPressed.Add(e.KeyInformation.VirtualKey);
+//		}
+//
+//		private void HandleKeyReleased(object sender, KeyboardEventArgs e)
+//		{
+//			if (keysPressed.Contains(e.KeyInformation.VirtualKey))
+//				keysPressed.Remove(e.KeyInformation.VirtualKey);
+//		}
 
 		#endregion
 
@@ -136,103 +123,30 @@ namespace MyThirdSDL
 			CreateRenderer(RendererFlags.RendererAccelerated);
 
 			contentManager = new ContentManager();
-			simulationManager = new SimulationManager();
-			jobFactory = new JobFactory();
-			agentManager = new AgentManager();
-			agentFactory = new AgentFactory(Renderer, agentManager, contentManager, jobFactory);
-			screenManager = new ScreenManager(contentManager);
+			screenManager = new ScreenManager(Renderer);
+			screenManager.Initialize();
+			screenFactory = new ScreenFactory();
 
 			Camera.Position = Vector.Zero;
 
-			simulationManager.EmployeeIsDirty += HandleEmployeeIsDirty;
-			simulationManager.EmployeeIsHungry += HandleEmployeeIsHungry;
-			simulationManager.EmployeeIsSleepy += HandleEmployeeIsSleepy;
-			simulationManager.EmployeeIsThirsty += HandleEmployeeIsThirsty;
-			simulationManager.EmployeeIsUnhappy += HandleEmployeeIsUnhappy;
-			simulationManager.EmployeeIsUnhealthy += HandleEmployeeIsUnhealthy;
-			simulationManager.EmployeeNeedsOfficeDeskAssignment += HandleEmployeeNeedsOfficeDesk;
-			simulationManager.EmployeeThirstSatisfied += HandleEmployeeThirstSatisfied;
-			simulationManager.EmployeeHungerSatisfied += HandleEmployeeHungerSatisfied;
-
-			simulationManager.EmployeeClicked += HandleEmployeeClicked;
+			currentGameState = GameState.Title;
+			MainGameScreen mainGameScreen = CreateMainGameScreen();
+			screenManager.AddScreen(mainGameScreen);
 
 			if (log.IsDebugEnabled)
 				log.Debug("Game loop Initialize has been completed.");
 		}
 
-		private void HandleEmployeeClicked(object sender, EmployeeClickedEventArgs e)
+		#region Create Screens
+
+		public MainMenuScreen CreateMainMenuScreen()
 		{
-			userInterfaceManager.SetEmployeeBeingInspected(e.Employee);
+			return new MainMenuScreen(Renderer, contentManager);
 		}
 
-		private void HandleEmployeeHungerSatisfied(object sender, EventArgs e)
+		public MainGameScreen CreateMainGameScreen()
 		{
-			var employee = GetEmployeeFromEventSender(sender);
-			userInterfaceManager.RemoveMessageForAgentByType(employee.ID, SimulationMessageType.EmployeeIsHungry);
-		}
-
-		private void HandleEmployeeThirstSatisfied(object sender, EventArgs e)
-		{
-			var employee = GetEmployeeFromEventSender(sender);
-			userInterfaceManager.RemoveMessageForAgentByType(employee.ID, SimulationMessageType.EmployeeIsThirsty);
-		}
-
-		#region Employee Events
-
-		private Employee GetEmployeeFromEventSender(object sender)
-		{
-			var employee = sender as Employee;
-			if (employee == null)
-				throw new ArgumentException("HandleEmployee handlers can only work with Employee objects!");
-			return employee;
-		}
-
-		private void SendEmployeeMessageToUserInterface(Employee employee, string messageText, SimulationMessageType messageType)
-		{
-			var message = SimulationMessageFactory.Create(employee.ProjectedPosition, messageText, messageType);
-			userInterfaceManager.AddMessageForAgent(employee.ID, message);
-		}
-
-		private void HandleEmployeeIsUnhappy(object sender, EventArgs e)
-		{
-			var employee = GetEmployeeFromEventSender(sender);
-			SendEmployeeMessageToUserInterface(employee, String.Format("{0} is unhappy!", employee.FullName), SimulationMessageType.EmployeeIsUnhappy);
-		}
-
-		private void HandleEmployeeNeedsOfficeDesk(object sender, EventArgs e)
-		{
-			var employee = GetEmployeeFromEventSender(sender);
-			//SendEmployeeMessageToUserInterface(employee, String.Format("{0} needs and office desk to work!", employee.FullName), SimulationMessageType.EmployeeNeedsDesk);
-		}
-
-		private void HandleEmployeeIsUnhealthy(object sender, EventArgs e)
-		{
-			var employee = GetEmployeeFromEventSender(sender);
-			SendEmployeeMessageToUserInterface(employee, String.Format("{0} is unhealthy!", employee.FullName), SimulationMessageType.EmployeeIsUnhealthy);
-		}
-
-		private void HandleEmployeeIsSleepy(object sender, EventArgs e)
-		{
-			var employee = GetEmployeeFromEventSender(sender);
-			SendEmployeeMessageToUserInterface(employee, String.Format("{0} is sleepy!", employee.FullName), SimulationMessageType.EmployeeIsSleepy);
-		}
-
-		private void HandleEmployeeIsThirsty(object sender, EventArgs e)
-		{
-			var employee = GetEmployeeFromEventSender(sender);
-			//SendEmployeeMessageToUserInterface(employee, String.Format("{0} is thirsty!", employee.FullName), SimulationMessageType.EmployeeIsThirsty);
-		}
-
-		private void HandleEmployeeIsHungry(object sender, EventArgs e)
-		{
-			var employee = GetEmployeeFromEventSender(sender);
-			//SendEmployeeMessageToUserInterface(employee, String.Format("{0} is hungry!", employee.FullName), SimulationMessageType.EmployeeIsHungry);
-		}
-
-		private void HandleEmployeeIsDirty(object sender, EventArgs e)
-		{
-			var employee = GetEmployeeFromEventSender(sender);
-			SendEmployeeMessageToUserInterface(employee, String.Format("{0} is dirty!", employee.FullName), SimulationMessageType.EmployeeIsDirty);
+			return new MainGameScreen(Renderer, contentManager);
 		}
 
 		#endregion
@@ -244,76 +158,8 @@ namespace MyThirdSDL
 		{
 			base.LoadContent();
 
-			string mapPath = contentManager.GetContentPath("Map2");
-			string tileHighlightTexturePath = contentManager.GetContentPath("TileHighlight2");
-			string tileHighlightSelectedTexturePath = contentManager.GetContentPath("TileHighlightSelected");
-			//string fontPath = contentManager.GetContentPath("Arcade");
-
-			tiledMap = new TiledMap(mapPath, Renderer);
-			simulationManager.CurrentMap = tiledMap;
-
-			var pathNodes = tiledMap.GetPathNodes();
-			Random random = new Random();
-			for (int i = 0; i < 2; i++)
-			{
-				int x = random.Next(0, pathNodes.Count);
-				var pathNode = pathNodes[x];
-				Employee employee = agentFactory.CreateEmployee(TimeSpan.Zero, new Vector(pathNode.WorldPosition.X, pathNode.WorldPosition.Y));
-				simulationManager.AddAgent(employee);
-			}
-
-			var pathNode1 = tiledMap.GetPathNodeAtWorldGridIndex(new Vector(3, 15));
-			var pathNode2 = tiledMap.GetPathNodeAtWorldGridIndex(new Vector(15, 9));
-			var pathNode3 = tiledMap.GetPathNodeAtWorldGridIndex(new Vector(20, 9));
-			var pathNode4 = tiledMap.GetPathNodeAtWorldGridIndex(new Vector(4, 10));
-			var pathNode5 = tiledMap.GetPathNodeAtWorldGridIndex(new Vector(3, 21));
-			var pathNode6 = tiledMap.GetPathNodeAtWorldGridIndex(new Vector(4, 4));
-
-			SodaMachine sodaMachine = agentFactory.CreateSodaMachine(TimeSpan.Zero, new Vector(pathNode3.WorldPosition.X, pathNode3.WorldPosition.Y));
-			SodaMachine sodaMachine2 = agentFactory.CreateSodaMachine(TimeSpan.Zero, new Vector(pathNode4.WorldPosition.X, pathNode4.WorldPosition.Y));
-			SnackMachine snackMachine = agentFactory.CreateSnackMachine(TimeSpan.Zero, new Vector(pathNode2.WorldPosition.X, pathNode2.WorldPosition.Y));
-			SnackMachine snackMachine2 = agentFactory.CreateSnackMachine(TimeSpan.Zero, new Vector(pathNode1.WorldPosition.X, pathNode1.WorldPosition.Y));
-			OfficeDesk officeDesk = agentFactory.CreateOfficeDesk(TimeSpan.Zero, new Vector(pathNode5.WorldPosition.X, pathNode5.WorldPosition.Y));
-			OfficeDesk officeDesk2 = agentFactory.CreateOfficeDesk(TimeSpan.Zero, new Vector(pathNode6.WorldPosition.X, pathNode6.WorldPosition.Y));
-			simulationManager.AddAgents(employees);
-			simulationManager.AddAgent(sodaMachine);
-			simulationManager.AddAgent(sodaMachine2);
-			simulationManager.AddAgent(snackMachine);
-			simulationManager.AddAgent(snackMachine2);
-			simulationManager.AddAgent(officeDesk);
-			simulationManager.AddAgent(officeDesk2);
-
-			Surface tileHighlightSurface = new Surface(tileHighlightTexturePath, SurfaceType.PNG);
-			tileHighlightImage = new Image(Renderer, tileHighlightSurface, ImageFormat.PNG);
-
-			Surface tileHightlightSelectedSurface = new Surface(tileHighlightSelectedTexturePath, SurfaceType.PNG);
-			tileHighlightSelectedImage = new Image(Renderer, tileHightlightSelectedSurface, ImageFormat.PNG);
-
-			List<IPurchasable> purchasableItems = new List<IPurchasable>();
-			purchasableItems.Add(agentFactory.CreateSnackMachine(TimeSpan.Zero));
-			purchasableItems.Add(agentFactory.CreateSodaMachine(TimeSpan.Zero));
-			purchasableItems.Add(agentFactory.CreateWaterFountain(TimeSpan.Zero));
-			purchasableItems.Add(agentFactory.CreateOfficeDesk(TimeSpan.Zero));
-			purchasableItems.Add(agentFactory.CreateTrashBin(TimeSpan.Zero));
-			purchasableItems.Add(agentFactory.CreateSnackMachine(TimeSpan.Zero));
-			purchasableItems.Add(agentFactory.CreateSodaMachine(TimeSpan.Zero));
-			purchasableItems.Add(agentFactory.CreateWaterFountain(TimeSpan.Zero));
-			purchasableItems.Add(agentFactory.CreateOfficeDesk(TimeSpan.Zero));
-			purchasableItems.Add(agentFactory.CreateTrashBin(TimeSpan.Zero));
-			purchasableItems.Add(agentFactory.CreateSodaMachine(TimeSpan.Zero));
-			purchasableItems.Add(agentFactory.CreateWaterFountain(TimeSpan.Zero));
-			userInterfaceManager = new UserInterfaceManager(Renderer, contentManager, new Point(SCREEN_WIDTH, SCREEN_HEIGHT), purchasableItems);
-			userInterfaceManager.PurchasableItemSelected += HandlePurchasableItemSelected;
-
 			if (log.IsDebugEnabled)
 				log.Debug("Game loop LoadContent has been completed.");
-		}
-
-		IPurchasable selectedPurchasableItem;
-
-		private void HandlePurchasableItemSelected(object sender, PurchasableItemSelectedEventArgs e)
-		{
-			selectedPurchasableItem = e.PurchasableItem;
 		}
 
 		/// <summary>
@@ -326,29 +172,13 @@ namespace MyThirdSDL
 		/// you will experience update/draw lag.</remarks>
 		protected override void Update(GameTime gameTime)
 		{
-			InputHelper.Update();
-			screenManager.Update(gameTime, !isWindowFocused);
-			Camera.Update(mouseOverScreenEdge);
-			simulationManager.Update(gameTime);
-
-			if (userInterfaceManager.MouseMode == MouseMode.SelectEquipment)
+			if (isWindowFocused)
 			{
-				if (InputHelper.CurrentMouseState.ButtonsPressed != null && InputHelper.PreviousMouseState.ButtonsPressed != null)
-				{
-					if (!InputHelper.CurrentMouseState.ButtonsPressed.Contains(MouseButtonCode.Left)
-					    && InputHelper.PreviousMouseState.ButtonsPressed.Contains(MouseButtonCode.Left))
-					{
-						if (selectedPurchasableItem is SodaMachine)
-						{
-							var sodaMachine = agentFactory.CreateSodaMachine(simulationManager.SimulationTime, InputHelper.ClickedWorldSpacePoint);
-							simulationManager.AddAgent(sodaMachine);
-						}
-					}
-				}
+				KeyboardHelper.Update();
+				MouseHelper.Update();
+				screenManager.Update(gameTime, !isWindowFocused);
+				Camera.Update(mouseOverScreenEdge);
 			}
-
-			string simulationTimeText = simulationManager.SimulationTimeDisplay;
-			userInterfaceManager.Update(gameTime, simulationTimeText);
 		}
 
 		/// <summary>
@@ -361,85 +191,8 @@ namespace MyThirdSDL
 		/// you will experience update/draw lag.</remarks>
 		protected override void Draw(GameTime gameTime)
 		{
-			allDrawables.Clear();
-			Renderer.ClearScreen();
-
-			DrawBaseTiles(gameTime);
-			SortDrawablesByDrawDepth();
-			DrawHeightTiles(gameTime);
-
-			userInterfaceManager.Draw(gameTime, Renderer);
-
-			if (userInterfaceManager.MouseMode == MouseMode.SelectEquipment)
-			{
-				Renderer.RenderTexture(selectedPurchasableItem.Texture, 
-					InputHelper.ClickedMousePoint.X - selectedPurchasableItem.Texture.Width / 2, 
-					InputHelper.ClickedMousePoint.Y - selectedPurchasableItem.Texture.Height);
-			}
-
-			Renderer.RenderPresent();
-		}
-
-		/// <summary>
-		/// Selects out the non-empty height tiles from the height layer in the tile map and sorts them by their draw depth.
-		/// </summary>
-		/// 
-		private void SortDrawablesByDrawDepth()
-		{
-			// select out the drawable tiles from our height layer (walls/objects on top of floor)
-			TileLayer heightLayer = tiledMap.TileLayers.First(tl => tl.Type == TileLayerType.Height);
-			IEnumerable<Tile> drawableTiles = heightLayer.Tiles.Where(t => !t.IsEmpty);
-			allDrawables.AddRange(drawableTiles);
-			allDrawables.AddRange(simulationManager.TrackedAgents);
-			// sort the drawables by their depth so they appear correctly on top of each other
-			allDrawables.Sort((d1, d2) => d1.Depth.CompareTo(d2.Depth));
-		}
-
-		/// <summary>
-		/// Draws the base tiles and optionally any tile highlights.
-		/// </summary>
-		/// <param name="gameTime">Game time.</param>
-		private void DrawBaseTiles(GameTime gameTime)
-		{
-			TileLayer baseLayer = tiledMap.TileLayers.First(tl => tl.Type == TileLayerType.Base);
-			IEnumerable<Tile> baseTiles = baseLayer.Tiles.Where(t => !t.IsEmpty);
-			foreach (Tile baseTile in baseTiles)
-			{
-				baseTile.Draw(gameTime, Renderer);
-				if (CoordinateHelper.AreIndicesEqual(baseTile.WorldGridIndex, mouseClickPositionWorldGridIndex))
-					DrawTileHighlight(tileHighlightSelectedImage, baseTile.ProjectedPosition - Camera.Position);
-				if (CoordinateHelper.AreIndicesEqual(baseTile.WorldGridIndex, mousePositionWorldGridIndex))
-					DrawTileHighlight(tileHighlightImage, baseTile.ProjectedPosition - Camera.Position);
-			}
-		}
-
-		/// <summary>
-		/// Selects out the non-empty height tiles from the height layer in the tile map and draws them (must be sorted by draw depth prior to drawing
-		/// or items will appear rendered out of order)
-		/// </summary>
-		/// <param name="gameTime">Game time.</param>
-		private void DrawHeightTiles(GameTime gameTime)
-		{
-			foreach (IDrawable drawable in allDrawables)
-			{
-				drawable.Draw(gameTime, Renderer);
-				if (drawable is Tile)
-				{
-					if (CoordinateHelper.AreIndicesEqual(drawable.WorldGridIndex, mouseClickPositionWorldGridIndex))
-						DrawTileHighlight(tileHighlightSelectedImage, drawable.ProjectedPosition - Camera.Position);
-					if (CoordinateHelper.AreIndicesEqual(drawable.WorldGridIndex, mousePositionWorldGridIndex))
-						DrawTileHighlight(tileHighlightImage, drawable.ProjectedPosition - Camera.Position);
-				}
-			}
-		}
-
-		private void DrawTileHighlight(Image image, Vector position)
-		{
-			Renderer.RenderTexture(
-				image.Texture,
-				position.X - (image.Texture.Width * 0.5f),
-				position.Y - (image.Texture.Height * 0.75f)
-			);
+			if (isWindowFocused)
+				screenManager.Draw(gameTime, Renderer);
 		}
 
 		/// <summary>
