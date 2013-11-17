@@ -52,9 +52,11 @@ namespace MyThirdSDL.UserInterface
 		/// Gets the mouse mode.
 		/// </summary>
 		/// <value>The mouse mode.</value>
-		public MouseModeType MouseMode { get; private set; }
+		public MouseMode MouseMode { get; private set; }
 
 		#region Constructors
+
+		public event EventHandler<PurchasableItemSelectedEventArgs> PurchasableItemSelected;
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="MyThirdSDL.UserInterface.UserInterfaceManager"/> class.
@@ -69,7 +71,7 @@ namespace MyThirdSDL.UserInterface
 			this.purchasableItems = purchasableItems;
 			this.contentManager = contentManager;
 
-			MouseMode = MouseModeType.SelectGeneral;
+			MouseMode = MouseMode.SelectGeneral;
 
 			controlFactory = new ControlFactory(renderer, contentManager);
 
@@ -221,8 +223,6 @@ namespace MyThirdSDL.UserInterface
 					menuEquipment.ButtonConfirmWindowClicked += menuEquipment_ButtonConfirmWindowClicked;
 				}
 
-				MouseMode = MouseModeType.SelectEquipment;
-
 				ShowMenuEquipment();
 			}
 		}
@@ -244,7 +244,6 @@ namespace MyThirdSDL.UserInterface
 					menuInspectEmployee = controlFactory.CreateMenuInspectEmployee(menuPosition);
 					menuInspectEmployee.ButtonCloseWindowClicked += menuInspectEmployee_ButtonCloseWindowClicked;
 				}
-				MouseMode = MouseModeType.SelectRoom;
 
 				ShowMenuInspectEmployee();
 			}
@@ -294,8 +293,12 @@ namespace MyThirdSDL.UserInterface
 			isMenuEquipmentOpen = false;
 		}
 
-		private void menuEquipment_ButtonConfirmWindowClicked(object sender, EventArgs e)
+		private void menuEquipment_ButtonConfirmWindowClicked(object sender, ButtonConfirmWindowClickedEventArgs e)
 		{
+			IPurchasable selectedPurchasableItem = e.PurchasableItem;
+			MouseMode = MouseMode.SelectEquipment;
+			if (PurchasableItemSelected != null)
+				PurchasableItemSelected(sender, new PurchasableItemSelectedEventArgs(e.PurchasableItem));
 			HideMenuEquipment();
 		}
 
@@ -306,7 +309,7 @@ namespace MyThirdSDL.UserInterface
 
 		private void ToolboxTray_ButtonSelectGeneralClicked(object sender, EventArgs e)
 		{
-			MouseMode = MouseModeType.SelectGeneral;
+			MouseMode = MouseMode.SelectGeneral;
 		}
 
 		#endregion

@@ -17,7 +17,7 @@ namespace MyThirdSDL.UserInterface
 		private Label labelMoney;
 		private IPurchasable purchasableItem;
 
-		public new event EventHandler<PurchasableItemClickedEventArgs> Clicked;
+		public new event EventHandler<PurchasableItemSelectedEventArgs> Clicked;
 
 		public override Vector Position
 		{
@@ -78,20 +78,10 @@ namespace MyThirdSDL.UserInterface
 
 		private void OnClicked()
 		{
-			PurchasableItemClickedEventArgs e = new PurchasableItemClickedEventArgs(purchasableItem);
+			PurchasableItemSelectedEventArgs e = new PurchasableItemSelectedEventArgs(purchasableItem);
 
 			if (Clicked != null)
 				Clicked(this, e);
-		}
-	}
-
-	public class PurchasableItemClickedEventArgs : EventArgs
-	{
-		public IPurchasable PurchasableItem { get; private set; }
-
-		public PurchasableItemClickedEventArgs(IPurchasable purchasableItem)
-		{
-			this.PurchasableItem = purchasableItem;
 		}
 	}
 }

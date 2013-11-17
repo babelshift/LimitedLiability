@@ -308,10 +308,21 @@ namespace MyThirdSDL
 			purchasableItems.Add(agentFactory.CreateSodaMachine(TimeSpan.Zero));
 			purchasableItems.Add(agentFactory.CreateWaterFountain(TimeSpan.Zero));
 			userInterfaceManager = new UserInterfaceManager(Renderer, contentManager, new Point(SCREEN_WIDTH, SCREEN_HEIGHT), purchasableItems);
+			userInterfaceManager.PurchasableItemSelected += HandlePurchasableItemSelected;
 
 			if (log.IsDebugEnabled)
 				log.Debug("Game loop LoadContent has been completed.");
 		}
+
+		IPurchasable selectedPurchasableItem;
+
+		private void HandlePurchasableItemSelected (object sender, PurchasableItemSelectedEventArgs e)
+		{
+			selectedPurchasableItem = e.PurchasableItem;
+		}
+
+		private MouseState mouseStateCurrent;
+		private MouseState mouseStatePrevious;
 
 		/// <summary>
 		/// Update the game state such as positions, health, power ups, ammo, and anything else that is used
@@ -325,6 +336,30 @@ namespace MyThirdSDL
 		{
 			Camera.Update(mouseOverScreenEdge);
 			simulationManager.Update(gameTime);
+
+			if (userInterfaceManager.MouseMode == MouseMode.SelectEquipment)
+			{
+				mouseStatePrevious = mouseStateCurrent;
+				mouseStateCurrent = Mouse.GetState();
+				if (mouseStateCurrent.ButtonsPressed != null && mouseStatePrevious.ButtonsPressed != null)
+				{
+					if (!mouseStateCurrent.ButtonsPressed.Contains(MouseButtonCode.Left)
+					   && mouseStatePrevious.ButtonsPressed.Contains(MouseButtonCode.Left))
+					{
+						Point clickedPoint = new Point(mouseStateCurrent.X, mouseStateCurrent.Y);
+						Vector clickedWorldSpacePoint = CoordinateHelper.ScreenSpaceToWorldSpace(
+							                               clickedPoint.X, clickedPoint.Y,
+							                               CoordinateHelper.ScreenOffset,
+							                               CoordinateHelper.ScreenProjectionType.Isometric
+						                               );
+						if (selectedPurchasableItem is SodaMachine)
+						{
+							var sodaMachine = agentFactory.CreateSodaMachine(simulationManager.SimulationTime, new Vector(clickedWorldSpacePoint.X, clickedWorldSpacePoint.Y));
+							simulationManager.AddAgent(sodaMachine);
+						}
+					}
+				}
+			}
 
 			//isoWorldGridIndexText.UpdateText(String.Format("(Iso) WorldX: {0}, WorldY: {1}", isoMouseWorldGridIndex.X, isoMouseWorldGridIndex.Y));
 			//orthoWorldGridIndexText.UpdateText(String.Format("(X,Y): ({0},{1})", orthoMouseWorldPosition.X, orthoMouseWorldPosition.Y));
@@ -365,6 +400,11 @@ namespace MyThirdSDL
 			//Renderer.RenderTexture(worldAgeText.Texture, 0, 90);
 
 			userInterfaceManager.Draw(gameTime, Renderer);
+
+			if(userInterfaceManager.MouseMode == MouseMode.SelectEquipment)
+			{
+				Renderer.RenderTexture(selectedPurchasableItem.Texture, mouseStateCurrent.X - selectedPurchasableItem.Texture.Width / 2, mouseStateCurrent.Y - selectedPurchasableItem.Texture.Height);
+			}
 
 			Renderer.RenderPresent();
 		}

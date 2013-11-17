@@ -14,7 +14,7 @@ using MyThirdSDL.Simulation;
 
 namespace MyThirdSDL.UserInterface
 {
-	public enum MouseModeType
+	public enum MouseMode
 	{
 		SelectGeneral,
 		SelectEquipment,

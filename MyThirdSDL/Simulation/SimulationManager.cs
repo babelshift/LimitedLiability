@@ -57,6 +57,8 @@ namespace MyThirdSDL.Simulation
 		public event EventHandler<EventArgs> EmployeeThirstSatisfied;
 		public event EventHandler<EventArgs> EmployeeHungerSatisfied;
 
+		public event EventHandler<EmployeeClickedEventArgs> EmployeeClicked;
+
 		#endregion
 
 		#region Private Simulation Event Handlers
@@ -115,8 +117,6 @@ namespace MyThirdSDL.Simulation
 				&& !mouseStateCurrent.ButtonsPressed.Contains(MouseButtonCode.Left)
 				&& mouseStatePrevious.ButtonsPressed.Contains(MouseButtonCode.Left);
 		}
-
-        public event EventHandler<EmployeeClickedEventArgs> EmployeeClicked;
 
 		#region Employee Events
 

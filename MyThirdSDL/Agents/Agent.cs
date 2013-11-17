@@ -12,7 +12,7 @@ namespace MyThirdSDL.Agents
 	{
 		#region Members 
 
-		private Texture Texture { get; set; }
+		public Texture Texture { get; private set; }
 
 		public Rectangle CollisionBox
 		{

@@ -128,7 +128,6 @@
     <Compile Include="Simulation\SimulationMessageFactory.cs" />
     <Compile Include="Simulation\Subscription.cs" />
     <Compile Include="UserInterface\MouseOverScreenEdge.cs" />
-    <Compile Include="UserInterface\MouseModeType.cs" />
     <Compile Include="Agents\AgentActivity.cs" />
     <Compile Include="Agents\AgentState.cs" />
     <Compile Include="Simulation\EmployeeClickedEventArgs.cs" />
@@ -138,6 +137,8 @@
     <Compile Include="Descriptors\NecessityEffect.cs" />
     <Compile Include="Descriptors\SkillEffect.cs" />
     <Compile Include="Agents\TrashBin.cs" />
+    <Compile Include="UserInterface\PurchasableItemSelectedEventArgs.cs" />
+    <Compile Include="UserInterface\MouseMode.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

@@ -50,8 +50,8 @@ namespace MyThirdSDL.UserInterface
 
 		#region Events
 
-		public event EventHandler ButtonCloseWindowClicked;
-		public event EventHandler ButtonConfirmWindowClicked;
+		public event EventHandler<EventArgs> ButtonCloseWindowClicked;
+		public event EventHandler<ButtonConfirmWindowClickedEventArgs> ButtonConfirmWindowClicked;
 
 		#endregion
 
@@ -195,9 +195,11 @@ namespace MyThirdSDL.UserInterface
 		}
 
 		private Dictionary<int, List<ButtonMenuItem>> buttonMenuItemPages = new Dictionary<int, List<ButtonMenuItem>>();
+		private IPurchasable selectedPurchasableItem;
 
-		private void buttonMenuItem_Clicked(object sender, PurchasableItemClickedEventArgs e)
+		private void buttonMenuItem_Clicked(object sender, PurchasableItemSelectedEventArgs e)
 		{
+			selectedPurchasableItem = e.PurchasableItem;
 			ButtonMenuItem clickedButtonMenuItem = sender as ButtonMenuItem;
 			if (clickedButtonMenuItem != null)
 			{
@@ -219,7 +221,7 @@ namespace MyThirdSDL.UserInterface
 
 		#region Event Subscriptions
 
-		private void OnButtonConfirmWindowClicked(object sender, EventArgs e)
+		private void OnButtonConfirmWindowClicked(object sender, ButtonConfirmWindowClickedEventArgs e)
 		{
 			if (ButtonConfirmWindowClicked != null)
 				ButtonConfirmWindowClicked(sender, e);
@@ -238,7 +240,8 @@ namespace MyThirdSDL.UserInterface
 
 		private void buttonConfirmWindow_Clicked(object sender, EventArgs e)
 		{
-			OnButtonConfirmWindowClicked(sender, e);
+			ButtonConfirmWindowClickedEventArgs e2 = new ButtonConfirmWindowClickedEventArgs(selectedPurchasableItem);
+			OnButtonConfirmWindowClicked(sender, e2);
 		}
 
 		private void buttonArrowCircleRight_Clicked(object sender, EventArgs e)
@@ -254,5 +257,15 @@ namespace MyThirdSDL.UserInterface
 		}
 
 		#endregion
+	}
+
+	public class ButtonConfirmWindowClickedEventArgs : EventArgs
+	{
+		public IPurchasable PurchasableItem { get; private set; }
+
+		public ButtonConfirmWindowClickedEventArgs(IPurchasable purchasableItem)
+		{
+			PurchasableItem = purchasableItem;
+		}
 	}
 }
