@@ -321,9 +321,6 @@ namespace MyThirdSDL
 			selectedPurchasableItem = e.PurchasableItem;
 		}
 
-		private MouseState mouseStateCurrent;
-		private MouseState mouseStatePrevious;
-
 		/// <summary>
 		/// Update the game state such as positions, health, power ups, ammo, and anything else that is used
 		/// in the simulation parameters.
@@ -334,21 +331,19 @@ namespace MyThirdSDL
 		/// you will experience update/draw lag.</remarks>
 		protected override void Update(GameTime gameTime)
 		{
+			InputHelper.Update();
 			Camera.Update(mouseOverScreenEdge);
 			simulationManager.Update(gameTime);
 
 			if (userInterfaceManager.MouseMode == MouseMode.SelectEquipment)
 			{
-				mouseStatePrevious = mouseStateCurrent;
-				mouseStateCurrent = Mouse.GetState();
-				if (mouseStateCurrent.ButtonsPressed != null && mouseStatePrevious.ButtonsPressed != null)
+				if (InputHelper.CurrentMouseState.ButtonsPressed != null && InputHelper.PreviousMouseState.ButtonsPressed != null)
 				{
-					if (!mouseStateCurrent.ButtonsPressed.Contains(MouseButtonCode.Left)
-					   && mouseStatePrevious.ButtonsPressed.Contains(MouseButtonCode.Left))
+					if (!InputHelper.CurrentMouseState.ButtonsPressed.Contains(MouseButtonCode.Left)
+						&& InputHelper.PreviousMouseState.ButtonsPressed.Contains(MouseButtonCode.Left))
 					{
-						Point clickedPoint = new Point(mouseStateCurrent.X, mouseStateCurrent.Y);
 						Vector clickedWorldSpacePoint = CoordinateHelper.ScreenSpaceToWorldSpace(
-							                               clickedPoint.X, clickedPoint.Y,
+							InputHelper.ClickedMousePoint.X, InputHelper.ClickedMousePoint.Y,
 							                               CoordinateHelper.ScreenOffset,
 							                               CoordinateHelper.ScreenProjectionType.Isometric
 						                               );
@@ -403,7 +398,9 @@ namespace MyThirdSDL
 
 			if(userInterfaceManager.MouseMode == MouseMode.SelectEquipment)
 			{
-				Renderer.RenderTexture(selectedPurchasableItem.Texture, mouseStateCurrent.X - selectedPurchasableItem.Texture.Width / 2, mouseStateCurrent.Y - selectedPurchasableItem.Texture.Height);
+				Renderer.RenderTexture(selectedPurchasableItem.Texture, 
+					InputHelper.ClickedMousePoint.X - selectedPurchasableItem.Texture.Width / 2, 
+					InputHelper.ClickedMousePoint.Y - selectedPurchasableItem.Texture.Height);
 			}
 
 			Renderer.RenderPresent();

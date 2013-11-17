@@ -65,9 +65,6 @@ namespace MyThirdSDL.Simulation
 
 		#endregion
 
-		private MouseState mouseStateCurrent;
-		private MouseState mouseStatePrevious;
-
 		/// <summary>
 		/// Updates the simulation by setting the simulation time and updating all tracked agents.
 		/// </summary>
@@ -75,9 +72,6 @@ namespace MyThirdSDL.Simulation
 		public void Update(GameTime gameTime)
 		{
 			SimulationTime = gameTime.TotalGameTime;
-
-			mouseStatePrevious = mouseStateCurrent;
-			mouseStateCurrent = Mouse.GetState();
 
 			foreach (var agentList in trackedAgents.Values)
             {
@@ -91,7 +85,7 @@ namespace MyThirdSDL.Simulation
                         
 						// if the agent being updated is an employee and that agent is being clicked on by the user, fire the event telling subscribers of such
 						// we can use this event to react to the user interacting with the employees to do things like display their inspection information
-						if (IsEmployeeClicked(mouseStateCurrent, mouseStatePrevious, employee))
+						if (IsEmployeeClicked(employee))
 							EventHelper.FireEvent<EmployeeClickedEventArgs>(EmployeeClicked, this, new EmployeeClickedEventArgs(employee));
                     }
                 }
@@ -104,18 +98,11 @@ namespace MyThirdSDL.Simulation
 		/// <returns><c>true</c> if this the passed employee is clicked based on the passed mouse state; otherwise, <c>false</c>.</returns>
 		/// <param name="mouseState">Mouse state.</param>
 		/// <param name="employee">Employee.</param>
-		private bool IsEmployeeClicked(MouseState mouseStateCurrent, MouseState mouseStatePrevious, Employee employee)
+		private bool IsEmployeeClicked(Employee employee)
 		{
-			Point clickedPoint = new Point(mouseStateCurrent.X, mouseStateCurrent.Y);
-			Vector clickedWorldSpacePoint = CoordinateHelper.ScreenSpaceToWorldSpace(
-				clickedPoint.X, clickedPoint.Y,
-				CoordinateHelper.ScreenOffset,
-				CoordinateHelper.ScreenProjectionType.Isometric
-			);
-
-			return employee.CollisionBox.Contains(new Point((int)clickedWorldSpacePoint.X, (int)clickedWorldSpacePoint.Y)) 
-				&& !mouseStateCurrent.ButtonsPressed.Contains(MouseButtonCode.Left)
-				&& mouseStatePrevious.ButtonsPressed.Contains(MouseButtonCode.Left);
+			return employee.CollisionBox.Contains(new Point((int)InputHelper.ClickedWorldSpacePoint.X, (int)InputHelper.ClickedWorldSpacePoint.Y)) 
+				&& !InputHelper.CurrentMouseState.ButtonsPressed.Contains(MouseButtonCode.Left)
+				&& InputHelper.PreviousMouseState.ButtonsPressed.Contains(MouseButtonCode.Left);
 		}
 
 		#region Employee Events

@@ -1,15 +1,15 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="MyThirdSDL/Agents/OfficeDesk.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="MyThirdSDL/MainGame.cs">
     <Files>
-      <File FileName="MyThirdSDL/Agents/Equipment.cs" Line="10" Column="41" />
-      <File FileName="MyThirdSDL/Agents/Library.cs" Line="31" Column="1" />
-      <File FileName="MyThirdSDL/Agents/SodaMachine.cs" Line="24" Column="38" />
-      <File FileName="MyThirdSDL/Agents/SnackMachine.cs" Line="24" Column="49" />
-      <File FileName="MyThirdSDL/Agents/WaterFountain.cs" Line="24" Column="49" />
-      <File FileName="MyThirdSDL/Descriptors/NecessityEffect.cs" Line="7" Column="20" />
-      <File FileName="MyThirdSDL/Descriptors/SkillEffect.cs" Line="22" Column="1" />
-      <File FileName="MyThirdSDL/Agents/OfficeDesk.cs" Line="20" Column="49" />
+      <File FileName="MyThirdSDL/UserInterface/MenuEquipment.cs" Line="200" Column="77" />
+      <File FileName="MyThirdSDL/UserInterface/ButtonMenuItem.cs" Line="81" Column="27" />
+      <File FileName="MyThirdSDL/UserInterface/UserInterfaceManager.cs" Line="246" Column="6" />
+      <File FileName="MyThirdSDL/MainGame.cs" Line="338" Column="39" />
+      <File FileName="MyThirdSDL/Simulation/SimulationManager.cs" Line="109" Column="1" />
+      <File FileName="../../../Downloads/mono/mono-3.2.3/mcs/class/System.Core/System.Linq/Check.cs" Line="38" Column="1" />
+      <File FileName="../../../Downloads/mono/mono-3.2.3/mcs/class/System.Core/System.Linq/Enumerable.cs" Line="611" Column="1" />
+      <File FileName="MyThirdSDL/UserInterface/Button.cs" Line="91" Column="18" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>

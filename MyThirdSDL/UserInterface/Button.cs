@@ -33,9 +33,6 @@ namespace MyThirdSDL.UserInterface
 			this.iconHover = iconHover;
 		}
 
-		private MouseState mouseStateCurrent;
-		private MouseState mouseStatePrevious;
-
 		private bool GetClicked(MouseState mouseStateCurrent, MouseState mouseStatePrevious)
 		{
 			if (IsHovered)
@@ -53,15 +50,12 @@ namespace MyThirdSDL.UserInterface
 		{
 			base.Update(gameTime);
 
-			mouseStatePrevious = mouseStateCurrent;
-			mouseStateCurrent = Mouse.GetState();
-
-			if (Bounds.Contains(new Point(mouseStateCurrent.X, mouseStateCurrent.Y)))
+			if (Bounds.Contains(InputHelper.ClickedMousePoint))
 				IsHovered = true;
 			else
 				IsHovered = false;
 
-			IsClicked = GetClicked(mouseStateCurrent, mouseStatePrevious);
+			IsClicked = GetClicked(InputHelper.CurrentMouseState, InputHelper.PreviousMouseState);
 
 			if (IsClicked)
 				OnClicked(EventArgs.Empty);
