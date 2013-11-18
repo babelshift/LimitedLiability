@@ -97,17 +97,17 @@ namespace MyThirdSDL
 		//			else
 		//				mouseOverScreenEdge = MouseOverScreenEdge.None;
 		//		}
-//		private void HandleKeyPressed(object sender, KeyboardEventArgs e)
-//		{
-//			if (!keysPressed.Contains(e.KeyInformation.VirtualKey))
-//				keysPressed.Add(e.KeyInformation.VirtualKey);
-//		}
-//
-//		private void HandleKeyReleased(object sender, KeyboardEventArgs e)
-//		{
-//			if (keysPressed.Contains(e.KeyInformation.VirtualKey))
-//				keysPressed.Remove(e.KeyInformation.VirtualKey);
-//		}
+		//		private void HandleKeyPressed(object sender, KeyboardEventArgs e)
+		//		{
+		//			if (!keysPressed.Contains(e.KeyInformation.VirtualKey))
+		//				keysPressed.Add(e.KeyInformation.VirtualKey);
+		//		}
+		//
+		//		private void HandleKeyReleased(object sender, KeyboardEventArgs e)
+		//		{
+		//			if (keysPressed.Contains(e.KeyInformation.VirtualKey))
+		//				keysPressed.Remove(e.KeyInformation.VirtualKey);
+		//		}
 
 		#endregion
 
@@ -177,7 +177,22 @@ namespace MyThirdSDL
 				KeyboardHelper.Update();
 				MouseHelper.Update();
 				screenManager.Update(gameTime, !isWindowFocused);
-				Camera.Update(mouseOverScreenEdge);
+
+				if (isMouseInsideWindowBounds)
+				{
+					if (MouseHelper.CurrentMouseState.X < 50 && MouseHelper.CurrentMouseState.X > 0)
+						mouseOverScreenEdge = MouseOverScreenEdge.Left;
+					else if (MouseHelper.CurrentMouseState.X > SCREEN_WIDTH - 50 && MouseHelper.CurrentMouseState.X < SCREEN_WIDTH - 1)
+						mouseOverScreenEdge = MouseOverScreenEdge.Right;
+					else if (MouseHelper.CurrentMouseState.Y < 50 && MouseHelper.CurrentMouseState.Y > 0)
+						mouseOverScreenEdge = MouseOverScreenEdge.Top;
+					else if (MouseHelper.CurrentMouseState.Y > SCREEN_HEIGHT - 50 && MouseHelper.CurrentMouseState.Y < SCREEN_HEIGHT - 1)
+						mouseOverScreenEdge = MouseOverScreenEdge.Bottom;
+					else
+						mouseOverScreenEdge = MouseOverScreenEdge.None;
+
+					Camera.Update(mouseOverScreenEdge);
+				}
 			}
 		}
 
