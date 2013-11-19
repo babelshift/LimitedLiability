@@ -9,6 +9,7 @@ using MyThirdSDL.Simulation;
 using MyThirdSDL.UserInterface;
 using MyThirdSDL.Descriptors;
 using SharpDL.Input;
+using SharpDL.Events;
 
 namespace MyThirdSDL.Screens
 {
@@ -27,8 +28,8 @@ namespace MyThirdSDL.Screens
 		private TiledMap tiledMap;
 		private IPurchasable selectedPurchasableItem;
 
-		private Vector mouseClickPositionWorldGridIndex = CoordinateHelper.DefaultVector;
-		private Vector mousePositionWorldGridIndex = CoordinateHelper.DefaultVector;
+		private Point mouseClickPositionWorldGridIndex = CoordinateHelper.DefaultPoint;
+		private Point mousePositionWorldGridIndex = CoordinateHelper.DefaultPoint;
 
 		public MainGameScreen(Renderer renderer, ContentManager contentManager)
 			: base(contentManager)
@@ -69,12 +70,12 @@ namespace MyThirdSDL.Screens
 				simulationManager.AddAgent(employee);
 			}
 
-			var pathNode1 = tiledMap.GetPathNodeAtWorldGridIndex(new Vector(3, 15));
-			var pathNode2 = tiledMap.GetPathNodeAtWorldGridIndex(new Vector(15, 9));
-			var pathNode3 = tiledMap.GetPathNodeAtWorldGridIndex(new Vector(20, 9));
-			var pathNode4 = tiledMap.GetPathNodeAtWorldGridIndex(new Vector(4, 10));
-			var pathNode5 = tiledMap.GetPathNodeAtWorldGridIndex(new Vector(3, 21));
-			var pathNode6 = tiledMap.GetPathNodeAtWorldGridIndex(new Vector(4, 4));
+			var pathNode1 = tiledMap.GetPathNodeAtWorldGridIndex(new Point(3, 15));
+			var pathNode2 = tiledMap.GetPathNodeAtWorldGridIndex(new Point(15, 9));
+			var pathNode3 = tiledMap.GetPathNodeAtWorldGridIndex(new Point(20, 9));
+			var pathNode4 = tiledMap.GetPathNodeAtWorldGridIndex(new Point(4, 10));
+			var pathNode5 = tiledMap.GetPathNodeAtWorldGridIndex(new Point(3, 21));
+			var pathNode6 = tiledMap.GetPathNodeAtWorldGridIndex(new Point(4, 4));
 
 			SodaMachine sodaMachine = agentFactory.CreateSodaMachine(TimeSpan.Zero, new Vector(pathNode3.WorldPosition.X, pathNode3.WorldPosition.Y));
 			SodaMachine sodaMachine2 = agentFactory.CreateSodaMachine(TimeSpan.Zero, new Vector(pathNode4.WorldPosition.X, pathNode4.WorldPosition.Y));
@@ -118,6 +119,20 @@ namespace MyThirdSDL.Screens
 			base.Deactivate();
 		}
 
+		public override void HandleMouseButtonPressedEvent(object sender, MouseButtonEventArgs e)
+		{
+			base.HandleMouseButtonPressedEvent(sender, e);
+
+			userInterfaceManager.HandleMouseButtonPressedEvent(sender, e);
+		}
+
+		public override void HandleMouseMovingEvent(object sender, MouseMotionEventArgs e)
+		{
+			base.HandleMouseMovingEvent(sender, e);
+
+			userInterfaceManager.HandleMouseMovingEvent(sender, e);
+		}
+
 		public override void HandleInput(GameTime gameTime)
 		{
 			base.HandleInput(gameTime);
@@ -138,7 +153,14 @@ namespace MyThirdSDL.Screens
 					{
 						if (selectedPurchasableItem is SodaMachine)
 						{
-							var sodaMachine = agentFactory.CreateSodaMachine(simulationManager.SimulationTime, MouseHelper.ClickedWorldSpacePoint);
+							var clickedWorldGridIndex = CoordinateHelper.WorldSpaceToWorldGridIndexPoint(
+								MouseHelper.ClickedWorldSpacePoint.X,
+								MouseHelper.ClickedWorldSpacePoint.Y,
+								CoordinateHelper.WorldGridCellWidth,
+								CoordinateHelper.WorldGridCellHeight
+							);
+
+							var sodaMachine = agentFactory.CreateSodaMachine(simulationManager.SimulationTime, new Vector(clickedWorldGridIndex.X * CoordinateHelper.WorldGridCellWidth, clickedWorldGridIndex.Y * CoordinateHelper.WorldGridCellHeight));
 							simulationManager.AddAgent(sodaMachine);
 						}
 					}
@@ -201,9 +223,9 @@ namespace MyThirdSDL.Screens
 			foreach (Tile baseTile in baseTiles)
 			{
 				baseTile.Draw(gameTime, renderer);
-				if (CoordinateHelper.AreIndicesEqual(baseTile.WorldGridIndex, mouseClickPositionWorldGridIndex))
+				if (baseTile.WorldGridIndex == mouseClickPositionWorldGridIndex)
 					DrawTileHighlight(tileHighlightSelectedImage, baseTile.ProjectedPosition - Camera.Position, renderer);
-				if (CoordinateHelper.AreIndicesEqual(baseTile.WorldGridIndex, mousePositionWorldGridIndex))
+				if (baseTile.WorldGridIndex == mousePositionWorldGridIndex)
 					DrawTileHighlight(tileHighlightImage, baseTile.ProjectedPosition - Camera.Position, renderer);
 			}
 		}
@@ -220,9 +242,9 @@ namespace MyThirdSDL.Screens
 				drawable.Draw(gameTime, renderer);
 				if (drawable is Tile)
 				{
-					if (CoordinateHelper.AreIndicesEqual(drawable.WorldGridIndex, mouseClickPositionWorldGridIndex))
+					if (drawable.WorldGridIndex == mouseClickPositionWorldGridIndex)
 						DrawTileHighlight(tileHighlightSelectedImage, drawable.ProjectedPosition - Camera.Position, renderer);
-					if (CoordinateHelper.AreIndicesEqual(drawable.WorldGridIndex, mousePositionWorldGridIndex))
+					if (drawable.WorldGridIndex == mousePositionWorldGridIndex)
 						DrawTileHighlight(tileHighlightImage, drawable.ProjectedPosition - Camera.Position, renderer);
 				}
 			}

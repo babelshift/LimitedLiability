@@ -11,6 +11,7 @@ namespace MyThirdSDL
 	{
 		public static int WorldGridCellWidth = 32;
 		public static int WorldGridCellHeight = 32;
+		public static Point DefaultPoint = new Point(-9999, -9999);
 		public static Vector DefaultVector = new Vector(-9999, -9999);
 
 		public enum ScreenProjectionType
@@ -66,17 +67,35 @@ namespace MyThirdSDL
 		}
 
 		/// <summary>
-		/// Using the world space coordinates and tile width/height, converts the values to the world space grid indices
+		/// Returns the world grid index in whole units (ints). Use this method when you need only the exact grid index value locked to the grid. For example, grid index
+		/// at [6.5, 7.5] would return in this method as [7, 8] through rounding of the index values. Useful when you need to lock positions to the grid.
 		/// </summary>
 		/// <param name="worldX"></param>
 		/// <param name="worldY"></param>
 		/// <param name="width"></param>
 		/// <param name="height"></param>
 		/// <returns></returns>
-		public static Vector WorldSpaceToWorldGridIndex(float worldX, float worldY, int width, int height)
+		public static Point WorldSpaceToWorldGridIndexPoint(float worldX, float worldY, int width, int height)
 		{
-			float worldGridX = (worldX) / width;
-			float worldGridY = (worldY)/ height;
+			float worldGridX = worldX / width;
+			float worldGridY = worldY / height;
+
+			return new Point((int)Math.Round(worldGridX), (int)Math.Round(worldGridY));
+		}
+
+		/// <summary>
+		/// Returns the world grid index (partial indices are possible since this is a vector). Use this method when you need exactly within a grid index. For example,
+		/// grid index [6.5, 7.5] indicates half indices in between the grids. This is useful when needing to render between indices.
+		/// </summary>
+		/// <returns>The space to world grid index vector.</returns>
+		/// <param name="worldX">World x.</param>
+		/// <param name="worldY">World y.</param>
+		/// <param name="width">Width.</param>
+		/// <param name="height">Height.</param>
+		public static Vector WorldSpaceToWorldGridIndexVector(float worldX, float worldY, int width, int height)
+		{
+			float worldGridX = worldX / width;
+			float worldGridY = worldY / height;
 
 			return new Vector(worldGridX, worldGridY);
 		}
@@ -93,7 +112,7 @@ namespace MyThirdSDL
 		/// <returns></returns>
 		public static Vector WorldSpaceToScreenSpace(float worldX, float worldY, int width, int height, Vector offset, ScreenProjectionType projectionType)
 		{
-			Vector worldGridIndex = CoordinateHelper.WorldSpaceToWorldGridIndex(worldX, worldY, width, height);
+			Vector worldGridIndex = CoordinateHelper.WorldSpaceToWorldGridIndexVector(worldX, worldY, width, height);
 			return CoordinateHelper.WorldGridIndexToScreenSpace(worldGridIndex.X, worldGridIndex.Y, width, height, offset, projectionType);
 		}
 
@@ -123,14 +142,6 @@ namespace MyThirdSDL
 			}
 			else
 				throw new NotImplementedException("Projections other than Isometric are not supported");
-		}
-
-		public static bool AreIndicesEqual(Vector index1, Vector index2)
-		{
-			if (Math.Round(index1.X) == Math.Round(index2.X) && Math.Round(index1.Y) == Math.Round(index2.Y))
-				return true;
-			else
-				return false;
 		}
 	}
 }

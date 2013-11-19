@@ -44,7 +44,7 @@ namespace MyThirdSDL.Agents
 
 		public AgentState State { get; private set; }
 
-		public Vector WorldGridIndex { get; private set; }
+		public Point WorldGridIndex { get; private set; }
 
 		public Vector WorldPosition { get; protected set; }
 
@@ -78,18 +78,14 @@ namespace MyThirdSDL.Agents
 			SimulationAge = simulationTime.Subtract(BirthTime);
 		}
 
-		private Vector GetWorldGridIndex()
+		private Point GetWorldGridIndex()
 		{
-			Vector worldGridIndex = CoordinateHelper.WorldSpaceToWorldGridIndex(
+			Point worldGridIndex = CoordinateHelper.WorldSpaceToWorldGridIndexPoint(
 				                        WorldPosition.X,
 				                        WorldPosition.Y,
 				                        CoordinateHelper.WorldGridCellWidth,
 				                        CoordinateHelper.WorldGridCellHeight
 			                        );
-
-			int worldGridIndexX = (int)Math.Round(worldGridIndex.X);
-			int worldGridIndexY = (int)Math.Round(worldGridIndex.Y);
-			worldGridIndex = new Vector(worldGridIndexX, worldGridIndexY);
 
 			return worldGridIndex;
 		}

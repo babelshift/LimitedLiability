@@ -29,8 +29,6 @@ namespace MyThirdSDL
 
 		#region Input Data
 
-		private MouseOverScreenEdge mouseOverScreenEdge;
-
 		#endregion
 
 		#region Factories and Managers
@@ -55,8 +53,8 @@ namespace MyThirdSDL
 		{
 //			KeyPressed += HandleKeyPressed;
 //			KeyReleased += HandleKeyReleased;
-			//MouseMoving += HandleMouseMoving;
-			//MouseButtonPressed += HandleMouseButtonClicked;
+			MouseMoving += HandleMouseMoving;
+			MouseButtonPressed += HandleMouseButtonClicked;
 			WindowEntered += (object sender, WindowEventArgs e) => isMouseInsideWindowBounds = true;
 			WindowLeave += (object sender, WindowEventArgs e) => isMouseInsideWindowBounds = false;
 			WindowFocusLost += (object sender, WindowEventArgs e) => isWindowFocused = false;
@@ -70,34 +68,16 @@ namespace MyThirdSDL
 
 		#region Event Handlers
 
-		//		private void HandleMouseButtonClicked(object sender, MouseButtonEventArgs e)
-		//		{
-		//			userInterfaceManager.HandleMouseButtonPressedEvent(sender, e);
-		//
-		//			if (e.MouseButton == MouseButtonCode.Left)
-		//			{
-		//				mouseClickPositionWorldGridIndex = mousePositionWorldGridIndex;
-		//			}
-		//		}
-		//		private void HandleMouseMoving(object sender, MouseMotionEventArgs e)
-		//		{
-		//			userInterfaceManager.HandleMouseMovingEvent(sender, e);
-		//
-		//			Vector mousePositionIsometric = CoordinateHelper.ScreenSpaceToWorldSpace(e.RelativeToWindowX, e.RelativeToWindowY,
-		//				                                CoordinateHelper.ScreenOffset, CoordinateHelper.ScreenProjectionType.Isometric);
-		//			mousePositionWorldGridIndex = CoordinateHelper.WorldSpaceToWorldGridIndex(mousePositionIsometric.X, mousePositionIsometric.Y, tiledMap.TileWidth / 2, tiledMap.TileHeight);
-		//
-		//			if (e.RelativeToWindowX < 50 && e.RelativeToWindowX > 0)
-		//				mouseOverScreenEdge = MouseOverScreenEdge.Left;
-		//			else if (e.RelativeToWindowX > SCREEN_WIDTH - 50 && e.RelativeToWindowX < SCREEN_WIDTH - 1)
-		//				mouseOverScreenEdge = MouseOverScreenEdge.Right;
-		//			else if (e.RelativeToWindowY < 50 && e.RelativeToWindowY > 0)
-		//				mouseOverScreenEdge = MouseOverScreenEdge.Top;
-		//			else if (e.RelativeToWindowY > SCREEN_HEIGHT - 50 && e.RelativeToWindowY < SCREEN_HEIGHT - 1)
-		//				mouseOverScreenEdge = MouseOverScreenEdge.Bottom;
-		//			else
-		//				mouseOverScreenEdge = MouseOverScreenEdge.None;
-		//		}
+		private void HandleMouseButtonClicked(object sender, MouseButtonEventArgs e)
+		{
+			screenManager.PassMouseButtonPressedEventToActiveScreen(sender, e);
+		}
+
+		private void HandleMouseMoving(object sender, MouseMotionEventArgs e)
+		{
+			screenManager.PassMouseMovingEventToActiveScreen(sender, e);
+		}
+
 		//		private void HandleKeyPressed(object sender, KeyboardEventArgs e)
 		//		{
 		//			if (!keysPressed.Contains(e.KeyInformation.VirtualKey))

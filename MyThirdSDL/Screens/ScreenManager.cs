@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using SharpDL.Graphics;
 using SharpDL;
 using MyThirdSDL.Content;
+using SharpDL.Events;
 
 namespace MyThirdSDL.Screens
 {
@@ -171,6 +172,20 @@ namespace MyThirdSDL.Screens
 		#endregion
 
 		#region Public Methods
+
+		public void PassMouseButtonPressedEventToActiveScreen(object sender, MouseButtonEventArgs e)
+		{
+			foreach (Screen screen in screens)
+				if (screen.ScreenState == ScreenState.Active)
+					screen.HandleMouseButtonPressedEvent(sender, e);
+		}
+
+		public void PassMouseMovingEventToActiveScreen(object sender, MouseMotionEventArgs e)
+		{
+			foreach (Screen screen in screens)
+				if (screen.ScreenState == ScreenState.Active)
+					screen.HandleMouseMovingEvent(sender, e);
+		}
 
 		/// <summary>
 		/// Adds a new screen to the screen manager.

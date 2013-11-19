@@ -9,6 +9,6 @@ namespace MyThirdSDL
 {
 	public interface INode
 	{
-		Vector WorldGridIndex { get; }
+		Point WorldGridIndex { get; }
 	}
 }

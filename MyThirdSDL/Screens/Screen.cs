@@ -2,6 +2,7 @@ using System;
 using SharpDL;
 using SharpDL.Graphics;
 using MyThirdSDL.Content;
+using SharpDL.Events;
 
 namespace MyThirdSDL.Screens
 {
@@ -236,6 +237,16 @@ namespace MyThirdSDL.Screens
 
 			// Otherwise we are still busy transitioning.
 			return true;
+		}
+
+		public virtual void HandleMouseButtonPressedEvent(object sender, MouseButtonEventArgs e)
+		{
+
+		}
+
+		public virtual void HandleMouseMovingEvent(object sender, MouseMotionEventArgs e)
+		{
+
 		}
 
 		/// <summary>

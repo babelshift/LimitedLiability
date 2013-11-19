@@ -39,7 +39,7 @@ namespace MyThirdSDL.Content
 		/// <summary>
 		/// World grid is the world space tile grid. This is the index within the world grid that the tile is positioned.
 		/// </summary>
-		public Vector WorldGridIndex { get; internal set; }
+		public Point WorldGridIndex { get; internal set; }
 
 		/// <summary>
 		/// World position is the position within the world space
@@ -225,15 +225,12 @@ namespace MyThirdSDL.Content
 
 		public Rectangle CollisionBox { get { return Bounds; } }
 
-		public Vector WorldGridIndex
+		public Point WorldGridIndex
 		{
 			get
 			{
-				Vector worldGridIndex = CoordinateHelper.WorldSpaceToWorldGridIndex(WorldPosition.X, WorldPosition.Y, Bounds.Width, Bounds.Height);
-				int worldGridIndexX = (int)Math.Round(worldGridIndex.X);
-				int worldGridIndexY = (int)Math.Round(worldGridIndex.Y);
-				//return new Vector(worldGridIndexX + 1, worldGridIndexY + 1);
-				return new Vector(worldGridIndexX, worldGridIndexY);
+				Point worldGridIndex = CoordinateHelper.WorldSpaceToWorldGridIndexPoint(WorldPosition.X, WorldPosition.Y, Bounds.Width, Bounds.Height);
+				return worldGridIndex;
 			}
 		}
 
@@ -274,7 +271,7 @@ namespace MyThirdSDL.Content
 			Type = type;
 		}
 
-		public MapObject GetMapObjectAtWorldGridIndex(Vector worldGridIndex)
+		public MapObject GetMapObjectAtWorldGridIndex(Point worldGridIndex)
 		{
 			MapObject mapObject = MapObjects.FirstOrDefault(mo => mo.WorldGridIndex == worldGridIndex);
 			return mapObject;
@@ -376,25 +373,25 @@ namespace MyThirdSDL.Content
 			{
 				foreach (var pathNode in pathNodeLayer.MapObjects)
 				{
-					Vector pathNodeWorldGridIndex = pathNode.WorldGridIndex;
+					Point pathNodeWorldGridIndex = pathNode.WorldGridIndex;
 
 					// get left neighbor
-					Vector leftNeighborIndex = new Vector(pathNodeWorldGridIndex.X - 1, pathNodeWorldGridIndex.Y);
+					Point leftNeighborIndex = new Point(pathNodeWorldGridIndex.X - 1, pathNodeWorldGridIndex.Y);
 					MapObject leftNeighbor = pathNodeLayer.GetMapObjectAtWorldGridIndex(leftNeighborIndex);
 					pathNode.AddNeighbor(leftNeighbor);
 
 					// get right neighbor
-					Vector rightNeighborIndex = new Vector(pathNodeWorldGridIndex.X + 1, pathNodeWorldGridIndex.Y);
+					Point rightNeighborIndex = new Point(pathNodeWorldGridIndex.X + 1, pathNodeWorldGridIndex.Y);
 					MapObject rightNeighbor = pathNodeLayer.GetMapObjectAtWorldGridIndex(rightNeighborIndex);
 					pathNode.AddNeighbor(rightNeighbor);
 
 					// get top neighbor
-					Vector topNeighborIndex = new Vector(pathNodeWorldGridIndex.X, pathNodeWorldGridIndex.Y - 1);
+					Point topNeighborIndex = new Point(pathNodeWorldGridIndex.X, pathNodeWorldGridIndex.Y - 1);
 					MapObject topNeighbor = pathNodeLayer.GetMapObjectAtWorldGridIndex(topNeighborIndex);
 					pathNode.AddNeighbor(topNeighbor);
 
 					// get bottom neighbor
-					Vector bottomNeighborIndex = new Vector(pathNodeWorldGridIndex.X, pathNodeWorldGridIndex.Y + 1);
+					Point bottomNeighborIndex = new Point(pathNodeWorldGridIndex.X, pathNodeWorldGridIndex.Y + 1);
 					MapObject bottomNeighbor = pathNodeLayer.GetMapObjectAtWorldGridIndex(bottomNeighborIndex);
 					pathNode.AddNeighbor(bottomNeighbor);
 				}
@@ -502,7 +499,7 @@ namespace MyThirdSDL.Content
 
 						tile.ProjectedPosition = projectedPosition;
 						tile.WorldPosition = worldPosition;
-						tile.WorldGridIndex = new Vector(x, y);
+						tile.WorldGridIndex = new Point(x, y);
 					}
 				}
 			}
@@ -514,7 +511,7 @@ namespace MyThirdSDL.Content
 		/// </summary>
 		/// <param name="worldGridIndex"></param>
 		/// <returns></returns>
-		public MapObject GetPathNodeAtWorldGridIndex(Vector worldGridIndex)
+		public MapObject GetPathNodeAtWorldGridIndex(Point worldGridIndex)
 		{
 			IEnumerable<MapObjectLayer> pathNodeLayers = mapObjectLayers.Where(mol => mol.Type == MapObjectLayerType.PathNode);
 			foreach (var pathNodeLayer in pathNodeLayers)

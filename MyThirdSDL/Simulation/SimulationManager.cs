@@ -438,7 +438,7 @@ namespace MyThirdSDL.Simulation
 		/// <param name="startWorldGridIndex"></param>
 		/// <param name="endWorldGridIndex"></param>
 		/// <returns></returns>
-		private Queue<MapObject> FindBestPath(Vector startWorldGridIndex, Vector endWorldGridIndex)
+		private Queue<MapObject> FindBestPath(Point startWorldGridIndex, Point endWorldGridIndex)
 		{
 			MapObject start = CurrentMap.GetPathNodeAtWorldGridIndex(startWorldGridIndex);
 			MapObject end = CurrentMap.GetPathNodeAtWorldGridIndex(endWorldGridIndex);
