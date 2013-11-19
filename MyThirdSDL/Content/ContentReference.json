@@ -58,7 +58,12 @@
 		{ "key": "IconCommunication",			"value": "Images/User Interface/IconCommunication.png" },
 		{ "key": "IconPersonAngry",				"value": "Images/User Interface/IconPersonAngry.png" },
 		{ "key": "IconPersonHappy",				"value": "Images/User Interface/IconPersonHappy.png" },
-		{ "key": "IconBin",						"value": "Images/User Interface/IconBin.png" }
+		{ "key": "IconBin",						"value": "Images/User Interface/IconBin.png" },
+
+		{ "key": "CursorHandRight",				"value": "Images/User Interface/CursorHandRight.png" },
+		{ "key": "CursorHandUp",				"value": "Images/User Interface/CursorHandUp.png" },
+		{ "key": "CursorHandLeft",				"value": "Images/User Interface/CursorHandLeft.png" },
+		{ "key": "CursorHandDown",				"value": "Images/User Interface/CursorHandDown.png" }
 	],
 	"maps": [
 		{ "key": "Map1",						"value": "Maps/Map1.tmx" },

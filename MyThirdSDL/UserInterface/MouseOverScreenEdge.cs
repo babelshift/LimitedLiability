@@ -16,6 +16,7 @@ namespace MyThirdSDL.UserInterface
 {
 	public enum MouseOverScreenEdge
 	{
+		Unknown,
 		None,
 		Top,
 		Bottom,

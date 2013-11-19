@@ -1,17 +1,20 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="MyThirdSDL/Screens/MainGameScreen.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="MyThirdSDL/MainGame.cs">
     <Files>
       <File FileName="MyThirdSDL/Screens/ScreenManager.cs" Line="1" Column="1" />
       <File FileName="MyThirdSDL/Screens/Screen.cs" Line="1" Column="1" />
-      <File FileName="MyThirdSDL/MainGame.cs" Line="33" Column="55" />
+      <File FileName="MyThirdSDL/MainGame.cs" Line="266" Column="93" />
       <File FileName="MyThirdSDL/Screens/MainMenuScreen.cs" Line="1" Column="1" />
       <File FileName="MyThirdSDL/Screens/LoadingScreen.cs" Line="1" Column="1" />
-      <File FileName="MyThirdSDL/MouseHelper.cs" Line="1" Column="1" />
+      <File FileName="MyThirdSDL/MouseHelper.cs" Line="27" Column="4" />
       <File FileName="MyThirdSDL/KeyboardHelper.cs" Line="1" Column="1" />
-      <File FileName="MyThirdSDL/Content/TextureStore.cs" Line="35" Column="47" />
-      <File FileName="MyThirdSDL/Camera.cs" Line="16" Column="20" />
-      <File FileName="MyThirdSDL/Screens/MainGameScreen.cs" Line="93" Column="80" />
+      <File FileName="MyThirdSDL/Screens/MainGameScreen.cs" Line="170" Column="5" />
+      <File FileName="MyThirdSDL/Camera.cs" Line="49" Column="1" />
+      <File FileName="MyThirdSDL/Agents/AgentFactory.cs" Line="45" Column="4" />
+      <File FileName="MyThirdSDL/Content/ContentReference.json" Line="44" Column="28" />
+      <File FileName="MyThirdSDL/UserInterface/UserInterfaceManager.cs" Line="1" Column="1" />
+      <File FileName="MyThirdSDL/Content/ContentManager.cs" Line="46" Column="1" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>

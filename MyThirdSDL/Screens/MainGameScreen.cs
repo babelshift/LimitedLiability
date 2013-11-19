@@ -168,8 +168,6 @@ namespace MyThirdSDL.Screens
 					MouseHelper.ClickedMousePoint.X - selectedPurchasableItem.Texture.Width / 2, 
 					MouseHelper.ClickedMousePoint.Y - selectedPurchasableItem.Texture.Height);
 			}
-
-			renderer.RenderPresent();
 		}
 
 		public override void Unload()

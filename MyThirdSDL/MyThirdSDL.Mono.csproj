@@ -149,6 +149,7 @@
     <Compile Include="Screens\LoadingScreen.cs" />
     <Compile Include="MouseHelper.cs" />
     <Compile Include="KeyboardHelper.cs" />
+    <Compile Include="Cursor.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -344,6 +345,18 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\Images\User Interface\IconBin.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Images\User Interface\CursorHandRight.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Images\User Interface\CursorHandLeft.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Images\User Interface\CursorHandUp.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Images\User Interface\CursorHandDown.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
