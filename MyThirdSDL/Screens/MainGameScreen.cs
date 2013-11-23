@@ -24,7 +24,6 @@ namespace MyThirdSDL.Screens
 		private List<IDrawable> allDrawables = new List<IDrawable>();
 		private Image tileHighlightImage;
 		private Image tileHighlightSelectedImage;
-		private List<Employee> employees = new List<Employee>();
 		private TiledMap tiledMap;
 		private IPurchasable selectedPurchasableItem;
 
@@ -53,7 +52,7 @@ namespace MyThirdSDL.Screens
 
 		public override void Activate(Renderer renderer)
 		{
-			string mapPath = ContentManager.GetContentPath("Map2");
+			string mapPath = ContentManager.GetContentPath("Office2");
 			string tileHighlightTexturePath = ContentManager.GetContentPath("TileHighlight2");
 			string tileHighlightSelectedTexturePath = ContentManager.GetContentPath("TileHighlightSelected");
 
@@ -70,26 +69,34 @@ namespace MyThirdSDL.Screens
 				simulationManager.AddAgent(employee);
 			}
 
-			var pathNode1 = tiledMap.GetPathNodeAtWorldGridIndex(new Point(3, 15));
-			var pathNode2 = tiledMap.GetPathNodeAtWorldGridIndex(new Point(15, 9));
-			var pathNode3 = tiledMap.GetPathNodeAtWorldGridIndex(new Point(20, 9));
-			var pathNode4 = tiledMap.GetPathNodeAtWorldGridIndex(new Point(4, 10));
-			var pathNode5 = tiledMap.GetPathNodeAtWorldGridIndex(new Point(3, 21));
-			var pathNode6 = tiledMap.GetPathNodeAtWorldGridIndex(new Point(4, 4));
+			for (int i = 0; i < 2; i++)
+			{
+				int x = random.Next(0, pathNodes.Count);
+				var pathNode = pathNodes[x];
+				OfficeDesk officeDesk = agentFactory.CreateOfficeDesk(TimeSpan.Zero, new Vector(pathNode.WorldPosition.X, pathNode.WorldPosition.Y));
+				simulationManager.AddAgent(officeDesk);
+			}
 
-			SodaMachine sodaMachine = agentFactory.CreateSodaMachine(TimeSpan.Zero, new Vector(pathNode3.WorldPosition.X, pathNode3.WorldPosition.Y));
-			SodaMachine sodaMachine2 = agentFactory.CreateSodaMachine(TimeSpan.Zero, new Vector(pathNode4.WorldPosition.X, pathNode4.WorldPosition.Y));
-			SnackMachine snackMachine = agentFactory.CreateSnackMachine(TimeSpan.Zero, new Vector(pathNode2.WorldPosition.X, pathNode2.WorldPosition.Y));
-			SnackMachine snackMachine2 = agentFactory.CreateSnackMachine(TimeSpan.Zero, new Vector(pathNode1.WorldPosition.X, pathNode1.WorldPosition.Y));
-			OfficeDesk officeDesk = agentFactory.CreateOfficeDesk(TimeSpan.Zero, new Vector(pathNode5.WorldPosition.X, pathNode5.WorldPosition.Y));
-			OfficeDesk officeDesk2 = agentFactory.CreateOfficeDesk(TimeSpan.Zero, new Vector(pathNode6.WorldPosition.X, pathNode6.WorldPosition.Y));
-			simulationManager.AddAgents(employees);
-			simulationManager.AddAgent(sodaMachine);
-			simulationManager.AddAgent(sodaMachine2);
-			simulationManager.AddAgent(snackMachine);
-			simulationManager.AddAgent(snackMachine2);
-			simulationManager.AddAgent(officeDesk);
-			simulationManager.AddAgent(officeDesk2);
+//			var pathNode1 = tiledMap.GetPathNodeAtWorldGridIndex(new Point(3, 15));
+//			var pathNode2 = tiledMap.GetPathNodeAtWorldGridIndex(new Point(15, 9));
+//			var pathNode3 = tiledMap.GetPathNodeAtWorldGridIndex(new Point(20, 9));
+//			var pathNode4 = tiledMap.GetPathNodeAtWorldGridIndex(new Point(4, 10));
+//			var pathNode5 = tiledMap.GetPathNodeAtWorldGridIndex(new Point(3, 21));
+//			var pathNode6 = tiledMap.GetPathNodeAtWorldGridIndex(new Point(4, 4));
+//
+//			SodaMachine sodaMachine = agentFactory.CreateSodaMachine(TimeSpan.Zero, new Vector(pathNode3.WorldPosition.X, pathNode3.WorldPosition.Y));
+//			SodaMachine sodaMachine2 = agentFactory.CreateSodaMachine(TimeSpan.Zero, new Vector(pathNode4.WorldPosition.X, pathNode4.WorldPosition.Y));
+//			SnackMachine snackMachine = agentFactory.CreateSnackMachine(TimeSpan.Zero, new Vector(pathNode2.WorldPosition.X, pathNode2.WorldPosition.Y));
+//			SnackMachine snackMachine2 = agentFactory.CreateSnackMachine(TimeSpan.Zero, new Vector(pathNode1.WorldPosition.X, pathNode1.WorldPosition.Y));
+//			OfficeDesk officeDesk = agentFactory.CreateOfficeDesk(TimeSpan.Zero, new Vector(pathNode5.WorldPosition.X, pathNode5.WorldPosition.Y));
+//			OfficeDesk officeDesk2 = agentFactory.CreateOfficeDesk(TimeSpan.Zero, new Vector(pathNode6.WorldPosition.X, pathNode6.WorldPosition.Y));
+//			simulationManager.AddAgents(employees);
+//			simulationManager.AddAgent(sodaMachine);
+//			simulationManager.AddAgent(sodaMachine2);
+//			simulationManager.AddAgent(snackMachine);
+//			simulationManager.AddAgent(snackMachine2);
+//			simulationManager.AddAgent(officeDesk);
+//			simulationManager.AddAgent(officeDesk2);
 
 			Surface tileHighlightSurface = new Surface(tileHighlightTexturePath, SurfaceType.PNG);
 			tileHighlightImage = new Image(renderer, tileHighlightSurface, ImageFormat.PNG);
@@ -178,9 +185,11 @@ namespace MyThirdSDL.Screens
 			allDrawables.Clear();
 			renderer.ClearScreen();
 
-			DrawBaseTiles(gameTime, renderer);
+//			DrawBaseTiles(gameTime, renderer);
 			SortDrawablesByDrawDepth();
-			DrawHeightTiles(gameTime, renderer);
+//			DrawHeightTiles(gameTime, renderer);
+			foreach (var drawable in allDrawables)
+				drawable.Draw(gameTime, renderer);
 
 			userInterfaceManager.Draw(gameTime, renderer);
 
@@ -204,9 +213,10 @@ namespace MyThirdSDL.Screens
 		private void SortDrawablesByDrawDepth()
 		{
 			// select out the drawable tiles from our height layer (walls/objects on top of floor)
-			TileLayer heightLayer = tiledMap.TileLayers.First(tl => tl.Type == TileLayerType.Height);
-			IEnumerable<Tile> drawableTiles = heightLayer.Tiles.Where(t => !t.IsEmpty);
-			allDrawables.AddRange(drawableTiles);
+			//TileLayer heightLayer = tiledMap.TileLayers.First(tl => tl.Type == TileLayerType.Height);
+			//IEnumerable<Tile> drawableTiles = heightLayer.Tiles.Where(t => !t.IsEmpty);
+			//allDrawables.AddRange(drawableTiles);
+			allDrawables.AddRange(tiledMap.MapCells);
 			allDrawables.AddRange(simulationManager.TrackedAgents);
 			// sort the drawables by their depth so they appear correctly on top of each other
 			allDrawables.Sort((d1, d2) => d1.Depth.CompareTo(d2.Depth));
@@ -218,16 +228,16 @@ namespace MyThirdSDL.Screens
 		/// <param name="gameTime">Game time.</param>
 		private void DrawBaseTiles(GameTime gameTime, Renderer renderer)
 		{
-			TileLayer baseLayer = tiledMap.TileLayers.First(tl => tl.Type == TileLayerType.Base);
-			IEnumerable<Tile> baseTiles = baseLayer.Tiles.Where(t => !t.IsEmpty);
-			foreach (Tile baseTile in baseTiles)
-			{
-				baseTile.Draw(gameTime, renderer);
-				if (baseTile.WorldGridIndex == mouseClickPositionWorldGridIndex)
-					DrawTileHighlight(tileHighlightSelectedImage, baseTile.ProjectedPosition - Camera.Position, renderer);
-				if (baseTile.WorldGridIndex == mousePositionWorldGridIndex)
-					DrawTileHighlight(tileHighlightImage, baseTile.ProjectedPosition - Camera.Position, renderer);
-			}
+//			TileLayer baseLayer = tiledMap.TileLayers.First(tl => tl.Type == TileLayerType.Base);
+//			IEnumerable<Tile> baseTiles = baseLayer.Tiles.Where(t => !t.IsEmpty);
+//			foreach (Tile baseTile in baseTiles)
+//			{
+//				baseTile.Draw(gameTime, renderer);
+//				if (baseTile.WorldGridIndex == mouseClickPositionWorldGridIndex)
+//					DrawTileHighlight(tileHighlightSelectedImage, baseTile.ProjectedPosition - Camera.Position, renderer);
+//				if (baseTile.WorldGridIndex == mousePositionWorldGridIndex)
+//					DrawTileHighlight(tileHighlightImage, baseTile.ProjectedPosition - Camera.Position, renderer);
+//			}
 		}
 
 		/// <summary>

@@ -7,282 +7,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using MyThirdSDL.Descriptors;
+using MyThirdSDL.Simulation;
 
 namespace MyThirdSDL.Content
 {
-	public enum TileLayerType
-	{
-		Base,
-		Height
-	}
-
-	public enum MapObjectLayerType
-	{
-		None,
-		PathNode,
-		Collidable
-	}
-
-	public enum MapObjectType
-	{
-		None,
-		PathNode,
-		Collidable
-	}
-
-	/// <summary>A Tile is a representation of a Tile in a .tmx file. These tiles contain textures and positions in order to render the map properly.
-	/// </summary>
-	public class Tile : IDisposable, IDrawable
-	{
-		public static int EmptyTileID = 0;
-
-		/// <summary>
-		/// World grid is the world space tile grid. This is the index within the world grid that the tile is positioned.
-		/// </summary>
-		public Point WorldGridIndex { get; internal set; }
-
-		/// <summary>
-		/// World position is the position within the world space
-		/// </summary>
-		public Vector WorldPosition { get; internal set; }
-
-		/// <summary>
-		/// Projected position is the calculated position for rendering based on world space position
-		/// </summary>
-		public Vector ProjectedPosition { get; internal set; }
-
-		/// <summary>
-		/// Depth determines the rendering order of the tile as compared to other drawable objects with depth
-		/// </summary>
-		public float Depth { get { return WorldPosition.X + WorldPosition.Y; } }
-
-		/// <summary>
-		/// Width of the tile in pixels
-		/// </summary>
-		public int Width { get; private set; }
-
-		/// <summary>
-		/// Height of the tile in pixels
-		/// </summary>
-		public int Height { get; private set; }
-
-		/// <summary>
-		/// Texture from which to select a rectangle source texture (similar to selecting from a sprite sheet)
-		/// </summary>
-		public Texture Texture { get; private set; }
-
-		/// <summary>
-		/// Rectangle determining where in the Texture to select the specific texture for our sprite or frame
-		/// </summary>
-		public Rectangle SourceTextureBounds { get; private set; }
-
-		/// <summary>
-		/// Tiles are empty if they have no texture assigned within Tiled Map Editor
-		/// </summary>
-		public bool IsEmpty { get; private set; }
-
-		/// <summary>
-		/// Default empty constructor creates an empty tile
-		/// </summary>
-		public Tile()
-		{
-			IsEmpty = true;
-		}
-
-		/// <summary>
-		/// Main constructor used to instantiate a tile when data is known at import
-		/// </summary>
-		/// <param name="texture"></param>
-		/// <param name="source"></param>
-		/// <param name="width"></param>
-		/// <param name="height"></param>
-		public Tile(Texture texture, Rectangle source, int width, int height)
-		{
-			IsEmpty = false;
-			Texture = texture;
-			SourceTextureBounds = source;
-			Width = width;
-			Height = height;
-		}
-
-		/// <summary>
-		/// Draws the tile to the passed renderer if the tile is not empty. The draw will occur at the center of the tile's texture.
-		/// TODO: Allow passing of origin?
-		/// </summary>
-		/// <param name="gameTime"></param>
-		/// <param name="renderer"></param>
-		public void Draw(GameTime gameTime, Renderer renderer)
-		{
-			if (!IsEmpty)
-			{
-				renderer.RenderTexture(
-					Texture,
-					ProjectedPosition.X - Width * 0.5f - Camera.Position.X,
-					ProjectedPosition.Y - Height * 0.5f - Camera.Position.Y,
-					SourceTextureBounds
-				);
-			}
-		}
-
-		public void Dispose()
-		{
-			Dispose(true);
-			GC.SuppressFinalize(this);
-		}
-
-		~Tile()
-		{
-			Dispose(false);
-		}
-
-		private void Dispose(bool isDisposing)
-		{
-			if (Texture != null)
-				Texture.Dispose();
-		}
-	}
-
-	/// <summary>A TileLayer is a representation of a tile layer in a .tmx file. These layers contain Tile objects which can be accessed
-	/// in order to render the textures associated with the tiles.
-	/// </summary>
-	public class TileLayer : IDisposable
-	{
-		private List<Tile> tiles = new List<Tile>();
-
-		public string Name { get; private set; }
-
-		public TileLayerType Type { get; private set; }
-
-		public int Width { get; private set; }
-
-		public int Height { get; private set; }
-
-		public IList<Tile> Tiles { get { return tiles; } }
-
-		public TileLayer(string name, int width, int height)
-		{
-			Name = name;
-			Width = width;
-			Height = height;
-
-			if (Name == "Floor")
-				Type = TileLayerType.Base;
-			else if (Name == "Walls")
-				Type = TileLayerType.Height;
-			else
-				throw new ArgumentOutOfRangeException("Unknown layer type");
-		}
-
-		public void AddTile(Tile tile)
-		{
-			tiles.Add(tile);
-		}
-
-		public void Dispose()
-		{
-			Dispose(true);
-			GC.SuppressFinalize(this);
-		}
-
-		~TileLayer()
-		{
-			Dispose(false);
-		}
-
-		private void Dispose(bool isDisposing)
-		{
-			foreach (Tile tile in tiles)
-				tile.Dispose();
-		}
-	}
-
-	public class MapObject : ICollidable, INode, IHasNeighbors<MapObject>
-	{
-		private List<MapObject> neighbors = new List<MapObject>();
-
-		public string Name { get; private set; }
-
-		public MapObjectType Type { get; private set; }
-
-		public Rectangle Bounds { get; set; }
-
-		/// <summary>
-		/// World position is the position within world space that the object exists. This position is defined within the .tmx tiled map file. When in isometric,
-		/// it seems that the first rows of the collection are actually shifted by -32 in both X and Y directions.
-		/// For example, in an isometric map with tile dimensions 64x32:
-		///		The tile at [0,0] is positioned at [-32,-32].
-		///		The tile at [0,1] is positioned at [-32,0].
-		///		The tile at [1,0] is positioned at [0,-32].
-		///	Because of that craziness, I am forced to shift the X and Y coordinates in the positive direction by the bounds and height, respectively.
-		///	For example:
-		///		The tile at [0,0] will be positioned (when shifted) at [0, 0].
-		///		The tile at [0,1] will be positioned (when shifted) at [0, 32].
-		///		The tile at [1,0] will be positioned (when shifted) at [32, 0].
-		/// </summary>
-		public Vector WorldPosition { get { return new Vector(Bounds.X + Bounds.Width, Bounds.Y + Bounds.Height); } }
-
-		public Orientation Orientation { get; set; }
-
-		public Rectangle CollisionBox { get { return Bounds; } }
-
-		public Point WorldGridIndex
-		{
-			get
-			{
-				Point worldGridIndex = CoordinateHelper.WorldSpaceToWorldGridIndexPoint(WorldPosition.X, WorldPosition.Y, Bounds.Width, Bounds.Height);
-				return worldGridIndex;
-			}
-		}
-
-		public IEnumerable<MapObject> Neighbors { get { return neighbors; } }
-
-		public MapObject(string name, Rectangle bounds, Orientation orientation, MapObjectType type)
-		{
-			Name = name;
-			Type = type;
-			Bounds = bounds;
-			Orientation = orientation;
-		}
-
-		public void ResolveCollision(ICollidable i)
-		{
-		}
-
-		public void AddNeighbor(MapObject mapObject)
-		{
-			if (mapObject != null)
-				neighbors.Add(mapObject);
-		}
-	}
-
-	public class MapObjectLayer
-	{
-		private List<MapObject> mapObjects = new List<MapObject>();
-
-		public string Name { get; private set; }
-
-		public MapObjectLayerType Type { get; private set; }
-
-		public IEnumerable<MapObject> MapObjects { get { return mapObjects; } }
-
-		public MapObjectLayer(string name, MapObjectLayerType type)
-		{
-			Name = name;
-			Type = type;
-		}
-
-		public MapObject GetMapObjectAtWorldGridIndex(Point worldGridIndex)
-		{
-			MapObject mapObject = MapObjects.FirstOrDefault(mo => mo.WorldGridIndex == worldGridIndex);
-			return mapObject;
-		}
-
-		public void AddMapObject(MapObject mapObject)
-		{
-			mapObjects.Add(mapObject);
-		}
-	}
-
 	/// <summary>A TiledMap is a representation of a .tmx map created with the Tiled Map Editor. You can access layers and tiles within
 	/// layers by accessing the properties of this class after instantiation.
 	/// </summary>
@@ -290,6 +18,7 @@ namespace MyThirdSDL.Content
 	{
 		private List<TileLayer> tileLayers = new List<TileLayer>();
 		private List<MapObjectLayer> mapObjectLayers = new List<MapObjectLayer>();
+		private List<MapCell> mapCells = new List<MapCell>();
 
 		/// <summary>
 		/// The number of tiles across (left to right) that make up this map
@@ -310,6 +39,8 @@ namespace MyThirdSDL.Content
 		/// The height of each tile in the map (all tiles are the same height)
 		/// </summary>
 		public int TileHeight { get; private set; }
+
+		public IEnumerable<MapCell> MapCells { get { return mapCells; } }
 
 		public IEnumerable<TileLayer> TileLayers { get { return tileLayers; } }
 
@@ -360,6 +91,80 @@ namespace MyThirdSDL.Content
 
 			CalculateTilePositions(mapContent.Orientation);
 			CalculatePathNodeNeighbors();
+
+			CreateMapCells(mapContent);
+
+			// loop through all tile layers in this tiled map
+			BuildMapCells();
+		}
+
+		private void BuildMapCells()
+		{
+			foreach (var tileLayer in tileLayers)
+			{
+				// calculate the z-index based on the layer's name
+				int zIndex = 0;
+				if (tileLayer.Name.Contains("Ground"))
+					zIndex = 0;
+				else if (tileLayer.Name.Contains("BackWalls"))
+					zIndex = 1;
+				else if (tileLayer.Name.Contains("Objects"))
+					zIndex = 2;
+				else if (tileLayer.Name.Contains("FrontWalls"))
+					zIndex = 3;
+
+				// loop through all tiles on this tile layer
+				foreach (var tile in tileLayer.Tiles)
+				{
+					// get the map cell that is associated with the world grid index that this tile is on
+					MapCell mapCell = mapCells.FirstOrDefault(mc => mc.WorldGridIndex == tile.WorldGridIndex);
+					// if there is no map cell at that location, create a new one and add it to the collection of map cells
+					if (mapCell != null)
+					{
+						mapCell.WorldPosition = tile.WorldPosition;
+						mapCell.ProjectedPosition = tile.ProjectedPosition;
+						//mapCells.Add(mapCell);
+						mapCell.AddTile(tile, zIndex);
+					}
+					else
+						throw new Exception(String.Format("No map cell found at [{0},{1}].", tile.WorldGridIndex.X, tile.WorldGridIndex.Y));
+				}
+			}
+
+			foreach (var mapObjectLayer in mapObjectLayers)
+			{
+				foreach (MapObject mapObject in mapObjectLayer.MapObjects)
+				{
+					MapCell mapCell = mapCells.FirstOrDefault(
+						mc =>
+						(mc.Bounds.Left == mapObject.Bounds.Left && mc.Bounds.Top == mapObject.Bounds.Top)
+						|| (mc.Bounds.Left == mapObject.Bounds.Left && mc.Bounds.Bottom == mapObject.Bounds.Bottom)
+						|| (mc.Bounds.Right == mapObject.Bounds.Right && mc.Bounds.Top == mapObject.Bounds.Top)
+						|| (mc.Bounds.Right == mapObject.Bounds.Right && mc.Bounds.Bottom == mapObject.Bounds.Bottom)
+					);
+
+					if (mapCell != null)
+					{
+						if (mapObject.Type == MapObjectType.DeadZone)
+							mapCell.AddDeadZone(mapObject);
+						else if (mapObject.Type == MapObjectType.PathNode)
+							mapCell.AddPathNode((PathNode)mapObject);
+					}
+				}
+			}
+		}
+
+		private void CreateMapCells(MapContent mapContent)
+		{
+			for (int x = 0; x < mapContent.Width; x++)
+			{
+				for (int y = 0; y < mapContent.Height; y++)
+				{
+					MapCell mapCell = new MapCell(CoordinateHelper.WorldGridCellWidth, CoordinateHelper.WorldGridCellHeight);
+					mapCell.WorldGridIndex = new Point(x, y);
+					mapCells.Add(mapCell);
+				}
+			}
 		}
 
 		/// <summary>
@@ -373,27 +178,10 @@ namespace MyThirdSDL.Content
 			{
 				foreach (var pathNode in pathNodeLayer.MapObjects)
 				{
-					Point pathNodeWorldGridIndex = pathNode.WorldGridIndex;
-
-					// get left neighbor
-					Point leftNeighborIndex = new Point(pathNodeWorldGridIndex.X - 1, pathNodeWorldGridIndex.Y);
-					MapObject leftNeighbor = pathNodeLayer.GetMapObjectAtWorldGridIndex(leftNeighborIndex);
-					pathNode.AddNeighbor(leftNeighbor);
-
-					// get right neighbor
-					Point rightNeighborIndex = new Point(pathNodeWorldGridIndex.X + 1, pathNodeWorldGridIndex.Y);
-					MapObject rightNeighbor = pathNodeLayer.GetMapObjectAtWorldGridIndex(rightNeighborIndex);
-					pathNode.AddNeighbor(rightNeighbor);
-
-					// get top neighbor
-					Point topNeighborIndex = new Point(pathNodeWorldGridIndex.X, pathNodeWorldGridIndex.Y - 1);
-					MapObject topNeighbor = pathNodeLayer.GetMapObjectAtWorldGridIndex(topNeighborIndex);
-					pathNode.AddNeighbor(topNeighbor);
-
-					// get bottom neighbor
-					Point bottomNeighborIndex = new Point(pathNodeWorldGridIndex.X, pathNodeWorldGridIndex.Y + 1);
-					MapObject bottomNeighbor = pathNodeLayer.GetMapObjectAtWorldGridIndex(bottomNeighborIndex);
-					pathNode.AddNeighbor(bottomNeighbor);
+					var realPathNode = (PathNode)pathNode;
+					IEnumerable<PathNode> neighboringPathNodes = pathNodeLayer.GetNeighboringPathNodes(realPathNode);
+					foreach (var neighboringPathNode in neighboringPathNodes)
+						realPathNode.AddNeighbor(neighboringPathNode);
 				}
 			}
 		}
@@ -410,15 +198,14 @@ namespace MyThirdSDL.Content
 
 			MapObjectLayerType mapObjectLayerType = MapObjectLayerType.None;
 			MapObjectType mapObjectType = MapObjectType.None;
-			if (objectLayerContent.Name == "Collidables")
+			if (objectLayerContent.Name == "DeadZones")
 			{
-				mapObjectLayerType = MapObjectLayerType.Collidable;
-				mapObjectType = MapObjectType.Collidable;
+				mapObjectLayerType = MapObjectLayerType.DeadZone;
+				mapObjectType = MapObjectType.DeadZone;
 			}
 			else if (objectLayerContent.Name == "PathNodes")
 			{
 				mapObjectLayerType = MapObjectLayerType.PathNode;
-				mapObjectType = MapObjectType.PathNode;
 			}
 			else
 				throw new Exception("Unknown map object layer type. Did you name your layer correctly? \"Collidables\" will be picked up as collidable objects. \"PathNodes\" will be picked up as path node objects.");
@@ -427,8 +214,16 @@ namespace MyThirdSDL.Content
 
 			foreach (ObjectContent objectContent in objectLayerContent.MapObjects)
 			{
-				MapObject mapObject = new MapObject(objectContent.Name, objectContent.Bounds, orientation, mapObjectType);
-				mapObjectLayer.AddMapObject(mapObject);
+				if (mapObjectLayer.Type == MapObjectLayerType.PathNode)
+				{
+					PathNode pathNode = new PathNode(objectContent.Name, objectContent.Bounds, orientation);
+					mapObjectLayer.AddMapObject(pathNode);
+				}
+				else
+				{
+					MapObject mapObject = new MapObject(objectContent.Name, objectContent.Bounds, orientation, mapObjectType);
+					mapObjectLayer.AddMapObject(mapObject);
+				}
 			}
 
 			return mapObjectLayer;
@@ -505,30 +300,22 @@ namespace MyThirdSDL.Content
 			}
 		}
 
-		/// <summary>
-		/// Attempts to find a path node at the passed world grid index in the path node layers and returns the path node
-		/// at that position. Throws exception if no path node is found.
-		/// </summary>
-		/// <param name="worldGridIndex"></param>
-		/// <returns></returns>
-		public MapObject GetPathNodeAtWorldGridIndex(Point worldGridIndex)
+		public PathNode GetPathNodeAtWorldPosition(Vector worldPosition)
 		{
-			IEnumerable<MapObjectLayer> pathNodeLayers = mapObjectLayers.Where(mol => mol.Type == MapObjectLayerType.PathNode);
-			foreach (var pathNodeLayer in pathNodeLayers)
-				foreach (var pathNode in pathNodeLayer.MapObjects)
-					if (pathNode.WorldGridIndex == worldGridIndex)
-						return pathNode;
+			IEnumerable<PathNode> pathNodes = GetPathNodes();
+			PathNode pathNode = pathNodes.FirstOrDefault(pn => pn.Bounds.Contains(new Point((int)worldPosition.X, (int)worldPosition.Y)));
 
-			throw new Exception(String.Format("No path node found at [{0},{1}]", worldGridIndex.X, worldGridIndex.Y));
+			if (pathNode != null)
+				return pathNode;
+			else
+				throw new Exception(String.Format("No path node found at [{0},{1}]", worldPosition.X, worldPosition.Y));
 		}
 
-		public IList<MapObject> GetPathNodes()
+		public IList<PathNode> GetPathNodes()
 		{
-			IEnumerable<MapObjectLayer> pathNodeLayers = mapObjectLayers.Where(mol => mol.Type == MapObjectLayerType.PathNode);
-			List<MapObject> pathNodes = new List<MapObject>();
-			foreach (var pathNodeLayer in pathNodeLayers)
-				foreach (var pathNode in pathNodeLayer.MapObjects)
-					pathNodes.Add(pathNode);
+			List<PathNode> pathNodes = new List<PathNode>();
+			foreach (MapCell mapCell in mapCells)
+				pathNodes.AddRange(mapCell.PathNodes);
 
 			return pathNodes;
 		}

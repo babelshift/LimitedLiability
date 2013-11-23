@@ -438,11 +438,11 @@ namespace MyThirdSDL.Simulation
 		/// <param name="startWorldGridIndex"></param>
 		/// <param name="endWorldGridIndex"></param>
 		/// <returns></returns>
-		private Queue<MapObject> FindBestPath(Point startWorldGridIndex, Point endWorldGridIndex)
+		private Queue<MapObject> FindBestPath(Vector startWorldPosition, Vector endWorldPosition)
 		{
-			MapObject start = CurrentMap.GetPathNodeAtWorldGridIndex(startWorldGridIndex);
-			MapObject end = CurrentMap.GetPathNodeAtWorldGridIndex(endWorldGridIndex);
-			Path<MapObject> bestPath = FindPath<MapObject>(start, end, ExactDistance, ManhattanDistance);
+			PathNode start = CurrentMap.GetPathNodeAtWorldPosition(startWorldPosition);
+			PathNode end = CurrentMap.GetPathNodeAtWorldPosition(endWorldPosition);
+			Path<PathNode> bestPath = FindPath<PathNode>(start, end);//, ExactDistance, ManhattanDistance);
 			IEnumerable<MapObject> bestPathReversed = bestPath.Reverse();
 			Queue<MapObject> result = new Queue<MapObject>();
 			foreach (var bestPathNode in bestPathReversed)
@@ -462,10 +462,10 @@ namespace MyThirdSDL.Simulation
 		/// <returns></returns>
 		private Path<Node> FindPath<Node>(
 			Node start,							// starting node
-			Node destination,					// destination node
-			Func<Node, Node, double> distance,	// takes two nodes and calculates a distance cost between them
-			Func<Node, Node, double> estimate)		// takes a node and calculates an estimated distance between current node
-			where Node : IHasNeighbors<Node>
+			Node destination)//,					// destination node
+			//Func<Node, Node, double> distance,	// takes two nodes and calculates a distance cost between them
+			//Func<Node, Node, double> estimate)		// takes a node and calculates an estimated distance between current node
+			where Node : INode, IHasNeighbors<Node>
 		{
 			var closed = new HashSet<Node>();
 			var queue = new PriorityQueue<double, Path<Node>>();
@@ -486,9 +486,9 @@ namespace MyThirdSDL.Simulation
 
 				foreach (Node n in path.LastStep.Neighbors)
 				{
-					double d = distance(path.LastStep, n);
+					double d = ManhattanDistance(path.LastStep, n);
 					var newPath = path.AddStep(n, d);
-					queue.Enqueue(newPath.TotalCost + estimate(n, destination), newPath);
+					queue.Enqueue(newPath.TotalCost + ExactDistance(n, destination), newPath);
 				}
 			}
 
@@ -505,13 +505,13 @@ namespace MyThirdSDL.Simulation
 		private T GetClosestAgentByType<T>(MobileAgent mobileAgent, IEnumerable<T> agentsToCheck)
 			where T : Agent
 		{
-			var employeeWorldIndex = mobileAgent.WorldGridIndex;
-			var employeeOnPathNode = CurrentMap.GetPathNodeAtWorldGridIndex(employeeWorldIndex);
+			var employeeWorldPosition = mobileAgent.WorldPosition;
+			//var employeeOnPathNode = CurrentMap.GetPathNodeAtWorldPosition(employeeWorldPosition);
 
 			if (agentsToCheck.Count() > 0)
 			{
 				// calculate the closest snack machine's manhatten distance
-				double minimumManhattenDistance = Int32.MaxValue;
+				int minimumDistance = Int32.MaxValue;
 				T closestAgent = null;
 
 				foreach (var agentToCheck in agentsToCheck)
@@ -524,12 +524,13 @@ namespace MyThirdSDL.Simulation
 							continue;
 					}
 
-					var agentToFindWorldIndex = agentToCheck.WorldGridIndex;
-					var agentOnPathNode = CurrentMap.GetPathNodeAtWorldGridIndex(agentToFindWorldIndex);
-					double manhattenDistance = ManhattanDistance(employeeOnPathNode, agentOnPathNode);
-					if (manhattenDistance < minimumManhattenDistance)
+					//var agentToCheckOnPathNode = CurrentMap.GetPathNodeAtWorldPosition(agentToCheck.WorldPosition);
+
+					var bestPath = FindBestPath(mobileAgent.WorldPosition, agentToCheck.WorldPosition);
+
+					if (bestPath.Count < minimumDistance)
 					{
-						minimumManhattenDistance = manhattenDistance;
+						minimumDistance = bestPath.Count;
 						closestAgent = agentToCheck;
 					}
 				}
@@ -551,7 +552,7 @@ namespace MyThirdSDL.Simulation
 			where T : Agent
 		{
 			// tell the agent to path to the closest soda machine (or random if a tie)
-			Queue<MapObject> bestPath = FindBestPath(mobileAgent.WorldGridIndex, agent.WorldGridIndex);
+			Queue<MapObject> bestPath = FindBestPath(mobileAgent.WorldPosition, agent.WorldPosition);
 			return bestPath;
 		}
 
@@ -578,7 +579,7 @@ namespace MyThirdSDL.Simulation
 		private double ManhattanDistance<Node>(Node node1, Node node2)
 			where Node : INode
 		{
-			return Math.Abs(node1.WorldGridIndex.X - node2.WorldGridIndex.X) + Math.Abs(node1.WorldGridIndex.Y - node2.WorldGridIndex.Y);
+			return Math.Abs(node1.WorldPosition.X - node2.WorldPosition.Y) + Math.Abs(node1.WorldPosition.Y - node2.WorldPosition.Y);
 		}
 
 		#endregion

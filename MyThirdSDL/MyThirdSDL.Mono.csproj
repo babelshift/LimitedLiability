@@ -53,9 +53,6 @@
     <Reference Include="Newtonsoft.Json">
       <HintPath>..\Libs\Newtonsoft.Json.dll</HintPath>
     </Reference>
-    <Reference Include="SharpTiles">
-      <HintPath>..\Libs\SharpTiles.dll</HintPath>
-    </Reference>
     <Reference Include="log4net">
       <HintPath>..\Libs\log4net.dll</HintPath>
     </Reference>
@@ -70,6 +67,9 @@
     </Reference>
     <Reference Include="SharpDL.Graphics">
       <HintPath>..\Libs\SharpDL.Graphics.dll</HintPath>
+    </Reference>
+    <Reference Include="SharpTiles">
+      <HintPath>..\Libs\SharpTiles.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -150,6 +150,15 @@
     <Compile Include="MouseHelper.cs" />
     <Compile Include="KeyboardHelper.cs" />
     <Compile Include="Cursor.cs" />
+    <Compile Include="Simulation\PathNode.cs" />
+    <Compile Include="Content\TileLayerType.cs" />
+    <Compile Include="Content\MapObjectLayerType.cs" />
+    <Compile Include="Content\MapObjectType.cs" />
+    <Compile Include="Content\MapCell.cs" />
+    <Compile Include="Content\Tile.cs" />
+    <Compile Include="Content\TileLayer.cs" />
+    <Compile Include="Content\MapObject.cs" />
+    <Compile Include="Content\MapObjectLayer.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -357,6 +366,36 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\Images\User Interface\CursorHandDown.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Maps\Office2.tmx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Maps\0_Decor_Inside.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Maps\0_Decor_Outside.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Maps\0_Ground_Inside.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Maps\0_Ground_Outside.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Maps\0_Objects.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Maps\Characters.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Images\0001.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Images\Equipment\OfficeDesk2.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Maps\Office1.tmx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>

@@ -35,7 +35,7 @@ namespace MyThirdSDL.Agents
 			} 
 		}
 
-		protected bool IsAtFinalWalkToDestination { get { return CollisionBox.Intersects(CurrentIntention.WalkToAgent.CollisionBox); } }
+		protected bool IsAtFinalWalkToDestination { get { return CurrentIntention.WalkToAgent.CollisionBox.Intersects(CollisionBox); } }
 
 		private bool IsAtPathNodeDestination
 		{
