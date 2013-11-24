@@ -60,70 +60,137 @@ namespace MyThirdSDL.Content
 			Width = mapContent.Width * TileWidth;
 			Height = mapContent.Height * TileHeight;
 
-			foreach (LayerContent layer in mapContent.Layers)
-			{
-				if (layer is TileLayerContent)
-				{
-					TileLayerContent tileLayerContent = layer as TileLayerContent;
-					TileLayer tileLayer = new TileLayer(layer.Name, tileLayerContent.Width, tileLayerContent.Height);
-
-					for (int i = 0; i < tileLayerContent.Data.Length; i++)
-					{
-						// strip out the flipped flags from the map editor to get the real tile index
-						uint tileID = tileLayerContent.Data[i];
-						uint flippedHorizontallyFlag = 0x80000000;
-						uint flippedVerticallyFlag = 0x40000000;
-						int tileIndex = (int)(tileID & ~(flippedVerticallyFlag | flippedHorizontallyFlag));
-
-						Tile tile = CreateTile(tileIndex, mapContent.TileSets);
-
-						tileLayer.AddTile(tile);
-					}
-
-					tileLayers.Add(tileLayer);
-				}
-				else if (layer is ObjectLayerContent)
-				{
-					MapObjectLayer mapObjectLayer = CreateObjectLayer(layer, mapContent.Orientation);
-					mapObjectLayers.Add(mapObjectLayer);
-				}
-			}
-
+			CreateLayers(mapContent);
 			CalculateTilePositions(mapContent.Orientation);
 			CalculatePathNodeNeighbors();
-
 			CreateMapCells(mapContent);
-
-			// loop through all tile layers in this tiled map
 			BuildMapCells();
 		}
 
+		/// <summary>
+		/// Create tile layers and object layers based on what we find in the Tiled Map TMX file.
+		/// </summary>
+		/// <param name="mapContent">Map content.</param>
+		private void CreateLayers(MapContent mapContent)
+		{
+			foreach (LayerContent layerContent in mapContent.Layers)
+			{
+				if (layerContent is TileLayerContent)
+				{
+					TileLayer tileLayer = CreateTileLayer(layerContent, mapContent.TileSets);
+					tileLayers.Add(tileLayer);
+				}
+				else if (layerContent is ObjectLayerContent)
+				{
+					MapObjectLayer mapObjectLayer = CreateObjectLayer(layerContent, mapContent.Orientation);
+					mapObjectLayers.Add(mapObjectLayer);
+				}
+			}
+		}
+
+		private TileLayer CreateTileLayer(LayerContent layerContent, IEnumerable<TileSetContent> tileSets)
+		{
+			TileLayerContent tileLayerContent = layerContent as TileLayerContent;
+
+			TileLayerType tileLayerType = TileLayerType.None;
+			if (layerContent.Name.Contains("Ground"))
+				tileLayerType = TileLayerType.Ground;
+			else if (layerContent.Name.Contains("BackWalls"))
+				tileLayerType = TileLayerType.BackWalls;
+			else if (layerContent.Name.Contains("Objects"))
+				tileLayerType = TileLayerType.Objects;
+			else if (layerContent.Name.Contains("FrontWalls"))
+				tileLayerType = TileLayerType.FrontWalls;
+
+			TileLayer tileLayer = new TileLayer(layerContent.Name, tileLayerContent.Width, tileLayerContent.Height, tileLayerType);
+			for (int i = 0; i < tileLayerContent.Data.Length; i++)
+			{
+				// strip out the flipped flags from the map editor to get the real tile index
+				uint tileID = tileLayerContent.Data[i];
+				uint flippedHorizontallyFlag = 0x80000000;
+				uint flippedVerticallyFlag = 0x40000000;
+				int tileIndex = (int)(tileID & ~(flippedVerticallyFlag | flippedHorizontallyFlag));
+				Tile tile = CreateTile(tileIndex, tileSets, tileLayerType);
+				tileLayer.AddTile(tile);
+			}
+
+			return tileLayer;
+		}
+
+		/// <summary>
+		/// Creates the proper map object layer based on the layer name such as collidables and path nodes.
+		/// </summary>
+		/// <param name="layer"></param>
+		/// <param name="orientation"></param>
+		/// <returns></returns>
+		private MapObjectLayer CreateObjectLayer(LayerContent layer, Orientation orientation)
+		{
+			ObjectLayerContent objectLayerContent = layer as ObjectLayerContent;
+
+			MapObjectLayerType mapObjectLayerType = MapObjectLayerType.None;
+			MapObjectType mapObjectType = MapObjectType.None;
+
+			if (objectLayerContent.Name == "DeadZones")
+			{
+				mapObjectLayerType = MapObjectLayerType.DeadZone;
+				mapObjectType = MapObjectType.DeadZone;
+			}
+			else if (objectLayerContent.Name == "PathNodes")
+			{
+				mapObjectLayerType = MapObjectLayerType.PathNode;
+			}
+			else
+				throw new Exception("Unknown map object layer type. Did you name your layer correctly? \"Collidables\" will be picked up as collidable objects. \"PathNodes\" will be picked up as path node objects.");
+
+			MapObjectLayer mapObjectLayer = new MapObjectLayer(objectLayerContent.Name, mapObjectLayerType);
+
+			foreach (ObjectContent objectContent in objectLayerContent.MapObjects)
+			{
+				if (mapObjectLayer.Type == MapObjectLayerType.PathNode)
+				{
+					PathNode pathNode = new PathNode(objectContent.Name, objectContent.Bounds, orientation);
+					mapObjectLayer.AddMapObject(pathNode);
+				}
+				else
+				{
+					MapObject mapObject = new MapObject(objectContent.Name, objectContent.Bounds, orientation, mapObjectType);
+					mapObjectLayer.AddMapObject(mapObject);
+				}
+			}
+
+			return mapObjectLayer;
+		}
+
+		/// <summary>
+		/// Build map cells based on the layers contained within. Tile layers will be used to determine z-index tiles on each map cell. Object layers
+		/// will be used to determine dead zones and path nodes in the map cells.
+		/// </summary>
 		private void BuildMapCells()
 		{
 			foreach (var tileLayer in tileLayers)
 			{
-				// calculate the z-index based on the layer's name
-				int zIndex = 0;
-				if (tileLayer.Name.Contains("Ground"))
-					zIndex = 0;
-				else if (tileLayer.Name.Contains("BackWalls"))
-					zIndex = 1;
-				else if (tileLayer.Name.Contains("Objects"))
-					zIndex = 2;
-				else if (tileLayer.Name.Contains("FrontWalls"))
-					zIndex = 3;
-
 				// loop through all tiles on this tile layer
 				foreach (var tile in tileLayer.Tiles)
 				{
 					// get the map cell that is associated with the world grid index that this tile is on
 					MapCell mapCell = mapCells.FirstOrDefault(mc => mc.WorldGridIndex == tile.WorldGridIndex);
-					// if there is no map cell at that location, create a new one and add it to the collection of map cells
+
+					// we have a map cell at this index, so copy our data to it and add the tile with the z-index
 					if (mapCell != null)
 					{
 						mapCell.WorldPosition = tile.WorldPosition;
 						mapCell.ProjectedPosition = tile.ProjectedPosition;
-						//mapCells.Add(mapCell);
+
+						int zIndex = 0;
+						if (tile.Type == TileType.Ground)
+							zIndex = 0;
+						else if (tile.Type == TileType.BackWall)
+							zIndex = 1;
+						else if (tile.Type == TileType.Object)
+							zIndex = 2;
+						else if (tile.Type == TileType.FrontWall)
+							zIndex = 3;
+
 						mapCell.AddTile(tile, zIndex);
 					}
 					else
@@ -131,18 +198,28 @@ namespace MyThirdSDL.Content
 				}
 			}
 
+			AddDeadZonesAndPathNodesToMapCells();
+		}
+
+		/// <summary>
+		/// Adds the dead zones and path nodes to map cells. Each map cell can contains 0-4 dead zones and 0-4 path nodes based on the map's object layers.
+		/// This method will loop through object layers and add the dead zone and path node objects to the map cell's collections if the map cell contains
+		/// that object. Objects must be cell/axis aligned or an exception is thrown.
+		/// </summary>
+		private void AddDeadZonesAndPathNodesToMapCells()
+		{
 			foreach (var mapObjectLayer in mapObjectLayers)
 			{
 				foreach (MapObject mapObject in mapObjectLayer.MapObjects)
 				{
+					// get the map cell that contains us (where two of our edges line up with two of the map cell edges)
 					MapCell mapCell = mapCells.FirstOrDefault(
-						mc =>
-						(mc.Bounds.Left == mapObject.Bounds.Left && mc.Bounds.Top == mapObject.Bounds.Top)
-						|| (mc.Bounds.Left == mapObject.Bounds.Left && mc.Bounds.Bottom == mapObject.Bounds.Bottom)
-						|| (mc.Bounds.Right == mapObject.Bounds.Right && mc.Bounds.Top == mapObject.Bounds.Top)
-						|| (mc.Bounds.Right == mapObject.Bounds.Right && mc.Bounds.Bottom == mapObject.Bounds.Bottom)
-					);
+						                  mc => (mc.Bounds.Left == mapObject.Bounds.Left && mc.Bounds.Top == mapObject.Bounds.Top)
+						                  || (mc.Bounds.Left == mapObject.Bounds.Left && mc.Bounds.Bottom == mapObject.Bounds.Bottom)
+						                  || (mc.Bounds.Right == mapObject.Bounds.Right && mc.Bounds.Top == mapObject.Bounds.Top)
+						                  || (mc.Bounds.Right == mapObject.Bounds.Right && mc.Bounds.Bottom == mapObject.Bounds.Bottom));
 
+					// if we are in a valid map cell, add the map object appropriately based on type
 					if (mapCell != null)
 					{
 						if (mapObject.Type == MapObjectType.DeadZone)
@@ -150,10 +227,17 @@ namespace MyThirdSDL.Content
 						else if (mapObject.Type == MapObjectType.PathNode)
 							mapCell.AddPathNode((PathNode)mapObject);
 					}
+					else
+						throw new Exception("MapObjects must be map cell aligned.");
 				}
 			}
 		}
 
+		/// <summary>
+		/// Create empty map cells based on tile counts in the Tiled Map TMX. For example, a tile map of 15x15 tiles will be translated into
+		/// 15x15 map cells. These map cells are then later populated with 0-N tiles, 0-4 dead zones, and 0-4 path nodes.
+		/// </summary>
+		/// <param name="mapContent">Map content.</param>
 		private void CreateMapCells(MapContent mapContent)
 		{
 			for (int x = 0; x < mapContent.Width; x++)
@@ -186,56 +270,13 @@ namespace MyThirdSDL.Content
 			}
 		}
 
-		/// <summary>
-		/// Creates the proper map object layer based on the layer name such as collidables and path nodes.
-		/// </summary>
-		/// <param name="layer"></param>
-		/// <param name="orientation"></param>
-		/// <returns></returns>
-		private MapObjectLayer CreateObjectLayer(LayerContent layer, Orientation orientation)
-		{
-			ObjectLayerContent objectLayerContent = layer as ObjectLayerContent;
-
-			MapObjectLayerType mapObjectLayerType = MapObjectLayerType.None;
-			MapObjectType mapObjectType = MapObjectType.None;
-			if (objectLayerContent.Name == "DeadZones")
-			{
-				mapObjectLayerType = MapObjectLayerType.DeadZone;
-				mapObjectType = MapObjectType.DeadZone;
-			}
-			else if (objectLayerContent.Name == "PathNodes")
-			{
-				mapObjectLayerType = MapObjectLayerType.PathNode;
-			}
-			else
-				throw new Exception("Unknown map object layer type. Did you name your layer correctly? \"Collidables\" will be picked up as collidable objects. \"PathNodes\" will be picked up as path node objects.");
-
-			MapObjectLayer mapObjectLayer = new MapObjectLayer(objectLayerContent.Name, mapObjectLayerType);
-
-			foreach (ObjectContent objectContent in objectLayerContent.MapObjects)
-			{
-				if (mapObjectLayer.Type == MapObjectLayerType.PathNode)
-				{
-					PathNode pathNode = new PathNode(objectContent.Name, objectContent.Bounds, orientation);
-					mapObjectLayer.AddMapObject(pathNode);
-				}
-				else
-				{
-					MapObject mapObject = new MapObject(objectContent.Name, objectContent.Bounds, orientation, mapObjectType);
-					mapObjectLayer.AddMapObject(mapObject);
-				}
-			}
-
-			return mapObjectLayer;
-		}
-
 		/// <summary>Based on a passed tile index, create a Tile by looking up which TileSet it belongs to, assign the proper TilSet texture,
 		/// and find the bounds of the rectangle that encompasses the correct tile texture within the total tileset texture.
 		/// </summary>
 		/// <param name="tileIndex">Index of the tile (GID) within the map file</param>
 		/// <param name="tileSets">Enumerable list of tilesets used to find out which tileset a tile belongs to</param>
 		/// <returns></returns>
-		private Tile CreateTile(int tileIndex, IEnumerable<TileSetContent> tileSets)
+		private Tile CreateTile(int tileIndex, IEnumerable<TileSetContent> tileSets, TileLayerType tileLayerType)
 		{
 			Tile tile = new Tile();
 
@@ -254,7 +295,17 @@ namespace MyThirdSDL.Content
 					}
 				}
 
-				tile = new Tile(tileSetTexture, source, TileWidth, TileHeight);
+				TileType tileType = TileType.None;
+				if (tileLayerType == TileLayerType.Ground)
+					tileType = TileType.Ground;
+				else if (tileLayerType == TileLayerType.BackWalls)
+					tileType = TileType.BackWall;
+				if (tileLayerType == TileLayerType.Objects)
+					tileType = TileType.Object;
+				if (tileLayerType == TileLayerType.FrontWalls)
+					tileType = TileType.FrontWall;
+
+				tile = new Tile(tileSetTexture, source, TileWidth, TileHeight, tileType);
 			}
 
 			return tile;

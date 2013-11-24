@@ -44,7 +44,7 @@ namespace MyThirdSDL.Agents
 
 		public AgentState State { get; private set; }
 
-		public Point WorldGridIndex { get; private set; }
+		//public Point WorldGridIndex { get; private set; }
 
 		public Vector WorldPosition { get; protected set; }
 
@@ -66,7 +66,7 @@ namespace MyThirdSDL.Agents
 
 			WorldPosition = startingPosition;
 			ProjectedPosition = GetProjectedPosition();
-			WorldGridIndex = GetWorldGridIndex();
+			//WorldGridIndex = GetWorldGridIndex();
 		}
 
 		#endregion
@@ -78,17 +78,17 @@ namespace MyThirdSDL.Agents
 			SimulationAge = simulationTime.Subtract(BirthTime);
 		}
 
-		private Point GetWorldGridIndex()
-		{
-			Point worldGridIndex = CoordinateHelper.WorldSpaceToWorldGridIndexPoint(
-				                        WorldPosition.X,
-				                        WorldPosition.Y,
-				                        CoordinateHelper.WorldGridCellWidth,
-				                        CoordinateHelper.WorldGridCellHeight
-			                        );
-
-			return worldGridIndex;
-		}
+//		private Point GetWorldGridIndex()
+//		{
+//			Point worldGridIndex = CoordinateHelper.WorldSpaceToWorldGridIndexPoint(
+//				                        WorldPosition.X,
+//				                        WorldPosition.Y,
+//				                        CoordinateHelper.WorldGridCellWidth,
+//				                        CoordinateHelper.WorldGridCellHeight
+//			                        );
+//
+//			return worldGridIndex;
+//		}
 
 		private Vector GetProjectedPosition()
 		{
@@ -131,7 +131,7 @@ namespace MyThirdSDL.Agents
 		public virtual void Update(GameTime gameTime)
 		{
 			SetSimulationAge(gameTime.TotalGameTime);
-			WorldGridIndex = GetWorldGridIndex();
+			//WorldGridIndex = GetWorldGridIndex();
 		}
 
 		public void Draw(GameTime gameTime, Renderer renderer)

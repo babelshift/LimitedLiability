@@ -62,6 +62,8 @@ namespace MyThirdSDL.Content
 		/// </summary>
 		public bool IsEmpty { get; private set; }
 
+		public TileType Type { get; private set; }
+
 		/// <summary>
 		/// Default empty constructor creates an empty tile
 		/// </summary>
@@ -77,8 +79,9 @@ namespace MyThirdSDL.Content
 		/// <param name="source"></param>
 		/// <param name="width"></param>
 		/// <param name="height"></param>
-		public Tile(Texture texture, Rectangle source, int width, int height)
+		public Tile(Texture texture, Rectangle source, int width, int height, TileType type)
 		{
+			Type = type;
 			IsEmpty = false;
 			Texture = texture;
 			SourceTextureBounds = source;

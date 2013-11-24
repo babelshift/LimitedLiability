@@ -52,7 +52,7 @@ namespace MyThirdSDL.Screens
 
 		public override void Activate(Renderer renderer)
 		{
-			string mapPath = ContentManager.GetContentPath("Office2");
+			string mapPath = ContentManager.GetContentPath("Office1");
 			string tileHighlightTexturePath = ContentManager.GetContentPath("TileHighlight2");
 			string tileHighlightSelectedTexturePath = ContentManager.GetContentPath("TileHighlightSelected");
 
@@ -61,7 +61,7 @@ namespace MyThirdSDL.Screens
 
 			var pathNodes = tiledMap.GetPathNodes();
 			Random random = new Random();
-			for (int i = 0; i < 2; i++)
+			for (int i = 0; i < 15; i++)
 			{
 				int x = random.Next(0, pathNodes.Count);
 				var pathNode = pathNodes[x];
@@ -69,12 +69,20 @@ namespace MyThirdSDL.Screens
 				simulationManager.AddAgent(employee);
 			}
 
-			for (int i = 0; i < 2; i++)
+			for (int i = 0; i < 15; i++)
 			{
 				int x = random.Next(0, pathNodes.Count);
 				var pathNode = pathNodes[x];
 				OfficeDesk officeDesk = agentFactory.CreateOfficeDesk(TimeSpan.Zero, new Vector(pathNode.WorldPosition.X, pathNode.WorldPosition.Y));
 				simulationManager.AddAgent(officeDesk);
+			}
+
+			for (int i = 0; i < 3; i++)
+			{
+				int x = random.Next(0, pathNodes.Count);
+				var pathNode = pathNodes[x];
+				SnackMachine snackMachine = agentFactory.CreateSnackMachine(TimeSpan.Zero, new Vector(pathNode.WorldPosition.X, pathNode.WorldPosition.Y));
+				simulationManager.AddAgent(snackMachine);
 			}
 
 //			var pathNode1 = tiledMap.GetPathNodeAtWorldGridIndex(new Point(3, 15));
@@ -226,39 +234,39 @@ namespace MyThirdSDL.Screens
 		/// Draws the base tiles and optionally any tile highlights.
 		/// </summary>
 		/// <param name="gameTime">Game time.</param>
-		private void DrawBaseTiles(GameTime gameTime, Renderer renderer)
-		{
-//			TileLayer baseLayer = tiledMap.TileLayers.First(tl => tl.Type == TileLayerType.Base);
-//			IEnumerable<Tile> baseTiles = baseLayer.Tiles.Where(t => !t.IsEmpty);
-//			foreach (Tile baseTile in baseTiles)
-//			{
-//				baseTile.Draw(gameTime, renderer);
-//				if (baseTile.WorldGridIndex == mouseClickPositionWorldGridIndex)
-//					DrawTileHighlight(tileHighlightSelectedImage, baseTile.ProjectedPosition - Camera.Position, renderer);
-//				if (baseTile.WorldGridIndex == mousePositionWorldGridIndex)
-//					DrawTileHighlight(tileHighlightImage, baseTile.ProjectedPosition - Camera.Position, renderer);
-//			}
-		}
+//		private void DrawBaseTiles(GameTime gameTime, Renderer renderer)
+//		{
+////			TileLayer baseLayer = tiledMap.TileLayers.First(tl => tl.Type == TileLayerType.Base);
+////			IEnumerable<Tile> baseTiles = baseLayer.Tiles.Where(t => !t.IsEmpty);
+////			foreach (Tile baseTile in baseTiles)
+////			{
+////				baseTile.Draw(gameTime, renderer);
+////				if (baseTile.WorldGridIndex == mouseClickPositionWorldGridIndex)
+////					DrawTileHighlight(tileHighlightSelectedImage, baseTile.ProjectedPosition - Camera.Position, renderer);
+////				if (baseTile.WorldGridIndex == mousePositionWorldGridIndex)
+////					DrawTileHighlight(tileHighlightImage, baseTile.ProjectedPosition - Camera.Position, renderer);
+////			}
+//		}
 
 		/// <summary>
 		/// Selects out the non-empty height tiles from the height layer in the tile map and draws them (must be sorted by draw depth prior to drawing
 		/// or items will appear rendered out of order)
 		/// </summary>
 		/// <param name="gameTime">Game time.</param>
-		private void DrawHeightTiles(GameTime gameTime, Renderer renderer)
-		{
-			foreach (IDrawable drawable in allDrawables)
-			{
-				drawable.Draw(gameTime, renderer);
-				if (drawable is Tile)
-				{
-					if (drawable.WorldGridIndex == mouseClickPositionWorldGridIndex)
-						DrawTileHighlight(tileHighlightSelectedImage, drawable.ProjectedPosition - Camera.Position, renderer);
-					if (drawable.WorldGridIndex == mousePositionWorldGridIndex)
-						DrawTileHighlight(tileHighlightImage, drawable.ProjectedPosition - Camera.Position, renderer);
-				}
-			}
-		}
+//		private void DrawHeightTiles(GameTime gameTime, Renderer renderer)
+//		{
+//			foreach (IDrawable drawable in allDrawables)
+//			{
+//				drawable.Draw(gameTime, renderer);
+//				if (drawable is Tile)
+//				{
+//					//if (drawable.WorldGridIndex == mouseClickPositionWorldGridIndex)
+//					//	DrawTileHighlight(tileHighlightSelectedImage, drawable.ProjectedPosition - Camera.Position, renderer);
+//					//if (drawable.WorldGridIndex == mousePositionWorldGridIndex)
+//					//	DrawTileHighlight(tileHighlightImage, drawable.ProjectedPosition - Camera.Position, renderer);
+//				}
+//			}
+//		}
 
 		private void DrawTileHighlight(Image image, Vector position, Renderer renderer)
 		{

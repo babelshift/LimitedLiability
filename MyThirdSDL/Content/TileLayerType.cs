@@ -13,7 +13,10 @@ namespace MyThirdSDL.Content
 {
 	public enum TileLayerType
 	{
-		Base,
-		Height
+		None,
+		Ground,
+		BackWalls,
+		Objects,
+		FrontWalls
 	}
 }

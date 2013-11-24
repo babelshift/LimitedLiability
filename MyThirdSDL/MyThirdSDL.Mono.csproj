@@ -159,6 +159,7 @@
     <Compile Include="Content\TileLayer.cs" />
     <Compile Include="Content\MapObject.cs" />
     <Compile Include="Content\MapObjectLayer.cs" />
+    <Compile Include="Content\TileType.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -396,6 +397,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\Maps\Office1.tmx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Images\Equipment\SnackMachine3.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>

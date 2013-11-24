@@ -26,8 +26,11 @@ namespace MyThirdSDL.Content
 
 		public IList<Tile> Tiles { get { return tiles; } }
 
-		public TileLayer(string name, int width, int height)
+		public TileLayerType Type { get; private set; }
+
+		public TileLayer(string name, int width, int height, TileLayerType type)
 		{
+			Type = type;
 			Name = name;
 			Width = width;
 			Height = height;

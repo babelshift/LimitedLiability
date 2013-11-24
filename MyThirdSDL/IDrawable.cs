@@ -10,7 +10,7 @@ namespace MyThirdSDL
 {
 	public interface IDrawable
 	{
-		Point WorldGridIndex { get; }
+		//Point WorldGridIndex { get; }
 		Vector WorldPosition { get; }
 		Vector ProjectedPosition { get; }
 		float Depth { get; }
