@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MyThirdSDL
+namespace MyThirdSDL.Simulation
 {
 	public class Path<Node> : IEnumerable<Node>
 	{

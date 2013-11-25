@@ -351,9 +351,15 @@ namespace MyThirdSDL.Content
 			}
 		}
 
+        /// <summary>
+        /// Returns the path node that contains the passed vector position. The path node must be enabled in order to be returned. Path nodes are enabled unless
+        /// otherwise disabled by the placement of an obstacle or object on the node.
+        /// </summary>
+        /// <param name="worldPosition"></param>
+        /// <returns></returns>
 		public PathNode GetPathNodeAtWorldPosition(Vector worldPosition)
 		{
-			IEnumerable<PathNode> pathNodes = GetPathNodes();
+			IEnumerable<PathNode> pathNodes = GetActivePathNodes();
 			PathNode pathNode = pathNodes.FirstOrDefault(pn => pn.Bounds.Contains(new Point((int)worldPosition.X, (int)worldPosition.Y)));
 
 			if (pathNode != null)
@@ -370,6 +376,11 @@ namespace MyThirdSDL.Content
 
 			return pathNodes;
 		}
+
+        public IList<PathNode> GetActivePathNodes()
+        {
+            return GetPathNodes().Where(pn => pn.IsEnabled == true).ToList();
+        }
 
 		#region Dispose
 

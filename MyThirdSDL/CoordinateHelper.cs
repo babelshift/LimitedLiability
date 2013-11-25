@@ -114,8 +114,16 @@ namespace MyThirdSDL
 		/// <returns></returns>
 		public static Vector WorldSpaceToScreenSpace(float worldX, float worldY, int width, int height, Vector offset, ScreenProjectionType projectionType)
 		{
-			Vector worldGridIndex = CoordinateHelper.WorldSpaceToWorldGridIndexVector(worldX, worldY, width, height);
-			return CoordinateHelper.WorldGridIndexToScreenSpace(worldGridIndex.X, worldGridIndex.Y, width, height, offset, projectionType);
+			//Vector worldGridIndex = CoordinateHelper.WorldSpaceToWorldGridIndexVector(worldX, worldY, width, height);
+
+            float screenSpaceX = worldX - worldY;
+            float screenSpaceY = (worldX + worldY) / 2;
+            
+            Vector screenSpace = new Vector(screenSpaceX, screenSpaceY);
+            Vector offsetScreenSpace = screenSpace + offset;
+            return offsetScreenSpace;
+
+            //return CoordinateHelper.WorldGridIndexToScreenSpace(worldGridIndex.X, worldGridIndex.Y, width, height, offset, projectionType);
 		}
 
 		/// <summary>

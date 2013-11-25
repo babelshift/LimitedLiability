@@ -14,7 +14,7 @@ namespace MyThirdSDL.Agents
 	public class Employee : MobileAgent, ITriggerSubscriber
 	{
 		private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-		private double necessityDecayRate = -0.01;
+		private double necessityDecayRate = -0.005;
 		private static Vector speed = new Vector(50, 50);
 
 		public string FullName { get { return FirstName + " " + LastName; } }

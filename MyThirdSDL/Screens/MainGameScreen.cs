@@ -53,8 +53,6 @@ namespace MyThirdSDL.Screens
 		public override void Activate(Renderer renderer)
 		{
 			string mapPath = ContentManager.GetContentPath("Office1");
-			string tileHighlightTexturePath = ContentManager.GetContentPath("TileHighlight2");
-			string tileHighlightSelectedTexturePath = ContentManager.GetContentPath("TileHighlightSelected");
 
 			tiledMap = new TiledMap(mapPath, renderer);
 			simulationManager.CurrentMap = tiledMap;
@@ -85,26 +83,12 @@ namespace MyThirdSDL.Screens
 				simulationManager.AddAgent(snackMachine);
 			}
 
-//			var pathNode1 = tiledMap.GetPathNodeAtWorldGridIndex(new Point(3, 15));
-//			var pathNode2 = tiledMap.GetPathNodeAtWorldGridIndex(new Point(15, 9));
-//			var pathNode3 = tiledMap.GetPathNodeAtWorldGridIndex(new Point(20, 9));
-//			var pathNode4 = tiledMap.GetPathNodeAtWorldGridIndex(new Point(4, 10));
-//			var pathNode5 = tiledMap.GetPathNodeAtWorldGridIndex(new Point(3, 21));
-//			var pathNode6 = tiledMap.GetPathNodeAtWorldGridIndex(new Point(4, 4));
-//
-//			SodaMachine sodaMachine = agentFactory.CreateSodaMachine(TimeSpan.Zero, new Vector(pathNode3.WorldPosition.X, pathNode3.WorldPosition.Y));
-//			SodaMachine sodaMachine2 = agentFactory.CreateSodaMachine(TimeSpan.Zero, new Vector(pathNode4.WorldPosition.X, pathNode4.WorldPosition.Y));
-//			SnackMachine snackMachine = agentFactory.CreateSnackMachine(TimeSpan.Zero, new Vector(pathNode2.WorldPosition.X, pathNode2.WorldPosition.Y));
-//			SnackMachine snackMachine2 = agentFactory.CreateSnackMachine(TimeSpan.Zero, new Vector(pathNode1.WorldPosition.X, pathNode1.WorldPosition.Y));
-//			OfficeDesk officeDesk = agentFactory.CreateOfficeDesk(TimeSpan.Zero, new Vector(pathNode5.WorldPosition.X, pathNode5.WorldPosition.Y));
-//			OfficeDesk officeDesk2 = agentFactory.CreateOfficeDesk(TimeSpan.Zero, new Vector(pathNode6.WorldPosition.X, pathNode6.WorldPosition.Y));
-//			simulationManager.AddAgents(employees);
-//			simulationManager.AddAgent(sodaMachine);
-//			simulationManager.AddAgent(sodaMachine2);
-//			simulationManager.AddAgent(snackMachine);
-//			simulationManager.AddAgent(snackMachine2);
-//			simulationManager.AddAgent(officeDesk);
-//			simulationManager.AddAgent(officeDesk2);
+            string redDotTexturePath = ContentManager.GetContentPath("RedDot");
+            Surface redDotSurface = new Surface(redDotTexturePath, SurfaceType.PNG);
+            redDotTexture = new Image(renderer, redDotSurface, ImageFormat.PNG);
+
+            string tileHighlightTexturePath = ContentManager.GetContentPath("TileHighlight2");
+            string tileHighlightSelectedTexturePath = ContentManager.GetContentPath("TileHighlightSelected");
 
 			Surface tileHighlightSurface = new Surface(tileHighlightTexturePath, SurfaceType.PNG);
 			tileHighlightImage = new Image(renderer, tileHighlightSurface, ImageFormat.PNG);
@@ -128,6 +112,8 @@ namespace MyThirdSDL.Screens
 			userInterfaceManager = new UserInterfaceManager(renderer, ContentManager, new Point(MainGame.SCREEN_WIDTH, MainGame.SCREEN_HEIGHT), purchasableItems);
 			userInterfaceManager.PurchasableItemSelected += HandlePurchasableItemSelected;
 		}
+
+        private Image redDotTexture;
 
 		public override void Deactivate()
 		{
@@ -199,6 +185,8 @@ namespace MyThirdSDL.Screens
 			foreach (var drawable in allDrawables)
 				drawable.Draw(gameTime, renderer);
 
+            //DrawActiveNodeCenters(renderer);
+
 			userInterfaceManager.Draw(gameTime, renderer);
 
 			if (userInterfaceManager.MouseMode == MouseMode.SelectEquipment)
@@ -208,6 +196,18 @@ namespace MyThirdSDL.Screens
 					MouseHelper.ClickedMousePoint.Y - selectedPurchasableItem.Texture.Height);
 			}
 		}
+
+        private void DrawActiveNodeCenters(Renderer renderer)
+        {
+            var pathNodes = tiledMap.GetActivePathNodes();
+            foreach (var pathNode in pathNodes)
+            {
+                var pathNodeProjectedPosition1 = CoordinateHelper.WorldSpaceToScreenSpace(pathNode.Bounds.Center.X, pathNode.Bounds.Center.Y,
+                    CoordinateHelper.PathNodeGridCellHeight, CoordinateHelper.PathNodeGridCellHeight, CoordinateHelper.ScreenOffset, CoordinateHelper.ScreenProjectionType.Isometric);
+
+                renderer.RenderTexture(redDotTexture.Texture, pathNodeProjectedPosition1.X, pathNodeProjectedPosition1.Y);
+            }
+        }
 
 		public override void Unload()
 		{

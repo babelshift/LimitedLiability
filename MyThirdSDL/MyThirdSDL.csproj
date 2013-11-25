@@ -74,6 +74,8 @@
     <Compile Include="Agents\Agent.cs" />
     <Compile Include="Agents\AgentActivity.cs" />
     <Compile Include="Agents\AgentFactory.cs" />
+    <Compile Include="Agents\AgentManager.cs" />
+    <Compile Include="Agents\AgentMetaData.cs" />
     <Compile Include="Agents\AgentState.cs" />
     <Compile Include="Agents\Employee.cs" />
     <Compile Include="Agents\Equipment.cs" />
@@ -85,12 +87,23 @@
     <Compile Include="Agents\Room.cs" />
     <Compile Include="Agents\SnackMachine.cs" />
     <Compile Include="Agents\SodaMachine.cs" />
+    <Compile Include="Agents\TrashBin.cs" />
     <Compile Include="Agents\WaterFountain.cs" />
     <Compile Include="Camera.cs" />
     <Compile Include="Content\ContentManager.cs" />
+    <Compile Include="Content\MapCell.cs" />
+    <Compile Include="Content\MapObject.cs" />
+    <Compile Include="Content\MapObjectLayer.cs" />
+    <Compile Include="Content\MapObjectLayerType.cs" />
+    <Compile Include="Content\MapObjectType.cs" />
     <Compile Include="Content\TextureStore.cs" />
+    <Compile Include="Content\Tile.cs" />
     <Compile Include="Content\TiledMap.cs" />
+    <Compile Include="Content\TileLayer.cs" />
+    <Compile Include="Content\TileLayerType.cs" />
+    <Compile Include="Content\TileType.cs" />
     <Compile Include="CoordinateHelper.cs" />
+    <Compile Include="Cursor.cs" />
     <Compile Include="Descriptors\IAffectsNecessities.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -103,25 +116,37 @@
     <Compile Include="Descriptors\Necessities.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Descriptors\NecessityEffects.cs" />
+    <Compile Include="Descriptors\NecessityEffect.cs" />
+    <Compile Include="Descriptors\SkillEffect.cs" />
     <Compile Include="Descriptors\Skills.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="EventHelper.cs" />
+    <Compile Include="GameState.cs" />
     <Compile Include="GridManager.cs" />
     <Compile Include="ICollidable.cs" />
     <Compile Include="IDrawable.cs" />
     <Compile Include="INode.cs" />
+    <Compile Include="KeyboardHelper.cs" />
     <Compile Include="MainGame.cs" />
-    <Compile Include="Path.cs" />
+    <Compile Include="MouseHelper.cs" />
+    <Compile Include="Simulation\Path.cs" />
     <Compile Include="PriorityQueue.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Screens\LoadingScreen.cs" />
+    <Compile Include="Screens\MainGameScreen.cs" />
+    <Compile Include="Screens\MainMenuScreen.cs" />
+    <Compile Include="Screens\Screen.cs" />
+    <Compile Include="Screens\ScreenFactory.cs" />
+    <Compile Include="Screens\ScreenManager.cs" />
+    <Compile Include="Screens\ScreenState.cs" />
     <Compile Include="Simulation\Action.cs" />
     <Compile Include="Simulation\EmployeeClickedEventArgs.cs" />
     <Compile Include="Simulation\Intention.cs" />
     <Compile Include="Simulation\ITriggerable.cs" />
     <Compile Include="Simulation\ITriggerSubscriber.cs" />
+    <Compile Include="Simulation\PathNode.cs" />
     <Compile Include="Simulation\SimulationManager.cs" />
     <Compile Include="Simulation\SimulationMessage.cs" />
     <Compile Include="Simulation\SimulationMessageFactory.cs" />
@@ -152,8 +177,9 @@
     <Compile Include="UserInterface\MessageBox.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="UserInterface\MouseModeType.cs" />
+    <Compile Include="UserInterface\MouseMode.cs" />
     <Compile Include="UserInterface\MouseOverScreenEdge.cs" />
+    <Compile Include="UserInterface\PurchasableItemSelectedEventArgs.cs" />
     <Compile Include="UserInterface\SimulationLabel.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -168,6 +194,30 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\Images\RedDot.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Maps\0_Decor_Inside.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Maps\0_Decor_Outside.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Maps\0_Ground_Inside.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Maps\0_Ground_Outside.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Maps\0_Objects.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Maps\Characters.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <None Include="Agents\AgentReference.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="App.config" />
     <Compile Include="IHasNeighbors.cs" />
     <Content Include="Content\ContentReference.json">
@@ -184,13 +234,38 @@
       <SubType>Designer</SubType>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Include="Content\Maps\Map3.tmx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Content\Maps\Office1.tmx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Content\Maps\Office2.tmx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Content\Maps\Office3.tmx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\Images\0001.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Content\Images\CubeTileSheet.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Content\Images\CubeTileSheet2.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Images\CubeTileSheet3.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Content\Images\Equipment\OfficeDesk.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Images\Equipment\OfficeDesk2.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\Images\Equipment\SnackMachine.png">
@@ -199,7 +274,13 @@
     <Content Include="Content\Images\Equipment\SnackMachine2.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Content\Images\Equipment\SnackMachine3.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Content\Images\Equipment\SodaMachine.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Images\Equipment\TrashBin.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\Images\Equipment\WaterFountain.png">
@@ -241,6 +322,18 @@
     <Content Include="Content\Images\User Interface\ButtonSquareHover.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Content\Images\User Interface\CursorHandDown.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Images\User Interface\CursorHandLeft.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Images\User Interface\CursorHandRight.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Images\User Interface\CursorHandUp.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Content\Images\User Interface\IconArrowCircleLeft.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -251,6 +344,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\Images\User Interface\IconBarChartUp.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Images\User Interface\IconBin.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\Images\User Interface\IconChair.png">
@@ -293,6 +389,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\Images\User Interface\IconPersonAngry.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Images\User Interface\IconPersonHappy.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\Images\User Interface\IconPersonPlain.png">

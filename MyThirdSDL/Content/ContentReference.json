@@ -3,6 +3,8 @@
 		{ "key": "Arcade",						"value": "Fonts/Arcade N.ttf" }  
 	], 
 	"textures": [
+		{ "key": "RedDot",						"value": "Images/RedDot.png" },
+
 		{ "key": "Employee1",					"value": "Images/0001.png" },
 		{ "key": "TileHighlight2",				"value": "Images/tileHighlight2.png" },
 		{ "key": "TileHighlightSelected",		"value": "Images/tileHighlightSelected.png" },
