@@ -8,13 +8,13 @@ using System.Threading.Tasks;
 
 namespace MyThirdSDL
 {
-	public interface IDrawable
-	{
+    public interface IDrawable
+    {
         Guid ID { get; }
-		//Point WorldGridIndex { get; }
-		Vector WorldPosition { get; }
-		Vector ProjectedPosition { get; }
-		float Depth { get; }
-		void Draw(GameTime gameTime, Renderer renderer);
-	}
+        //Point WorldGridIndex { get; }
+        Vector WorldPosition { get; }
+        Vector ProjectedPosition { get; }
+        float Depth { get; }
+        void Draw(GameTime gameTime, Renderer renderer);
+    }
 }
