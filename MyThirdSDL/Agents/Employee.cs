@@ -15,7 +15,15 @@ namespace MyThirdSDL.Agents
 	{
 		private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 		private double necessityDecayRate = -0.005;
-		private static Vector speed = new Vector(50, 50);
+		private static Vector speed = new Vector(25, 25);
+
+        public override Rectangle CollisionBox
+        {
+            get
+            {
+                return new Rectangle((int)WorldPosition.X, (int)WorldPosition.Y, Texture.Width / 2, Texture.Height / 2);
+            }
+        }
 
 		public string FullName { get { return FirstName + " " + LastName; } }
 

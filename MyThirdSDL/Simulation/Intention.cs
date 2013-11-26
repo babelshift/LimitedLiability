@@ -26,13 +26,13 @@ namespace MyThirdSDL.Simulation
     public class Intention
     {
 		public Agent WalkToAgent { get; private set; }
-		public Queue<MapObject> PathNodesToAgent { get; private set; }
+		public Queue<PathNode> PathNodesToAgent { get; private set; }
 		public IntentionType Type { get; private set; }
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="MyThirdSDL.Intent"/> class. 
 		/// </summary>
-		public Intention(Agent walkToAgent, Queue<MapObject> pathNodesToAgent, IntentionType type)
+        public Intention(Agent walkToAgent, Queue<PathNode> pathNodesToAgent, IntentionType type)
         {
 			WalkToAgent = walkToAgent;
 			PathNodesToAgent = pathNodesToAgent;

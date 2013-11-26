@@ -9,6 +9,8 @@ namespace MyThirdSDL
 {
 	public static class CoordinateHelper
 	{
+        public static int TileMapTileWidth = 80;
+        public static int TileMapTileHeight = 40;
 		public static int WorldGridCellWidth = 40;
 		public static int WorldGridCellHeight = 40;
 		public static int PathNodeGridCellWidth = 20;
@@ -112,18 +114,14 @@ namespace MyThirdSDL
 		/// <param name="offset"></param>
 		/// <param name="projectionType"></param>
 		/// <returns></returns>
-		public static Vector WorldSpaceToScreenSpace(float worldX, float worldY, int width, int height, Vector offset, ScreenProjectionType projectionType)
+		public static Vector WorldSpaceToScreenSpace(float worldX, float worldY, Vector offset, ScreenProjectionType projectionType)
 		{
-			//Vector worldGridIndex = CoordinateHelper.WorldSpaceToWorldGridIndexVector(worldX, worldY, width, height);
-
             float screenSpaceX = worldX - worldY;
             float screenSpaceY = (worldX + worldY) / 2;
             
             Vector screenSpace = new Vector(screenSpaceX, screenSpaceY);
             Vector offsetScreenSpace = screenSpace + offset;
             return offsetScreenSpace;
-
-            //return CoordinateHelper.WorldGridIndexToScreenSpace(worldGridIndex.X, worldGridIndex.Y, width, height, offset, projectionType);
 		}
 
 		/// <summary>

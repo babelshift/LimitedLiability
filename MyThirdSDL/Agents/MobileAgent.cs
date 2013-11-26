@@ -13,8 +13,8 @@ namespace MyThirdSDL.Agents
 	{
 		private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 		private Queue<Intention> intentions = new Queue<Intention>();
-		private Queue<MapObject> pathNodes;
-		private Vector currentDestination;
+		private Queue<PathNode> pathNodes;
+		private PathNode currentDestination;
 
 		public AgentActivity Activity { get; private set; }
 
@@ -41,10 +41,21 @@ namespace MyThirdSDL.Agents
 		{
 			get
 			{
-				if (currentDestination == CoordinateHelper.DefaultVector || CollisionBox.Contains(new Point((int)currentDestination.X, (int)currentDestination.Y)))
-					return true;
-				else
-					return false;
+                if (currentDestination == null)
+                    return true;
+                else
+                {
+                    Rectangle smallBounds = new Rectangle(
+                        (int)(currentDestination.WorldPosition.X + currentDestination.Bounds.Width / 4),
+                        (int)(currentDestination.WorldPosition.Y + currentDestination.Bounds.Height / 4),
+                        currentDestination.Bounds.Width / 2,
+                        currentDestination.Bounds.Height / 2);
+
+                    if (currentDestination.Bounds.Contains(CollisionBox.Center))
+                        return true;
+                    else
+                        return false;
+                }
 			}
 		}
 
@@ -66,7 +77,6 @@ namespace MyThirdSDL.Agents
 			: base(birthTime, name, texture, startingPosition)
 		{
 			Activity = AgentActivity.Unknown;
-			currentDestination = CoordinateHelper.DefaultVector;
 			Speed = startingSpeed;
 		}
 
@@ -150,7 +160,7 @@ namespace MyThirdSDL.Agents
 		/// </summary>
 		/// <param name="pathNodes">Path nodes.</param>
 		/// <param name="agent">Agent.</param>
-		protected void WalkOnPathTowardsIntendedAgent(Queue<MapObject> pathNodes, Intention intention)
+		protected void WalkOnPathTowardsIntendedAgent(Queue<PathNode> pathNodes, Intention intention)
 		{
 			// if we are not yet walking towards an agent, walk towards it!
 			if (!HasCurrentIntention)
@@ -173,10 +183,10 @@ namespace MyThirdSDL.Agents
 				{
 					if (pathNodes != null)
 					{
-						if (pathNodes.Count == 0)
-							ResetMovement();
-						else
-							currentDestination = pathNodes.Dequeue().WorldPosition;
+                        if (pathNodes.Count == 0)
+                            ResetMovement();
+                        else
+                            currentDestination = pathNodes.Dequeue();
 					}
 				}
 			}
@@ -185,22 +195,25 @@ namespace MyThirdSDL.Agents
 		private void Move(double dt)
 		{
 			//ChangeActivity(AgentActivity.Walking);
-			Vector direction = GetMovementDirection();
-			WorldPosition += new Vector((float)(direction.X * Speed.X * dt), (float)(direction.Y * Speed.Y * dt));
+            if (currentDestination != null)
+            {
+                Vector direction = GetMovementDirection();
+                WorldPosition += new Vector((float)(direction.X * Speed.X * dt), (float)(direction.Y * Speed.Y * dt));
+            }
 		}
 
 		private void ResetMovement()
 		{
 			pathNodes = null;
-			currentDestination = CoordinateHelper.DefaultVector;
+            currentDestination = null;
 			//ChangeActivity(AgentActivity.Idle);
 		}
 
 		private void SetNextDestinationNode()
 		{
-			if (pathNodes != null)
-				if (pathNodes.Count() > 0)
-				currentDestination = pathNodes.Dequeue().WorldPosition;
+            if (pathNodes != null)
+                if (pathNodes.Count() > 0)
+                    currentDestination = pathNodes.Dequeue();
 		}
 
 		private Vector GetMovementDirection()
@@ -210,16 +223,14 @@ namespace MyThirdSDL.Agents
 				float movementDirectionX = 0f;
 				float movementDirectionY = 0f;
 
-				if (WorldPosition.X > currentDestination.X)
+				if (CollisionBox.Center.X > currentDestination.Bounds.Center.X)
 					movementDirectionX -= 1f;
-
-				if (WorldPosition.X < currentDestination.X)
+                else if (CollisionBox.Center.X < currentDestination.Bounds.Center.X)
 					movementDirectionX += 1f;
 
-				if (WorldPosition.Y > currentDestination.Y)
+                if (CollisionBox.Center.Y > currentDestination.Bounds.Center.Y)
 					movementDirectionY -= 1f;
-
-				if (WorldPosition.Y < currentDestination.Y)
+                else if (CollisionBox.Center.Y < currentDestination.Bounds.Center.Y)
 					movementDirectionY += 1f;
 
 				return new Vector(movementDirectionX, movementDirectionY);

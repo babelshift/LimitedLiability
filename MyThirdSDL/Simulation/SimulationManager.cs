@@ -438,13 +438,13 @@ namespace MyThirdSDL.Simulation
 		/// <param name="startWorldGridIndex"></param>
 		/// <param name="endWorldGridIndex"></param>
 		/// <returns></returns>
-		private Queue<MapObject> FindBestPath(Vector startWorldPosition, Vector endWorldPosition)
+		private Queue<PathNode> FindBestPath(Vector startWorldPosition, Vector endWorldPosition)
 		{
 			PathNode start = CurrentMap.GetPathNodeAtWorldPosition(startWorldPosition);
 			PathNode end = CurrentMap.GetPathNodeAtWorldPosition(endWorldPosition);
 			Path<PathNode> bestPath = FindPath<PathNode>(start, end);//, ExactDistance, ManhattanDistance);
-			IEnumerable<MapObject> bestPathReversed = bestPath.Reverse();
-			Queue<MapObject> result = new Queue<MapObject>();
+			IEnumerable<PathNode> bestPathReversed = bestPath.Reverse();
+			Queue<PathNode> result = new Queue<PathNode>();
 			foreach (var bestPathNode in bestPathReversed)
 				result.Enqueue(bestPathNode);
 			return result;
@@ -548,11 +548,11 @@ namespace MyThirdSDL.Simulation
 		/// <param name="mobileAgent">Mobile agent.</param>
 		/// <param name="agent">Agent.</param>
 		/// <typeparam name="T">The 1st type parameter.</typeparam>
-		private Queue<MapObject> GetBestPathToAgent<T>(Agent mobileAgent, T agent)
+		private Queue<PathNode> GetBestPathToAgent<T>(Agent mobileAgent, T agent)
 			where T : Agent
 		{
 			// tell the agent to path to the closest soda machine (or random if a tie)
-			Queue<MapObject> bestPath = FindBestPath(mobileAgent.WorldPosition, agent.WorldPosition);
+			Queue<PathNode> bestPath = FindBestPath(mobileAgent.WorldPosition, agent.WorldPosition);
 			return bestPath;
 		}
 

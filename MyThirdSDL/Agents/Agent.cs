@@ -8,144 +8,130 @@ using System.Threading.Tasks;
 
 namespace MyThirdSDL.Agents
 {
-	public abstract class Agent : IDrawable, ICollidable
-	{
-		#region Members 
+    public abstract class Agent : IDrawable, ICollidable
+    {
+        #region Members
 
-		public Texture Texture { get; private set; }
+        public Texture Texture { get; private set; }
 
-		public Rectangle CollisionBox
-		{
-			get
-			{
-				return new Rectangle((int)WorldPosition.X, (int)WorldPosition.Y, Texture.Width / 2, Texture.Height / 2);
-			}
-		}
+        public virtual Rectangle CollisionBox
+        {
+            get
+            {
+                return new Rectangle((int)WorldPosition.X, (int)WorldPosition.Y, Texture.Width / 2, Texture.Height / 2);
+            }
+        }
 
-		private TimeSpan BirthTime { get; set; }
+        private TimeSpan BirthTime { get; set; }
 
-		#endregion
+        #endregion
 
-		#region Properties
+        #region Properties
 
-		public Guid ID { get; private set; }
+        public Guid ID { get; private set; }
 
-		public string Name { get; private set; }
+        public string Name { get; private set; }
 
-		public TimeSpan SimulationAge { get; private set; }
+        public TimeSpan SimulationAge { get; private set; }
 
-		public TimeSpan WorldAge
-		{
-			get
-			{
-				return TimeSpan.FromMilliseconds(8640 * SimulationAge.TotalMilliseconds);
-			}
-		}
+        public TimeSpan WorldAge
+        {
+            get
+            {
+                return TimeSpan.FromMilliseconds(8640 * SimulationAge.TotalMilliseconds);
+            }
+        }
 
-		public AgentState State { get; private set; }
+        public AgentState State { get; private set; }
 
-		//public Point WorldGridIndex { get; private set; }
+        //public Point WorldGridIndex { get; private set; }
 
-		public Vector WorldPosition { get; protected set; }
+        public Vector WorldPosition { get; protected set; }
 
-		public float Depth { get { return WorldPosition.X + WorldPosition.Y; } }
+        public float Depth { get { return WorldPosition.X + WorldPosition.Y; } }
 
-		public Vector ProjectedPosition { get; private set; }
+        public Vector ProjectedPosition { get; private set; }
 
-		#endregion
+        #endregion
 
-		#region Constructors
+        #region Constructors
 
-		public Agent(TimeSpan birthTime, string name, Texture texture, Vector startingPosition)
-		{
-			ID = Guid.NewGuid();
-			BirthTime = birthTime;
-			Name = name;
-			Texture = texture;
-			State = AgentState.Unknown;
+        public Agent(TimeSpan birthTime, string name, Texture texture, Vector startingPosition)
+        {
+            ID = Guid.NewGuid();
+            BirthTime = birthTime;
+            Name = name;
+            Texture = texture;
+            State = AgentState.Unknown;
 
-			WorldPosition = startingPosition;
-			ProjectedPosition = GetProjectedPosition();
-			//WorldGridIndex = GetWorldGridIndex();
-		}
+            WorldPosition = startingPosition;
+            ProjectedPosition = GetProjectedPosition();
+            //WorldGridIndex = GetWorldGridIndex();
+        }
 
-		#endregion
+        #endregion
 
-		#region Utilities
+        #region Utilities
 
-		private void SetSimulationAge(TimeSpan simulationTime)
-		{
-			SimulationAge = simulationTime.Subtract(BirthTime);
-		}
+        private void SetSimulationAge(TimeSpan simulationTime)
+        {
+            SimulationAge = simulationTime.Subtract(BirthTime);
+        }
 
-//		private Point GetWorldGridIndex()
-//		{
-//			Point worldGridIndex = CoordinateHelper.WorldSpaceToWorldGridIndexPoint(
-//				                        WorldPosition.X,
-//				                        WorldPosition.Y,
-//				                        CoordinateHelper.WorldGridCellWidth,
-//				                        CoordinateHelper.WorldGridCellHeight
-//			                        );
-//
-//			return worldGridIndex;
-//		}
+        private Vector GetProjectedPosition()
+        {
+            Vector projectedPosition = CoordinateHelper.WorldSpaceToScreenSpace(
+                WorldPosition.X,
+                WorldPosition.Y,
+                CoordinateHelper.ScreenOffset,
+                CoordinateHelper.ScreenProjectionType.Isometric
+            );
 
-		private Vector GetProjectedPosition()
-		{
-			Vector projectedPosition = CoordinateHelper.WorldSpaceToScreenSpace(
-				                           WorldPosition.X,
-				                           WorldPosition.Y,
-				                           Texture.Width / 2,
-				                           Texture.Height,
-				                           CoordinateHelper.ScreenOffset,
-				                           CoordinateHelper.ScreenProjectionType.Isometric
-			                           );
+            return projectedPosition;
+        }
 
-			return projectedPosition;
-		}
+        #endregion
 
-		#endregion
+        #region Status Changes
 
-		#region Status Changes
+        public void Activate()
+        {
+            ChangeStatus(AgentState.Active);
+        }
 
-		public void Activate()
-		{
-			ChangeStatus(AgentState.Active);
-		}
+        public void Deactivate()
+        {
+            ChangeStatus(AgentState.Inactive);
+        }
 
-		public void Deactivate()
-		{
-			ChangeStatus(AgentState.Inactive);
-		}
+        protected void ChangeStatus(AgentState status)
+        {
+            if (State != status)
+                State = status;
+        }
 
-		protected void ChangeStatus(AgentState status)
-		{
-			if (State != status)
-				State = status;
-		}
+        #endregion
 
-		#endregion
+        #region Game Loop
 
-		#region Game Loop
+        public virtual void Update(GameTime gameTime)
+        {
+            SetSimulationAge(gameTime.TotalGameTime);
+            //WorldGridIndex = GetWorldGridIndex();
+        }
 
-		public virtual void Update(GameTime gameTime)
-		{
-			SetSimulationAge(gameTime.TotalGameTime);
-			//WorldGridIndex = GetWorldGridIndex();
-		}
+        public void Draw(GameTime gameTime, Renderer renderer)
+        {
+            ProjectedPosition = GetProjectedPosition();
 
-		public void Draw(GameTime gameTime, Renderer renderer)
-		{
-			ProjectedPosition = GetProjectedPosition();
+            // adjust the positions so we draw at the center of the Texture and at the correct camera position
+            float drawPositionX = ProjectedPosition.X - Camera.Position.X - CoordinateHelper.TileMapTileWidth * 0.5f;
+            float drawPositionY = ProjectedPosition.Y - Camera.Position.Y - CoordinateHelper.TileMapTileHeight;
 
-			// adjust the positions so we draw at the center of the Texture and at the correct camera position
-			float drawPositionX = ProjectedPosition.X - Texture.Width * 0.5f - Camera.Position.X;
-			float drawPositionY = ProjectedPosition.Y - Texture.Height * 0.25f - Camera.Position.Y;
+            renderer.RenderTexture(Texture, drawPositionX, drawPositionY);
+        }
 
-			renderer.RenderTexture(Texture, drawPositionX, drawPositionY);
-		}
+        #endregion
 
-		#endregion
-
-	}
+    }
 }

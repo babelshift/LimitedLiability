@@ -8,14 +8,17 @@ using System.Text;
 using System.Threading.Tasks;
 using MyThirdSDL.Descriptors;
 using MyThirdSDL.Simulation;
+using MyThirdSDL.Agents;
 
 namespace MyThirdSDL.Content
 {
-	public class MapCell : IDisposable, IDrawable
+	public class MapCell : IDrawable
 	{
-		private Dictionary<int, List<Tile>> tilesByIndexZ = new Dictionary<int, List<Tile>>();
+        private SortedDictionary<int, List<IDrawable>> drawablesByZIndex = new SortedDictionary<int, List<IDrawable>>();
 		private List<MapObject> deadZones = new List<MapObject>();
-		private List<PathNode> pathNodes = new List<PathNode>();
+        private List<PathNode> pathNodes = new List<PathNode>();
+
+        public Guid ID { get; private set; }
 
 		public IEnumerable<PathNode> PathNodes { get { return pathNodes; } }
 
@@ -35,21 +38,23 @@ namespace MyThirdSDL.Content
 
 		public MapCell(int width, int height)
 		{
+            ID = Guid.NewGuid();
 			Width = width;
 			Height = height;
 		}
 
 		public void Draw(GameTime gameTime, Renderer renderer)
 		{
-			foreach (int zIndex in tilesByIndexZ.Keys)
-			{
-				List<Tile> tiles = new List<Tile>();
+            List<Texture> orderedTexturesToDraw = new List<Texture>();
 
-				bool success = tilesByIndexZ.TryGetValue(zIndex, out tiles);
-				if (success)
-					foreach (var tile in tiles)
-						tile.Draw(gameTime, renderer);
-			}
+            foreach (int zIndex in drawablesByZIndex.Keys)
+            {
+                List<IDrawable> drawables = new List<IDrawable>();
+                bool success = drawablesByZIndex.TryGetValue(zIndex, out drawables);
+                if (success)
+                    foreach (var drawable in drawables)
+                        drawable.Draw(gameTime, renderer);
+            }
 		}
 
 		public void AddDeadZone(MapObject deadZone)
@@ -64,37 +69,19 @@ namespace MyThirdSDL.Content
 				pathNodes.Add(pathNode);
 		}
 
-		public void AddTile(Tile tile, int zIndex)
+		public void AddDrawable(IDrawable drawable, int zIndex)
 		{
-			List<Tile> tiles = new List<Tile>();
+			List<IDrawable> drawables = new List<IDrawable>();
 
-			bool success = tilesByIndexZ.TryGetValue(zIndex, out tiles);
+			bool success = drawablesByZIndex.TryGetValue(zIndex, out drawables);
 			if (success)
-				tiles.Add(tile);
+				drawables.Add(drawable);
 			else
 			{
-				tiles = new List<Tile>();
-				tiles.Add(tile);
-				tilesByIndexZ.Add(zIndex, tiles);
+				drawables = new List<IDrawable>();
+				drawables.Add(drawable);
+				drawablesByZIndex.Add(zIndex, drawables);
 			}
-		}
-
-		public void Dispose()
-		{
-			Dispose(true);
-			GC.SuppressFinalize(this);
-		}
-
-		~MapCell()
-		{
-			Dispose(false);
-		}
-
-		private void Dispose(bool isDisposing)
-		{
-			foreach (var tiles in tilesByIndexZ.Values)
-				foreach (var tile in tiles)
-					tile.Dispose();
 		}
 	}
 }
