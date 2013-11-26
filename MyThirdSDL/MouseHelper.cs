@@ -21,9 +21,9 @@ namespace MyThirdSDL
 			ClickedMousePoint = new Point(MouseHelper.CurrentMouseState.X, MouseHelper.CurrentMouseState.Y);
 
 			ClickedWorldSpacePoint = CoordinateHelper.ScreenSpaceToWorldSpace(
-                ClickedMousePoint.X, ClickedMousePoint.Y,
-                CoordinateHelper.ScreenOffset,
-                CoordinateHelper.ScreenProjectionType.Isometric);
+				ClickedMousePoint.X, ClickedMousePoint.Y,
+				CoordinateHelper.ScreenOffset,
+				CoordinateHelper.ScreenProjectionType.Isometric);
 		}
 	}
 }

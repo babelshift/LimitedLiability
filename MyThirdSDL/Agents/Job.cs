@@ -16,10 +16,10 @@ namespace MyThirdSDL.Agents
 		public Skills.Rating RequiredCommunication { get; private set; }
 		public Skills.Rating RequiredLeadership { get; private set; }
 
-		public Job(string title, double salary, 
-			Skills.Rating requiredIntelligence, 
-			Skills.Rating requiredCreativity, 
-			Skills.Rating requiredCommunication, 
+		public Job(string title, double salary,
+			Skills.Rating requiredIntelligence,
+			Skills.Rating requiredCreativity,
+			Skills.Rating requiredCommunication,
 			Skills.Rating requiredLeadership)
 		{
 			Title = title;

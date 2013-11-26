@@ -14,11 +14,11 @@ namespace MyThirdSDL.Content
 {
 	public class MapCell : IDrawable
 	{
-        private SortedDictionary<int, List<IDrawable>> drawablesByZIndex = new SortedDictionary<int, List<IDrawable>>();
+		private SortedDictionary<int, List<IDrawable>> drawablesByZIndex = new SortedDictionary<int, List<IDrawable>>();
 		private List<MapObject> deadZones = new List<MapObject>();
-        private List<PathNode> pathNodes = new List<PathNode>();
+		private List<PathNode> pathNodes = new List<PathNode>();
 
-        public Guid ID { get; private set; }
+		public Guid ID { get; private set; }
 
 		public IEnumerable<PathNode> PathNodes { get { return pathNodes; } }
 
@@ -38,28 +38,28 @@ namespace MyThirdSDL.Content
 
 		public MapCell(int width, int height)
 		{
-            ID = Guid.NewGuid();
+			ID = Guid.NewGuid();
 			Width = width;
 			Height = height;
 		}
 
 		public void Draw(GameTime gameTime, Renderer renderer)
 		{
-            List<Texture> orderedTexturesToDraw = new List<Texture>();
+			List<Texture> orderedTexturesToDraw = new List<Texture>();
 
-            foreach (int zIndex in drawablesByZIndex.Keys)
-            {
-                List<IDrawable> drawables = new List<IDrawable>();
-                bool success = drawablesByZIndex.TryGetValue(zIndex, out drawables);
-                if (success)
-                    foreach (var drawable in drawables)
-                        drawable.Draw(gameTime, renderer);
-            }
+			foreach (int zIndex in drawablesByZIndex.Keys)
+			{
+				List<IDrawable> drawables = new List<IDrawable>();
+				bool success = drawablesByZIndex.TryGetValue(zIndex, out drawables);
+				if (success)
+					foreach (var drawable in drawables)
+						drawable.Draw(gameTime, renderer);
+			}
 		}
 
 		public void AddDeadZone(MapObject deadZone)
 		{
-			if(!deadZones.Contains(deadZone))
+			if (!deadZones.Contains(deadZone))
 				deadZones.Add(deadZone);
 		}
 

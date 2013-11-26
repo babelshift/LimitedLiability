@@ -12,7 +12,7 @@ namespace MyThirdSDL.Simulation
 		public Node LastStep { get; private set; }
 		public Path<Node> PreviousSteps { get; private set; }
 		public double TotalCost { get; private set; }
-		
+
 		private Path(Node lastStep, Path<Node> previousSteps, double totalCost)
 		{
 			LastStep = lastStep;

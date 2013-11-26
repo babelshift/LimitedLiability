@@ -4,8 +4,8 @@ using System.Collections.Generic;
 
 namespace MyThirdSDL.Simulation
 {
-    public class Trigger
-    {
+	public class Trigger
+	{
 		private ConcurrentDictionary<ActionType, Action> actions = new ConcurrentDictionary<ActionType, Action>();
 
 		public Guid ID { get; private set; }
@@ -17,7 +17,7 @@ namespace MyThirdSDL.Simulation
 
 		public void AddAction(Action action)
 		{
-			if(!actions.ContainsKey(action.Type))
+			if (!actions.ContainsKey(action.Type))
 				actions.TryAdd(action.Type, action);
 		}
 
@@ -40,7 +40,7 @@ namespace MyThirdSDL.Simulation
 							subscriptionsToRemove.Add(subscription);
 					}
 
-					foreach(var subscription in subscriptionsToRemove)
+					foreach (var subscription in subscriptionsToRemove)
 						action.RemoveSubscription(subscription.Subscriber);
 				}
 			}
@@ -53,6 +53,6 @@ namespace MyThirdSDL.Simulation
 			if (success)
 				action.AddSubscription(subscriber, subscriptionType);
 		}
-    }
+	}
 }
 

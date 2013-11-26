@@ -59,7 +59,7 @@ namespace MyThirdSDL.UserInterface
 
 		private void Dispose(bool disposing)
 		{
-			if(Texture != null)
+			if (Texture != null)
 				Texture.Dispose();
 		}
 	}

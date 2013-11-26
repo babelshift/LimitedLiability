@@ -7,13 +7,13 @@ using System.Threading.Tasks;
 
 namespace MyThirdSDL.Simulation
 {
-    public class EmployeeClickedEventArgs : EventArgs
-    {
-        public Employee Employee { get; private set; }
+	public class EmployeeClickedEventArgs : EventArgs
+	{
+		public Employee Employee { get; private set; }
 
-        public EmployeeClickedEventArgs(Employee employee)
-        {
-            Employee = employee;
-        }
-    }
+		public EmployeeClickedEventArgs(Employee employee)
+		{
+			Employee = employee;
+		}
+	}
 }

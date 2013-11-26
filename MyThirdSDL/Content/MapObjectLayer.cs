@@ -35,15 +35,15 @@ namespace MyThirdSDL.Content
 			if (leftNeighboringPathNode != null)
 				neighboringPathNodes.Add(leftNeighboringPathNode);
 
-			PathNode rightNeighboringPathNode =  GetNeighboringPathNode(mo => mo.Bounds.Left == pathNode.Bounds.Right && mo.Bounds.Bottom == pathNode.Bounds.Bottom);
+			PathNode rightNeighboringPathNode = GetNeighboringPathNode(mo => mo.Bounds.Left == pathNode.Bounds.Right && mo.Bounds.Bottom == pathNode.Bounds.Bottom);
 			if (rightNeighboringPathNode != null)
 				neighboringPathNodes.Add(rightNeighboringPathNode);
 
-			PathNode topNeighboringPathNode =  GetNeighboringPathNode(mo => mo.Bounds.Bottom == pathNode.Bounds.Top && mo.Bounds.Left == pathNode.Bounds.Left);
+			PathNode topNeighboringPathNode = GetNeighboringPathNode(mo => mo.Bounds.Bottom == pathNode.Bounds.Top && mo.Bounds.Left == pathNode.Bounds.Left);
 			if (topNeighboringPathNode != null)
 				neighboringPathNodes.Add(topNeighboringPathNode);
 
-			PathNode bottomNeighboringPathNode =  GetNeighboringPathNode(mo => mo.Bounds.Top == pathNode.Bounds.Bottom && mo.Bounds.Left == pathNode.Bounds.Left);
+			PathNode bottomNeighboringPathNode = GetNeighboringPathNode(mo => mo.Bounds.Top == pathNode.Bounds.Bottom && mo.Bounds.Left == pathNode.Bounds.Left);
 			if (bottomNeighboringPathNode != null)
 				neighboringPathNodes.Add(bottomNeighboringPathNode);
 

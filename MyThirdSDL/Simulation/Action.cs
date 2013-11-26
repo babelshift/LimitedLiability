@@ -10,17 +10,17 @@ namespace MyThirdSDL.Simulation
 		DispenseFood
 	}
 
-    public class Action
-    {
+	public class Action
+	{
 		private List<Subscription> subscriptions = new List<Subscription>();
 
 		public ActionType Type { get; private set; }
 		public IEnumerable<Subscription> Subscriptions { get { return subscriptions; } }
 
 		public Action(ActionType type)
-        {
+		{
 			Type = type;
-        }
+		}
 
 		public void AddSubscription(ITriggerSubscriber subscriber, SubscriptionType subscriptionType)
 		{
@@ -31,6 +31,6 @@ namespace MyThirdSDL.Simulation
 		{
 			subscriptions.RemoveAll(s => s.Subscriber.ID == subscriber.ID);
 		}
-    }
+	}
 }
 

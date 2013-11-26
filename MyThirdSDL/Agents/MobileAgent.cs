@@ -25,14 +25,14 @@ namespace MyThirdSDL.Agents
 		public bool HasCurrentIntention { get { return CurrentIntention != null; } }
 
 		public Intention FinalIntention
-		{ 
+		{
 			get
-			{ 
+			{
 				if (intentions.Count > 0)
 					return intentions.Peek();
 				else
 					return CurrentIntention;
-			} 
+			}
 		}
 
 		protected bool IsAtFinalWalkToDestination { get { return CurrentIntention.WalkToAgent.CollisionBox.Intersects(CollisionBox); } }
@@ -41,15 +41,15 @@ namespace MyThirdSDL.Agents
 		{
 			get
 			{
-                if (currentDestination == null)
-                    return true;
-                else
-                {
-                    if (currentDestination.Bounds.Contains(CollisionBox.Center))
-                        return true;
-                    else
-                        return false;
-                }
+				if (currentDestination == null)
+					return true;
+				else
+				{
+					if (currentDestination.Bounds.Contains(CollisionBox.Center))
+						return true;
+					else
+						return false;
+				}
 			}
 		}
 
@@ -177,10 +177,10 @@ namespace MyThirdSDL.Agents
 				{
 					if (pathNodes != null)
 					{
-                        if (pathNodes.Count == 0)
-                            ResetMovement();
-                        else
-                            currentDestination = pathNodes.Dequeue();
+						if (pathNodes.Count == 0)
+							ResetMovement();
+						else
+							currentDestination = pathNodes.Dequeue();
 					}
 				}
 			}
@@ -189,25 +189,25 @@ namespace MyThirdSDL.Agents
 		private void Move(double dt)
 		{
 			//ChangeActivity(AgentActivity.Walking);
-            if (currentDestination != null)
-            {
-                Vector direction = GetMovementDirection();
-                WorldPosition += new Vector((float)(direction.X * Speed.X * dt), (float)(direction.Y * Speed.Y * dt));
-            }
+			if (currentDestination != null)
+			{
+				Vector direction = GetMovementDirection();
+				WorldPosition += new Vector((float)(direction.X * Speed.X * dt), (float)(direction.Y * Speed.Y * dt));
+			}
 		}
 
 		private void ResetMovement()
 		{
 			pathNodes = null;
-            currentDestination = null;
+			currentDestination = null;
 			//ChangeActivity(AgentActivity.Idle);
 		}
 
 		private void SetNextDestinationNode()
 		{
-            if (pathNodes != null)
-                if (pathNodes.Count() > 0)
-                    currentDestination = pathNodes.Dequeue();
+			if (pathNodes != null)
+				if (pathNodes.Count() > 0)
+					currentDestination = pathNodes.Dequeue();
 		}
 
 		private Vector GetMovementDirection()
@@ -219,12 +219,12 @@ namespace MyThirdSDL.Agents
 
 				if (CollisionBox.Center.X > currentDestination.Bounds.Center.X)
 					movementDirectionX -= 1f;
-                else if (CollisionBox.Center.X < currentDestination.Bounds.Center.X)
+				else if (CollisionBox.Center.X < currentDestination.Bounds.Center.X)
 					movementDirectionX += 1f;
 
-                if (CollisionBox.Center.Y > currentDestination.Bounds.Center.Y)
+				if (CollisionBox.Center.Y > currentDestination.Bounds.Center.Y)
 					movementDirectionY -= 1f;
-                else if (CollisionBox.Center.Y < currentDestination.Bounds.Center.Y)
+				else if (CollisionBox.Center.Y < currentDestination.Bounds.Center.Y)
 					movementDirectionY += 1f;
 
 				return new Vector(movementDirectionX, movementDirectionY);

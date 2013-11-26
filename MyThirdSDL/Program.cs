@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-[assembly: log4net.Config.XmlConfigurator(ConfigFileExtension="log4net")]
+[assembly: log4net.Config.XmlConfigurator(ConfigFileExtension = "log4net")]
 
 namespace MyThirdSDL
 {

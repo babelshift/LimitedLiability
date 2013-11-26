@@ -43,7 +43,7 @@ namespace MyThirdSDL.Agents
 		{
 			get
 			{
-				int necessityRatingAverage = 
+				int necessityRatingAverage =
 					((int)Necessities.Sleep
 					+ (int)Necessities.Health
 					+ (int)Necessities.Hygiene
@@ -168,13 +168,13 @@ namespace MyThirdSDL.Agents
 
 					// if we are going to a desk and we are not assigned to a desk and our target desk is not already assigned, assign this desk to ourself
 					if (CurrentIntention.Type == IntentionType.GoToDesk)
-						if(!IsAssignedAnOfficeDesk)
-							if(!officeDesk.IsAssignedToAnEmployee)
+						if (!IsAssignedAnOfficeDesk)
+							if (!officeDesk.IsAssignedToAnEmployee)
 								AssignOfficeDesk(officeDesk);
 
 					// if we are assigned an office desk, we are now at our office desk
-					if(IsAssignedAnOfficeDesk)
-						if(officeDesk.ID == AssignedOfficeDesk.ID)
+					if (IsAssignedAnOfficeDesk)
+						if (officeDesk.ID == AssignedOfficeDesk.ID)
 							IsAtOfficeDesk = true;
 				}
 

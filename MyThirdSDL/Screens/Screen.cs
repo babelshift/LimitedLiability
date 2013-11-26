@@ -229,7 +229,7 @@ namespace MyThirdSDL.Screens
 
 			// Did we reach the end of the transition?
 			if (((direction < 0) && (transitionPosition <= 0)) ||
-			    ((direction > 0) && (transitionPosition >= 1)))
+				((direction > 0) && (transitionPosition >= 1)))
 			{
 				//transitionPosition = MathHelper.Clamp(transitionPosition, 0, 1);
 				return false;

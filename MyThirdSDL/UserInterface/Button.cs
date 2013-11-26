@@ -39,7 +39,7 @@ namespace MyThirdSDL.UserInterface
 			{
 				// if the curren state does not have a left click and the previous state does have a left click, then the user released the mouse
 				if (!mouseStateCurrent.ButtonsPressed.Contains(MouseButtonCode.Left)
-				     && mouseStatePrevious.ButtonsPressed.Contains(MouseButtonCode.Left))
+					 && mouseStatePrevious.ButtonsPressed.Contains(MouseButtonCode.Left))
 					return true;
 			}
 
@@ -66,8 +66,8 @@ namespace MyThirdSDL.UserInterface
 			if (IsPressed || IsHovered)
 			{
 				if (IsHovered)
-				if (Tooltip != null)
-					Tooltip.Draw(gameTime, renderer);
+					if (Tooltip != null)
+						Tooltip.Draw(gameTime, renderer);
 
 				if (textureHover != null)
 					renderer.RenderTexture(textureHover, (int)Position.X, (int)Position.Y);

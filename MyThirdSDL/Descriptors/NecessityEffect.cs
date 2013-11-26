@@ -2,7 +2,7 @@ using System;
 
 namespace MyThirdSDL
 {
-    public class NecessityEffect
+	public class NecessityEffect
 	{
 		public int HealthEffectiveness { get; private set; }
 		public int HygieneEffectiveness { get; private set; }
@@ -17,7 +17,7 @@ namespace MyThirdSDL
 			SleepEffectiveness = sleep;
 			ThirstEffectiveness = thirst;
 			HungerEffectiveness = hunger;
-        }
-    }
+		}
+	}
 }
 

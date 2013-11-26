@@ -16,7 +16,7 @@ namespace MyThirdSDL.Content
 		private const string contentRoot = "Content/";
 		private const string contentReferencePath = contentRoot + "ContentReference.json";
 
-		public ContentManager() 
+		public ContentManager()
 		{
 			string json = File.ReadAllText(contentReferencePath);
 			JObject o = JObject.Parse(json);
@@ -34,7 +34,7 @@ namespace MyThirdSDL.Content
 			{
 				var keyValuePair = GetKeyValuePair(map);
 				contentReference.Add(keyValuePair.Key, keyValuePair.Value);
-			} 
+			}
 		}
 
 		public string GetContentPath(string contentKey)

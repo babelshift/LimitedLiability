@@ -8,121 +8,121 @@ using System.Threading.Tasks;
 
 namespace MyThirdSDL.Agents
 {
-    public abstract class Agent : IDrawable, ICollidable
-    {
-        #region Members
+	public abstract class Agent : IDrawable, ICollidable
+	{
+		#region Members
 
-        public Texture Texture { get; private set; }
+		public Texture Texture { get; private set; }
 
-        public Rectangle CollisionBox
-        {
-            get
-            {
-                return new Rectangle((int)WorldPosition.X, (int)WorldPosition.Y, Texture.Width / 2, Texture.Height / 2);
-            }
-        }
+		public Rectangle CollisionBox
+		{
+			get
+			{
+				return new Rectangle((int)WorldPosition.X, (int)WorldPosition.Y, Texture.Width / 2, Texture.Height / 2);
+			}
+		}
 
-        private TimeSpan BirthTime { get; set; }
+		private TimeSpan BirthTime { get; set; }
 
-        #endregion
+		#endregion
 
-        #region Properties
+		#region Properties
 
-        public Guid ID { get; private set; }
+		public Guid ID { get; private set; }
 
-        public string Name { get; private set; }
+		public string Name { get; private set; }
 
-        public TimeSpan SimulationAge { get; private set; }
+		public TimeSpan SimulationAge { get; private set; }
 
-        public TimeSpan WorldAge
-        {
-            get
-            {
-                return TimeSpan.FromMilliseconds(8640 * SimulationAge.TotalMilliseconds);
-            }
-        }
+		public TimeSpan WorldAge
+		{
+			get
+			{
+				return TimeSpan.FromMilliseconds(8640 * SimulationAge.TotalMilliseconds);
+			}
+		}
 
-        public AgentState State { get; private set; }
+		public AgentState State { get; private set; }
 
-        public Vector WorldPosition { get; protected set; }
+		public Vector WorldPosition { get; protected set; }
 
-        public float Depth { get { return WorldPosition.X + WorldPosition.Y; } }
+		public float Depth { get { return WorldPosition.X + WorldPosition.Y; } }
 
-        public Vector ProjectedPosition
-        {
-            get
-            {
-                Vector projectedPosition = CoordinateHelper.WorldSpaceToScreenSpace(
-                    WorldPosition.X,
-                    WorldPosition.Y,
-                    CoordinateHelper.ScreenOffset,
-                    CoordinateHelper.ScreenProjectionType.Isometric
-                );
+		public Vector ProjectedPosition
+		{
+			get
+			{
+				Vector projectedPosition = CoordinateHelper.WorldSpaceToScreenSpace(
+					WorldPosition.X,
+					WorldPosition.Y,
+					CoordinateHelper.ScreenOffset,
+					CoordinateHelper.ScreenProjectionType.Isometric
+				);
 
-                return projectedPosition;
-            }
-        }
+				return projectedPosition;
+			}
+		}
 
-        #endregion
+		#endregion
 
-        #region Constructors
+		#region Constructors
 
-        public Agent(TimeSpan birthTime, string name, Texture texture, Vector startingPosition)
-        {
-            ID = Guid.NewGuid();
-            BirthTime = birthTime;
-            Name = name;
-            Texture = texture;
-            State = AgentState.Unknown;
-            WorldPosition = startingPosition;
-        }
+		public Agent(TimeSpan birthTime, string name, Texture texture, Vector startingPosition)
+		{
+			ID = Guid.NewGuid();
+			BirthTime = birthTime;
+			Name = name;
+			Texture = texture;
+			State = AgentState.Unknown;
+			WorldPosition = startingPosition;
+		}
 
-        #endregion
+		#endregion
 
-        #region Utilities
+		#region Utilities
 
-        private void SetSimulationAge(TimeSpan simulationTime)
-        {
-            SimulationAge = simulationTime.Subtract(BirthTime);
-        }
+		private void SetSimulationAge(TimeSpan simulationTime)
+		{
+			SimulationAge = simulationTime.Subtract(BirthTime);
+		}
 
-        #endregion
+		#endregion
 
-        #region Status Changes
+		#region Status Changes
 
-        public void Activate()
-        {
-            ChangeStatus(AgentState.Active);
-        }
+		public void Activate()
+		{
+			ChangeStatus(AgentState.Active);
+		}
 
-        public void Deactivate()
-        {
-            ChangeStatus(AgentState.Inactive);
-        }
+		public void Deactivate()
+		{
+			ChangeStatus(AgentState.Inactive);
+		}
 
-        protected void ChangeStatus(AgentState status)
-        {
-            if (State != status)
-                State = status;
-        }
+		protected void ChangeStatus(AgentState status)
+		{
+			if (State != status)
+				State = status;
+		}
 
-        #endregion
+		#endregion
 
-        #region Game Loop
+		#region Game Loop
 
-        public virtual void Update(GameTime gameTime)
-        {
-            SetSimulationAge(gameTime.TotalGameTime);
-        }
+		public virtual void Update(GameTime gameTime)
+		{
+			SetSimulationAge(gameTime.TotalGameTime);
+		}
 
-        public void Draw(GameTime gameTime, Renderer renderer)
-        {
-            // adjust the positions so we draw at the center of the Texture and at the correct camera position
-            Vector drawPosition = CoordinateHelper.ProjectedPositionToDrawPosition(ProjectedPosition);
-            renderer.RenderTexture(Texture, drawPosition.X, drawPosition.Y);
-        }
+		public void Draw(GameTime gameTime, Renderer renderer)
+		{
+			// adjust the positions so we draw at the center of the Texture and at the correct camera position
+			Vector drawPosition = CoordinateHelper.ProjectedPositionToDrawPosition(ProjectedPosition);
+			renderer.RenderTexture(Texture, drawPosition.X, drawPosition.Y);
+		}
 
-        #endregion
+		#endregion
 
-    }
+	}
 }

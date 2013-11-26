@@ -40,18 +40,18 @@ namespace MyThirdSDL.UserInterface
 			return messageBox;
 		}
 
-        public MenuInspectEmployee CreateMenuInspectEmployee(Vector bottomRightPointOfWindow)
-        {
-            Texture texture = GetTexture("MenuInspectEmployeeFrame");
-            Vector position = new Vector(bottomRightPointOfWindow.X / 2 - texture.Width / 2, bottomRightPointOfWindow.Y / 2 - texture.Height / 2);
-            string fontPath = contentManager.GetContentPath("Arcade");
-            Color fontColor = new Color(218, 218, 218);
-            int fontSizeTitle = 14;
-            int fontSizeContent = 12;
+		public MenuInspectEmployee CreateMenuInspectEmployee(Vector bottomRightPointOfWindow)
+		{
+			Texture texture = GetTexture("MenuInspectEmployeeFrame");
+			Vector position = new Vector(bottomRightPointOfWindow.X / 2 - texture.Width / 2, bottomRightPointOfWindow.Y / 2 - texture.Height / 2);
+			string fontPath = contentManager.GetContentPath("Arcade");
+			Color fontColor = new Color(218, 218, 218);
+			int fontSizeTitle = 14;
+			int fontSizeContent = 12;
 
-            Icon iconMainMenu = CreateIcon(new Vector(position.X + 5, position.Y + 5), "IconPersonPlain");
-            Icon iconNeedsMenu = CreateIcon(new Vector(position.X + 362, position.Y + 5), "IconStatistics");
-            Icon iconSkillsMenu = CreateIcon(new Vector(position.X + 505, position.Y + 5), "IconPenPaper");
+			Icon iconMainMenu = CreateIcon(new Vector(position.X + 5, position.Y + 5), "IconPersonPlain");
+			Icon iconNeedsMenu = CreateIcon(new Vector(position.X + 362, position.Y + 5), "IconStatistics");
+			Icon iconSkillsMenu = CreateIcon(new Vector(position.X + 505, position.Y + 5), "IconPenPaper");
 
 			Label labelMainMenu = CreateLabel(new Vector(position.X + 38, position.Y + 15), fontPath, fontSizeTitle, fontColor, "Inspect Employee");
 			Label labelNeedsMenu = CreateLabel(new Vector(position.X + 400, position.Y + 15), fontPath, fontSizeTitle, fontColor, "Needs");
@@ -69,88 +69,88 @@ namespace MyThirdSDL.UserInterface
 			Label labelThirst = CreateLabel(new Vector(position.X + 395, position.Y + 150), fontPath, fontSizeContent, fontColor, "N/A");
 			Label labelHunger = CreateLabel(new Vector(position.X + 395, position.Y + 180), fontPath, fontSizeContent, fontColor, "N/A");
 
-            Icon iconCommunication = CreateIcon(new Vector(position.X + 508, position.Y + 50), "IconCommunication");
-            Icon iconLeadership = CreateIcon(new Vector(position.X + 508, position.Y + 80), "IconLeadership");
-            Icon iconCreativity = CreateIcon(new Vector(position.X + 508, position.Y + 110), "IconCreativity");
-            Icon iconIntelligence = CreateIcon(new Vector(position.X + 508, position.Y + 140), "IconIntelligence");
+			Icon iconCommunication = CreateIcon(new Vector(position.X + 508, position.Y + 50), "IconCommunication");
+			Icon iconLeadership = CreateIcon(new Vector(position.X + 508, position.Y + 80), "IconLeadership");
+			Icon iconCreativity = CreateIcon(new Vector(position.X + 508, position.Y + 110), "IconCreativity");
+			Icon iconIntelligence = CreateIcon(new Vector(position.X + 508, position.Y + 140), "IconIntelligence");
 
-            Label labelCommunication = CreateLabel(new Vector(position.X + 540, position.Y + 60), fontPath, fontSizeContent, fontColor, "N/A");
-            Label labelLeadership = CreateLabel(new Vector(position.X + 540, position.Y + 90), fontPath, fontSizeContent, fontColor, "N/A");
-            Label labelCreativity = CreateLabel(new Vector(position.X + 540, position.Y + 120), fontPath, fontSizeContent, fontColor, "N/A");
-            Label labelIntelligence = CreateLabel(new Vector(position.X + 540, position.Y + 150), fontPath, fontSizeContent, fontColor, "N/A");
+			Label labelCommunication = CreateLabel(new Vector(position.X + 540, position.Y + 60), fontPath, fontSizeContent, fontColor, "N/A");
+			Label labelLeadership = CreateLabel(new Vector(position.X + 540, position.Y + 90), fontPath, fontSizeContent, fontColor, "N/A");
+			Label labelCreativity = CreateLabel(new Vector(position.X + 540, position.Y + 120), fontPath, fontSizeContent, fontColor, "N/A");
+			Label labelIntelligence = CreateLabel(new Vector(position.X + 540, position.Y + 150), fontPath, fontSizeContent, fontColor, "N/A");
 
-            Label labelName = CreateLabel(new Vector(position.X + 15, position.Y + 60), fontPath, fontSizeContent, fontColor, "Name:");
-            Label labelAge = CreateLabel(new Vector(position.X + 15, position.Y + 90), fontPath, fontSizeContent, fontColor, "Age:");
-            Label labelJob = CreateLabel(new Vector(position.X + 15, position.Y + 120), fontPath, fontSizeContent, fontColor, "Job:");
-            Label labelSalary = CreateLabel(new Vector(position.X + 15, position.Y + 150), fontPath, fontSizeContent, fontColor, "Salary:");
-            Label labelStatus = CreateLabel(new Vector(position.X + 15, position.Y + 180), fontPath, fontSizeContent, fontColor, "Status:");
-            Label labelBirth = CreateLabel(new Vector(position.X + 15, position.Y + 210), fontPath, fontSizeContent, fontColor, "Birth:");
-            Label labelMood = CreateLabel(new Vector(position.X + 15, position.Y + 240), fontPath, fontSizeContent, fontColor, "Mood:");
+			Label labelName = CreateLabel(new Vector(position.X + 15, position.Y + 60), fontPath, fontSizeContent, fontColor, "Name:");
+			Label labelAge = CreateLabel(new Vector(position.X + 15, position.Y + 90), fontPath, fontSizeContent, fontColor, "Age:");
+			Label labelJob = CreateLabel(new Vector(position.X + 15, position.Y + 120), fontPath, fontSizeContent, fontColor, "Job:");
+			Label labelSalary = CreateLabel(new Vector(position.X + 15, position.Y + 150), fontPath, fontSizeContent, fontColor, "Salary:");
+			Label labelStatus = CreateLabel(new Vector(position.X + 15, position.Y + 180), fontPath, fontSizeContent, fontColor, "Status:");
+			Label labelBirth = CreateLabel(new Vector(position.X + 15, position.Y + 210), fontPath, fontSizeContent, fontColor, "Birth:");
+			Label labelMood = CreateLabel(new Vector(position.X + 15, position.Y + 240), fontPath, fontSizeContent, fontColor, "Mood:");
 
-            Label labelNameValue = CreateLabel(new Vector(position.X + 110, position.Y + 60), fontPath, fontSizeContent, fontColor, "N/A");
-            Label labelAgeValue = CreateLabel(new Vector(position.X + 110, position.Y + 90), fontPath, fontSizeContent, fontColor, "N/A");
-            Label labelJobValue = CreateLabel(new Vector(position.X + 110, position.Y + 120), fontPath, fontSizeContent, fontColor, "N/A");
-            Label labelSalaryValue = CreateLabel(new Vector(position.X + 110, position.Y + 150), fontPath, fontSizeContent, fontColor, "N/A");
-            Label labelStatusValue = CreateLabel(new Vector(position.X + 110, position.Y + 180), fontPath, fontSizeContent, fontColor, "N/A");
-            Label labelBirthValue = CreateLabel(new Vector(position.X + 110, position.Y + 210), fontPath, fontSizeContent, fontColor, "N/A");
+			Label labelNameValue = CreateLabel(new Vector(position.X + 110, position.Y + 60), fontPath, fontSizeContent, fontColor, "N/A");
+			Label labelAgeValue = CreateLabel(new Vector(position.X + 110, position.Y + 90), fontPath, fontSizeContent, fontColor, "N/A");
+			Label labelJobValue = CreateLabel(new Vector(position.X + 110, position.Y + 120), fontPath, fontSizeContent, fontColor, "N/A");
+			Label labelSalaryValue = CreateLabel(new Vector(position.X + 110, position.Y + 150), fontPath, fontSizeContent, fontColor, "N/A");
+			Label labelStatusValue = CreateLabel(new Vector(position.X + 110, position.Y + 180), fontPath, fontSizeContent, fontColor, "N/A");
+			Label labelBirthValue = CreateLabel(new Vector(position.X + 110, position.Y + 210), fontPath, fontSizeContent, fontColor, "N/A");
 
 			Icon iconMoodHappy = CreateIcon(new Vector(position.X + 110, position.Y + 230), "IconPersonHappy");
 			Icon iconMoodAngry = CreateIcon(new Vector(position.X + 110, position.Y + 230), "IconPersonAngry");
-            
+
 			Button buttonCloseWindow = CreateButton(new Vector(position.X + 600, position.Y - 47), "ButtonSquare", "ButtonSquareHover", "IconWindowClose", "IconWindowClose");
 
-            MenuInspectEmployee menuInspectEmployee = new MenuInspectEmployee(texture, position, buttonCloseWindow,
+			MenuInspectEmployee menuInspectEmployee = new MenuInspectEmployee(texture, position, buttonCloseWindow,
 				labelNameValue, labelAgeValue, labelJobValue, labelSalaryValue, labelStatusValue, labelBirthValue, iconMoodHappy, iconMoodAngry,
 				labelHealth, labelHygiene, labelSleep, labelThirst, labelHunger, labelCommunication, labelCreativity, labelLeadership, labelIntelligence);
 
-            menuInspectEmployee.AddControl(iconMainMenu);
-            menuInspectEmployee.AddControl(iconNeedsMenu);
-            menuInspectEmployee.AddControl(iconSkillsMenu);
+			menuInspectEmployee.AddControl(iconMainMenu);
+			menuInspectEmployee.AddControl(iconNeedsMenu);
+			menuInspectEmployee.AddControl(iconSkillsMenu);
 
-            menuInspectEmployee.AddControl(labelMainMenu);
-            menuInspectEmployee.AddControl(labelNeedsMenu);
-            menuInspectEmployee.AddControl(labelSkillsMenu);
+			menuInspectEmployee.AddControl(labelMainMenu);
+			menuInspectEmployee.AddControl(labelNeedsMenu);
+			menuInspectEmployee.AddControl(labelSkillsMenu);
 
-            menuInspectEmployee.AddControl(iconHealth);
-            menuInspectEmployee.AddControl(iconHygiene);
-            menuInspectEmployee.AddControl(iconSleep);
-            menuInspectEmployee.AddControl(iconThirst);
-            menuInspectEmployee.AddControl(iconHunger);
+			menuInspectEmployee.AddControl(iconHealth);
+			menuInspectEmployee.AddControl(iconHygiene);
+			menuInspectEmployee.AddControl(iconSleep);
+			menuInspectEmployee.AddControl(iconThirst);
+			menuInspectEmployee.AddControl(iconHunger);
 
-//            menuInspectEmployee.AddControl(labelHealth);
-//            menuInspectEmployee.AddControl(labelHygiene);
-//            menuInspectEmployee.AddControl(labelSleep);
-//            menuInspectEmployee.AddControl(labelThirst);
-//            menuInspectEmployee.AddControl(labelHunger);
+			//            menuInspectEmployee.AddControl(labelHealth);
+			//            menuInspectEmployee.AddControl(labelHygiene);
+			//            menuInspectEmployee.AddControl(labelSleep);
+			//            menuInspectEmployee.AddControl(labelThirst);
+			//            menuInspectEmployee.AddControl(labelHunger);
 
-            menuInspectEmployee.AddControl(iconCommunication);
-            menuInspectEmployee.AddControl(iconLeadership);
-            menuInspectEmployee.AddControl(iconCreativity);
-            menuInspectEmployee.AddControl(iconIntelligence);
+			menuInspectEmployee.AddControl(iconCommunication);
+			menuInspectEmployee.AddControl(iconLeadership);
+			menuInspectEmployee.AddControl(iconCreativity);
+			menuInspectEmployee.AddControl(iconIntelligence);
 
-//            menuInspectEmployee.AddControl(labelCommunication);
-//            menuInspectEmployee.AddControl(labelLeadership);
-//            menuInspectEmployee.AddControl(labelCreativity);
-//            menuInspectEmployee.AddControl(labelIntelligence);
+			//            menuInspectEmployee.AddControl(labelCommunication);
+			//            menuInspectEmployee.AddControl(labelLeadership);
+			//            menuInspectEmployee.AddControl(labelCreativity);
+			//            menuInspectEmployee.AddControl(labelIntelligence);
 
-            menuInspectEmployee.AddControl(labelName);
-            menuInspectEmployee.AddControl(labelAge);
-            menuInspectEmployee.AddControl(labelJob);
-            menuInspectEmployee.AddControl(labelSalary);
-            menuInspectEmployee.AddControl(labelStatus);
-            menuInspectEmployee.AddControl(labelBirth);
+			menuInspectEmployee.AddControl(labelName);
+			menuInspectEmployee.AddControl(labelAge);
+			menuInspectEmployee.AddControl(labelJob);
+			menuInspectEmployee.AddControl(labelSalary);
+			menuInspectEmployee.AddControl(labelStatus);
+			menuInspectEmployee.AddControl(labelBirth);
 			menuInspectEmployee.AddControl(labelMood);
 
-            //menuInspectEmployee.AddControl(labelNameValue);
-            //menuInspectEmployee.AddControl(labelAgeValue);
-            //menuInspectEmployee.AddControl(labelJobValue);
-            //menuInspectEmployee.AddControl(labelSalaryValue);
-            //menuInspectEmployee.AddControl(labelStatusValue);
-            //menuInspectEmployee.AddControl(labelBirthValue);
-            //menuInspectEmployee.AddControl(labelMoodValue);
+			//menuInspectEmployee.AddControl(labelNameValue);
+			//menuInspectEmployee.AddControl(labelAgeValue);
+			//menuInspectEmployee.AddControl(labelJobValue);
+			//menuInspectEmployee.AddControl(labelSalaryValue);
+			//menuInspectEmployee.AddControl(labelStatusValue);
+			//menuInspectEmployee.AddControl(labelBirthValue);
+			//menuInspectEmployee.AddControl(labelMoodValue);
 
-            return menuInspectEmployee;
-        }
+			return menuInspectEmployee;
+		}
 
 		public MenuEquipment CreateMenuEquipment(Vector bottomRightPointOfWindow, IEnumerable<IPurchasable> purchasableItems)
 		{
@@ -192,7 +192,7 @@ namespace MyThirdSDL.UserInterface
 				iconMoney, iconHealth, iconHygiene, iconSleep, iconThirst, iconHunger, labelMoney, labelHealth, labelHygiene, labelSleep, labelThirst,
 				labelHunger, buttonArrowCircleLeft, buttonArrowCircleRight, buttonCloseWindow, buttonConfirmWindow);
 
-			foreach(var purchasableItem in purchasableItems)
+			foreach (var purchasableItem in purchasableItems)
 			{
 				ButtonMenuItem buttonMenuItem = CreateButtonMenuItem(position, "ButtonMenuItem", "ButtonMenuItemHover", purchasableItem);
 				menuEquipment.AddButtonMenuItem(buttonMenuItem);
@@ -286,7 +286,7 @@ namespace MyThirdSDL.UserInterface
 			return new ButtonMenuItem(position, texture, textureHover, iconItem, labelItem, iconMoney, labelMoney, purchasableItem);
 		}
 
-		public Button CreateButton(Vector position, string texturePathKey, string textureHoverPathKey, 
+		public Button CreateButton(Vector position, string texturePathKey, string textureHoverPathKey,
 			string iconTexturePathKey, string iconTextureHoverPathKey)
 		{
 			Texture texture = GetTexture(texturePathKey);
@@ -321,7 +321,7 @@ namespace MyThirdSDL.UserInterface
 			return new SimulationLabel(position, trueTypeText, simulationMessage);
 		}
 
-		public Tooltip CreateTooltip(Vector position, string tooltipFrameTexturePathKey, string labelFontPath, 
+		public Tooltip CreateTooltip(Vector position, string tooltipFrameTexturePathKey, string labelFontPath,
 			int labelFontSize, Color labelColor, string labelText)
 		{
 			Label label = CreateLabel(new Vector(position.X + 7, position.Y + 8), labelFontPath, labelFontSize, labelColor, labelText);

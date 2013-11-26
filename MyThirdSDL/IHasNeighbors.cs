@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace MyThirdSDL
 {
-    public interface IHasNeighbors<Node>
-    {
+	public interface IHasNeighbors<Node>
+	{
 		IEnumerable<Node> Neighbors { get; }
-    }
+	}
 }

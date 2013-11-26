@@ -9,6 +9,6 @@ namespace MyThirdSDL
 		BackWall,
 		Object,
 		FrontWall
-    }
+	}
 }
 

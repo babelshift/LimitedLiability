@@ -109,7 +109,7 @@ namespace MyThirdSDL.Screens
 				screen.Update(gameTime, otherWindowHasFocus, coveredByOtherScreen); //, otherWindowHasFocus, coveredByOtherScreen);
 
 				if (screen.ScreenState == ScreenState.TransitionOn ||
-				    screen.ScreenState == ScreenState.Active)
+					screen.ScreenState == ScreenState.Active)
 				{
 					// If this is the first active screen we came across,
 					// give it a chance to handle input.

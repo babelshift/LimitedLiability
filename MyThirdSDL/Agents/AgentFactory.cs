@@ -142,7 +142,7 @@ namespace MyThirdSDL.Agents
 			if (log.IsDebugEnabled)
 				log.Debug(String.Format("Creating agent of type {0} at ({1},{2}) with birth time: {3}", typeof(T), position.X, position.Y, birthTime));
 			Texture texture = GetTextureFromStore(texturePathKey);
-			return (T)Activator.CreateInstance(typeof(T), birthTime, texture, position, 
+			return (T)Activator.CreateInstance(typeof(T), birthTime, texture, position,
 				agentMetaData.Name, agentMetaData.Price, agentMetaData.IconKey, agentMetaData.NecessityEffect, agentMetaData.SkillEffect);
 		}
 

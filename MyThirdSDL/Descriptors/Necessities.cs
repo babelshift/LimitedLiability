@@ -40,32 +40,32 @@ namespace MyThirdSDL.Descriptors
 		private double thirstRating;
 
 		public Rating Sleep
-		{ 
-			get { return GetRatingFromDouble(sleepRating); } 
+		{
+			get { return GetRatingFromDouble(sleepRating); }
 			private set { sleepRating = (double)value; }
 		}
 
 		public Rating Health
-		{ 
-			get { return GetRatingFromDouble(healthRating); } 
+		{
+			get { return GetRatingFromDouble(healthRating); }
 			private set { healthRating = (double)value; }
 		}
 
 		public Rating Hygiene
-		{ 
-			get { return GetRatingFromDouble(hygieneRating); } 
+		{
+			get { return GetRatingFromDouble(hygieneRating); }
 			private set { hygieneRating = (double)value; }
 		}
 
 		public Rating Hunger
-		{ 
-			get { return GetRatingFromDouble(hungerRating); } 
+		{
+			get { return GetRatingFromDouble(hungerRating); }
 			private set { hungerRating = (double)value; }
 		}
 
 		public Rating Thirst
-		{ 
-			get { return GetRatingFromDouble(thirstRating); } 
+		{
+			get { return GetRatingFromDouble(thirstRating); }
 			private set { thirstRating = (double)value; }
 		}
 

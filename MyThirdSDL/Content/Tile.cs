@@ -17,7 +17,7 @@ namespace MyThirdSDL.Content
 	{
 		public static int EmptyTileID = 0;
 
-        public Guid ID { get; private set; }
+		public Guid ID { get; private set; }
 
 		/// <summary>
 		/// World grid is the world space tile grid. This is the index within the world grid that the tile is positioned.
@@ -71,7 +71,7 @@ namespace MyThirdSDL.Content
 		/// </summary>
 		public Tile()
 		{
-            ID = Guid.NewGuid();
+			ID = Guid.NewGuid();
 			IsEmpty = true;
 		}
 
@@ -104,8 +104,8 @@ namespace MyThirdSDL.Content
 			{
 				renderer.RenderTexture(
 					Texture,
-                    ProjectedPosition.X - Camera.Position.X - Width * 0.5f,
-                    ProjectedPosition.Y - Camera.Position.Y - Height,
+					ProjectedPosition.X - Camera.Position.X - Width * 0.5f,
+					ProjectedPosition.Y - Camera.Position.Y - Height,
 					SourceTextureBounds
 				);
 			}
@@ -128,5 +128,5 @@ namespace MyThirdSDL.Content
 				Texture.Dispose();
 		}
 	}
-	
+
 }

@@ -13,7 +13,7 @@ namespace MyThirdSDL.UserInterface
 	{
 		private const int itemsPerPage = 4;
 
-		#region Header Controls 
+		#region Header Controls
 
 		private Icon iconMainMenu;
 		private Icon iconInfoMenu;
@@ -57,9 +57,9 @@ namespace MyThirdSDL.UserInterface
 
 		#region Constructor
 
-		public MenuEquipment(Texture texture, Vector position, Icon iconMainMenu, Icon iconInfoMenu, Label labelMainMenu, Label labelInfoMenu, 
-			Icon iconMoney, Icon iconHealth, Icon iconHygiene, Icon iconSleepy, Icon iconThirst, Icon iconHunger, Label labelMoney, 
-			Label labelHealth, Label labelHygiene, Label labelSleepy, Label labelThirst, Label labelHunger, 
+		public MenuEquipment(Texture texture, Vector position, Icon iconMainMenu, Icon iconInfoMenu, Label labelMainMenu, Label labelInfoMenu,
+			Icon iconMoney, Icon iconHealth, Icon iconHygiene, Icon iconSleepy, Icon iconThirst, Icon iconHunger, Label labelMoney,
+			Label labelHealth, Label labelHygiene, Label labelSleepy, Label labelThirst, Label labelHunger,
 			Button buttonArrowCircleLeft, Button buttonArrowCircleRight, Button buttonCloseWindow, Button buttonConfirmWindow)
 			: base(texture, position)
 		{
@@ -204,7 +204,7 @@ namespace MyThirdSDL.UserInterface
 			if (clickedButtonMenuItem != null)
 			{
 				foreach (var buttonMenuItemPage in buttonMenuItemPages.Values)
-					foreach(var buttonMenuItem in buttonMenuItemPage)
+					foreach (var buttonMenuItem in buttonMenuItemPage)
 						buttonMenuItem.ToggleOff();
 				clickedButtonMenuItem.ToggleOn();
 			}
@@ -246,13 +246,13 @@ namespace MyThirdSDL.UserInterface
 
 		private void buttonArrowCircleRight_Clicked(object sender, EventArgs e)
 		{
-			if(currentDisplayedPage < buttonMenuItemPages.Keys.Count)
+			if (currentDisplayedPage < buttonMenuItemPages.Keys.Count)
 				currentDisplayedPage++;
 		}
 
 		private void buttonArrowCircleLeft_Clicked(object sender, EventArgs e)
 		{
-			if(currentDisplayedPage > 1)
+			if (currentDisplayedPage > 1)
 				currentDisplayedPage--;
 		}
 

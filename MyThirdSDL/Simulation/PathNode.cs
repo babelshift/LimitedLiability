@@ -16,9 +16,9 @@ namespace MyThirdSDL.Simulation
 
 		public PathNode(string name, Rectangle bounds, Orientation orientation)
 			: base(name, bounds, orientation, MyThirdSDL.Content.MapObjectType.PathNode)
-        {
-            Enable();
-        }
+		{
+			Enable();
+		}
 
 		public void AddNeighbor(PathNode pathNode)
 		{
@@ -35,6 +35,6 @@ namespace MyThirdSDL.Simulation
 		{
 			IsEnabled = false;
 		}
-    }
+	}
 }
 

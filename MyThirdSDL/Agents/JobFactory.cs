@@ -44,11 +44,11 @@ namespace MyThirdSDL.Agents
 		/// <returns></returns>
 		public Job CreateJob(Skills skill)
 		{
-			 List<Job> validJobs = jobs.Where(j =>
-				skill.Intelligence >= j.RequiredIntelligence
-				&& skill.Creativity >= j.RequiredCreativity
-				&& skill.Communication >= j.RequiredCommunication
-				&& skill.Leadership >= j.RequiredLeadership).ToList();
+			List<Job> validJobs = jobs.Where(j =>
+			   skill.Intelligence >= j.RequiredIntelligence
+			   && skill.Creativity >= j.RequiredCreativity
+			   && skill.Communication >= j.RequiredCommunication
+			   && skill.Leadership >= j.RequiredLeadership).ToList();
 
 			int i = random.Next(0, validJobs.Count - 1);
 

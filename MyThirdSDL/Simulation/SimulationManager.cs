@@ -34,7 +34,7 @@ namespace MyThirdSDL.Simulation
 		/// </summary>
 		/// <value>The tracked agents.</value>
 		public IEnumerable<Agent> TrackedAgents
-		{ 
+		{
 			get
 			{
 				IEnumerable<List<Agent>> agentLists = trackedAgents.Values.AsEnumerable();
@@ -42,22 +42,22 @@ namespace MyThirdSDL.Simulation
 				foreach (var agentList in agentLists)
 					agents.AddRange(agentList);
 				return agents;
-			} 
+			}
 		}
 
-        public IEnumerable<Employee> TrackedEmployees
-        {
-            get
-            {
-                IEnumerable<List<Agent>> agentLists = trackedAgents.Values.AsEnumerable();
-                List<Employee> agents = new List<Employee>();
-                foreach (var agentList in agentLists)
-                    foreach(var agent in agentList)
-                        if(agent is Employee)
-                            agents.Add(agent as Employee);
-                return agents;
-            } 
-        }
+		public IEnumerable<Employee> TrackedEmployees
+		{
+			get
+			{
+				IEnumerable<List<Agent>> agentLists = trackedAgents.Values.AsEnumerable();
+				List<Employee> agents = new List<Employee>();
+				foreach (var agentList in agentLists)
+					foreach (var agent in agentList)
+						if (agent is Employee)
+							agents.Add(agent as Employee);
+				return agents;
+			}
+		}
 
 		#region Public Simulation Events
 
@@ -88,22 +88,22 @@ namespace MyThirdSDL.Simulation
 			SimulationTime = gameTime.TotalGameTime;
 
 			foreach (var agentList in trackedAgents.Values)
-            {
+			{
 				foreach (var agent in agentList)
-                {
+				{
 					agent.Update(gameTime);
 
-                    if (agent is Employee)
-                    {
-                        var employee = agent as Employee;
-                        
+					if (agent is Employee)
+					{
+						var employee = agent as Employee;
+
 						// if the agent being updated is an employee and that agent is being clicked on by the user, fire the event telling subscribers of such
 						// we can use this event to react to the user interacting with the employees to do things like display their inspection information
 						if (IsEmployeeClicked(employee))
 							EventHelper.FireEvent<EmployeeClickedEventArgs>(EmployeeClicked, this, new EmployeeClickedEventArgs(employee));
-                    }
-                }
-            }
+					}
+				}
+			}
 		}
 
 		/// <summary>
@@ -114,7 +114,7 @@ namespace MyThirdSDL.Simulation
 		/// <param name="employee">Employee.</param>
 		private bool IsEmployeeClicked(Employee employee)
 		{
-			return employee.CollisionBox.Contains(new Point((int)MouseHelper.ClickedWorldSpacePoint.X, (int)MouseHelper.ClickedWorldSpacePoint.Y)) 
+			return employee.CollisionBox.Contains(new Point((int)MouseHelper.ClickedWorldSpacePoint.X, (int)MouseHelper.ClickedWorldSpacePoint.Y))
 				&& !MouseHelper.CurrentMouseState.ButtonsPressed.Contains(MouseButtonCode.Left)
 				&& MouseHelper.PreviousMouseState.ButtonsPressed.Contains(MouseButtonCode.Left);
 		}
@@ -136,12 +136,12 @@ namespace MyThirdSDL.Simulation
 
 		private void HandleIsUnhappy(object sender, EventArgs e)
 		{
-			
+
 		}
 
 		private void HandleIsUnhealthy(object sender, EventArgs e)
 		{
-			
+
 		}
 
 		private void HandleIsThirsty(object sender, EventArgs e)
@@ -160,7 +160,7 @@ namespace MyThirdSDL.Simulation
 
 		private void HandleIsDirty(object sender, EventArgs e)
 		{
-			
+
 		}
 
 		private void HandleIsSleepy(object sender, EventArgs e)
@@ -350,14 +350,14 @@ namespace MyThirdSDL.Simulation
 			{
 				// TODO: this is ugly as hell, i'm switching on a type in a generic method and double casting a list
 				// we want to remove assigned office desks from the list of get tracked agents because they should be considered taken
-//				if (typeof(T).Equals(typeof(OfficeDesk)))
-//				{
-//					var officeDesks = agentsForType.Cast<OfficeDesk>().ToList();
-//					officeDesks.RemoveAll(o => o.IsAssignedToAnEmployee == true);
-//					return officeDesks.Cast<T>();
-//				}
-//				else
-					return agentsForType.Cast<T>();
+				//				if (typeof(T).Equals(typeof(OfficeDesk)))
+				//				{
+				//					var officeDesks = agentsForType.Cast<OfficeDesk>().ToList();
+				//					officeDesks.RemoveAll(o => o.IsAssignedToAnEmployee == true);
+				//					return officeDesks.Cast<T>();
+				//				}
+				//				else
+				return agentsForType.Cast<T>();
 			}
 			else
 				return new List<T>();
@@ -397,20 +397,20 @@ namespace MyThirdSDL.Simulation
 					if (closestAgent != null)
 					{
 						// if this is a triggerable, subscribe to the trigger now that we intend to go to it
-//						if (closestAgent is ITriggerable)
-//						{
-//							var triggerable = closestAgent as ITriggerable;
-//							if (closestAgent is SodaMachine)
-//								triggerable.Trigger.AddSubscriptionToActionByType(mobileAgent, SubscriptionType.Once, ActionType.DispenseDrink);
-//							if (closestAgent is SnackMachine)
-//								triggerable.Trigger.AddSubscriptionToActionByType(mobileAgent, SubscriptionType.Once, ActionType.DispenseFood);
-//						}
+						//						if (closestAgent is ITriggerable)
+						//						{
+						//							var triggerable = closestAgent as ITriggerable;
+						//							if (closestAgent is SodaMachine)
+						//								triggerable.Trigger.AddSubscriptionToActionByType(mobileAgent, SubscriptionType.Once, ActionType.DispenseDrink);
+						//							if (closestAgent is SnackMachine)
+						//								triggerable.Trigger.AddSubscriptionToActionByType(mobileAgent, SubscriptionType.Once, ActionType.DispenseFood);
+						//						}
 
 						// we only want to add a "go to office desk" intention if the desk is not assigned to someone
 						if (closestAgent is OfficeDesk)
 						{
 							var closestOfficeDesk = closestAgent as OfficeDesk;
-							if(!closestOfficeDesk.IsAssignedToAnEmployee)
+							if (!closestOfficeDesk.IsAssignedToAnEmployee)
 								AddIntentionToAgent(mobileAgent, closestAgent, intentionType);
 						}
 						else
@@ -419,7 +419,7 @@ namespace MyThirdSDL.Simulation
 				}
 			}
 		}
-			
+
 		private void WalkEmployeeToAssignedOfficeDesk(Employee employee)
 		{
 			AddIntentionToAgent(employee, employee.AssignedOfficeDesk, IntentionType.GoToDesk);

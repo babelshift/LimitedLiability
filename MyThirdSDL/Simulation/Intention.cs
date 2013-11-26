@@ -23,8 +23,8 @@ namespace MyThirdSDL.Simulation
 	/// Intent could be "Go to a Vending Machine and Eat." Intents should point to another Agent so that the MobileAgent can path to it and optionally
 	/// set off the trigger for the Agent (if the Agent is Triggerable).
 	/// </summary>
-    public class Intention
-    {
+	public class Intention
+	{
 		public Agent WalkToAgent { get; private set; }
 		public Queue<PathNode> PathNodesToAgent { get; private set; }
 		public IntentionType Type { get; private set; }
@@ -32,12 +32,12 @@ namespace MyThirdSDL.Simulation
 		/// <summary>
 		/// Initializes a new instance of the <see cref="MyThirdSDL.Intent"/> class. 
 		/// </summary>
-        public Intention(Agent walkToAgent, Queue<PathNode> pathNodesToAgent, IntentionType type)
-        {
+		public Intention(Agent walkToAgent, Queue<PathNode> pathNodesToAgent, IntentionType type)
+		{
 			WalkToAgent = walkToAgent;
 			PathNodesToAgent = pathNodesToAgent;
 			Type = type;
-        }
-    }
+		}
+	}
 }
 

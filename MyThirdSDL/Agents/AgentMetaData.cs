@@ -2,8 +2,8 @@ using System;
 
 namespace MyThirdSDL
 {
-    public class AgentMetaData
-    {
+	public class AgentMetaData
+	{
 		public int Price { get; private set; }
 		public string Name { get; private set; }
 		public string IconKey { get; private set; }
@@ -11,13 +11,13 @@ namespace MyThirdSDL
 		public SkillEffect SkillEffect { get; private set; }
 
 		public AgentMetaData(int price, string name, string iconKey, NecessityEffect necessityEffect, SkillEffect skillEffect)
-        {
+		{
 			Price = price;
 			Name = name;
 			IconKey = iconKey;
 			NecessityEffect = necessityEffect;
 			SkillEffect = skillEffect;
-        }
-    }
+		}
+	}
 }
 

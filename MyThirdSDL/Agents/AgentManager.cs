@@ -5,15 +5,15 @@ using System.Collections.Generic;
 
 namespace MyThirdSDL
 {
-    public class AgentManager
+	public class AgentManager
 	{
 		private const string agentRoot = "Agents/";
 		private const string agentReferencePath = agentRoot + "AgentReference.json";
 
 		private Dictionary<string, AgentMetaData> agentMetaDataDictionary = new Dictionary<string, AgentMetaData>();
 
-        public AgentManager()
-        {
+		public AgentManager()
+		{
 			string json = File.ReadAllText(agentReferencePath);
 
 			JObject o = JObject.Parse(json);
@@ -52,7 +52,7 @@ namespace MyThirdSDL
 				agentMetaData = new AgentMetaData(price, name, iconKey, necessityEffectData, skillEffectData);
 				agentMetaDataDictionary.Add(key, agentMetaData);
 			}
-        }
+		}
 
 		public AgentMetaData GetAgentMetaData(string key)
 		{
@@ -63,6 +63,6 @@ namespace MyThirdSDL
 			else
 				throw new KeyNotFoundException(String.Format("The content with key '{0}' was not found.", key));
 		}
-    }
+	}
 }
 

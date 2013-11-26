@@ -51,8 +51,8 @@ namespace MyThirdSDL
 		/// </summary>
 		public MainGame()
 		{
-//			KeyPressed += HandleKeyPressed;
-//			KeyReleased += HandleKeyReleased;
+			//			KeyPressed += HandleKeyPressed;
+			//			KeyReleased += HandleKeyReleased;
 			MouseMoving += HandleMouseMoving;
 			MouseButtonPressed += HandleMouseButtonClicked;
 			WindowEntered += (object sender, WindowEventArgs e) => isMouseInsideWindowBounds = true;

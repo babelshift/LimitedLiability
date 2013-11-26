@@ -11,8 +11,8 @@ using MyThirdSDL.Descriptors;
 
 namespace MyThirdSDL.UserInterface
 {
-    public class MenuInspectEmployee : Control
-    {
+	public class MenuInspectEmployee : Control
+	{
 		private Label labelHealthValue;
 		private Label labelHygieneValue;
 		private Label labelSleepValue;
@@ -24,22 +24,22 @@ namespace MyThirdSDL.UserInterface
 		private Label labelIntelligenceValue;
 		private Label labelLeadershipValue;
 
-        private Label labelNameValue;
-        private Label labelAgeValue;
-        private Label labelJobValue;
-        private Label labelSalaryValue;
-        private Label labelStatusValue;
-        private Label labelBirthValue;
+		private Label labelNameValue;
+		private Label labelAgeValue;
+		private Label labelJobValue;
+		private Label labelSalaryValue;
+		private Label labelStatusValue;
+		private Label labelBirthValue;
 
 		private Icon iconMoodActive;
 		private Icon iconMoodHappy;
 		private Icon iconMoodAngry;
 
-        private Button buttonCloseWindow;
+		private Button buttonCloseWindow;
 
 		public event EventHandler<EventArgs> ButtonCloseWindowClicked;
 
-        private List<Control> controls = new List<Control>();
+		private List<Control> controls = new List<Control>();
 
 		public void SetInfoValues(Employee employee)
 		{
@@ -73,24 +73,24 @@ namespace MyThirdSDL.UserInterface
 			labelIntelligenceValue.Text = String.Format("{0} {1}", (int)skills.Intelligence, skills.IntelligenceToString());
 		}
 
-        List<Label> labelValues = new List<Label>();
+		List<Label> labelValues = new List<Label>();
 
-        public MenuInspectEmployee(Texture texture, Vector position, Button buttonCloseWindow,
-			Label labelNameValue, Label labelAgeValue, Label labelJobValue, Label labelSalaryValue,  Label labelStatusValue, Label labelBirthValue,
+		public MenuInspectEmployee(Texture texture, Vector position, Button buttonCloseWindow,
+			Label labelNameValue, Label labelAgeValue, Label labelJobValue, Label labelSalaryValue, Label labelStatusValue, Label labelBirthValue,
 			Icon iconMoodHappy, Icon iconMoodAngry,
-			Label labelHealth, Label labelHygiene, Label labelSleep, Label labelThirst, Label labelHunger, Label labelCommunication, 
+			Label labelHealth, Label labelHygiene, Label labelSleep, Label labelThirst, Label labelHunger, Label labelCommunication,
 			Label labelCreativity, Label labelLeadership, Label labelIntelligence)
-            : base(texture, position)
-        {
-            this.buttonCloseWindow = buttonCloseWindow;
+			: base(texture, position)
+		{
+			this.buttonCloseWindow = buttonCloseWindow;
 			this.buttonCloseWindow.Clicked += (object sender, EventArgs e) => EventHelper.FireEvent(ButtonCloseWindowClicked, this, EventArgs.Empty);
 
-            this.labelNameValue = labelNameValue;
-            this.labelAgeValue = labelAgeValue;
-            this.labelJobValue = labelJobValue;
-            this.labelSalaryValue = labelSalaryValue;
-            this.labelStatusValue = labelStatusValue;
-            this.labelBirthValue = labelBirthValue;
+			this.labelNameValue = labelNameValue;
+			this.labelAgeValue = labelAgeValue;
+			this.labelJobValue = labelJobValue;
+			this.labelSalaryValue = labelSalaryValue;
+			this.labelStatusValue = labelStatusValue;
+			this.labelBirthValue = labelBirthValue;
 
 			this.iconMoodAngry = iconMoodAngry;
 			this.iconMoodHappy = iconMoodHappy;
@@ -105,12 +105,12 @@ namespace MyThirdSDL.UserInterface
 			this.labelLeadershipValue = labelLeadership;
 			this.labelIntelligenceValue = labelIntelligence;
 
-            labelValues.Add(this.labelNameValue);
-            labelValues.Add(this.labelAgeValue);
-            labelValues.Add(this.labelJobValue);
-            labelValues.Add(this.labelSalaryValue);
-            labelValues.Add(this.labelStatusValue);
-            labelValues.Add(this.labelBirthValue);
+			labelValues.Add(this.labelNameValue);
+			labelValues.Add(this.labelAgeValue);
+			labelValues.Add(this.labelJobValue);
+			labelValues.Add(this.labelSalaryValue);
+			labelValues.Add(this.labelStatusValue);
+			labelValues.Add(this.labelBirthValue);
 			labelValues.Add(this.labelHealthValue);
 			labelValues.Add(this.labelHygieneValue);
 			labelValues.Add(this.labelSleepValue);
@@ -120,41 +120,41 @@ namespace MyThirdSDL.UserInterface
 			labelValues.Add(this.labelCreativityValue);
 			labelValues.Add(this.labelLeadershipValue);
 			labelValues.Add(this.labelIntelligenceValue);
-        }
+		}
 
-        public void AddControl(Control control)
-        {
-            controls.Add(control);
-        }
+		public void AddControl(Control control)
+		{
+			controls.Add(control);
+		}
 
-        public override void Update(GameTime gameTime)
-        {
-            base.Update(gameTime);
+		public override void Update(GameTime gameTime)
+		{
+			base.Update(gameTime);
 
-            buttonCloseWindow.Update(gameTime);
+			buttonCloseWindow.Update(gameTime);
 
-            foreach (var control in controls)
-                control.Update(gameTime);
+			foreach (var control in controls)
+				control.Update(gameTime);
 
-            foreach (var labelValue in labelValues)
-                labelValue.Update(gameTime);
+			foreach (var labelValue in labelValues)
+				labelValue.Update(gameTime);
 
 			iconMoodActive.Update(gameTime);
-        }
+		}
 
-        public override void Draw(GameTime gameTime, Renderer renderer)
-        {
-            base.Draw(gameTime, renderer);
+		public override void Draw(GameTime gameTime, Renderer renderer)
+		{
+			base.Draw(gameTime, renderer);
 
-            buttonCloseWindow.Draw(gameTime, renderer);
+			buttonCloseWindow.Draw(gameTime, renderer);
 
-            foreach (var control in controls)
-                control.Draw(gameTime, renderer);
+			foreach (var control in controls)
+				control.Draw(gameTime, renderer);
 
-            foreach (var labelValue in labelValues)
-                labelValue.Draw(gameTime, renderer);
+			foreach (var labelValue in labelValues)
+				labelValue.Draw(gameTime, renderer);
 
 			iconMoodActive.Draw(gameTime, renderer);
-        }
-    }
+		}
+	}
 }

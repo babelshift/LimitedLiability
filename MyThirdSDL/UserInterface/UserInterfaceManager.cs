@@ -31,7 +31,7 @@ namespace MyThirdSDL.UserInterface
 
 		#region Message List
 
-		private Dictionary<Guid, Dictionary<SimulationMessageType, SimulationLabel>> labelMessagesForMultipleAgents 
+		private Dictionary<Guid, Dictionary<SimulationMessageType, SimulationLabel>> labelMessagesForMultipleAgents
 			= new Dictionary<Guid, Dictionary<SimulationMessageType, SimulationLabel>>();
 		private List<Label> labels = new List<Label>();
 
@@ -371,8 +371,8 @@ namespace MyThirdSDL.UserInterface
 		public void HandleMouseMovingEvent(object sender, MouseMotionEventArgs e)
 		{
 			var mousePositionAbsolute = new Vector(e.RelativeToWindowX, e.RelativeToWindowY);
-			var mousePositionIsometric = CoordinateHelper.ScreenSpaceToWorldSpace(e.RelativeToWindowX, e.RelativeToWindowY, 
-				                             CoordinateHelper.ScreenOffset, CoordinateHelper.ScreenProjectionType.Isometric);
+			var mousePositionIsometric = CoordinateHelper.ScreenSpaceToWorldSpace(e.RelativeToWindowX, e.RelativeToWindowY,
+											 CoordinateHelper.ScreenOffset, CoordinateHelper.ScreenProjectionType.Isometric);
 
 			labelMousePositionAbsolute.Text = String.Format("Mouse Position (Absolute): ({0}, {1})", mousePositionAbsolute.X, mousePositionAbsolute.Y);
 			labelMousePositionIsometric.Text = String.Format("Mouse Position (Isometric): ({0}, {1})", mousePositionIsometric.X, mousePositionIsometric.Y);

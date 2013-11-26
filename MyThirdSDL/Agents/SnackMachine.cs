@@ -20,7 +20,7 @@ namespace MyThirdSDL.Agents
 
 		public bool IsAssignedToAnEmployee { get { return AssignedEmployee != null; } }
 
-		public SnackMachine(TimeSpan birthTime, Texture texture, Vector startingPosition, 
+		public SnackMachine(TimeSpan birthTime, Texture texture, Vector startingPosition,
 			string name, int price, string iconTextureKey, NecessityEffect necessityEffect, SkillEffect skillEffect)
 			: base(birthTime, name, texture, startingPosition, price)
 		{
