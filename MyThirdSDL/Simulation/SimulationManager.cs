@@ -45,6 +45,20 @@ namespace MyThirdSDL.Simulation
 			} 
 		}
 
+        public IEnumerable<Employee> TrackedEmployees
+        {
+            get
+            {
+                IEnumerable<List<Agent>> agentLists = trackedAgents.Values.AsEnumerable();
+                List<Employee> agents = new List<Employee>();
+                foreach (var agentList in agentLists)
+                    foreach(var agent in agentList)
+                        if(agent is Employee)
+                            agents.Add(agent as Employee);
+                return agents;
+            } 
+        }
+
 		#region Public Simulation Events
 
 		public event EventHandler<EventArgs> EmployeeIsSleepy;

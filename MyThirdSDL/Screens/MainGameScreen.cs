@@ -15,6 +15,8 @@ namespace MyThirdSDL.Screens
 {
     public class MainGameScreen : Screen
     {
+        #region Members
+
         private JobFactory jobFactory;
         private AgentFactory agentFactory;
         private AgentManager agentManager;
@@ -26,9 +28,16 @@ namespace MyThirdSDL.Screens
         private Image tileHighlightSelectedImage;
         private TiledMap tiledMap;
         private IPurchasable selectedPurchasableItem;
+        private Image redDotTexture;
 
         private Point mouseClickPositionWorldGridIndex = CoordinateHelper.DefaultPoint;
         private Point mousePositionWorldGridIndex = CoordinateHelper.DefaultPoint;
+
+        private MapCell hoveredMapCell;
+
+        #endregion
+
+        #region Constructor
 
         public MainGameScreen(Renderer renderer, ContentManager contentManager)
             : base(contentManager)
@@ -50,6 +59,78 @@ namespace MyThirdSDL.Screens
             simulationManager.EmployeeClicked += HandleEmployeeClicked;
         }
 
+        #endregion
+
+        #region User Input
+
+        public override void HandleMouseButtonPressedEvent(object sender, MouseButtonEventArgs e)
+        {
+            base.HandleMouseButtonPressedEvent(sender, e);
+
+            userInterfaceManager.HandleMouseButtonPressedEvent(sender, e);
+        }
+
+        public override void HandleMouseMovingEvent(object sender, MouseMotionEventArgs e)
+        {
+            base.HandleMouseMovingEvent(sender, e);
+
+            userInterfaceManager.HandleMouseMovingEvent(sender, e);
+        }
+
+        public override void HandleInput(GameTime gameTime)
+        {
+            base.HandleInput(gameTime);
+        }
+
+
+        private void HandleMouseModeSelectEquipment()
+        {
+            // when we are in mouse mode select equipment, the user can place equipment into the world
+            if (userInterfaceManager.MouseMode == MouseMode.SelectEquipment)
+            {
+                // get the map cell that the user's mouse is hovering over
+                hoveredMapCell = GetHoveredMapCell();
+
+                // if the user is not hovering over a valid map cell, don't take any action (this happens when the mouse is outside the bounds of the world)
+                if (hoveredMapCell != null)
+                {
+                    // if the user has clicked or released any mouse buttons while in this mode, try to place the equipment
+                    if (MouseHelper.CurrentMouseState.ButtonsPressed != null && MouseHelper.PreviousMouseState.ButtonsPressed != null)
+                    {
+                        // only place the equipment when the user releases the left mouse button
+                        if (!MouseHelper.CurrentMouseState.ButtonsPressed.Contains(MouseButtonCode.Left)
+                            && MouseHelper.PreviousMouseState.ButtonsPressed.Contains(MouseButtonCode.Left))
+                        {
+                            if (selectedPurchasableItem is SodaMachine)
+                            {
+                                var sodaMachine = agentFactory.CreateSodaMachine(simulationManager.SimulationTime, new Vector(hoveredMapCell.WorldPosition.X, hoveredMapCell.WorldPosition.Y));
+                                AddEquipmentToSimulationAndHoveredMapCell(sodaMachine);
+                            }
+                            else if (selectedPurchasableItem is SnackMachine)
+                            {
+                                var snackMachine = agentFactory.CreateSnackMachine(simulationManager.SimulationTime, new Vector(hoveredMapCell.WorldPosition.X, hoveredMapCell.WorldPosition.Y));
+                                AddEquipmentToSimulationAndHoveredMapCell(snackMachine);
+                            }
+                            else if (selectedPurchasableItem is OfficeDesk)
+                            {
+                                var officeDesk = agentFactory.CreateOfficeDesk(simulationManager.SimulationTime, new Vector(hoveredMapCell.WorldPosition.X, hoveredMapCell.WorldPosition.Y));
+                                AddEquipmentToSimulationAndHoveredMapCell(officeDesk);
+                            }
+                        }
+                    }
+                }
+            }
+            else
+                hoveredMapCell = null;
+        }
+
+        private void HandlePurchasableItemSelected(object sender, PurchasableItemSelectedEventArgs e)
+        {
+            selectedPurchasableItem = e.PurchasableItem;
+        }
+
+        #endregion
+
         public override void Activate(Renderer renderer)
         {
             string mapPath = ContentManager.GetContentPath("Office1");
@@ -66,22 +147,6 @@ namespace MyThirdSDL.Screens
                 Employee employee = agentFactory.CreateEmployee(TimeSpan.Zero, new Vector(pathNode.WorldPosition.X, pathNode.WorldPosition.Y));
                 simulationManager.AddAgent(employee);
             }
-
-            //for (int i = 0; i < 5; i++)
-            //{
-            //    int x = random.Next(0, pathNodes.Count);
-            //    var pathNode = pathNodes[x];
-            //    OfficeDesk officeDesk = agentFactory.CreateOfficeDesk(TimeSpan.Zero, new Vector(pathNode.WorldPosition.X, pathNode.WorldPosition.Y));
-            //    simulationManager.AddAgent(officeDesk);
-            //}
-
-            //for (int i = 0; i < 3; i++)
-            //{
-            //    int x = random.Next(0, pathNodes.Count);
-            //    var pathNode = pathNodes[x];
-            //    SnackMachine snackMachine = agentFactory.CreateSnackMachine(TimeSpan.Zero, new Vector(pathNode.WorldPosition.X, pathNode.WorldPosition.Y));
-            //    simulationManager.AddAgent(snackMachine);
-            //}
 
             string redDotTexturePath = ContentManager.GetContentPath("RedDot");
             Surface redDotSurface = new Surface(redDotTexturePath, SurfaceType.PNG);
@@ -113,33 +178,10 @@ namespace MyThirdSDL.Screens
             userInterfaceManager.PurchasableItemSelected += HandlePurchasableItemSelected;
         }
 
-        private Image redDotTexture;
-
         public override void Deactivate()
         {
             base.Deactivate();
         }
-
-        public override void HandleMouseButtonPressedEvent(object sender, MouseButtonEventArgs e)
-        {
-            base.HandleMouseButtonPressedEvent(sender, e);
-
-            userInterfaceManager.HandleMouseButtonPressedEvent(sender, e);
-        }
-
-        public override void HandleMouseMovingEvent(object sender, MouseMotionEventArgs e)
-        {
-            base.HandleMouseMovingEvent(sender, e);
-
-            userInterfaceManager.HandleMouseMovingEvent(sender, e);
-        }
-
-        public override void HandleInput(GameTime gameTime)
-        {
-            base.HandleInput(gameTime);
-        }
-
-        private MapCell hoveredMapCell;
 
         public override void Update(GameTime gameTime, bool otherWindowHasFocus, bool coveredByOtherScreen)
         {
@@ -147,117 +189,44 @@ namespace MyThirdSDL.Screens
 
             simulationManager.Update(gameTime);
 
-            if (userInterfaceManager.MouseMode == MouseMode.SelectEquipment)
-            {
-                hoveredMapCell = GetHoveredMapCell();
-
-                if (hoveredMapCell != null)
-                {
-                    if (MouseHelper.CurrentMouseState.ButtonsPressed != null && MouseHelper.PreviousMouseState.ButtonsPressed != null)
-                    {
-                        if (!MouseHelper.CurrentMouseState.ButtonsPressed.Contains(MouseButtonCode.Left)
-                            && MouseHelper.PreviousMouseState.ButtonsPressed.Contains(MouseButtonCode.Left))
-                        {
-                            if (selectedPurchasableItem is SodaMachine)
-                            {
-                                var sodaMachine = agentFactory.CreateSodaMachine(simulationManager.SimulationTime, new Vector(hoveredMapCell.WorldPosition.X, hoveredMapCell.WorldPosition.Y));
-                                simulationManager.AddAgent(sodaMachine);
-                                hoveredMapCell.AddDrawable(sodaMachine, (int)TileType.Object);
-                            }
-                            else if (selectedPurchasableItem is SnackMachine)
-                            {
-                                var snackMachine = agentFactory.CreateSnackMachine(simulationManager.SimulationTime, new Vector(hoveredMapCell.WorldPosition.X, hoveredMapCell.WorldPosition.Y));
-                                simulationManager.AddAgent(snackMachine);
-                                hoveredMapCell.AddDrawable(snackMachine, (int)TileType.Object);
-                            }
-                            else if (selectedPurchasableItem is OfficeDesk)
-                            {
-                                var officeDesk = agentFactory.CreateOfficeDesk(simulationManager.SimulationTime, new Vector(hoveredMapCell.WorldPosition.X, hoveredMapCell.WorldPosition.Y));
-                                simulationManager.AddAgent(officeDesk);
-                                hoveredMapCell.AddDrawable(officeDesk, (int)TileType.Object);
-                            }
-                        }
-                    }
-                }
-            }
-            else
-                hoveredMapCell = null;
+            HandleMouseModeSelectEquipment();
 
             string simulationTimeText = simulationManager.SimulationTimeDisplay;
             userInterfaceManager.Update(gameTime, simulationTimeText);
-        }
-
-        private MapCell GetHoveredMapCell()
-        {
-            int mousePositionX = MouseHelper.CurrentMouseState.X;
-            int mousePositionY = MouseHelper.CurrentMouseState.Y;
-
-            Vector worldPositionAtMousePosition = CoordinateHelper.ScreenSpaceToWorldSpace(
-                mousePositionX, mousePositionY,
-                CoordinateHelper.ScreenOffset, CoordinateHelper.ScreenProjectionType.Isometric);
-
-            return tiledMap.GetMapCellAtWorldPosition(worldPositionAtMousePosition);
         }
 
         public override void Draw(GameTime gameTime, Renderer renderer)
         {
             base.Draw(gameTime, renderer);
 
-            allDrawables.Clear();
             renderer.ClearScreen();
 
+            allDrawables.Clear();
             SortDrawablesByDrawDepth();
+
             foreach (var drawable in allDrawables)
                 drawable.Draw(gameTime, renderer);
 
             if (hoveredMapCell != null)
-                renderer.RenderTexture(tileHighlightImage.Texture,
-                    hoveredMapCell.ProjectedPosition.X - Camera.Position.X - CoordinateHelper.TileMapTileWidth * 0.5f,
-                    hoveredMapCell.ProjectedPosition.Y - Camera.Position.Y - CoordinateHelper.TileMapTileHeight);
+            {
+                Vector drawPosition = CoordinateHelper.ProjectedPositionToDrawPosition(hoveredMapCell.ProjectedPosition);
+
+                renderer.RenderTexture(tileHighlightImage.Texture, drawPosition.X, drawPosition.Y);
+
+                if (userInterfaceManager.MouseMode == MouseMode.SelectEquipment)
+                {
+                    renderer.RenderTexture(selectedPurchasableItem.Texture, drawPosition.X, drawPosition.Y);
+                }
+            }
 
             //DrawActiveNodeCenters(renderer);
 
             userInterfaceManager.Draw(gameTime, renderer);
-
-            if (userInterfaceManager.MouseMode == MouseMode.SelectEquipment)
-            {
-                if (hoveredMapCell != null)
-                    renderer.RenderTexture(selectedPurchasableItem.Texture,
-                    hoveredMapCell.ProjectedPosition.X - Camera.Position.X - CoordinateHelper.TileMapTileWidth * 0.5f,
-                    hoveredMapCell.ProjectedPosition.Y - Camera.Position.Y - CoordinateHelper.TileMapTileHeight);
-            }
-        }
-
-        private void DrawActiveNodeCenters(Renderer renderer)
-        {
-            var pathNodes = tiledMap.GetActivePathNodes();
-            foreach (var pathNode in pathNodes)
-            {
-                var pathNodeProjectedPosition1 = CoordinateHelper.WorldSpaceToScreenSpace(pathNode.Bounds.Center.X, pathNode.Bounds.Center.Y,
-                    CoordinateHelper.ScreenOffset, CoordinateHelper.ScreenProjectionType.Isometric);
-
-                renderer.RenderTexture(redDotTexture.Texture, pathNodeProjectedPosition1.X, pathNodeProjectedPosition1.Y);
-            }
         }
 
         public override void Unload()
         {
             base.Unload();
-        }
-
-        /// <summary>
-        /// Selects out the non-empty height tiles from the height layer in the tile map and sorts them by their draw depth.
-        /// </summary>
-        /// 
-        private void SortDrawablesByDrawDepth()
-        {
-            allDrawables.AddRange(tiledMap.MapCells);
-
-            foreach (var trackedAgent in simulationManager.TrackedAgents)
-                if (!allDrawables.Any(d => d.ID == trackedAgent.ID))
-                    allDrawables.Add(trackedAgent);
-
-            allDrawables.Sort((d1, d2) => d1.Depth.CompareTo(d2.Depth));
         }
 
         #region Employee Events
@@ -337,10 +306,49 @@ namespace MyThirdSDL.Screens
 
         #endregion
 
-        private void HandlePurchasableItemSelected(object sender, PurchasableItemSelectedEventArgs e)
+        /// <summary>
+        /// Selects out the non-empty height tiles from the height layer in the tile map and sorts them by their draw depth.
+        /// </summary>
+        /// 
+        private void SortDrawablesByDrawDepth()
         {
-            selectedPurchasableItem = e.PurchasableItem;
+            allDrawables.AddRange(tiledMap.MapCells);
+
+            allDrawables.AddRange(simulationManager.TrackedEmployees);
+
+            allDrawables.Sort((d1, d2) => d1.Depth.CompareTo(d2.Depth));
         }
+
+        private MapCell GetHoveredMapCell()
+        {
+            int mousePositionX = MouseHelper.CurrentMouseState.X;
+            int mousePositionY = MouseHelper.CurrentMouseState.Y;
+
+            Vector worldPositionAtMousePosition = CoordinateHelper.ScreenSpaceToWorldSpace(
+                mousePositionX, mousePositionY,
+                CoordinateHelper.ScreenOffset, CoordinateHelper.ScreenProjectionType.Isometric);
+
+            return tiledMap.GetMapCellAtWorldPosition(worldPositionAtMousePosition);
+        }
+
+        private void AddEquipmentToSimulationAndHoveredMapCell(Agent agent)
+        {
+            simulationManager.AddAgent(agent);
+            hoveredMapCell.AddDrawable(agent, (int)TileType.Object);
+        }
+
+        private void DrawActiveNodeCenters(Renderer renderer)
+        {
+            var pathNodes = tiledMap.GetActivePathNodes();
+            foreach (var pathNode in pathNodes)
+            {
+                var pathNodeProjectedPosition1 = CoordinateHelper.WorldSpaceToScreenSpace(pathNode.Bounds.Center.X, pathNode.Bounds.Center.Y,
+                    CoordinateHelper.ScreenOffset, CoordinateHelper.ScreenProjectionType.Isometric);
+
+                renderer.RenderTexture(redDotTexture.Texture, pathNodeProjectedPosition1.X - Camera.Position.X, pathNodeProjectedPosition1.Y - Camera.Position.Y);
+            }
+        }
+
     }
 }
 

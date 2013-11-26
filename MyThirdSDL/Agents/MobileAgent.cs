@@ -45,12 +45,6 @@ namespace MyThirdSDL.Agents
                     return true;
                 else
                 {
-                    Rectangle smallBounds = new Rectangle(
-                        (int)(currentDestination.WorldPosition.X + currentDestination.Bounds.Width / 4),
-                        (int)(currentDestination.WorldPosition.Y + currentDestination.Bounds.Height / 4),
-                        currentDestination.Bounds.Width / 2,
-                        currentDestination.Bounds.Height / 2);
-
                     if (currentDestination.Bounds.Contains(CollisionBox.Center))
                         return true;
                     else

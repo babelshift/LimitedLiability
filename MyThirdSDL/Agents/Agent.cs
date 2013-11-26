@@ -14,7 +14,7 @@ namespace MyThirdSDL.Agents
 
         public Texture Texture { get; private set; }
 
-        public virtual Rectangle CollisionBox
+        public Rectangle CollisionBox
         {
             get
             {
@@ -44,13 +44,24 @@ namespace MyThirdSDL.Agents
 
         public AgentState State { get; private set; }
 
-        //public Point WorldGridIndex { get; private set; }
-
         public Vector WorldPosition { get; protected set; }
 
         public float Depth { get { return WorldPosition.X + WorldPosition.Y; } }
 
-        public Vector ProjectedPosition { get; private set; }
+        public Vector ProjectedPosition
+        {
+            get
+            {
+                Vector projectedPosition = CoordinateHelper.WorldSpaceToScreenSpace(
+                    WorldPosition.X,
+                    WorldPosition.Y,
+                    CoordinateHelper.ScreenOffset,
+                    CoordinateHelper.ScreenProjectionType.Isometric
+                );
+
+                return projectedPosition;
+            }
+        }
 
         #endregion
 
@@ -63,10 +74,7 @@ namespace MyThirdSDL.Agents
             Name = name;
             Texture = texture;
             State = AgentState.Unknown;
-
             WorldPosition = startingPosition;
-            ProjectedPosition = GetProjectedPosition();
-            //WorldGridIndex = GetWorldGridIndex();
         }
 
         #endregion
@@ -76,18 +84,6 @@ namespace MyThirdSDL.Agents
         private void SetSimulationAge(TimeSpan simulationTime)
         {
             SimulationAge = simulationTime.Subtract(BirthTime);
-        }
-
-        private Vector GetProjectedPosition()
-        {
-            Vector projectedPosition = CoordinateHelper.WorldSpaceToScreenSpace(
-                WorldPosition.X,
-                WorldPosition.Y,
-                CoordinateHelper.ScreenOffset,
-                CoordinateHelper.ScreenProjectionType.Isometric
-            );
-
-            return projectedPosition;
         }
 
         #endregion
@@ -117,18 +113,13 @@ namespace MyThirdSDL.Agents
         public virtual void Update(GameTime gameTime)
         {
             SetSimulationAge(gameTime.TotalGameTime);
-            //WorldGridIndex = GetWorldGridIndex();
         }
 
         public void Draw(GameTime gameTime, Renderer renderer)
         {
-            ProjectedPosition = GetProjectedPosition();
-
             // adjust the positions so we draw at the center of the Texture and at the correct camera position
-            float drawPositionX = ProjectedPosition.X - Camera.Position.X - CoordinateHelper.TileMapTileWidth * 0.5f;
-            float drawPositionY = ProjectedPosition.Y - Camera.Position.Y - CoordinateHelper.TileMapTileHeight;
-
-            renderer.RenderTexture(Texture, drawPositionX, drawPositionY);
+            Vector drawPosition = CoordinateHelper.ProjectedPositionToDrawPosition(ProjectedPosition);
+            renderer.RenderTexture(Texture, drawPosition.X, drawPosition.Y);
         }
 
         #endregion

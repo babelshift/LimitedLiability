@@ -16,19 +16,29 @@ namespace MyThirdSDL.Content
     /// </summary>
     public class TiledMap : IDisposable
     {
+        #region Members
+
         private List<TileLayer> tileLayers = new List<TileLayer>();
         private List<MapObjectLayer> mapObjectLayers = new List<MapObjectLayer>();
         private List<MapCell> mapCells = new List<MapCell>();
 
+        #endregion
+
+        #region Properties
+
+        public int HorizontalTileCount { get; private set; }
+
+        public int VerticalTileCount { get; private set; }
+
         /// <summary>
         /// The number of tiles across (left to right) that make up this map
         /// </summary>
-        public int Width { get; private set; }
+        public int PixelWidth { get; private set; }
 
         /// <summary>
         /// The number of tiles down (top to bottom) that make up this map
         /// </summary>
-        public int Height { get; private set; }
+        public int PixelHeight { get; private set; }
 
         /// <summary>
         /// The width of each tile in the map (all tiles are the same width)
@@ -46,7 +56,12 @@ namespace MyThirdSDL.Content
 
         public IEnumerable<MapObjectLayer> MapObjectLayers { get { return mapObjectLayers; } }
 
-        /// <summary>Default constructor creates a map from a .tmx file and creates any associated tileset textures by using the passed renderer.
+        #endregion
+
+        #region Constructors
+
+        /// <summary
+        /// >Default constructor creates a map from a .tmx file and creates any associated tileset textures by using the passed renderer.
         /// </summary>
         /// <param name="filePath">Path to the .tmx file to load</param>
         /// <param name="renderer">Renderer object used to load tileset textures</param>
@@ -57,8 +72,11 @@ namespace MyThirdSDL.Content
             TileWidth = mapContent.TileWidth;
             TileHeight = mapContent.TileHeight;
 
-            Width = mapContent.Width * TileWidth;
-            Height = mapContent.Height * TileHeight;
+            PixelWidth = mapContent.Width * TileWidth;
+            PixelHeight = mapContent.Height * TileHeight;
+
+            HorizontalTileCount = mapContent.Width;
+            VerticalTileCount = mapContent.Height;
 
             CreateLayers(mapContent);
             CalculateTilePositions(mapContent.Orientation);
@@ -66,6 +84,10 @@ namespace MyThirdSDL.Content
             CreateMapCells(mapContent);
             BuildMapCells();
         }
+
+        #endregion
+
+        #region Map Population Methods
 
         /// <summary>
         /// Create tile layers and object layers based on what we find in the Tiled Map TMX file.
@@ -118,6 +140,48 @@ namespace MyThirdSDL.Content
         }
 
         /// <summary>
+        /// Based on a passed tile index, create a Tile by looking up which TileSet it belongs to, assign the proper TilSet texture,
+        /// and find the bounds of the rectangle that encompasses the correct tile texture within the total tileset texture.
+        /// </summary>
+        /// <param name="tileIndex">Index of the tile (GID) within the map file</param>
+        /// <param name="tileSets">Enumerable list of tilesets used to find out which tileset a tile belongs to</param>
+        /// <returns></returns>
+        private Tile CreateTile(int tileIndex, IEnumerable<TileSetContent> tileSets, TileLayerType tileLayerType)
+        {
+            Tile tile = new Tile();
+
+            // we don't want to look up tiles with ID 0 in tile sets because Tiled Map Editor treats ID 0 as an empty tile
+            if (tileIndex > Tile.EmptyTileID)
+            {
+                Texture tileSetTexture = null;
+                Rectangle source = new Rectangle();
+                foreach (TileSetContent tileSet in tileSets)
+                {
+                    if (tileIndex - tileSet.FirstGID < tileSet.Tiles.Count)
+                    {
+                        tileSetTexture = tileSet.Texture;
+                        source = tileSet.Tiles[(int)(tileIndex - tileSet.FirstGID)].SourceTextureBounds;
+                        break;
+                    }
+                }
+
+                TileType tileType = TileType.None;
+                if (tileLayerType == TileLayerType.Ground)
+                    tileType = TileType.Ground;
+                else if (tileLayerType == TileLayerType.BackWalls)
+                    tileType = TileType.BackWall;
+                if (tileLayerType == TileLayerType.Objects)
+                    tileType = TileType.Object;
+                if (tileLayerType == TileLayerType.FrontWalls)
+                    tileType = TileType.FrontWall;
+
+                tile = new Tile(tileSetTexture, source, TileWidth, TileHeight, tileType);
+            }
+
+            return tile;
+        }
+
+        /// <summary>
         /// Creates the proper map object layer based on the layer name such as collidables and path nodes.
         /// </summary>
         /// <param name="layer"></param>
@@ -159,6 +223,24 @@ namespace MyThirdSDL.Content
             }
 
             return mapObjectLayer;
+        }
+
+        /// <summary>
+        /// Create empty map cells based on tile counts in the Tiled Map TMX. For example, a tile map of 15x15 tiles will be translated into
+        /// 15x15 map cells. These map cells are then later populated with 0-N tiles, 0-4 dead zones, and 0-4 path nodes.
+        /// </summary>
+        /// <param name="mapContent">Map content.</param>
+        private void CreateMapCells(MapContent mapContent)
+        {
+            for (int y = 0; y < mapContent.Height; y++)
+            {
+                for (int x = 0; x < mapContent.Width; x++)
+                {
+                    MapCell mapCell = new MapCell(CoordinateHelper.WorldGridCellWidth, CoordinateHelper.WorldGridCellHeight);
+                    mapCell.WorldGridIndex = new Point(x, y);
+                    mapCells.Add(mapCell);
+                }
+            }
         }
 
         /// <summary>
@@ -226,24 +308,6 @@ namespace MyThirdSDL.Content
         }
 
         /// <summary>
-        /// Create empty map cells based on tile counts in the Tiled Map TMX. For example, a tile map of 15x15 tiles will be translated into
-        /// 15x15 map cells. These map cells are then later populated with 0-N tiles, 0-4 dead zones, and 0-4 path nodes.
-        /// </summary>
-        /// <param name="mapContent">Map content.</param>
-        private void CreateMapCells(MapContent mapContent)
-        {
-            for (int x = 0; x < mapContent.Width; x++)
-            {
-                for (int y = 0; y < mapContent.Height; y++)
-                {
-                    MapCell mapCell = new MapCell(CoordinateHelper.WorldGridCellWidth, CoordinateHelper.WorldGridCellHeight);
-                    mapCell.WorldGridIndex = new Point(x, y);
-                    mapCells.Add(mapCell);
-                }
-            }
-        }
-
-        /// <summary>
         /// Loops through all path node layers, calculates the position (world grid index) of each immediate neighbor to the node,
         /// and adds the neighbors to a collection. These neighbors are used in path finding algorithms.
         /// </summary>
@@ -262,48 +326,8 @@ namespace MyThirdSDL.Content
             }
         }
 
-        /// <summary>Based on a passed tile index, create a Tile by looking up which TileSet it belongs to, assign the proper TilSet texture,
-        /// and find the bounds of the rectangle that encompasses the correct tile texture within the total tileset texture.
-        /// </summary>
-        /// <param name="tileIndex">Index of the tile (GID) within the map file</param>
-        /// <param name="tileSets">Enumerable list of tilesets used to find out which tileset a tile belongs to</param>
-        /// <returns></returns>
-        private Tile CreateTile(int tileIndex, IEnumerable<TileSetContent> tileSets, TileLayerType tileLayerType)
-        {
-            Tile tile = new Tile();
-
-            // we don't want to look up tiles with ID 0 in tile sets because Tiled Map Editor treats ID 0 as an empty tile
-            if (tileIndex > Tile.EmptyTileID)
-            {
-                Texture tileSetTexture = null;
-                Rectangle source = new Rectangle();
-                foreach (TileSetContent tileSet in tileSets)
-                {
-                    if (tileIndex - tileSet.FirstGID < tileSet.Tiles.Count)
-                    {
-                        tileSetTexture = tileSet.Texture;
-                        source = tileSet.Tiles[(int)(tileIndex - tileSet.FirstGID)].SourceTextureBounds;
-                        break;
-                    }
-                }
-
-                TileType tileType = TileType.None;
-                if (tileLayerType == TileLayerType.Ground)
-                    tileType = TileType.Ground;
-                else if (tileLayerType == TileLayerType.BackWalls)
-                    tileType = TileType.BackWall;
-                if (tileLayerType == TileLayerType.Objects)
-                    tileType = TileType.Object;
-                if (tileLayerType == TileLayerType.FrontWalls)
-                    tileType = TileType.FrontWall;
-
-                tile = new Tile(tileSetTexture, source, TileWidth, TileHeight, tileType);
-            }
-
-            return tile;
-        }
-
-        /// <summary>Loop through all tiles in all tile layers and calculate their X,Y coordinates. This will be used
+        /// <summary>
+        /// Loop through all tiles in all tile layers and calculate their X,Y coordinates. This will be used
         /// by renderers to paint the textures in the correct position of the rendering target.
         /// </summary>
         private void CalculateTilePositions(Orientation mapOrientation)
@@ -320,14 +344,12 @@ namespace MyThirdSDL.Content
                         Vector worldPosition = Vector.Zero;
                         if (mapOrientation == Orientation.Isometric)
                         {
-                            Vector screenPosition = CoordinateHelper.WorldGridIndexToScreenSpace(
-                                                        x, y, TileWidth / 2, TileHeight,
-                                                        CoordinateHelper.ScreenOffset,
-                                                        CoordinateHelper.ScreenProjectionType.Isometric
-                                                    );
-
-                            projectedPosition = new Vector(screenPosition.X, screenPosition.Y);
+                            // we divide tile width by 2 here because our world space has half the width as the screen space tiles
+                            // for example, a tile map with 80 wide by 40 high tiles in projected screen space will be represented
+                            // in world space in a 40 wide by 40 high grid
                             worldPosition = new Vector(x * TileWidth / 2, y * TileHeight);
+                            projectedPosition = CoordinateHelper.WorldSpaceToScreenSpace(worldPosition.X, worldPosition.Y,
+                                CoordinateHelper.ScreenOffset, CoordinateHelper.ScreenProjectionType.Isometric);
                         }
                         else if (mapOrientation == Orientation.Orthogonal)
                         {
@@ -342,6 +364,10 @@ namespace MyThirdSDL.Content
                 }
             }
         }
+
+        #endregion
+
+        #region Finder Methods
 
         /// <summary>
         /// Returns the path node that contains the passed vector position. The path node must be enabled in order to be returned. Path nodes are enabled unless
@@ -360,6 +386,10 @@ namespace MyThirdSDL.Content
                 throw new Exception(String.Format("No path node found at [{0},{1}]", worldPosition.X, worldPosition.Y));
         }
 
+        /// <summary>
+        /// Returns all path nodes in all map cells.
+        /// </summary>
+        /// <returns></returns>
         public IList<PathNode> GetPathNodes()
         {
             List<PathNode> pathNodes = new List<PathNode>();
@@ -369,20 +399,42 @@ namespace MyThirdSDL.Content
             return pathNodes;
         }
 
+        /// <summary>
+        /// Returns all enabled path nodes in all map cells.
+        /// </summary>
+        /// <returns></returns>
         public IList<PathNode> GetActivePathNodes()
         {
             return GetPathNodes().Where(pn => pn.IsEnabled == true).ToList();
         }
 
+        /// <summary>
+        /// Returns the map cell located at the passed world position. Coordinates are rounded prior to check because map cells exist in whole number coordinates.
+        /// </summary>
+        /// <param name="worldPosition"></param>
+        /// <returns></returns>
         public MapCell GetMapCellAtWorldPosition(Vector worldPosition)
         {
             int worldX = (int)(Math.Round(worldPosition.X / CoordinateHelper.WorldGridCellWidth));
             int worldY = (int)(Math.Round(worldPosition.Y / CoordinateHelper.WorldGridCellHeight));
 
-            MapCell mapCell = mapCells.FirstOrDefault(mc => mc.WorldGridIndex.X == worldX && mc.WorldGridIndex.Y == worldY);
+            // if we are within the bounds of the world
+            if (worldX >= 0 && worldY >= 0 && worldX < HorizontalTileCount && worldY < VerticalTileCount)
+            {
+                // if we are not exceeding the count of our collection
+                if ((worldY * HorizontalTileCount + worldX) < mapCells.Count)
+                {
+                    // O(1) lookup
+                    MapCell mapCell = mapCells[worldY * HorizontalTileCount + worldX];
+                    return mapCell;
+                }
+            }
 
-            return mapCell;
+            // there was no cell found at the coordinates provided or it was outside the valid range
+            return null;
         }
+
+        #endregion
 
         #region Dispose
 
@@ -404,6 +456,5 @@ namespace MyThirdSDL.Content
         }
 
         #endregion
-
     }
 }

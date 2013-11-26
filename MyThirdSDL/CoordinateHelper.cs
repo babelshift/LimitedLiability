@@ -9,12 +9,13 @@ namespace MyThirdSDL
 {
 	public static class CoordinateHelper
 	{
-        public static int TileMapTileWidth = 80;
-        public static int TileMapTileHeight = 40;
-		public static int WorldGridCellWidth = 40;
-		public static int WorldGridCellHeight = 40;
-		public static int PathNodeGridCellWidth = 20;
-		public static int PathNodeGridCellHeight = 20;
+        // TODO: set these values on init based on .tmx file?
+        public static readonly int TileMapTileWidth = 80;
+        public static readonly int TileMapTileHeight = 40;
+        public static readonly int WorldGridCellWidth = 40;
+        public static readonly int WorldGridCellHeight = 40;
+        public static readonly int PathNodeGridCellWidth = 20;
+        public static readonly int PathNodeGridCellHeight = 20;
 		public static Point DefaultPoint = new Point(-9999, -9999);
 		public static Vector DefaultVector = new Vector(-9999, -9999);
 
@@ -27,7 +28,7 @@ namespace MyThirdSDL
 		/// <summary>
 		/// The offset used to reposition the screen space at rendering (useful when projecting from orthogonal to isometric where the position will be off centered)
 		/// </summary>
-		public static Vector ScreenOffset = new Vector(700, WorldGridCellHeight * 2);
+        public static Vector ScreenOffset = new Vector(MainGame.SCREEN_WIDTH / 2, TileMapTileWidth);
 
 		/// <summary>
 		/// Converts the passed angle in degrees to angle in radians
@@ -71,40 +72,6 @@ namespace MyThirdSDL
 		}
 
 		/// <summary>
-		/// Returns the world grid index in whole units (ints). Use this method when you need only the exact grid index value locked to the grid. For example, grid index
-		/// at [6.5, 7.5] would return in this method as [7, 8] through rounding of the index values. Useful when you need to lock positions to the grid.
-		/// </summary>
-		/// <param name="worldX"></param>
-		/// <param name="worldY"></param>
-		/// <param name="width"></param>
-		/// <param name="height"></param>
-		/// <returns></returns>
-		public static Point WorldSpaceToWorldGridIndexPoint(float worldX, float worldY, int width, int height)
-		{
-			float worldGridX = worldX / width;
-			float worldGridY = worldY / height;
-
-			return new Point((int)Math.Round(worldGridX), (int)Math.Round(worldGridY));
-		}
-
-		/// <summary>
-		/// Returns the world grid index (partial indices are possible since this is a vector). Use this method when you need exactly within a grid index. For example,
-		/// grid index [6.5, 7.5] indicates half indices in between the grids. This is useful when needing to render between indices.
-		/// </summary>
-		/// <returns>The space to world grid index vector.</returns>
-		/// <param name="worldX">World x.</param>
-		/// <param name="worldY">World y.</param>
-		/// <param name="width">Width.</param>
-		/// <param name="height">Height.</param>
-		public static Vector WorldSpaceToWorldGridIndexVector(float worldX, float worldY, int width, int height)
-		{
-			float worldGridX = worldX / width;
-			float worldGridY = worldY / height;
-
-			return new Vector(worldGridX, worldGridY);
-		}
-
-		/// <summary>
 		/// Using the passed world space coordinates, object width/height, and offset, converts the values to the projected screen space equivalent based on the projection type
 		/// </summary>
 		/// <param name="worldX"></param>
@@ -116,40 +83,25 @@ namespace MyThirdSDL
 		/// <returns></returns>
 		public static Vector WorldSpaceToScreenSpace(float worldX, float worldY, Vector offset, ScreenProjectionType projectionType)
 		{
-            float screenSpaceX = worldX - worldY;
-            float screenSpaceY = (worldX + worldY) / 2;
-            
-            Vector screenSpace = new Vector(screenSpaceX, screenSpaceY);
-            Vector offsetScreenSpace = screenSpace + offset;
-            return offsetScreenSpace;
+            if (projectionType == ScreenProjectionType.Isometric)
+            {
+                float screenSpaceX = worldX - worldY;
+                float screenSpaceY = (worldX + worldY) / 2;
+
+                Vector screenSpace = new Vector(screenSpaceX, screenSpaceY);
+                Vector offsetScreenSpace = screenSpace + offset;
+                return offsetScreenSpace;
+            }
+            else
+                return new Vector(worldX, worldY);
 		}
 
-		/// <summary>
-		/// Using the passed world grid index, tile width/height, and offset, converts the values to the projected screen space equivalent based on the projection type
-		/// </summary>
-		/// <param name="worldGridX"></param>
-		/// <param name="worldGridY"></param>
-		/// <param name="width"></param>
-		/// <param name="height"></param>
-		/// <param name="offset"></param>
-		/// <param name="projectionType"></param>
-		/// <returns></returns>
-		public static Vector WorldGridIndexToScreenSpace(float worldGridX, float worldGridY, int width, int height, Vector offset, ScreenProjectionType projectionType)
-		{
-			if (projectionType == ScreenProjectionType.Isometric)
-			{
-				float rawPositionX = worldGridX * width;
-				float rawPositionY = worldGridY * height;
+        public static Vector ProjectedPositionToDrawPosition(Vector projectedPosition)
+        {
+            float drawPositionX = projectedPosition.X - Camera.Position.X - CoordinateHelper.TileMapTileWidth * 0.5f;
+            float drawPositionY = projectedPosition.Y - Camera.Position.Y - CoordinateHelper.TileMapTileHeight;
 
-				float screenSpaceX = rawPositionX - rawPositionY;
-				float screenSpaceY = (rawPositionX + rawPositionY) / 2;
-
-				Vector screenSpace = new Vector(screenSpaceX, screenSpaceY);
-				Vector offsetScreenSpace = screenSpace + offset;
-				return offsetScreenSpace;
-			}
-			else
-				throw new NotImplementedException("Projections other than Isometric are not supported");
-		}
+            return new Vector(drawPositionX, drawPositionY);
+        }
 	}
 }
