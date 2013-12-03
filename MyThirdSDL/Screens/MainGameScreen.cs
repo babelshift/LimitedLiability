@@ -331,7 +331,8 @@ namespace MyThirdSDL.Screens
 			return tiledMap.GetMapCellAtWorldPosition(worldPositionAtMousePosition);
 		}
 
-		private void AddEquipmentToSimulationAndHoveredMapCell(Agent agent)
+		private void AddEquipmentToSimulationAndHoveredMapCell<T>(T agent)
+			where T : Agent
 		{
 			simulationManager.AddAgent(agent);
 			hoveredMapCell.AddDrawable(agent, (int)TileType.Object);
