@@ -84,7 +84,6 @@
     <Compile Include="IDrawable.cs" />
     <Compile Include="INode.cs" />
     <Compile Include="MainGame.cs" />
-    <Compile Include="Path.cs" />
     <Compile Include="PriorityQueue.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -160,6 +159,7 @@
     <Compile Include="Content\MapObject.cs" />
     <Compile Include="Content\MapObjectLayer.cs" />
     <Compile Include="Content\TileType.cs" />
+    <Compile Include="Simulation\Path.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -400,6 +400,12 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\Images\Equipment\SnackMachine3.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Images\RedDot.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Images\tileHighlight3.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>

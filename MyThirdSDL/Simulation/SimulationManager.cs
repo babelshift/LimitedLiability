@@ -500,9 +500,9 @@ namespace MyThirdSDL.Simulation
 
 				foreach (Node n in path.LastStep.Neighbors)
 				{
-					double d = ManhattanDistance(path.LastStep, n);
+					double d = ExactDistance(path.LastStep, n);
 					var newPath = path.AddStep(n, d);
-					queue.Enqueue(newPath.TotalCost + ExactDistance(n, destination), newPath);
+					queue.Enqueue(newPath.TotalCost + ManhattanDistanceEstimate(n, destination), newPath);
 				}
 			}
 
@@ -590,10 +590,10 @@ namespace MyThirdSDL.Simulation
 		/// <param name="node1"></param>
 		/// <param name="node2"></param>
 		/// <returns></returns>
-		private double ManhattanDistance<Node>(Node node1, Node node2)
+		private double ManhattanDistanceEstimate<Node>(Node node1, Node node2)
 			where Node : INode
 		{
-			return Math.Abs(node1.WorldPosition.X - node2.WorldPosition.Y) + Math.Abs(node1.WorldPosition.Y - node2.WorldPosition.Y);
+			return Math.Abs(node1.WorldPosition.X - node2.WorldPosition.X) + Math.Abs(node1.WorldPosition.Y - node2.WorldPosition.Y);
 		}
 
 		#endregion

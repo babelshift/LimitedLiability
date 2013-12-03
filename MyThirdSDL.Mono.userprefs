@@ -1,16 +1,8 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="MyThirdSDL/Simulation/SimulationManager.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="MyThirdSDL/Screens/MainGameScreen.cs">
     <Files>
-      <File FileName="MyThirdSDL/MainGame.cs" Line="187" Column="99" />
-      <File FileName="MyThirdSDL/Screens/MainGameScreen.cs" Line="74" Column="29" />
-      <File FileName="MyThirdSDL/CoordinateHelper.cs" Line="12" Column="44" />
-      <File FileName="MyThirdSDL/Agents/AgentFactory.cs" Line="44" Column="3" />
-      <File FileName="MyThirdSDL/Content/ContentReference.json" Line="25" Column="20" />
-      <File FileName="MyThirdSDL/Content/TextureStore.cs" Line="35" Column="1" />
-      <File FileName="MyThirdSDL/Content/TiledMap.cs" Line="646" Column="1" />
-      <File FileName="MyThirdSDL/Simulation/SimulationManager.cs" Line="446" Column="1" />
-      <File FileName="../../../Downloads/mono/mono-3.2.3/mcs/class/System.Core/System.Linq/Check.cs" Line="38" Column="1" />
+      <File FileName="MyThirdSDL/Screens/MainGameScreen.cs" Line="158" Column="46" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
