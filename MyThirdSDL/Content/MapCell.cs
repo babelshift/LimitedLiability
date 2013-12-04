@@ -45,8 +45,6 @@ namespace MyThirdSDL.Content
 
 		public void Draw(GameTime gameTime, Renderer renderer)
 		{
-			List<Texture> orderedTexturesToDraw = new List<Texture>();
-
 			foreach (int zIndex in drawablesByZIndex.Keys)
 			{
 				List<IDrawable> drawables = new List<IDrawable>();
@@ -82,6 +80,15 @@ namespace MyThirdSDL.Content
 				drawables.Add(drawable);
 				drawablesByZIndex.Add(zIndex, drawables);
 			}
+		}
+
+		public void RemoveDrawable(IDrawable drawable, int zIndex)
+		{
+			List<IDrawable> drawables = new List<IDrawable>();
+
+			bool success = drawablesByZIndex.TryGetValue(zIndex, out drawables);
+			if (success)
+				drawables.RemoveAll(d => d.ID == drawable.ID);
 		}
 	}
 }

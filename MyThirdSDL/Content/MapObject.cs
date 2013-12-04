@@ -17,7 +17,7 @@ namespace MyThirdSDL.Content
 
 		public MapObjectType Type { get; private set; }
 
-		public Rectangle Bounds { get; set; }
+		public Rectangle Bounds { get; private set; }
 
 		/// <summary>
 		/// World position is the position within world space that the object exists. This position is defined within the .tmx tiled map file. When in isometric,
@@ -32,7 +32,7 @@ namespace MyThirdSDL.Content
 		///		The tile at [0,1] will be positioned (when shifted) at [0, 32].
 		///		The tile at [1,0] will be positioned (when shifted) at [32, 0].
 		/// </summary>
-		public Vector WorldPosition { get { return new Vector(Bounds.X + Bounds.Width, Bounds.Y + Bounds.Height); } }
+		public Vector WorldPosition { get { return new Vector(Bounds.X, Bounds.Y); } }
 
 		public Orientation Orientation { get; set; }
 

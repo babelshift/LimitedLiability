@@ -4,6 +4,7 @@
 	], 
 	"textures": [
 		{ "key": "RedDot",						"value": "Images/RedDot.png" },
+		{ "key": "GreenDot",						"value": "Images/GreenDot.png" },
 
 		{ "key": "Employee1",					"value": "Images/0001.png" },
 		{ "key": "TileHighlight3",				"value": "Images/tileHighlight3.png" },

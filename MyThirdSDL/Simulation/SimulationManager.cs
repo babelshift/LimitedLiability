@@ -93,17 +93,34 @@ namespace MyThirdSDL.Simulation
 				{
 					agent.Update(gameTime);
 
+					// handle employee specific update logic
 					if (agent is Employee)
 					{
 						var employee = agent as Employee;
+
+						// remove ourselves from the employee's currently occupied map cell
+						if(employee.OccupiedMapCell != null)
+							employee.OccupiedMapCell.RemoveDrawable(employee, (int)TileType.Object);
+
+						// get the map cell that the employee occupies and add it as a drawable to that map cell
+						MapCell mapCellToOccupy = GetMapCellOccupiedByEmployee(employee);
+						mapCellToOccupy.AddDrawable(employee, (int)TileType.Object);
+						employee.OccupiedMapCell = mapCellToOccupy;
 
 						// if the agent being updated is an employee and that agent is being clicked on by the user, fire the event telling subscribers of such
 						// we can use this event to react to the user interacting with the employees to do things like display their inspection information
 						if (IsEmployeeClicked(employee))
 							EventHelper.FireEvent<EmployeeClickedEventArgs>(EmployeeClicked, this, new EmployeeClickedEventArgs(employee));
+
 					}
 				}
 			}
+		}
+
+		private MapCell GetMapCellOccupiedByEmployee(Employee employee)
+		{
+			MapCell mapCell = CurrentMap.MapCells.FirstOrDefault(mc => mc.Bounds.Contains(employee.CollisionBox.Center));
+			return mapCell;
 		}
 
 		/// <summary>
@@ -366,6 +383,15 @@ namespace MyThirdSDL.Simulation
 		#endregion
 
 		/// <summary>
+		/// Attempts to walk the employee to its assigned office desk. This will queue up an intention of "Go To Desk" for the employee.
+		/// </summary>
+		/// <param name="employee">Employee.</param>
+		private void WalkEmployeeToAssignedOfficeDesk(Employee employee)
+		{
+			AddIntentionToAgent(employee, employee.AssignedOfficeDesk, IntentionType.GoToDesk);
+		}
+
+		/// <summary>
 		/// Walks the passed mobile agent to the closest agent of type T.
 		/// </summary>
 		/// <param name="agent">Agent.</param>
@@ -390,7 +416,7 @@ namespace MyThirdSDL.Simulation
 				// if there are agents by that type to head towards, proceed
 				if (agentsToCheck.Count() > 0)
 				{
-					// find the best path to the closest soda machine to the employee and set the employee on his way towards that soda machine
+					// find the closest agent by the type T to the employee and set the employee on his way towards that agent if any exists
 					var closestAgent = GetClosestAgentByType<T>(mobileAgent, agentsToCheck);
 
 					// if there is an actual closest agent in the simulation, proceed
@@ -420,11 +446,13 @@ namespace MyThirdSDL.Simulation
 			}
 		}
 
-		private void WalkEmployeeToAssignedOfficeDesk(Employee employee)
-		{
-			AddIntentionToAgent(employee, employee.AssignedOfficeDesk, IntentionType.GoToDesk);
-		}
-
+		/// <summary>
+		/// Adds and intention based on the passed intention type to the from agent based on the passed to agent. Basically, the "fromAgent"
+		/// will perform whatever intention is indicated by the "intentionType" on the "toAgent", such as walking to a snack machine to drink.
+		/// </summary>
+		/// <param name="fromAgent">From agent.</param>
+		/// <param name="toAgent">To agent.</param>
+		/// <param name="intentionType">Intention type.</param>
 		private void AddIntentionToAgent(MobileAgent fromAgent, Agent toAgent, IntentionType intentionType)
 		{
 			Agent walkFromAgent;
@@ -520,7 +548,6 @@ namespace MyThirdSDL.Simulation
 			where T : Agent
 		{
 			var employeeWorldPosition = mobileAgent.WorldPosition;
-			//var employeeOnPathNode = CurrentMap.GetPathNodeAtWorldPosition(employeeWorldPosition);
 
 			if (agentsToCheck.Count() > 0)
 			{
@@ -538,9 +565,8 @@ namespace MyThirdSDL.Simulation
 							continue;
 					}
 
-					//var agentToCheckOnPathNode = CurrentMap.GetPathNodeAtWorldPosition(agentToCheck.WorldPosition);
-
-					var bestPath = FindBestPath(mobileAgent.WorldPosition, agentToCheck.WorldPosition);
+					// TODO: rethink this? we are looking up the best path in an inefficient way
+					var bestPath = GetBestPathToAgent(mobileAgent, agentToCheck);
 
 					if (bestPath.Count < minimumDistance)
 					{
@@ -565,13 +591,16 @@ namespace MyThirdSDL.Simulation
 		private Queue<PathNode> GetBestPathToAgent<T>(Agent mobileAgent, T agent)
 			where T : Agent
 		{
-			// tell the agent to path to the closest soda machine (or random if a tie)
-			Queue<PathNode> bestPath = FindBestPath(mobileAgent.WorldPosition, agent.WorldPosition);
+			// find the best path from the mobile agent's center to the target agent's center
+			Queue<PathNode> bestPath = FindBestPath(
+				new Vector(mobileAgent.CollisionBox.Center.X, mobileAgent.CollisionBox.Center.Y), 
+				new Vector(agent.CollisionBox.Center.X, agent.CollisionBox.Center.Y));
+
 			return bestPath;
 		}
 
 		/// <summary>
-		/// The exact distance between two nodes in this game is a single node (1).
+		/// The exact distance between two nodes in this game is a single node (1). By default, node links do not have costs associated with them.
 		/// </summary>
 		/// <typeparam name="Node"></typeparam>
 		/// <param name="node1"></param>

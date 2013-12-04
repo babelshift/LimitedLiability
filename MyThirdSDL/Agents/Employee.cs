@@ -8,6 +8,7 @@ using SharpDL.Graphics;
 using MyThirdSDL.Simulation;
 using MyThirdSDL.Descriptors;
 using SharpDL;
+using MyThirdSDL.Content;
 
 namespace MyThirdSDL.Agents
 {
@@ -52,6 +53,8 @@ namespace MyThirdSDL.Agents
 				return necessityRatingAverage;
 			}
 		}
+
+		public MapCell OccupiedMapCell { get; set; } 
 
 		public event EventHandler<EventArgs> IsSleepy;
 		public event EventHandler<EventArgs> IsUnhealthy;

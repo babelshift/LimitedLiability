@@ -378,7 +378,9 @@ namespace MyThirdSDL.Content
 		public PathNode GetPathNodeAtWorldPosition(Vector worldPosition)
 		{
 			IEnumerable<PathNode> pathNodes = GetActivePathNodes();
-			PathNode pathNode = pathNodes.FirstOrDefault(pn => pn.Bounds.Contains(new Point((int)worldPosition.X, (int)worldPosition.Y)));
+
+			// the rounding of the position coordinates here is causing problems finding the path nodes i think
+			PathNode pathNode = pathNodes.FirstOrDefault(pn => pn.Bounds.Contains(worldPosition));
 
 			if (pathNode != null)
 				return pathNode;

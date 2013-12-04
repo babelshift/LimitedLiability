@@ -29,6 +29,7 @@ namespace MyThirdSDL.Screens
 		private TiledMap tiledMap;
 		private IPurchasable selectedPurchasableItem;
 		private Image redDotTexture;
+		private Image greenDotTexture;
 
 		private Point mouseClickPositionWorldGridIndex = CoordinateHelper.DefaultPoint;
 		private Point mousePositionWorldGridIndex = CoordinateHelper.DefaultPoint;
@@ -152,6 +153,10 @@ namespace MyThirdSDL.Screens
 			Surface redDotSurface = new Surface(redDotTexturePath, SurfaceType.PNG);
 			redDotTexture = new Image(renderer, redDotSurface, ImageFormat.PNG);
 
+			string greenDotTexturePath = ContentManager.GetContentPath("GreenDot");
+			Surface greenDotSurface = new Surface(greenDotTexturePath, SurfaceType.PNG);
+			greenDotTexture = new Image(renderer, greenDotSurface, ImageFormat.PNG);
+
 			string tileHighlightTexturePath = ContentManager.GetContentPath("TileHighlight3");
 			string tileHighlightSelectedTexturePath = ContentManager.GetContentPath("TileHighlightSelected");
 
@@ -189,6 +194,8 @@ namespace MyThirdSDL.Screens
 
 			simulationManager.Update(gameTime);
 
+
+
 			HandleMouseModeSelectEquipment();
 
 			string simulationTimeText = simulationManager.SimulationTimeDisplay;
@@ -202,7 +209,7 @@ namespace MyThirdSDL.Screens
 			renderer.ClearScreen();
 
 			allDrawables.Clear();
-			SortDrawablesByDrawDepth();
+			AddAndSortDrawablesByDrawDepth();
 
 			foreach (var drawable in allDrawables)
 				drawable.Draw(gameTime, renderer);
@@ -219,7 +226,8 @@ namespace MyThirdSDL.Screens
 				}
 			}
 
-			//DrawActiveNodeCenters(renderer);
+			DrawActiveNodeCenters(renderer);
+			DrawEmployeeWorldPositions(renderer);
 
 			userInterfaceManager.Draw(gameTime, renderer);
 		}
@@ -310,7 +318,7 @@ namespace MyThirdSDL.Screens
 		/// Selects out the non-empty height tiles from the height layer in the tile map and sorts them by their draw depth.
 		/// </summary>
 		/// 
-		private void SortDrawablesByDrawDepth()
+		private void AddAndSortDrawablesByDrawDepth()
 		{
 			allDrawables.AddRange(tiledMap.MapCells);
 
@@ -338,15 +346,37 @@ namespace MyThirdSDL.Screens
 			hoveredMapCell.AddDrawable(agent, (int)TileType.Object);
 		}
 
+		private void DrawEmployeeWorldPositions(Renderer renderer)
+		{
+			foreach (var employee in simulationManager.TrackedEmployees)
+			{
+				renderer.SetDrawColor(8, 255, 8, 255);
+				Primitive.DrawLine(renderer, employee.CollisionBox.X, employee.CollisionBox.Y, employee.CollisionBox.Right, employee.CollisionBox.Y);
+				Primitive.DrawLine(renderer, employee.CollisionBox.X, employee.CollisionBox.Y, employee.CollisionBox.X, employee.CollisionBox.Bottom);
+				Primitive.DrawLine(renderer, employee.CollisionBox.Right, employee.CollisionBox.Y, employee.CollisionBox.Right, employee.CollisionBox.Bottom);
+				Primitive.DrawLine(renderer, employee.CollisionBox.X, employee.CollisionBox.Bottom, employee.CollisionBox.Right, employee.CollisionBox.Bottom);
+				renderer.SetDrawColor(0, 0, 0, 255);
+			}
+		}
+
 		private void DrawActiveNodeCenters(Renderer renderer)
 		{
 			var pathNodes = tiledMap.GetActivePathNodes();
 			foreach (var pathNode in pathNodes)
 			{
-				var pathNodeProjectedPosition1 = CoordinateHelper.WorldSpaceToScreenSpace(pathNode.Bounds.Center.X, pathNode.Bounds.Center.Y,
-					CoordinateHelper.ScreenOffset, CoordinateHelper.ScreenProjectionType.Isometric);
+//				var pathNodeProjectedPosition1 = CoordinateHelper.WorldSpaceToScreenSpace(pathNode.Bounds.Center.X, pathNode.Bounds.Center.Y,
+//					CoordinateHelper.ScreenOffset, CoordinateHelper.ScreenProjectionType.Isometric);
 
-				renderer.RenderTexture(redDotTexture.Texture, pathNodeProjectedPosition1.X - Camera.Position.X, pathNodeProjectedPosition1.Y - Camera.Position.Y);
+				renderer.SetDrawColor(255, 8, 8, 255);
+				Primitive.DrawLine(renderer, pathNode.Bounds.X, pathNode.Bounds.Y, pathNode.Bounds.Right, pathNode.Bounds.Y);
+				Primitive.DrawLine(renderer, pathNode.Bounds.X, pathNode.Bounds.Y, pathNode.Bounds.X, pathNode.Bounds.Bottom);
+				Primitive.DrawLine(renderer, pathNode.Bounds.Right, pathNode.Bounds.Y, pathNode.Bounds.Right, pathNode.Bounds.Bottom);
+				Primitive.DrawLine(renderer, pathNode.Bounds.X, pathNode.Bounds.Bottom, pathNode.Bounds.Right, pathNode.Bounds.Bottom);
+//				renderer.RenderTexture(redDotTexture.Texture, pathNode.Bounds.X, pathNode.Bounds.Y);
+//				renderer.RenderTexture(redDotTexture.Texture, pathNode.Bounds.Right, pathNode.Bounds.Y);
+//				renderer.RenderTexture(redDotTexture.Texture, pathNode.Bounds.X, pathNode.Bounds.Bottom);
+//				renderer.RenderTexture(redDotTexture.Texture, pathNode.Bounds.Right, pathNode.Bounds.Bottom);
+				renderer.SetDrawColor(0, 0, 0, 255);
 			}
 		}
 
