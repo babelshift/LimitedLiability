@@ -1,6 +1,16 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench />
+  <MonoDevelop.Ide.Workbench ActiveDocument="MyThirdSDL/UserInterface/UserInterfaceManager.cs">
+    <Files>
+      <File FileName="MyThirdSDL/Screens/MainGameScreen.cs" Line="314" Column="3" />
+      <File FileName="MyThirdSDL/UserInterface/UserInterfaceManager.cs" Line="322" Column="13" />
+      <File FileName="MyThirdSDL/Screens/ScreenManager.cs" Line="177" Column="4" />
+      <File FileName="MyThirdSDL/Simulation/SimulationManager.cs" Line="142" Column="4" />
+      <File FileName="MyThirdSDL/UserInterface/UserInterfaceState.cs" Line="24" Column="3" />
+      <File FileName="MyThirdSDL/Screens/Screen.cs" Line="242" Column="23" />
+      <File FileName="MyThirdSDL/Content/TiledMap.cs" Line="389" Column="1" />
+    </Files>
+  </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
     <BreakpointStore>
       <Breakpoint file="/home/justin/Documents/git/SharpDL/SharpDL.Graphics/Texture.cs" line="121" column="1" />

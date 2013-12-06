@@ -25,7 +25,7 @@ namespace MyThirdSDL.Simulation
 			}
 		}
 
-		public TimeSpan SimulationTime { get; private set; }
+		public static TimeSpan SimulationTime { get; private set; }
 
 		public TiledMap CurrentMap { get; set; }
 
@@ -131,9 +131,14 @@ namespace MyThirdSDL.Simulation
 		/// <param name="employee">Employee.</param>
 		private bool IsEmployeeClicked(Employee employee)
 		{
-			return employee.CollisionBox.Contains(new Point((int)MouseHelper.ClickedWorldSpacePoint.X, (int)MouseHelper.ClickedWorldSpacePoint.Y))
+			if (MouseHelper.PreviousMouseState.ButtonsPressed != null)
+			{
+				return employee.CollisionBox.Contains(new Point((int)MouseHelper.ClickedWorldSpacePoint.X, (int)MouseHelper.ClickedWorldSpacePoint.Y))
 				&& !MouseHelper.CurrentMouseState.ButtonsPressed.Contains(MouseButtonCode.Left)
 				&& MouseHelper.PreviousMouseState.ButtonsPressed.Contains(MouseButtonCode.Left);
+			}
+			else
+				return false;
 		}
 
 		#region Employee Events

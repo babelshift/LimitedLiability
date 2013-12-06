@@ -52,7 +52,9 @@ namespace MyThirdSDL.UserInterface
 		/// Gets the mouse mode.
 		/// </summary>
 		/// <value>The mouse mode.</value>
-		public MouseMode MouseMode { get; private set; }
+		public UserInterfaceState CurrentState { get; private set; }
+		public TimeSpan TimeSpentInCurrentState { get; private set; }
+		private TimeSpan timeOfStatusChange = TimeSpan.Zero;
 
 		#region Constructors
 
@@ -71,7 +73,7 @@ namespace MyThirdSDL.UserInterface
 			this.purchasableItems = purchasableItems;
 			this.contentManager = contentManager;
 
-			MouseMode = MouseMode.SelectGeneral;
+			ChangeState(UserInterfaceState.Default);
 
 			controlFactory = new ControlFactory(renderer, contentManager);
 
@@ -267,6 +269,7 @@ namespace MyThirdSDL.UserInterface
 		private void ShowMenuInspectEmployee()
 		{
 			isMenuInspectEmployeeOpen = true;
+			ChangeState(UserInterfaceState.InspectEmployeeMenuActive);
 		}
 
 		private void HideMenuInspectEmployee()
@@ -277,6 +280,7 @@ namespace MyThirdSDL.UserInterface
 		private void menuInspectEmployee_ButtonCloseWindowClicked(object sender, EventArgs e)
 		{
 			HideMenuInspectEmployee();
+			ChangeState(UserInterfaceState.Default);
 		}
 
 		#endregion
@@ -286,6 +290,7 @@ namespace MyThirdSDL.UserInterface
 		private void ShowMenuEquipment()
 		{
 			isMenuEquipmentOpen = true;
+			ChangeState(UserInterfaceState.SelectEquipmentMenuActive);
 		}
 
 		private void HideMenuEquipment()
@@ -296,20 +301,24 @@ namespace MyThirdSDL.UserInterface
 		private void menuEquipment_ButtonConfirmWindowClicked(object sender, ButtonConfirmWindowClickedEventArgs e)
 		{
 			IPurchasable selectedPurchasableItem = e.PurchasableItem;
-			MouseMode = MouseMode.SelectEquipment;
 			if (PurchasableItemSelected != null)
 				PurchasableItemSelected(sender, new PurchasableItemSelectedEventArgs(e.PurchasableItem));
+
 			HideMenuEquipment();
+
+			ChangeState(UserInterfaceState.PlaceEquipmentActive);
 		}
 
 		private void menuEquipment_ButtonCloseWindowClicked(object sender, EventArgs e)
 		{
 			HideMenuEquipment();
+
+			ChangeState(UserInterfaceState.Default);
 		}
 
 		private void ToolboxTray_ButtonSelectGeneralClicked(object sender, EventArgs e)
 		{
-			MouseMode = MouseMode.SelectGeneral;
+			ChangeState(UserInterfaceState.Default);
 		}
 
 		#endregion
@@ -327,6 +336,8 @@ namespace MyThirdSDL.UserInterface
 
 			if (isMenuInspectEmployeeOpen)
 				menuInspectEmployee.Update(gameTime);
+
+			TimeSpentInCurrentState = SimulationManager.SimulationTime.Subtract(timeOfStatusChange);
 		}
 
 		public void Draw(GameTime gameTime, Renderer renderer)
@@ -376,6 +387,13 @@ namespace MyThirdSDL.UserInterface
 
 			labelMousePositionAbsolute.Text = String.Format("Mouse Position (Absolute): ({0}, {1})", mousePositionAbsolute.X, mousePositionAbsolute.Y);
 			labelMousePositionIsometric.Text = String.Format("Mouse Position (Isometric): ({0}, {1})", mousePositionIsometric.X, mousePositionIsometric.Y);
+		}
+
+		private void ChangeState(UserInterfaceState state)
+		{
+			// TODO: maybe a global here isn't the best idea?
+			timeOfStatusChange = SimulationManager.SimulationTime;
+			CurrentState = state;
 		}
 
 		#endregion

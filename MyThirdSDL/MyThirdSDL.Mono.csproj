@@ -137,7 +137,6 @@
     <Compile Include="Descriptors\SkillEffect.cs" />
     <Compile Include="Agents\TrashBin.cs" />
     <Compile Include="UserInterface\PurchasableItemSelectedEventArgs.cs" />
-    <Compile Include="UserInterface\MouseMode.cs" />
     <Compile Include="Screens\ScreenManager.cs" />
     <Compile Include="Screens\Screen.cs" />
     <Compile Include="Screens\ScreenState.cs" />
@@ -160,6 +159,7 @@
     <Compile Include="Content\MapObjectLayer.cs" />
     <Compile Include="Content\TileType.cs" />
     <Compile Include="Simulation\Path.cs" />
+    <Compile Include="UserInterface\UserInterfaceState.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -402,13 +402,7 @@
     <Content Include="Content\Images\Equipment\SnackMachine3.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Images\RedDot.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
     <Content Include="Content\Images\tileHighlight3.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Content\Images\GreenDot.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>

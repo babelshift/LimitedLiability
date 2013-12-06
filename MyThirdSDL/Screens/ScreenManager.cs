@@ -156,10 +156,6 @@ namespace MyThirdSDL.Screens
 		/// </summary>
 		public void Draw(GameTime gameTime, Renderer renderer)
 		{
-			//spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, null, null, null, null, Resolution.getTransformationMatrix());
-			//MenuBackground.Draw(spriteBatch, Color.White);
-			//spriteBatch.End();
-
 			foreach (Screen screen in screens)
 			{
 				if (screen.ScreenState == ScreenState.Hidden)

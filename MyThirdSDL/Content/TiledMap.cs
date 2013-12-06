@@ -16,6 +16,7 @@ namespace MyThirdSDL.Content
 	/// </summary>
 	public class TiledMap : IDisposable
 	{
+
 		#region Members
 
 		private List<TileLayer> tileLayers = new List<TileLayer>();
@@ -288,10 +289,10 @@ namespace MyThirdSDL.Content
 				{
 					// get the map cell that contains us (where two of our edges line up with two of the map cell edges)
 					MapCell mapCell = mapCells.FirstOrDefault(
-										  mc => (mc.Bounds.Left == mapObject.Bounds.Left && mc.Bounds.Top == mapObject.Bounds.Top)
-										  || (mc.Bounds.Left == mapObject.Bounds.Left && mc.Bounds.Bottom == mapObject.Bounds.Bottom)
-										  || (mc.Bounds.Right == mapObject.Bounds.Right && mc.Bounds.Top == mapObject.Bounds.Top)
-										  || (mc.Bounds.Right == mapObject.Bounds.Right && mc.Bounds.Bottom == mapObject.Bounds.Bottom));
+						                  mc => (mc.Bounds.Left == mapObject.Bounds.Left && mc.Bounds.Top == mapObject.Bounds.Top)
+						                  || (mc.Bounds.Left == mapObject.Bounds.Left && mc.Bounds.Bottom == mapObject.Bounds.Bottom)
+						                  || (mc.Bounds.Right == mapObject.Bounds.Right && mc.Bounds.Top == mapObject.Bounds.Top)
+						                  || (mc.Bounds.Right == mapObject.Bounds.Right && mc.Bounds.Bottom == mapObject.Bounds.Bottom));
 
 					// if we are in a valid map cell, add the map object appropriately based on type
 					if (mapCell != null)
@@ -458,5 +459,6 @@ namespace MyThirdSDL.Content
 		}
 
 		#endregion
+
 	}
 }

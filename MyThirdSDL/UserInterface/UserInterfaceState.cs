@@ -14,10 +14,14 @@ using MyThirdSDL.Simulation;
 
 namespace MyThirdSDL.UserInterface
 {
-	public enum MouseMode
+	public enum UserInterfaceState
 	{
-		SelectGeneral,
-		SelectEquipment,
-		SelectRoom
+		Unknown,
+		Default,
+		SelectEquipmentMenuActive,
+		SelectRoomMenuActive,
+		InspectEmployeeMenuActive,
+		PlaceEquipmentActive,
+		PlaceRoomActive
 	}
 }
