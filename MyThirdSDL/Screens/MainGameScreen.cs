@@ -249,7 +249,8 @@ namespace MyThirdSDL.Screens
 
 		private void HandleEmployeeClicked(object sender, EmployeeClickedEventArgs e)
 		{
-			userInterfaceManager.SetEmployeeBeingInspected(e.Employee);
+			if(userInterfaceManager.CurrentState == UserInterfaceState.Default)
+				userInterfaceManager.SetEmployeeBeingInspected(e.Employee);
 		}
 
 		private void HandleEmployeeHungerSatisfied(object sender, EventArgs e)

@@ -53,7 +53,9 @@ namespace MyThirdSDL.UserInterface
 		/// </summary>
 		/// <value>The mouse mode.</value>
 		public UserInterfaceState CurrentState { get; private set; }
+
 		public TimeSpan TimeSpentInCurrentState { get; private set; }
+
 		private TimeSpan timeOfStatusChange = TimeSpan.Zero;
 
 		#region Constructors
@@ -98,6 +100,9 @@ namespace MyThirdSDL.UserInterface
 			labels.Add(labelMousePositionAbsolute);
 			labels.Add(labelMousePositionIsometric);
 			labels.Add(labelSimulationTime);
+
+			CreateMenuEquipment();
+			CreateMenuInspectEmployee();
 		}
 
 		/// <summary>
@@ -216,18 +221,11 @@ namespace MyThirdSDL.UserInterface
 			if (!isMenuEquipmentOpen)
 			{
 				ClearMenusOpen();
-
-				if (menuEquipment == null)
-				{
-					Vector menuPosition = new Vector(bottomRightPointOfWindow.X, bottomRightPointOfWindow.Y);
-					menuEquipment = controlFactory.CreateMenuEquipment(menuPosition, purchasableItems);
-					menuEquipment.ButtonCloseWindowClicked += menuEquipment_ButtonCloseWindowClicked;
-					menuEquipment.ButtonConfirmWindowClicked += menuEquipment_ButtonConfirmWindowClicked;
-				}
-
 				ShowMenuEquipment();
 			}
 		}
+
+		#endregion
 
 		private void ClearMenusOpen()
 		{
@@ -235,32 +233,19 @@ namespace MyThirdSDL.UserInterface
 			HideMenuEquipment();
 		}
 
+		#region Menu Inspect Employee Events
+
 		private void CreateMenuInspectEmployee()
 		{
-			if (!isMenuInspectEmployeeOpen)
-			{
-				ClearMenusOpen();
-				if (menuInspectEmployee == null)
-				{
-					Vector menuPosition = new Vector(bottomRightPointOfWindow.X, bottomRightPointOfWindow.Y);
-					menuInspectEmployee = controlFactory.CreateMenuInspectEmployee(menuPosition);
-					menuInspectEmployee.ButtonCloseWindowClicked += menuInspectEmployee_ButtonCloseWindowClicked;
-				}
-
-				ShowMenuInspectEmployee();
-			}
+			Vector menuPosition = new Vector(bottomRightPointOfWindow.X, bottomRightPointOfWindow.Y);
+			menuInspectEmployee = controlFactory.CreateMenuInspectEmployee(menuPosition);
+			menuInspectEmployee.ButtonCloseWindowClicked += menuInspectEmployee_ButtonCloseWindowClicked;
 		}
-
-		#endregion
-
-		#region Menu Inspect Employee Events
 
 		public void SetEmployeeBeingInspected(Employee employee)
 		{
 			ClearMenusOpen();
-
-			CreateMenuInspectEmployee();
-
+			ShowMenuInspectEmployee();
 			menuInspectEmployee.SetInfoValues(employee);
 			menuInspectEmployee.SetNeedsValues(employee.Necessities);
 			menuInspectEmployee.SetSkillsValues(employee.Skills);
@@ -275,17 +260,25 @@ namespace MyThirdSDL.UserInterface
 		private void HideMenuInspectEmployee()
 		{
 			isMenuInspectEmployeeOpen = false;
+			ChangeState(UserInterfaceState.Default);
 		}
 
 		private void menuInspectEmployee_ButtonCloseWindowClicked(object sender, EventArgs e)
 		{
 			HideMenuInspectEmployee();
-			ChangeState(UserInterfaceState.Default);
 		}
 
 		#endregion
 
 		#region Menu Equipment Events
+
+		private void CreateMenuEquipment()
+		{
+			Vector menuPosition = new Vector(bottomRightPointOfWindow.X, bottomRightPointOfWindow.Y);
+			menuEquipment = controlFactory.CreateMenuEquipment(menuPosition, purchasableItems);
+			menuEquipment.ButtonCloseWindowClicked += menuEquipment_ButtonCloseWindowClicked;
+			menuEquipment.ButtonConfirmWindowClicked += menuEquipment_ButtonConfirmWindowClicked;
+		}
 
 		private void ShowMenuEquipment()
 		{
@@ -296,6 +289,7 @@ namespace MyThirdSDL.UserInterface
 		private void HideMenuEquipment()
 		{
 			isMenuEquipmentOpen = false;
+			ChangeState(UserInterfaceState.Default);
 		}
 
 		private void menuEquipment_ButtonConfirmWindowClicked(object sender, ButtonConfirmWindowClickedEventArgs e)
@@ -312,8 +306,6 @@ namespace MyThirdSDL.UserInterface
 		private void menuEquipment_ButtonCloseWindowClicked(object sender, EventArgs e)
 		{
 			HideMenuEquipment();
-
-			ChangeState(UserInterfaceState.Default);
 		}
 
 		private void ToolboxTray_ButtonSelectGeneralClicked(object sender, EventArgs e)
@@ -383,7 +375,7 @@ namespace MyThirdSDL.UserInterface
 		{
 			var mousePositionAbsolute = new Vector(e.RelativeToWindowX, e.RelativeToWindowY);
 			var mousePositionIsometric = CoordinateHelper.ScreenSpaceToWorldSpace(e.RelativeToWindowX, e.RelativeToWindowY,
-											 CoordinateHelper.ScreenOffset, CoordinateHelper.ScreenProjectionType.Isometric);
+				                             CoordinateHelper.ScreenOffset, CoordinateHelper.ScreenProjectionType.Isometric);
 
 			labelMousePositionAbsolute.Text = String.Format("Mouse Position (Absolute): ({0}, {1})", mousePositionAbsolute.X, mousePositionAbsolute.Y);
 			labelMousePositionIsometric.Text = String.Format("Mouse Position (Isometric): ({0}, {1})", mousePositionIsometric.X, mousePositionIsometric.Y);

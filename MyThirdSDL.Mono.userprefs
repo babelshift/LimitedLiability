@@ -1,14 +1,14 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="MyThirdSDL/UserInterface/UserInterfaceManager.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="MyThirdSDL/Screens/MainGameScreen.cs">
     <Files>
-      <File FileName="MyThirdSDL/Screens/MainGameScreen.cs" Line="314" Column="3" />
-      <File FileName="MyThirdSDL/UserInterface/UserInterfaceManager.cs" Line="322" Column="13" />
-      <File FileName="MyThirdSDL/Screens/ScreenManager.cs" Line="177" Column="4" />
-      <File FileName="MyThirdSDL/Simulation/SimulationManager.cs" Line="142" Column="4" />
-      <File FileName="MyThirdSDL/UserInterface/UserInterfaceState.cs" Line="24" Column="3" />
-      <File FileName="MyThirdSDL/Screens/Screen.cs" Line="242" Column="23" />
-      <File FileName="MyThirdSDL/Content/TiledMap.cs" Line="389" Column="1" />
+      <File FileName="MyThirdSDL/Screens/MainGameScreen.cs" Line="252" Column="42" />
+      <File FileName="MyThirdSDL/UserInterface/UserInterfaceManager.cs" Line="125" Column="25" />
+      <File FileName="MyThirdSDL/Screens/ScreenManager.cs" Line="1" Column="1" />
+      <File FileName="MyThirdSDL/Simulation/SimulationManager.cs" Line="1" Column="1" />
+      <File FileName="MyThirdSDL/UserInterface/UserInterfaceState.cs" Line="1" Column="1" />
+      <File FileName="MyThirdSDL/Screens/Screen.cs" Line="1" Column="1" />
+      <File FileName="MyThirdSDL/Content/TiledMap.cs" Line="1" Column="1" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
