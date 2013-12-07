@@ -26,6 +26,8 @@ namespace MyThirdSDL.UserInterface
 		private Label LabelDate { get; set; }
 		private Label LabelTime { get; set; }
 
+		public bool IsHovered { get; private set; }
+
 		public event EventHandler ButtonSelectGeneralClicked;
 		public event EventHandler ButtonSelectEquipmentClicked;
 		public event EventHandler ButtonSelectRoomClicked;
@@ -77,6 +79,11 @@ namespace MyThirdSDL.UserInterface
 			ButtonEmployees.Update(gameTime);
 			ButtonProducts.Update(gameTime);
 			ButtonMainMenu.Update(gameTime);
+
+			if (Bounds.Contains(new Point(MouseHelper.CurrentMouseState.X, MouseHelper.CurrentMouseState.Y)))
+				IsHovered = true;
+			else
+				IsHovered = false;
 		}
 
 		public override void Draw(GameTime gameTime, Renderer renderer)

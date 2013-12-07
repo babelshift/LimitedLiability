@@ -20,6 +20,7 @@ namespace MyThirdSDL.UserInterface
 		private Point bottomRightPointOfWindow;
 		private ControlFactory controlFactory;
 		private ContentManager contentManager;
+		private TimeSpan timeOfStatusChange = TimeSpan.Zero;
 
 		#region Diagnostic Items
 
@@ -40,8 +41,8 @@ namespace MyThirdSDL.UserInterface
 		#region Controls
 
 		private ToolboxTray toolboxTray;
-		private MenuEquipment menuEquipment;
 		private IEnumerable<IPurchasable> purchasableItems;
+		private MenuEquipment menuEquipment;
 		private bool isMenuEquipmentOpen = false;
 		private MenuInspectEmployee menuInspectEmployee;
 		private bool isMenuInspectEmployeeOpen = false;
@@ -56,7 +57,15 @@ namespace MyThirdSDL.UserInterface
 
 		public TimeSpan TimeSpentInCurrentState { get; private set; }
 
-		private TimeSpan timeOfStatusChange = TimeSpan.Zero;
+		public bool IsToolboxTrayHovered 
+		{ 
+			get 
+			{ 
+				if(toolboxTray != null) 
+					return toolboxTray.IsHovered;
+				return false;
+			} 
+		}
 
 		#region Constructors
 

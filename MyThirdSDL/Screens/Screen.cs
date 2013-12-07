@@ -254,7 +254,7 @@ namespace MyThirdSDL.Screens
 		/// is only called when the screen is active, and not when some other
 		/// screen has taken the focus.
 		/// </summary>
-		public virtual void HandleInput(GameTime gameTime)
+		public virtual void HandleInput(GameTime gameTime, bool isMouseInsideWindowBounds)
 		{
 		}
 

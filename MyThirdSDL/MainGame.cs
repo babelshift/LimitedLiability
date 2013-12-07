@@ -36,7 +36,6 @@ namespace MyThirdSDL
 		private ContentManager contentManager;
 		private ScreenManager screenManager;
 		private ScreenFactory screenFactory;
-		private Cursor cursor;
 
 		#endregion
 
@@ -108,7 +107,6 @@ namespace MyThirdSDL
 			screenManager.Initialize();
 			screenFactory = new ScreenFactory();
 
-			cursor = new Cursor(contentManager, Renderer);
 			Camera.Position = Vector.Zero;
 
 			currentGameState = GameState.Title;
@@ -159,28 +157,8 @@ namespace MyThirdSDL
 			{
 				KeyboardHelper.Update();
 				MouseHelper.Update();
-				screenManager.Update(gameTime, !isWindowFocused);
-
-				var mouseOverScreenEdge = GetMouseOverScreenEdge();
-				cursor.Update(isMouseInsideWindowBounds, mouseOverScreenEdge);
-				Camera.Update(mouseOverScreenEdge);
+				screenManager.Update(gameTime, !isWindowFocused, isMouseInsideWindowBounds);
 			}
-		}
-
-		private MouseOverScreenEdge GetMouseOverScreenEdge()
-		{
-			MouseOverScreenEdge mouseOverScreenEdge = MouseOverScreenEdge.Unknown;
-			if (MouseHelper.CurrentMouseState.X < 50 && MouseHelper.CurrentMouseState.X > 0)
-				mouseOverScreenEdge = MouseOverScreenEdge.Left;
-			else if (MouseHelper.CurrentMouseState.X > MainGame.SCREEN_WIDTH - 50 && MouseHelper.CurrentMouseState.X < MainGame.SCREEN_WIDTH - 1)
-				mouseOverScreenEdge = MouseOverScreenEdge.Right;
-			else if (MouseHelper.CurrentMouseState.Y < 50 && MouseHelper.CurrentMouseState.Y > 0)
-				mouseOverScreenEdge = MouseOverScreenEdge.Top;
-			else if (MouseHelper.CurrentMouseState.Y > MainGame.SCREEN_HEIGHT - 50 && MouseHelper.CurrentMouseState.Y < MainGame.SCREEN_HEIGHT - 1)
-				mouseOverScreenEdge = MouseOverScreenEdge.Bottom;
-			else
-				mouseOverScreenEdge = MouseOverScreenEdge.None;
-			return mouseOverScreenEdge;
 		}
 
 		/// <summary>
@@ -197,7 +175,6 @@ namespace MyThirdSDL
 			if (isWindowFocused)
 			{
 				screenManager.Draw(gameTime, Renderer);
-				cursor.Draw(Renderer);
 				Renderer.RenderPresent();
 			}
 		}

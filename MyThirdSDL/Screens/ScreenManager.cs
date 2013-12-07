@@ -86,7 +86,7 @@ namespace MyThirdSDL.Screens
 		/// <summary>
 		/// Allows each screen to run logic.
 		/// </summary>
-		public void Update(GameTime gameTime, bool otherWindowHasFocus)
+		public void Update(GameTime gameTime, bool otherWindowHasFocus, bool isMouseInsideWindowBounds)
 		{
 			// Make a copy of the master screen list, to avoid confusion if
 			// the process of updating one screen adds or removes others.
@@ -118,7 +118,7 @@ namespace MyThirdSDL.Screens
 					// Subsequent screens will thus be marked as "InActive"
 					if (!otherWindowHasFocus)
 					{
-						screen.HandleInput(gameTime);
+						screen.HandleInput(gameTime, isMouseInsideWindowBounds);
 
 						otherWindowHasFocus = true;
 					}

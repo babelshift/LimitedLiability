@@ -28,6 +28,7 @@ namespace MyThirdSDL.Screens
 		private TiledMap tiledMap;
 		private IPurchasable selectedPurchasableItem;
 		private MapCell hoveredMapCell;
+		private Cursor cursor;
 
 		private bool IsValidMapCellHovered { get { return hoveredMapCell != null; } }
 
@@ -89,9 +90,17 @@ namespace MyThirdSDL.Screens
 			userInterfaceManager.HandleMouseMovingEvent(sender, e);
 		}
 
-		public override void HandleInput(GameTime gameTime)
+		public override void HandleInput(GameTime gameTime, bool isMouseInsideWindowBounds)
 		{
-			base.HandleInput(gameTime);
+			base.HandleInput(gameTime, isMouseInsideWindowBounds);
+
+			// we only want to scroll the screen when the user isn't hovering the toolbox tray
+			if (!userInterfaceManager.IsToolboxTrayHovered)
+			{
+				var mouseOverScreenEdge = GetMouseOverScreenEdge();
+				cursor.Update(isMouseInsideWindowBounds, mouseOverScreenEdge);
+				Camera.Update(mouseOverScreenEdge);
+			}
 
 			if (userInterfaceManager.CurrentState == UserInterfaceState.Default)
 			{
@@ -186,6 +195,8 @@ namespace MyThirdSDL.Screens
 			purchasableItems.Add(agentFactory.CreateWaterFountain(TimeSpan.Zero));
 			userInterfaceManager = new UserInterfaceManager(renderer, ContentManager, new Point(MainGame.SCREEN_WIDTH, MainGame.SCREEN_HEIGHT), purchasableItems);
 			userInterfaceManager.PurchasableItemSelected += HandleSelectEquipment;
+
+			cursor = new Cursor(ContentManager, renderer);
 		}
 
 		public override void Deactivate()
@@ -230,6 +241,8 @@ namespace MyThirdSDL.Screens
 			//DrawEmployeCollisionBoxes(renderer);
 
 			userInterfaceManager.Draw(gameTime, renderer);
+
+			cursor.Draw(renderer);
 		}
 
 		public override void Unload()
@@ -383,6 +396,22 @@ namespace MyThirdSDL.Screens
 				Primitive.DrawLine(renderer, pathNode.Bounds.X, pathNode.Bounds.Bottom, pathNode.Bounds.Right, pathNode.Bounds.Bottom);
 				renderer.SetDrawColor(0, 0, 0, 255);
 			}
+		}
+	
+		private MouseOverScreenEdge GetMouseOverScreenEdge()
+		{
+			MouseOverScreenEdge mouseOverScreenEdge = MouseOverScreenEdge.Unknown;
+			if (MouseHelper.CurrentMouseState.X < 50 && MouseHelper.CurrentMouseState.X > 0)
+				mouseOverScreenEdge = MouseOverScreenEdge.Left;
+			else if (MouseHelper.CurrentMouseState.X > MainGame.SCREEN_WIDTH - 50 && MouseHelper.CurrentMouseState.X < MainGame.SCREEN_WIDTH - 1)
+				mouseOverScreenEdge = MouseOverScreenEdge.Right;
+			else if (MouseHelper.CurrentMouseState.Y < 50 && MouseHelper.CurrentMouseState.Y > 0)
+				mouseOverScreenEdge = MouseOverScreenEdge.Top;
+			else if (MouseHelper.CurrentMouseState.Y > MainGame.SCREEN_HEIGHT - 50 && MouseHelper.CurrentMouseState.Y < MainGame.SCREEN_HEIGHT - 1)
+				mouseOverScreenEdge = MouseOverScreenEdge.Bottom;
+			else
+				mouseOverScreenEdge = MouseOverScreenEdge.None;
+			return mouseOverScreenEdge;
 		}
 	}
 }
