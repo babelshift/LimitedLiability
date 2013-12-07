@@ -43,7 +43,7 @@ namespace MyThirdSDL.Agents
 
 		public Employee CreateEmployee(TimeSpan birthTime, Vector position)
 		{
-			string texturePath = contentManager.GetContentPath("Employee1");
+			string texturePath = contentManager.GetContentPath("MaleEmployee0001");
 			Texture texture = textureStore.GetTexture(texturePath);
 
 			int employeeNumber = GetNextEmployeeNumber();

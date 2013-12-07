@@ -27,6 +27,7 @@ namespace MyThirdSDL.UserInterface
 		private Label labelMousePositionAbsolute;
 		private Label labelMousePositionIsometric;
 		private Label labelSimulationTime;
+		private Label labelState;
 
 		#endregion
 
@@ -234,6 +235,11 @@ namespace MyThirdSDL.UserInterface
 			}
 		}
 
+		private void ToolboxTray_ButtonSelectGeneralClicked(object sender, EventArgs e)
+		{
+			ChangeState(UserInterfaceState.Default);
+		}
+
 		#endregion
 
 		private void ClearMenusOpen()
@@ -317,11 +323,6 @@ namespace MyThirdSDL.UserInterface
 			HideMenuEquipment();
 		}
 
-		private void ToolboxTray_ButtonSelectGeneralClicked(object sender, EventArgs e)
-		{
-			ChangeState(UserInterfaceState.Default);
-		}
-
 		#endregion
 
 		#region Game Loop
@@ -337,6 +338,10 @@ namespace MyThirdSDL.UserInterface
 
 			if (isMenuInspectEmployeeOpen)
 				menuInspectEmployee.Update(gameTime);
+
+			if (CurrentState == UserInterfaceState.PlaceEquipmentActive)
+				if (MouseHelper.CurrentMouseState.ButtonsPressed.Contains(MouseButtonCode.Right))
+					ChangeState(UserInterfaceState.Default);
 
 			TimeSpentInCurrentState = SimulationManager.SimulationTime.Subtract(timeOfStatusChange);
 		}

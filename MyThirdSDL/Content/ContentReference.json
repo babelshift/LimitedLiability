@@ -3,14 +3,12 @@
 		{ "key": "Arcade",						"value": "Fonts/Arcade N.ttf" }  
 	], 
 	"textures": [
-		{ "key": "Employee1",					"value": "Images/0001.png" },
-		{ "key": "TileHighlight3",				"value": "Images/tileHighlight3.png" },
-		{ "key": "TileHighlight2",				"value": "Images/tileHighlight2.png" },
-		{ "key": "TileHighlightSelected",		"value": "Images/tileHighlightSelected.png" },
-		{ "key": "SnackMachine",				"value": "Images/Equipment/SnackMachine3.png" },
+		{ "key": "MaleEmployee0001",			"value": "Images/MaleEmployee0001.png" },
+		{ "key": "TileHighlight",				"value": "Images/TileHighlight.png" },
+		{ "key": "SnackMachine",				"value": "Images/Equipment/SnackMachine.png" },
 		{ "key": "SodaMachine",					"value": "Images/Equipment/SodaMachine.png" },
-		{ "key": "WaterFountain",				"value": "Images/Equipment/WaterFountain.png" },
-		{ "key": "OfficeDesk",					"value": "Images/Equipment/OfficeDesk2.png" },
+		{ "key": "WaterFountain",				"value": "Images/Equipment/SodaMachine.png" },
+		{ "key": "OfficeDesk",					"value": "Images/Equipment/OfficeDesk.png" },
 		{ "key": "TrashBin",					"value": "Images/Equipment/OfficeDesk.png" },
 
 		{ "key": "MessageBoxFrame",				"value": "Images/User Interface/MessageBoxFrame.png" },
@@ -67,9 +65,6 @@
 		{ "key": "CursorHandDown",				"value": "Images/User Interface/CursorHandDown.png" }
 	],
 	"maps": [
-		{ "key": "Map1",						"value": "Maps/Map1.tmx" },
-		{ "key": "Map2",						"value": "Maps/Map2.tmx" },
-		{ "key": "Office1",						"value": "Maps/Office1.tmx" },
-		{ "key": "Office2",						"value": "Maps/Office2.tmx" }
+		{ "key": "Office1",						"value": "Maps/Office1.tmx" }
 	] 
 }

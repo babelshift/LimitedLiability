@@ -162,7 +162,7 @@ namespace MyThirdSDL.Screens
 		public override void Activate(Renderer renderer)
 		{
 			string mapPath = ContentManager.GetContentPath("Office1");
-			string tileHighlightTexturePath = ContentManager.GetContentPath("TileHighlight3");
+			string tileHighlightTexturePath = ContentManager.GetContentPath("TileHighlight");
 
 			tiledMap = new TiledMap(mapPath, renderer);
 			simulationManager.CurrentMap = tiledMap;
