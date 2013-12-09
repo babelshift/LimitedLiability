@@ -41,19 +41,18 @@ namespace MyThirdSDL.Agents
 
 		#region Employees
 
-		public Employee CreateEmployee(TimeSpan birthTime, Vector position)
+		public Employee CreateEmployee(TimeSpan simulationBirthTime, DateTime worldDateTime, Vector position)
 		{
 			string texturePath = contentManager.GetContentPath("MaleEmployee0001");
 			Texture texture = textureStore.GetTexture(texturePath);
 
 			int employeeNumber = GetNextEmployeeNumber();
 			string firstName = GetRandomFirstName();
-			int age = GetRandomAge();
-			DateTime birthday = DateTime.Now.Subtract(TimeSpan.FromDays(age * 365));
+			DateTime birthday = GetRandomBirthday(worldDateTime);
 			Skills skills = Skills.GetRandomSkills();
 			Job job = jobFactory.CreateJob(skills);
 
-			Employee employee = new Employee(birthTime, "Employee " + employeeNumber, texture, position, firstName, "Smith", age, birthday, skills, job);
+			Employee employee = new Employee(simulationBirthTime, "Employee " + employeeNumber, texture, position, firstName, "Smith", birthday, skills, job);
 
 			if (log.IsDebugEnabled)
 				log.Debug(String.Format("Employee has been created with name: {0}", employee.FullName));
@@ -61,10 +60,16 @@ namespace MyThirdSDL.Agents
 			return employee;
 		}
 
-		private int GetRandomAge()
+		private DateTime GetRandomBirthday(DateTime worldDateTime)
 		{
-			int age = random.Next(18, 80);
-			return age;
+			int minAgeInYears = 18;
+			int maxAgeInYears = 80;
+			int randomYearsOld = random.Next(minAgeInYears, maxAgeInYears);
+			int randomYear = worldDateTime.AddYears(-1 * randomYearsOld).Year;
+			int randomMonth = random.Next(1, 12);
+			int daysInMonth = DateTime.DaysInMonth(randomYear, randomMonth);
+			int randomDay = random.Next(1, daysInMonth);
+			return new DateTime(randomYear, randomMonth, randomDay);
 		}
 
 		private int GetNextEmployeeNumber()

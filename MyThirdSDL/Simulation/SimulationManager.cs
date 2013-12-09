@@ -14,7 +14,34 @@ namespace MyThirdSDL.Simulation
 {
 	public class SimulationManager
 	{
+		public static readonly int SimulationTimeToWorldTimeMultiplier = 8640;
+
 		private Dictionary<System.Type, List<Agent>> trackedAgents = new Dictionary<Type, List<Agent>>();
+		private DateTime startingWorldDateTime;
+
+		public DateTime WorldDateTime 
+		{ 
+			get
+			{
+				return startingWorldDateTime.Add(WorldTimePassed);
+			}
+			private set
+			{
+				startingWorldDateTime = value;
+			}
+		}
+
+		private TimeSpan WorldTimePassed
+		{
+			get
+			{
+				double worldMilliseconds = SimulationTimeToWorldTimeMultiplier * SimulationTime.TotalMilliseconds;
+				TimeSpan worldTimePassed = TimeSpan.FromMilliseconds(worldMilliseconds);
+				return worldTimePassed;
+			}
+		}
+
+		public static TimeSpan SimulationTime { get; private set; }
 
 		public string SimulationTimeDisplay
 		{
@@ -24,8 +51,6 @@ namespace MyThirdSDL.Simulation
 					SimulationTime.Minutes.ToString(), SimulationTime.Seconds.ToString(), SimulationTime.Milliseconds.ToString());
 			}
 		}
-
-		public static TimeSpan SimulationTime { get; private set; }
 
 		public TiledMap CurrentMap { get; set; }
 
@@ -79,6 +104,11 @@ namespace MyThirdSDL.Simulation
 
 		#endregion
 
+		public SimulationManager(DateTime startingWorldDateTime)
+		{
+			WorldDateTime = startingWorldDateTime;
+		}
+
 		/// <summary>
 		/// Updates the simulation by setting the simulation time and updating all tracked agents.
 		/// </summary>
@@ -98,6 +128,9 @@ namespace MyThirdSDL.Simulation
 					{
 						var employee = agent as Employee;
 
+						// update the employee's age based on the updated world date time
+						employee.UpdateAge(WorldDateTime);
+
 						// remove ourselves from the employee's currently occupied map cell
 						if(employee.OccupiedMapCell != null)
 							employee.OccupiedMapCell.RemoveDrawable(employee, (int)TileType.Object);
@@ -111,7 +144,6 @@ namespace MyThirdSDL.Simulation
 						// we can use this event to react to the user interacting with the employees to do things like display their inspection information
 						if (IsEmployeeClicked(employee))
 							EventHelper.FireEvent<EmployeeClickedEventArgs>(EmployeeClicked, this, new EmployeeClickedEventArgs(employee));
-
 					}
 				}
 			}

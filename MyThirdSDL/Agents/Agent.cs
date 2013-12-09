@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using MyThirdSDL.Simulation;
 
 namespace MyThirdSDL.Agents
 {
@@ -22,7 +23,7 @@ namespace MyThirdSDL.Agents
 			}
 		}
 
-		private TimeSpan BirthTime { get; set; }
+		private TimeSpan SimulationBirthTime { get; set; }
 
 		#endregion
 
@@ -33,14 +34,6 @@ namespace MyThirdSDL.Agents
 		public string Name { get; private set; }
 
 		public TimeSpan SimulationAge { get; private set; }
-
-		public TimeSpan WorldAge
-		{
-			get
-			{
-				return TimeSpan.FromMilliseconds(8640 * SimulationAge.TotalMilliseconds);
-			}
-		}
 
 		public AgentState State { get; private set; }
 
@@ -70,7 +63,7 @@ namespace MyThirdSDL.Agents
 		public Agent(TimeSpan birthTime, string name, Texture texture, Vector startingPosition)
 		{
 			ID = Guid.NewGuid();
-			BirthTime = birthTime;
+			SimulationBirthTime = birthTime;
 			Name = name;
 			Texture = texture;
 			State = AgentState.Unknown;
@@ -83,7 +76,7 @@ namespace MyThirdSDL.Agents
 
 		private void SetSimulationAge(TimeSpan simulationTime)
 		{
-			SimulationAge = simulationTime.Subtract(BirthTime);
+			SimulationAge = simulationTime.Subtract(SimulationBirthTime);
 		}
 
 		#endregion

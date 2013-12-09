@@ -55,7 +55,7 @@ namespace MyThirdSDL.Screens
 		public MainGameScreen(Renderer renderer, ContentManager contentManager)
 			: base(contentManager)
 		{
-			simulationManager = new SimulationManager();
+			simulationManager = new SimulationManager(DateTime.Now);
 			jobFactory = new JobFactory();
 			agentManager = new AgentManager();
 			agentFactory = new AgentFactory(renderer, agentManager, contentManager, jobFactory);
@@ -134,18 +134,18 @@ namespace MyThirdSDL.Screens
 					{
 						if (selectedPurchasableItem is SodaMachine)
 						{
-							var sodaMachine = agentFactory.CreateSodaMachine(SimulationManager.SimulationTime, new Vector(hoveredMapCell.WorldPosition.X, hoveredMapCell.WorldPosition.Y));
-							AddEquipmentToSimulationAndHoveredMapCell(sodaMachine);
+							var agentToAdd = agentFactory.CreateSodaMachine(SimulationManager.SimulationTime, new Vector(hoveredMapCell.WorldPosition.X, hoveredMapCell.WorldPosition.Y));
+							AddEquipmentToSimulationAndHoveredMapCell(agentToAdd);
 						}
 						else if (selectedPurchasableItem is SnackMachine)
 						{
-							var snackMachine = agentFactory.CreateSnackMachine(SimulationManager.SimulationTime, new Vector(hoveredMapCell.WorldPosition.X, hoveredMapCell.WorldPosition.Y));
-							AddEquipmentToSimulationAndHoveredMapCell(snackMachine);
+							var agentToAdd = agentFactory.CreateSnackMachine(SimulationManager.SimulationTime, new Vector(hoveredMapCell.WorldPosition.X, hoveredMapCell.WorldPosition.Y));
+							AddEquipmentToSimulationAndHoveredMapCell(agentToAdd);
 						}
 						else if (selectedPurchasableItem is OfficeDesk)
 						{
-							var officeDesk = agentFactory.CreateOfficeDesk(SimulationManager.SimulationTime, new Vector(hoveredMapCell.WorldPosition.X, hoveredMapCell.WorldPosition.Y));
-							AddEquipmentToSimulationAndHoveredMapCell(officeDesk);
+							var agentToAdd = agentFactory.CreateOfficeDesk(SimulationManager.SimulationTime, new Vector(hoveredMapCell.WorldPosition.X, hoveredMapCell.WorldPosition.Y));
+							AddEquipmentToSimulationAndHoveredMapCell(agentToAdd);
 						}
 					}
 				}
@@ -173,7 +173,7 @@ namespace MyThirdSDL.Screens
 			{
 				int x = random.Next(0, pathNodes.Count);
 				var pathNode = pathNodes[x];
-				Employee employee = agentFactory.CreateEmployee(TimeSpan.Zero, new Vector(pathNode.WorldPosition.X, pathNode.WorldPosition.Y));
+				Employee employee = agentFactory.CreateEmployee(SimulationManager.SimulationTime, simulationManager.WorldDateTime, new Vector(pathNode.WorldPosition.X, pathNode.WorldPosition.Y));
 				simulationManager.AddAgent(employee);
 			}
 
@@ -212,6 +212,7 @@ namespace MyThirdSDL.Screens
 
 			string simulationTimeText = simulationManager.SimulationTimeDisplay;
 			userInterfaceManager.Update(gameTime, simulationTimeText);
+			userInterfaceManager.UpdateDisplayedDateAndTime(simulationManager.WorldDateTime);
 		}
 
 		public override void Draw(GameTime gameTime, Renderer renderer)
@@ -237,8 +238,8 @@ namespace MyThirdSDL.Screens
 				}
 			}
 
-			//DrawActiveNodeCenters(renderer);
-			//DrawEmployeCollisionBoxes(renderer);
+			DrawActiveNodeCenters(renderer);
+			DrawEmployeCollisionBoxes(renderer);
 
 			userInterfaceManager.Draw(gameTime, renderer);
 
@@ -356,11 +357,19 @@ namespace MyThirdSDL.Screens
 			hoveredMapCell = null;
 		}
 
+		/// <summary>
+		/// Adds the passed agent to the simulation by registering it with the simulation manager and adding it as a drawable object on the clicked map cell. Does nothing if
+		/// the passed agent is null.
+		/// </summary>
+		/// <param name="agent">Agent.</param>
 		private void AddEquipmentToSimulationAndHoveredMapCell<T>(T agent)
 			where T : Agent
 		{
-			simulationManager.AddAgent(agent);
-			hoveredMapCell.AddDrawable(agent, (int)TileType.Object);
+			if (agent != null)
+			{
+				simulationManager.AddAgent(agent);
+				hoveredMapCell.AddDrawable(agent, (int)TileType.Object);
+			}
 		}
 
 		/// <summary>
@@ -371,11 +380,22 @@ namespace MyThirdSDL.Screens
 		{
 			foreach (var employee in simulationManager.TrackedEmployees)
 			{
+				Vector projected1 = CoordinateHelper.WorldSpaceToScreenSpace(employee.CollisionBox.X, employee.CollisionBox.Y, CoordinateHelper.ScreenOffset, CoordinateHelper.ScreenProjectionType.Isometric);
+				Vector projected2 = CoordinateHelper.WorldSpaceToScreenSpace(employee.CollisionBox.Right, employee.CollisionBox.Y, CoordinateHelper.ScreenOffset, CoordinateHelper.ScreenProjectionType.Isometric);
+				Vector projected3 = CoordinateHelper.WorldSpaceToScreenSpace(employee.CollisionBox.X, employee.CollisionBox.Bottom, CoordinateHelper.ScreenOffset, CoordinateHelper.ScreenProjectionType.Isometric);
+				Vector projected4 = CoordinateHelper.WorldSpaceToScreenSpace(employee.CollisionBox.Right, employee.CollisionBox.Bottom, CoordinateHelper.ScreenOffset, CoordinateHelper.ScreenProjectionType.Isometric);
+
 				renderer.SetDrawColor(8, 255, 8, 255);
-				Primitive.DrawLine(renderer, employee.CollisionBox.X, employee.CollisionBox.Y, employee.CollisionBox.Right, employee.CollisionBox.Y);
-				Primitive.DrawLine(renderer, employee.CollisionBox.X, employee.CollisionBox.Y, employee.CollisionBox.X, employee.CollisionBox.Bottom);
-				Primitive.DrawLine(renderer, employee.CollisionBox.Right, employee.CollisionBox.Y, employee.CollisionBox.Right, employee.CollisionBox.Bottom);
-				Primitive.DrawLine(renderer, employee.CollisionBox.X, employee.CollisionBox.Bottom, employee.CollisionBox.Right, employee.CollisionBox.Bottom);
+
+				Primitive.DrawLine(renderer, (int)projected1.X, (int)projected1.Y, (int)projected2.X, (int)projected2.Y); // top left to top right
+				Primitive.DrawLine(renderer, (int)projected1.X, (int)projected1.Y, (int)projected3.X, (int)projected3.Y); // top left to bottom left
+				Primitive.DrawLine(renderer, (int)projected2.X, (int)projected2.Y, (int)projected4.X, (int)projected4.Y); // top right to bottom right
+				Primitive.DrawLine(renderer, (int)projected3.X, (int)projected3.Y, (int)projected4.X, (int)projected4.Y); // bottom left to bottom right
+
+//				Primitive.DrawLine(renderer, employee.CollisionBox.X, employee.CollisionBox.Y, employee.CollisionBox.Right, employee.CollisionBox.Y);
+//				Primitive.DrawLine(renderer, employee.CollisionBox.X, employee.CollisionBox.Y, employee.CollisionBox.X, employee.CollisionBox.Bottom);
+//				Primitive.DrawLine(renderer, employee.CollisionBox.Right, employee.CollisionBox.Y, employee.CollisionBox.Right, employee.CollisionBox.Bottom);
+//				Primitive.DrawLine(renderer, employee.CollisionBox.X, employee.CollisionBox.Bottom, employee.CollisionBox.Right, employee.CollisionBox.Bottom);
 				renderer.SetDrawColor(0, 0, 0, 255);
 			}
 		}
@@ -389,11 +409,22 @@ namespace MyThirdSDL.Screens
 			var pathNodes = tiledMap.GetActivePathNodes();
 			foreach (var pathNode in pathNodes)
 			{
+				Vector projected1 = CoordinateHelper.WorldSpaceToScreenSpace(pathNode.Bounds.X, pathNode.Bounds.Y, CoordinateHelper.ScreenOffset, CoordinateHelper.ScreenProjectionType.Isometric);
+				Vector projected2 = CoordinateHelper.WorldSpaceToScreenSpace(pathNode.Bounds.Right, pathNode.Bounds.Y, CoordinateHelper.ScreenOffset, CoordinateHelper.ScreenProjectionType.Isometric);
+				Vector projected3 = CoordinateHelper.WorldSpaceToScreenSpace(pathNode.Bounds.X, pathNode.Bounds.Bottom, CoordinateHelper.ScreenOffset, CoordinateHelper.ScreenProjectionType.Isometric);
+				Vector projected4 = CoordinateHelper.WorldSpaceToScreenSpace(pathNode.Bounds.Right, pathNode.Bounds.Bottom, CoordinateHelper.ScreenOffset, CoordinateHelper.ScreenProjectionType.Isometric);
+
 				renderer.SetDrawColor(255, 8, 8, 255);
-				Primitive.DrawLine(renderer, pathNode.Bounds.X, pathNode.Bounds.Y, pathNode.Bounds.Right, pathNode.Bounds.Y);
-				Primitive.DrawLine(renderer, pathNode.Bounds.X, pathNode.Bounds.Y, pathNode.Bounds.X, pathNode.Bounds.Bottom);
-				Primitive.DrawLine(renderer, pathNode.Bounds.Right, pathNode.Bounds.Y, pathNode.Bounds.Right, pathNode.Bounds.Bottom);
-				Primitive.DrawLine(renderer, pathNode.Bounds.X, pathNode.Bounds.Bottom, pathNode.Bounds.Right, pathNode.Bounds.Bottom);
+
+				Primitive.DrawLine(renderer, (int)projected1.X, (int)projected1.Y, (int)projected2.X, (int)projected2.Y); // top left to top right
+				Primitive.DrawLine(renderer, (int)projected1.X, (int)projected1.Y, (int)projected3.X, (int)projected3.Y); // top left to bottom left
+				Primitive.DrawLine(renderer, (int)projected2.X, (int)projected2.Y, (int)projected4.X, (int)projected4.Y); // top right to bottom right
+				Primitive.DrawLine(renderer, (int)projected3.X, (int)projected3.Y, (int)projected4.X, (int)projected4.Y); // bottom left to bottom right
+
+//				Primitive.DrawLine(renderer, pathNode.Bounds.X, pathNode.Bounds.Y, pathNode.Bounds.Right, pathNode.Bounds.Y);
+//				Primitive.DrawLine(renderer, pathNode.Bounds.X, pathNode.Bounds.Y, pathNode.Bounds.X, pathNode.Bounds.Bottom);
+//				Primitive.DrawLine(renderer, pathNode.Bounds.Right, pathNode.Bounds.Y, pathNode.Bounds.Right, pathNode.Bounds.Bottom);
+//				Primitive.DrawLine(renderer, pathNode.Bounds.X, pathNode.Bounds.Bottom, pathNode.Bounds.Right, pathNode.Bounds.Bottom);
 				renderer.SetDrawColor(0, 0, 0, 255);
 			}
 		}

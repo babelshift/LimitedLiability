@@ -67,6 +67,12 @@ namespace MyThirdSDL.UserInterface
 			ButtonMainMenu.Clicked += ButtonMainMenu_Clicked;
 		}
 
+		public void UpdateDisplayedDateAndTime(DateTime dateTime)
+		{
+			LabelTime.Text = dateTime.ToShortTimeString();
+			LabelDate.Text = dateTime.ToShortDateString();
+		}
+
 		public override void Update(GameTime gameTime)
 		{
 			base.Update(gameTime);

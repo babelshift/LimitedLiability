@@ -24,7 +24,7 @@ namespace MyThirdSDL.Agents
 
 		public string LastName { get; private set; }
 
-		public int Age { get; private set; }
+		public TimeSpan Age { get; private set; }
 
 		public DateTime Birthday { get; private set; }
 
@@ -67,12 +67,11 @@ namespace MyThirdSDL.Agents
 		public event EventHandler<EventArgs> ThirstSatisfied;
 		public event EventHandler<EventArgs> HungerSatisfied;
 
-		public Employee(TimeSpan birthTime, string agentName, Texture texture, Vector position, string firstName, string lastName, int age, DateTime birthday, Skills skills, Job job)
+		public Employee(TimeSpan birthTime, string agentName, Texture texture, Vector position, string firstName, string lastName, DateTime birthday, Skills skills, Job job)
 			: base(birthTime, agentName, texture, position, speed)
 		{
 			FirstName = firstName;
 			LastName = lastName;
-			Age = age;
 			Birthday = birthday;
 			Job = job;
 			Skills = skills;
@@ -253,6 +252,11 @@ namespace MyThirdSDL.Agents
 				Drink(affector.ThirstEffectiveness);
 			else if (actionType == ActionType.DispenseFood)
 				Eat(affector.HungerEffectiveness);
+		}
+
+		public void UpdateAge(DateTime worldDateTime)
+		{
+			Age = worldDateTime.Subtract(Birthday);
 		}
 	}
 }

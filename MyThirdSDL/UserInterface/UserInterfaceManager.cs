@@ -85,8 +85,6 @@ namespace MyThirdSDL.UserInterface
 			this.purchasableItems = purchasableItems;
 			this.contentManager = contentManager;
 
-			ChangeState(UserInterfaceState.Default);
-
 			controlFactory = new ControlFactory(renderer, contentManager);
 
 			toolboxTray = controlFactory.CreateToolboxTray(new Vector(bottomRightPointOfWindow.X / 2 - 300, bottomRightPointOfWindow.Y - 50));
@@ -106,13 +104,17 @@ namespace MyThirdSDL.UserInterface
 			labelMousePositionAbsolute = controlFactory.CreateLabel(Vector.Zero, fontPath, fontSizeContent, fontColor, ".");
 			labelMousePositionIsometric = controlFactory.CreateLabel(Vector.Zero, fontPath, fontSizeContent, fontColor, ".");
 			labelSimulationTime = controlFactory.CreateLabel(Vector.Zero, fontPath, fontSizeContent, fontColor, ".");
+			labelState = controlFactory.CreateLabel(Vector.Zero, fontPath, fontSizeContent, fontColor, ".");
 
 			labels.Add(labelMousePositionAbsolute);
 			labels.Add(labelMousePositionIsometric);
 			labels.Add(labelSimulationTime);
+			labels.Add(labelState);
 
 			CreateMenuEquipment();
 			CreateMenuInspectEmployee();
+
+			ChangeState(UserInterfaceState.Default);
 		}
 
 		/// <summary>
@@ -376,6 +378,12 @@ namespace MyThirdSDL.UserInterface
 				menuInspectEmployee.Draw(gameTime, renderer);
 		}
 
+		public void UpdateDisplayedDateAndTime(DateTime dateTime)
+		{
+			if (toolboxTray != null)
+				toolboxTray.UpdateDisplayedDateAndTime(dateTime);
+		}
+
 		#endregion
 
 		#region User Input Events
@@ -400,6 +408,7 @@ namespace MyThirdSDL.UserInterface
 			// TODO: maybe a global here isn't the best idea?
 			timeOfStatusChange = SimulationManager.SimulationTime;
 			CurrentState = state;
+			labelState.Text = String.Format("UI State: {0}", state.ToString());
 		}
 
 		#endregion
