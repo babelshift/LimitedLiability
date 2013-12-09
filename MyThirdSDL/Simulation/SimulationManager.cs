@@ -14,22 +14,12 @@ namespace MyThirdSDL.Simulation
 {
 	public class SimulationManager
 	{
-		public static readonly int SimulationTimeToWorldTimeMultiplier = 8640;
+		public static readonly int SimulationTimeToWorldTimeMultiplier = 540;
 
 		private Dictionary<System.Type, List<Agent>> trackedAgents = new Dictionary<Type, List<Agent>>();
 		private DateTime startingWorldDateTime;
 
-		public DateTime WorldDateTime 
-		{ 
-			get
-			{
-				return startingWorldDateTime.Add(WorldTimePassed);
-			}
-			private set
-			{
-				startingWorldDateTime = value;
-			}
-		}
+		public DateTime WorldDateTime { get { return startingWorldDateTime.Add(WorldTimePassed); } }
 
 		private TimeSpan WorldTimePassed
 		{
@@ -42,15 +32,6 @@ namespace MyThirdSDL.Simulation
 		}
 
 		public static TimeSpan SimulationTime { get; private set; }
-
-		public string SimulationTimeDisplay
-		{
-			get
-			{
-				return String.Format("{0} minutes, {1} seconds, {2} milliseconds",
-					SimulationTime.Minutes.ToString(), SimulationTime.Seconds.ToString(), SimulationTime.Milliseconds.ToString());
-			}
-		}
 
 		public TiledMap CurrentMap { get; set; }
 
@@ -106,7 +87,7 @@ namespace MyThirdSDL.Simulation
 
 		public SimulationManager(DateTime startingWorldDateTime)
 		{
-			WorldDateTime = startingWorldDateTime;
+			this.startingWorldDateTime = startingWorldDateTime;
 		}
 
 		/// <summary>

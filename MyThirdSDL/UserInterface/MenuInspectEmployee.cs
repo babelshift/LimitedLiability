@@ -44,8 +44,8 @@ namespace MyThirdSDL.UserInterface
 		public void SetInfoValues(Employee employee)
 		{
 			labelNameValue.Text = employee.FullName;
-			double yearsOld = employee.Age.TotalDays / 365;
-			double daysInYearOld = (yearsOld - Math.Truncate(yearsOld)) * 365;
+			double yearsOld = DateTimeHelper.DaysToYears(employee.Age.TotalDays);
+			double daysInYearOld = DateTimeHelper.DaysRemainderInYears(yearsOld);
 			labelAgeValue.Text = String.Format("{0} years, {1} days", (int)yearsOld, (int)daysInYearOld);
 			labelJobValue.Text = employee.Job.Title;
 			labelSalaryValue.Text = employee.Job.Salary.ToString("C", CultureInfo.CreateSpecificCulture("en-US"));

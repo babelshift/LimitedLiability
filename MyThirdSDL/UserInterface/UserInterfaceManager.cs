@@ -329,9 +329,11 @@ namespace MyThirdSDL.UserInterface
 
 		#region Game Loop
 
-		public void Update(GameTime gameTime, string simulationTimeText)
+		public void Update(GameTime gameTime, DateTime worldDateTime)
 		{
-			labelSimulationTime.Text = String.Format("Simulation Time: {0}", simulationTimeText);
+			string simulationTimeDisplay = String.Format("{0} minutes, {1} seconds, {2} milliseconds",
+				SimulationManager.SimulationTime.Minutes.ToString(), SimulationManager.SimulationTime.Seconds.ToString(), SimulationManager.SimulationTime.Milliseconds.ToString());
+			labelSimulationTime.Text = String.Format("Simulation Time: {0}", simulationTimeDisplay);
 
 			toolboxTray.Update(gameTime);
 
@@ -346,6 +348,8 @@ namespace MyThirdSDL.UserInterface
 					ChangeState(UserInterfaceState.Default);
 
 			TimeSpentInCurrentState = SimulationManager.SimulationTime.Subtract(timeOfStatusChange);
+
+			UpdateDisplayedDateAndTime(worldDateTime);
 		}
 
 		public void Draw(GameTime gameTime, Renderer renderer)
@@ -378,7 +382,7 @@ namespace MyThirdSDL.UserInterface
 				menuInspectEmployee.Draw(gameTime, renderer);
 		}
 
-		public void UpdateDisplayedDateAndTime(DateTime dateTime)
+		private void UpdateDisplayedDateAndTime(DateTime dateTime)
 		{
 			if (toolboxTray != null)
 				toolboxTray.UpdateDisplayedDateAndTime(dateTime);

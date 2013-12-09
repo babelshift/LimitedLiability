@@ -160,6 +160,7 @@
     <Compile Include="Content\TileType.cs" />
     <Compile Include="Simulation\Path.cs" />
     <Compile Include="UserInterface\UserInterfaceState.cs" />
+    <Compile Include="DateTimeHelper.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

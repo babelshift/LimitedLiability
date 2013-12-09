@@ -210,9 +210,7 @@ namespace MyThirdSDL.Screens
 
 			simulationManager.Update(gameTime);
 
-			string simulationTimeText = simulationManager.SimulationTimeDisplay;
-			userInterfaceManager.Update(gameTime, simulationTimeText);
-			userInterfaceManager.UpdateDisplayedDateAndTime(simulationManager.WorldDateTime);
+			userInterfaceManager.Update(gameTime, simulationManager.WorldDateTime);
 		}
 
 		public override void Draw(GameTime gameTime, Renderer renderer)
