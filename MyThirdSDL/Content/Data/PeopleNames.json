@@ -1,0 +1,21 @@
+{
+	"firstNames": [
+		{ "name": "Justin" },
+		{ "name": "Joanne" },
+		{ "name": "Nicole" },
+		{ "name": "Victor" },
+		{ "name": "Jennifer" },
+		{ "name": "Adam" },
+		{ "name": "Aaron" },
+		{ "name": "Su Yin" }
+	],
+	"lastNames": [
+		{ "name": "Skiles" },
+		{ "name": "Sirois" },
+		{ "name": "Legge" },
+		{ "name": "Elci" },
+		{ "name": "Barreto" },
+		{ "name": "Allen" },
+		{ "name": "Cheam" }
+	] 
+}

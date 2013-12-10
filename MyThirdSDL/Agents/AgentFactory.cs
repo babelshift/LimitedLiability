@@ -13,27 +13,17 @@ namespace MyThirdSDL.Agents
 	{
 		private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
-		private List<string> firstNames = new List<string>();
 		private Random random = new Random();
 		private TextureStore textureStore;
-		private AgentManager agentManager;
 		private ContentManager contentManager;
 		private JobFactory jobFactory;
 		private Renderer renderer;
 		private int currentEmployeeNumber = 0;
 		private int currentEquipmentNumber = 0;
 
-		public AgentFactory(Renderer renderer, AgentManager agentManager, ContentManager contentManager, JobFactory jobFactory)
+		public AgentFactory(Renderer renderer, ContentManager contentManager, JobFactory jobFactory)
 		{
-			firstNames.Add("Justin");
-			firstNames.Add("Joanne");
-			firstNames.Add("Nicole");
-			firstNames.Add("Victor");
-			firstNames.Add("Jennifer");
-			firstNames.Add("Adam");
-
 			this.renderer = renderer;
-			this.agentManager = agentManager;
 			this.contentManager = contentManager;
 			this.jobFactory = jobFactory;
 			this.textureStore = new TextureStore(renderer);
@@ -47,12 +37,13 @@ namespace MyThirdSDL.Agents
 			Texture texture = textureStore.GetTexture(texturePath);
 
 			int employeeNumber = GetNextEmployeeNumber();
-			string firstName = GetRandomFirstName();
+			string firstName = contentManager.GetRandomFirstName();
+			string lastName = contentManager.GetRandomLastName();
 			DateTime birthday = GetRandomBirthday(worldDateTime);
 			Skills skills = Skills.GetRandomSkills();
 			Job job = jobFactory.CreateJob(skills);
 
-			Employee employee = new Employee(simulationBirthTime, "Employee " + employeeNumber, texture, position, firstName, "Smith", birthday, skills, job);
+			Employee employee = new Employee(simulationBirthTime, "Employee " + employeeNumber, texture, position, firstName, lastName, birthday, skills, job);
 
 			if (log.IsDebugEnabled)
 				log.Debug(String.Format("Employee has been created with name: {0}", employee.FullName));
@@ -77,14 +68,6 @@ namespace MyThirdSDL.Agents
 			return currentEmployeeNumber++;
 		}
 
-		private string GetRandomFirstName()
-		{
-			int i = random.Next(0, firstNames.Count - 1);
-			//int employeeNum = random.Next();
-			string firstName = firstNames[i];
-			return firstName;
-		}
-
 		#endregion
 
 		public TrashBin CreateTrashBin(TimeSpan birthTime)
@@ -94,7 +77,7 @@ namespace MyThirdSDL.Agents
 
 		public TrashBin CreateTrashBin(TimeSpan birthTime, Vector position)
 		{
-			AgentMetaData agentMetaData = agentManager.GetAgentMetaData("TrashBin");
+			AgentMetadata agentMetaData = contentManager.GetAgentMetadata("TrashBin");
 			return CreateAgent<TrashBin>(birthTime, "TrashBin", position, agentMetaData);
 		}
 
@@ -105,7 +88,7 @@ namespace MyThirdSDL.Agents
 
 		public OfficeDesk CreateOfficeDesk(TimeSpan birthTime, Vector position)
 		{
-			AgentMetaData agentMetaData = agentManager.GetAgentMetaData("OfficeDesk");
+			AgentMetadata agentMetaData = contentManager.GetAgentMetadata("OfficeDesk");
 			return CreateAgent<OfficeDesk>(birthTime, "OfficeDesk", position, agentMetaData);
 		}
 
@@ -116,7 +99,7 @@ namespace MyThirdSDL.Agents
 
 		public SnackMachine CreateSnackMachine(TimeSpan birthTime, Vector position)
 		{
-			AgentMetaData agentMetaData = agentManager.GetAgentMetaData("SnackMachine");
+			AgentMetadata agentMetaData = contentManager.GetAgentMetadata("SnackMachine");
 			return CreateAgent<SnackMachine>(birthTime, "SnackMachine", position, agentMetaData);
 		}
 
@@ -127,7 +110,7 @@ namespace MyThirdSDL.Agents
 
 		public SodaMachine CreateSodaMachine(TimeSpan birthTime, Vector position)
 		{
-			AgentMetaData agentMetaData = agentManager.GetAgentMetaData("SodaMachine");
+			AgentMetadata agentMetaData = contentManager.GetAgentMetadata("SodaMachine");
 			return CreateAgent<SodaMachine>(birthTime, "SodaMachine", position, agentMetaData);
 		}
 
@@ -138,11 +121,11 @@ namespace MyThirdSDL.Agents
 
 		public WaterFountain CreateWaterFountain(TimeSpan birthTime, Vector position)
 		{
-			AgentMetaData agentMetaData = agentManager.GetAgentMetaData("WaterFountain");
+			AgentMetadata agentMetaData = contentManager.GetAgentMetadata("WaterFountain");
 			return CreateAgent<WaterFountain>(birthTime, "WaterFountain", position, agentMetaData);
 		}
 
-		private T CreateAgent<T>(TimeSpan birthTime, string texturePathKey, Vector position, AgentMetaData agentMetaData)
+		private T CreateAgent<T>(TimeSpan birthTime, string texturePathKey, Vector position, AgentMetadata agentMetaData)
 		{
 			if (log.IsDebugEnabled)
 				log.Debug(String.Format("Creating agent of type {0} at ({1},{2}) with birth time: {3}", typeof(T), position.X, position.Y, birthTime));

@@ -12,6 +12,6 @@ namespace MyThirdSDL.Mail
 		Competitor,
 		Employee,
 		Headhunter,
-		Spam
+		Spammer
 	}
 }

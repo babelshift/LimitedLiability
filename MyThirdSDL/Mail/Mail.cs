@@ -10,8 +10,6 @@ namespace MyThirdSDL.Mail
 	{
 		public Guid ID { get; private set; }
 
-		public MailTargetType
-
 		public string From { get; private set; }
 
 		public string To { get; set; }

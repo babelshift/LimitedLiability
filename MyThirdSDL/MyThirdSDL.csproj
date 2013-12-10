@@ -74,8 +74,7 @@
     <Compile Include="Agents\Agent.cs" />
     <Compile Include="Agents\AgentActivity.cs" />
     <Compile Include="Agents\AgentFactory.cs" />
-    <Compile Include="Agents\AgentManager.cs" />
-    <Compile Include="Agents\AgentMetaData.cs" />
+    <Compile Include="Agents\AgentMetadata.cs" />
     <Compile Include="Agents\AgentState.cs" />
     <Compile Include="Agents\Employee.cs" />
     <Compile Include="Agents\Equipment.cs" />
@@ -90,6 +89,7 @@
     <Compile Include="Agents\TrashBin.cs" />
     <Compile Include="Agents\WaterFountain.cs" />
     <Compile Include="Camera.cs" />
+    <Compile Include="Content\CompanyMetadata.cs" />
     <Compile Include="Content\ContentManager.cs" />
     <Compile Include="Content\MapCell.cs" />
     <Compile Include="Content\MapObject.cs" />
@@ -222,12 +222,18 @@
     <Content Include="Content\Maps\Characters.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <None Include="Agents\AgentReference.json">
+    <Content Include="Content\Data\AgentReference.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
+    </Content>
+    <Content Include="Content\Data\CompanyData.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Data\PeopleNames.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <None Include="App.config" />
     <Compile Include="IHasNeighbors.cs" />
-    <Content Include="Content\ContentReference.json">
+    <Content Include="Content\Data\ContentReference.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\Fonts\Arcade N.ttf">

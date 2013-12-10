@@ -20,7 +20,6 @@ namespace MyThirdSDL.Screens
 
 		private JobFactory jobFactory;
 		private AgentFactory agentFactory;
-		private AgentManager agentManager;
 		private SimulationManager simulationManager;
 		private UserInterfaceManager userInterfaceManager;
 		private List<IDrawable> allDrawables = new List<IDrawable>();
@@ -57,8 +56,7 @@ namespace MyThirdSDL.Screens
 		{
 			simulationManager = new SimulationManager(DateTime.Now);
 			jobFactory = new JobFactory();
-			agentManager = new AgentManager();
-			agentFactory = new AgentFactory(renderer, agentManager, contentManager, jobFactory);
+			agentFactory = new AgentFactory(renderer, contentManager, jobFactory);
 
 			simulationManager.EmployeeIsDirty += HandleEmployeeIsDirty;
 			simulationManager.EmployeeIsHungry += HandleEmployeeIsHungry;

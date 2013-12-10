@@ -1,0 +1,8 @@
+{
+	"companies": [
+		{ "name": "Widgets, Inc.", "type": "Competitor", "domain": "widgitsinc.com" },
+		{ "name": "Inlook", "type": "Employee", "domain": "inlook.com"  }, 
+		{ "name": "Work Safe Porn", "type": "Spammer", "domain": "worksafeporn.com" }, 
+		{ "name": "Recruiters LLC", "type": "Headhunter", "domain": "recruiters.com" }
+	]
+}

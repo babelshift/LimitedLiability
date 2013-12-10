@@ -42,11 +42,11 @@ namespace MyThirdSDL.Mail
 			employeeMailboxes.Add(new Mailbox(new MailAddress("first.last@wahoo.com", MailAddressType.Employee)));
 			employeeMailboxes.Add(new Mailbox(new MailAddress("first.last@tinymail.com", MailAddressType.Employee)));
 			employeeMailboxes.Add(new Mailbox(new MailAddress("first.last@freemail.com", MailAddressType.Employee)));
-			spammerMailboxes.Add(new Mailbox(new MailAddress("no_reply@pillz.com", MailAddressType.Spam)));
-			spammerMailboxes.Add(new Mailbox(new MailAddress("no_reply@bigpharma.com", MailAddressType.Spam)));
-			spammerMailboxes.Add(new Mailbox(new MailAddress("no_reply@worksafeporn.com", MailAddressType.Spam)));
-			spammerMailboxes.Add(new Mailbox(new MailAddress("no_reply@bizdev.com", MailAddressType.Spam)));
-			spammerMailboxes.Add(new Mailbox(new MailAddress("no_reply@mylittlepony.com", MailAddressType.Spam)));
+			spammerMailboxes.Add(new Mailbox(new MailAddress("no_reply@pillz.com", MailAddressType.Spammer)));
+			spammerMailboxes.Add(new Mailbox(new MailAddress("no_reply@bigpharma.com", MailAddressType.Spammer)));
+			spammerMailboxes.Add(new Mailbox(new MailAddress("no_reply@worksafeporn.com", MailAddressType.Spammer)));
+			spammerMailboxes.Add(new Mailbox(new MailAddress("no_reply@bizdev.com", MailAddressType.Spammer)));
+			spammerMailboxes.Add(new Mailbox(new MailAddress("no_reply@mylittlepony.com", MailAddressType.Spammer)));
 		}
 
 		public void SendMail(Mail mail)
