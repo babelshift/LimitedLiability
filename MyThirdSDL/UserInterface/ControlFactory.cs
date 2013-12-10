@@ -117,21 +117,10 @@ namespace MyThirdSDL.UserInterface
 			menuInspectEmployee.AddControl(iconThirst);
 			menuInspectEmployee.AddControl(iconHunger);
 
-			//            menuInspectEmployee.AddControl(labelHealth);
-			//            menuInspectEmployee.AddControl(labelHygiene);
-			//            menuInspectEmployee.AddControl(labelSleep);
-			//            menuInspectEmployee.AddControl(labelThirst);
-			//            menuInspectEmployee.AddControl(labelHunger);
-
 			menuInspectEmployee.AddControl(iconCommunication);
 			menuInspectEmployee.AddControl(iconLeadership);
 			menuInspectEmployee.AddControl(iconCreativity);
 			menuInspectEmployee.AddControl(iconIntelligence);
-
-			//            menuInspectEmployee.AddControl(labelCommunication);
-			//            menuInspectEmployee.AddControl(labelLeadership);
-			//            menuInspectEmployee.AddControl(labelCreativity);
-			//            menuInspectEmployee.AddControl(labelIntelligence);
 
 			menuInspectEmployee.AddControl(labelName);
 			menuInspectEmployee.AddControl(labelAge);
@@ -140,14 +129,6 @@ namespace MyThirdSDL.UserInterface
 			menuInspectEmployee.AddControl(labelStatus);
 			menuInspectEmployee.AddControl(labelBirth);
 			menuInspectEmployee.AddControl(labelMood);
-
-			//menuInspectEmployee.AddControl(labelNameValue);
-			//menuInspectEmployee.AddControl(labelAgeValue);
-			//menuInspectEmployee.AddControl(labelJobValue);
-			//menuInspectEmployee.AddControl(labelSalaryValue);
-			//menuInspectEmployee.AddControl(labelStatusValue);
-			//menuInspectEmployee.AddControl(labelBirthValue);
-			//menuInspectEmployee.AddControl(labelMoodValue);
 
 			return menuInspectEmployee;
 		}
@@ -183,10 +164,10 @@ namespace MyThirdSDL.UserInterface
 			Label labelHunger = CreateLabel(new Vector(position.X + 400, position.Y + 210), fontPath, fontSizeContent, fontColor, "N/A");
 
 			Button buttonCloseWindow = CreateButton(new Vector(position.X + 454, position.Y - 47), "ButtonSquare", "ButtonSquareHover", "IconWindowClose", "IconWindowClose");
-			Button buttonConfirmWindow = CreateButton(new Vector(position.X + 454, position.Y + 285), "ButtonSquare", "ButtonSquareHover", "IconWindowConfirm", "IconWindowConfirm");
+			Button buttonConfirmWindow = CreateButton(new Vector(position.X + 454, position.Y + 303), "ButtonSquare", "ButtonSquareHover", "IconWindowConfirm", "IconWindowConfirm");
 
-			Button buttonArrowCircleLeft = CreateButton(new Vector(position.X + 5, position.Y + 235), "ButtonSquare", "ButtonSquareHover", "IconArrowCircleLeft", "IconArrowCircleLeft");
-			Button buttonArrowCircleRight = CreateButton(new Vector(position.X + 302, position.Y + 235), "ButtonSquare", "ButtonSquareHover", "IconArrowCircleRight", "IconArrowCircleRight");
+			Button buttonArrowCircleLeft = CreateButton(new Vector(position.X + 9, position.Y + 248), "ButtonSquare", "ButtonSquareHover", "IconArrowCircleLeft", "IconArrowCircleLeft");
+			Button buttonArrowCircleRight = CreateButton(new Vector(position.X + 296, position.Y + 248), "ButtonSquare", "ButtonSquareHover", "IconArrowCircleRight", "IconArrowCircleRight");
 
 			MenuEquipment menuEquipment = new MenuEquipment(texture, position, iconMainMenu, iconInfoMenu, labelMainMenu, labelInfoMenu,
 				iconMoney, iconHealth, iconHygiene, iconSleep, iconThirst, iconHunger, labelMoney, labelHealth, labelHygiene, labelSleep, labelThirst,

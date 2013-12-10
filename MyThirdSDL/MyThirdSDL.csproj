@@ -104,6 +104,7 @@
     <Compile Include="Content\TileType.cs" />
     <Compile Include="CoordinateHelper.cs" />
     <Compile Include="Cursor.cs" />
+    <Compile Include="DateTimeHelper.cs" />
     <Compile Include="Descriptors\IAffectsNecessities.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -128,6 +129,12 @@
     <Compile Include="IDrawable.cs" />
     <Compile Include="INode.cs" />
     <Compile Include="KeyboardHelper.cs" />
+    <Compile Include="Mail\Mail.cs" />
+    <Compile Include="Mail\MailAddress.cs" />
+    <Compile Include="Mail\Mailbox.cs" />
+    <Compile Include="Mail\MailManager.cs" />
+    <Compile Include="Mail\MailState.cs" />
+    <Compile Include="Mail\MailAddressType.cs" />
     <Compile Include="MainGame.cs" />
     <Compile Include="MouseHelper.cs" />
     <Compile Include="Simulation\Path.cs" />
@@ -177,7 +184,6 @@
     <Compile Include="UserInterface\MessageBox.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="UserInterface\MouseMode.cs" />
     <Compile Include="UserInterface\MouseOverScreenEdge.cs" />
     <Compile Include="UserInterface\PurchasableItemSelectedEventArgs.cs" />
     <Compile Include="UserInterface\SimulationLabel.cs">
@@ -192,12 +198,10 @@
     <Compile Include="UserInterface\UserInterfaceManager.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="UserInterface\UserInterfaceState.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Content\Images\RedDot.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Content\Images\tileHighlight3.png">
+    <Content Include="Content\Images\MaleEmployee0001.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\Maps\0_Decor_Inside.png">
@@ -229,14 +233,6 @@
     <Content Include="Content\Fonts\Arcade N.ttf">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <None Include="Content\Maps\Map1.tmx">
-      <SubType>Designer</SubType>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Content\Maps\Map2.tmx">
-      <SubType>Designer</SubType>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
     <None Include="Content\Maps\Map3.tmx">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -244,18 +240,12 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <SubType>Designer</SubType>
     </None>
-    <None Include="Content\Maps\Office2.tmx">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
     <None Include="Content\Maps\Office3.tmx">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Content\Images\0001.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
     <Content Include="Content\Images\CubeTileSheet.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -268,16 +258,7 @@
     <Content Include="Content\Images\Equipment\OfficeDesk.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Images\Equipment\OfficeDesk2.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
     <Content Include="Content\Images\Equipment\SnackMachine.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Content\Images\Equipment\SnackMachine2.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Content\Images\Equipment\SnackMachine3.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\Images\Equipment\SodaMachine.png">
@@ -286,31 +267,7 @@
     <Content Include="Content\Images\Equipment\TrashBin.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Images\Equipment\WaterFountain.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Content\Images\playerCollisionBox.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Content\Images\playerIsoBox.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Content\Images\thing.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Content\Images\thingBox.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Content\Images\tileCollisionBox.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
     <Content Include="Content\Images\tileHighlight.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Content\Images\tileHighlight2.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Content\Images\tileHighlightSelected.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\Images\User Interface\ButtonMenuItem.png">
