@@ -49,7 +49,7 @@ namespace MyThirdSDL.Mail
 			spammerMailboxes.Add(new Mailbox(new MailAddress("no_reply@mylittlepony.com", MailAddressType.Spammer)));
 		}
 
-		public void SendMail(Mail mail)
+		public void SendMail(MailItem mail)
 		{
 			Mailbox fromMailbox = AllMailboxes.FirstOrDefault(m => m.MailAddress.Address == mail.From);
 			if (fromMailbox == null)

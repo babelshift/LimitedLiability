@@ -45,8 +45,11 @@ namespace MyThirdSDL.UserInterface
 		private Button buttonArrowCircleRight;
 		private Button buttonCloseWindow;
 		private Button buttonConfirmWindow;
+		private Dictionary<int, List<ButtonMenuItem>> buttonMenuItemPages = new Dictionary<int, List<ButtonMenuItem>>();
 
 		#endregion
+		
+		private IPurchasable selectedPurchasableItem;
 
 		#region Events
 
@@ -193,9 +196,6 @@ namespace MyThirdSDL.UserInterface
 			buttonMenuItem.Position = buttonMenuItemPosition;
 			buttonMenuItem.Clicked += buttonMenuItem_Clicked;
 		}
-
-		private Dictionary<int, List<ButtonMenuItem>> buttonMenuItemPages = new Dictionary<int, List<ButtonMenuItem>>();
-		private IPurchasable selectedPurchasableItem;
 
 		private void buttonMenuItem_Clicked(object sender, PurchasableItemSelectedEventArgs e)
 		{

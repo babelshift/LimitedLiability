@@ -12,6 +12,7 @@ using SharpDL.Input;
 using MyThirdSDL.Content;
 using MyThirdSDL.Simulation;
 using MyThirdSDL.Agents;
+using MyThirdSDL.Mail;
 
 namespace MyThirdSDL.UserInterface
 {
@@ -47,6 +48,8 @@ namespace MyThirdSDL.UserInterface
 		private bool isMenuEquipmentOpen = false;
 		private MenuInspectEmployee menuInspectEmployee;
 		private bool isMenuInspectEmployeeOpen = false;
+		private MenuMailbox menuMailbox;
+		private bool isMenuMailboxOpen = false;
 
 		#endregion
 
@@ -113,6 +116,7 @@ namespace MyThirdSDL.UserInterface
 
 			CreateMenuEquipment();
 			CreateMenuInspectEmployee();
+			CreateMenuMailbox();
 
 			ChangeState(UserInterfaceState.Default);
 		}
@@ -226,6 +230,11 @@ namespace MyThirdSDL.UserInterface
 
 		private void ToolboxTray_ButtonSelectRoomClicked(object sender, EventArgs e)
 		{
+			if (!isMenuMailboxOpen)
+			{
+				ClearMenusOpen();
+				ShowMenuMailbox();
+			}
 		}
 
 		private void ToolboxTray_ButtonSelectEquipmentClicked(object sender, EventArgs e)
@@ -249,6 +258,29 @@ namespace MyThirdSDL.UserInterface
 			HideMenuInspectEmployee();
 			HideMenuEquipment();
 		}
+
+		#region Menu Mailbox Events
+
+
+		private void ShowMenuMailbox()
+		{
+			isMenuMailboxOpen = true;
+			ChangeState(UserInterfaceState.MailboxMenuActive);
+		}
+
+		private void CreateMenuMailbox()
+		{
+			Vector menuPosition = new Vector(bottomRightPointOfWindow.X, bottomRightPointOfWindow.Y);
+			Mailbox mailbox = new Mailbox(new Mail.MailAddress("first.last@company.com", Mail.MailAddressType.Player));
+			mailbox.AddMailToInbox(new MailItem("first", "first.last@company.com", "Hello World!", "PENISES", MailState.Unread));
+			mailbox.AddMailToInbox(new MailItem("first", "first.last@company.com", "Yo!", "Ho!", MailState.Unread));
+			mailbox.AddMailToInbox(new MailItem("first", "first.last@company.com", "Hi", "Sexy", MailState.Read));
+			mailbox.AddMailToInbox(new MailItem("first", "first.last@company.com", "Pills", "Free!", MailState.Unread));
+			mailbox.AddMailToInbox(new MailItem("first", "first.last@company.com", "Pills", "Free!", MailState.Unread));
+			menuMailbox = controlFactory.CreateMenuMailbox(menuPosition, mailbox);
+		}
+
+		#endregion
 
 		#region Menu Inspect Employee Events
 
@@ -343,6 +375,9 @@ namespace MyThirdSDL.UserInterface
 			if (isMenuInspectEmployeeOpen)
 				menuInspectEmployee.Update(gameTime);
 
+			if (isMenuMailboxOpen)
+				menuMailbox.Update(gameTime);
+
 			if (CurrentState == UserInterfaceState.PlaceEquipmentActive)
 				if (MouseHelper.CurrentMouseState.ButtonsPressed.Contains(MouseButtonCode.Right))
 					ChangeState(UserInterfaceState.Default);
@@ -380,6 +415,9 @@ namespace MyThirdSDL.UserInterface
 
 			if (isMenuInspectEmployeeOpen)
 				menuInspectEmployee.Draw(gameTime, renderer);
+
+			if (isMenuMailboxOpen)
+				menuMailbox.Draw(gameTime, renderer);
 		}
 
 		private void UpdateDisplayedDateAndTime(DateTime dateTime)

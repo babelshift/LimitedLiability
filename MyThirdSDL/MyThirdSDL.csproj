@@ -129,7 +129,7 @@
     <Compile Include="IDrawable.cs" />
     <Compile Include="INode.cs" />
     <Compile Include="KeyboardHelper.cs" />
-    <Compile Include="Mail\Mail.cs" />
+    <Compile Include="Mail\MailItem.cs" />
     <Compile Include="Mail\MailAddress.cs" />
     <Compile Include="Mail\Mailbox.cs" />
     <Compile Include="Mail\MailManager.cs" />
@@ -162,6 +162,8 @@
     <Compile Include="UserInterface\Button.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="UserInterface\ButtonMailFolder.cs" />
+    <Compile Include="UserInterface\ButtonMailItem.cs" />
     <Compile Include="UserInterface\ButtonMenuItem.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -181,6 +183,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="UserInterface\MenuInspectEmployee.cs" />
+    <Compile Include="UserInterface\MenuMailbox.cs" />
     <Compile Include="UserInterface\MessageBox.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -202,6 +205,42 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\Images\MaleEmployee0001.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Images\User Interface\ButtonMailFolder.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Images\User Interface\ButtonMailFolderHover.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Images\User Interface\ButtonMailItem.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Images\User Interface\ButtonMailItemHover.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Images\User Interface\IconFolderOpen.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Images\User Interface\IconMailArchive.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Images\User Interface\IconMailInbox.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Images\User Interface\IconMailOutbox.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Images\User Interface\IconMailRead.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Images\User Interface\IconMailUnread.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Images\User Interface\IconSeparator.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Images\User Interface\MenuMailboxFrame.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\Maps\0_Decor_Inside.png">

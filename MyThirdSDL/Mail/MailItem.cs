@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace MyThirdSDL.Mail
 {
-	public class Mail
+	public class MailItem
 	{
 		public Guid ID { get; private set; }
 
@@ -20,8 +20,9 @@ namespace MyThirdSDL.Mail
 
 		public MailState MailState { get; private set; }
 
-		public Mail(string from, string to, string subject, string body, MailState mailState)
+		public MailItem(string from, string to, string subject, string body, MailState mailState)
 		{
+			ID = Guid.NewGuid();
 			From = from;
 			To = to;
 			Subject = subject;

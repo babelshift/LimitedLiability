@@ -8,26 +8,30 @@ namespace MyThirdSDL.Mail
 {
 	public class Mailbox
 	{
-		private List<Mail> inbox = new List<Mail>();
-		private List<Mail> outbox = new List<Mail>();
-		private List<Mail> archive = new List<Mail>();
+		private List<MailItem> inbox = new List<MailItem>();
+		private List<MailItem> outbox = new List<MailItem>();
+		private List<MailItem> archive = new List<MailItem>();
 
 		public MailAddressType FromAddressType { get; private set; }
 
 		public MailAddress MailAddress { get; private set; }
+
+		public IEnumerable<MailItem> InboxMailItems { get { return inbox; } }
+		public IEnumerable<MailItem> OutboxMailItems { get { return outbox; } }
+		public IEnumerable<MailItem> ArchiveMailItems { get { return archive; } }
 
 		public Mailbox(MailAddress mailAddress)
 		{
 			MailAddress = mailAddress;
 		}
 
-		public void AddMailToInbox(Mail mail)
+		public void AddMailToInbox(MailItem mail)
 		{
 			if (!inbox.Any(m => m.ID == mail.ID))
 				inbox.Add(mail);
 		}
 
-		public void AddMailToOutbox(Mail mail)
+		public void AddMailToOutbox(MailItem mail)
 		{
 			if (!outbox.Any(m => m.ID == mail.ID))
 				outbox.Add(mail);
@@ -50,7 +54,7 @@ namespace MyThirdSDL.Mail
 
 		public void MoveMailToArchive(Guid mailId)
 		{
-			Mail mail = inbox.FirstOrDefault(m => m.ID == mailId);
+			MailItem mail = inbox.FirstOrDefault(m => m.ID == mailId);
 			if (mail != null)
 			{
 				inbox.Remove(mail);
