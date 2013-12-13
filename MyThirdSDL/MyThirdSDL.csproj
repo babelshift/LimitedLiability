@@ -179,6 +179,7 @@
     <Compile Include="UserInterface\Label.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="UserInterface\MailItemPage.cs" />
     <Compile Include="UserInterface\MenuEquipment.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -207,6 +208,12 @@
     <Content Include="Content\Images\MaleEmployee0001.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Content\Images\User Interface\ButtonMailAction.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Images\User Interface\ButtonMailActionHover.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Content\Images\User Interface\ButtonMailFolder.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -217,6 +224,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\Images\User Interface\ButtonMailItemHover.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Images\User Interface\ButtonMailItemSelected.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\Images\User Interface\IconFolderOpen.png">

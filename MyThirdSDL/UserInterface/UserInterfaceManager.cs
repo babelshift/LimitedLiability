@@ -268,16 +268,37 @@ namespace MyThirdSDL.UserInterface
 			ChangeState(UserInterfaceState.MailboxMenuActive);
 		}
 
+		private Mailbox mailbox = new Mailbox(new Mail.MailAddress("first.last@company.com", Mail.MailAddressType.Player));
+
 		private void CreateMenuMailbox()
 		{
 			Vector menuPosition = new Vector(bottomRightPointOfWindow.X, bottomRightPointOfWindow.Y);
-			Mailbox mailbox = new Mailbox(new Mail.MailAddress("first.last@company.com", Mail.MailAddressType.Player));
 			mailbox.AddMailToInbox(new MailItem("first", "first.last@company.com", "Hello World!", "PENISES", MailState.Unread));
 			mailbox.AddMailToInbox(new MailItem("first", "first.last@company.com", "Yo!", "Ho!", MailState.Unread));
 			mailbox.AddMailToInbox(new MailItem("first", "first.last@company.com", "Hi", "Sexy", MailState.Read));
 			mailbox.AddMailToInbox(new MailItem("first", "first.last@company.com", "Pills", "Free!", MailState.Unread));
 			mailbox.AddMailToInbox(new MailItem("first", "first.last@company.com", "Pills", "Free!", MailState.Unread));
+			mailbox.AddMailToInbox(new MailItem("first", "first.last@company.com", "Pills", "Free!", MailState.Unread));
+			mailbox.AddMailToInbox(new MailItem("first", "first.last@company.com", "Pills", "Free!", MailState.Unread));
+			mailbox.AddMailToInbox(new MailItem("first", "first.last@company.com", "Pills", "Free!", MailState.Unread));
+			mailbox.AddMailToInbox(new MailItem("first", "first.last@company.com", "Pills", "Free!", MailState.Unread));
+			mailbox.AddMailToOutbox(new MailItem("first", "first.last@company.com", "Hi", "Sexy", MailState.Read));
+			mailbox.AddMailToOutbox(new MailItem("first", "first.last@company.com", "Hi", "Sexy", MailState.Read));
+			mailbox.AddMailToOutbox(new MailItem("first", "first.last@company.com", "Hi", "Sexy", MailState.Read));
+			mailbox.AddMailToOutbox(new MailItem("first", "first.last@company.com", "Hi", "Sexy", MailState.Read));
+			mailbox.AddMailToOutbox(new MailItem("first", "first.last@company.com", "Hi", "Sexy", MailState.Read));
+			mailbox.AddMailToOutbox(new MailItem("first", "first.last@company.com", "Hi", "Sexy", MailState.Read));
+			mailbox.AddMailToOutbox(new MailItem("first", "first.last@company.com", "Hi", "Sexy", MailState.Read));
+			mailbox.AddMailToOutbox(new MailItem("first", "first.last@company.com", "Hi", "Sexy", MailState.Read));
 			menuMailbox = controlFactory.CreateMenuMailbox(menuPosition, mailbox);
+			menuMailbox.Archived += menuMailbox_Archived;
+		}
+
+		private void menuMailbox_Archived(object sender, ArchiveEventArgs e)
+		{
+			mailbox.MoveMailToArchive(e.SelectedMailItem.ID);
+			menuMailbox.ClearButtonsAndSeparators();
+			controlFactory.AddButtonMailItemsToMenu(menuMailbox, mailbox);
 		}
 
 		#endregion

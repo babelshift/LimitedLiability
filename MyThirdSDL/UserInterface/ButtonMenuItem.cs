@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace MyThirdSDL.UserInterface
 {
-	public class ButtonMenuItem : Button
+	public class ButtonMenuItem : Button, IDisposable
 	{
 		private Icon iconMain;
 		private Label labelMain;
@@ -82,6 +82,30 @@ namespace MyThirdSDL.UserInterface
 
 			if (Clicked != null)
 				Clicked(this, e);
+		}
+
+		public override void Dispose()
+		{
+ 			base.Dispose();
+			Dispose(true);
+			GC.SuppressFinalize(this);
+		}
+
+		~ButtonMenuItem()
+		{
+			Dispose(false);
+		}
+
+		private void Dispose(bool disposing)
+		{
+			if(iconMain != null)
+				iconMain.Dispose();
+			if(iconMoney != null)
+				iconMoney.Dispose();
+			if(labelMain != null)
+				labelMain.Dispose();
+			if(labelMoney != null)
+				labelMoney.Dispose();
 		}
 	}
 }

@@ -19,6 +19,8 @@ namespace MyThirdSDL.UserInterface
 
 		public MailItem MailItem { get; private set; }
 
+		public bool IsSelected { get; set; }
+
 		public override Vector Position
 		{
 			get
@@ -47,8 +49,8 @@ namespace MyThirdSDL.UserInterface
 			}
 		}
 
-		public ButtonMailItem(Texture texture, Texture textureHover, Vector position, Icon iconMailUnread, Icon iconMailRead, Label labelFrom, Label labelSubject, MailItem mailItem)
-			: base(texture, textureHover, position)
+		public ButtonMailItem(Texture texture, Texture textureHover, Vector position, Icon iconMailUnread, Icon iconMailRead, Label labelFrom, Label labelSubject, MailItem mailItem, Texture textureSelected)
+			: base(texture, textureHover, position, null, null, null, textureSelected)
 		{
 			this.iconMailRead = iconMailRead;
 			this.iconMailUnread = iconMailUnread;
@@ -68,6 +70,30 @@ namespace MyThirdSDL.UserInterface
 
 			labelFrom.Draw(gameTime, renderer);
 			labelSubject.Draw(gameTime, renderer);
+		}
+
+		public override void Dispose()
+		{
+ 			base.Dispose();
+			Dispose(true);
+			GC.SuppressFinalize(this);
+		}
+
+		~ButtonMailItem()
+		{
+			Dispose(false);
+		}
+
+		private void Dispose(bool disposing)
+		{
+			if (iconMailUnread != null)
+				iconMailUnread.Dispose();
+			if (iconMailRead != null)
+				iconMailRead.Dispose();
+			if (labelFrom != null)
+				labelFrom.Dispose();
+			if (labelSubject != null)
+				labelSubject.Dispose();
 		}
 	}
 }

@@ -234,8 +234,8 @@ namespace MyThirdSDL.Screens
 				}
 			}
 
-			DrawActiveNodeCenters(renderer);
-			DrawEmployeCollisionBoxes(renderer);
+			//DrawActiveNodeCenters(renderer);
+			//DrawEmployeCollisionBoxes(renderer);
 
 			userInterfaceManager.Draw(gameTime, renderer);
 

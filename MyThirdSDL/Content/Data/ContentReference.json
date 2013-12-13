@@ -26,8 +26,11 @@
 		{ "key": "ButtonSquareHover",			"value": "Images/User Interface/ButtonSquareHover.png" },
 		{ "key": "ButtonMailItem",				"value": "Images/User Interface/ButtonMailItem.png" },
 		{ "key": "ButtonMailItemHover",			"value": "Images/User Interface/ButtonMailItemHover.png" },
+		{ "key": "ButtonMailItemSelected",		"value": "Images/User Interface/ButtonMailItemSelected.png" },
 		{ "key": "ButtonMailFolder",			"value": "Images/User Interface/ButtonMailFolder.png" },
 		{ "key": "ButtonMailFolderHover",		"value": "Images/User Interface/ButtonMailFolderHover.png" },
+		{ "key": "ButtonMailAction",			"value": "Images/User Interface/ButtonMailAction.png" },
+		{ "key": "ButtonMailActionHover",		"value": "Images/User Interface/ButtonMailActionHover.png" },
 		
 		{ "key": "IconPenPaper",				"value": "Images/User Interface/IconPenPaper.png" },
 		{ "key": "IconWindow",					"value": "Images/User Interface/IconWindow.png" },

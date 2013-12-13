@@ -17,6 +17,11 @@ namespace MyThirdSDL.Content
 			this.renderer = renderer;
 		}
 
+		public Texture GetTextureCopy(string texturePath)
+		{
+			return CreateTexture(texturePath);
+		}
+
 		public Texture GetTexture(string texturePath)
 		{
 			Texture texture;
