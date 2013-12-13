@@ -20,6 +20,10 @@ namespace MyThirdSDL.Mail
 		public IEnumerable<MailItem> OutboxMailItems { get { return outbox; } }
 		public IEnumerable<MailItem> ArchiveMailItems { get { return archive; } }
 
+		public int UnreadMailCount { get { return inbox.Count(m => m.MailState == MailState.Unread); } }
+
+		public event EventHandler UnreadMailCountChanged;
+
 		public Mailbox(MailAddress mailAddress)
 		{
 			MailAddress = mailAddress;
@@ -28,7 +32,12 @@ namespace MyThirdSDL.Mail
 		public void AddMailToInbox(MailItem mail)
 		{
 			if (!inbox.Any(m => m.ID == mail.ID))
+			{
 				inbox.Add(mail);
+
+				if (mail.MailState == MailState.Unread)
+					OnUnreadMailCountChanged(mail, EventArgs.Empty);
+			}
 		}
 
 		public void AddMailToOutbox(MailItem mail)
@@ -39,7 +48,14 @@ namespace MyThirdSDL.Mail
 
 		public void DeleteMailFromInbox(Guid mailId)
 		{
-			inbox.RemoveAll(m => m.ID == mailId);
+			var mail = inbox.FirstOrDefault(m => m.ID == mailId);
+			if (mail != null)
+			{
+				inbox.Remove(mail);
+
+				if (mail.MailState == MailState.Unread)
+					OnUnreadMailCountChanged(mail, EventArgs.Empty);
+			}
 		}
 
 		public void DeleteMailFromOutbox(Guid mailId)
@@ -59,7 +75,16 @@ namespace MyThirdSDL.Mail
 			{
 				inbox.Remove(mail);
 				archive.Add(mail);
+
+				if (mail.MailState == MailState.Unread)
+					OnUnreadMailCountChanged(mail, EventArgs.Empty);
 			}
+		}
+
+		private void OnUnreadMailCountChanged(MailItem mail, EventArgs eventArgs)
+		{
+			if (UnreadMailCountChanged != null)
+				UnreadMailCountChanged(mail, eventArgs);
 		}
 	}
 }

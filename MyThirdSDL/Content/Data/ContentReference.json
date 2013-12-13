@@ -15,6 +15,8 @@
 		{ "key": "ToolboxTray",					"value": "Images/User Interface/ToolboxTray.png" },
 		{ "key": "ToolboxTrayButton",			"value": "Images/User Interface/ToolboxTrayButton.png" },
 		{ "key": "ToolboxTrayButtonHover",		"value": "Images/User Interface/ToolboxTrayButtonHover.png" },
+		{ "key": "ToolboxTrayButtonMail",		"value": "Images/User Interface/ToolboxTrayButtonMail.png" },
+		{ "key": "ToolboxTrayButtonMailHover",	"value": "Images/User Interface/ToolboxTrayButtonMailHover.png" },
 		{ "key": "TooltipFrame",				"value": "Images/User Interface/TooltipFrame.png" },
 		{ "key": "MenuEquipmentFrame",			"value": "Images/User Interface/MenuEquipmentFrame.png" },
 		{ "key": "MenuInspectEmployeeFrame",	"value": "Images/User Interface/MenuInspectEmployeeFrame.png" },

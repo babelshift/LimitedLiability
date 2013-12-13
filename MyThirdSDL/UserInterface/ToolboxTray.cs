@@ -18,6 +18,7 @@ namespace MyThirdSDL.UserInterface
 		private Button ButtonEmployees { get; set; }
 		private Button ButtonProducts { get; set; }
 		private Button ButtonMainMenu { get; set; }
+		private Button ButtonMailMenu { get; set; }
 
 		private Icon IconMoney { get; set; }
 		private Icon IconTime { get; set; }
@@ -36,11 +37,13 @@ namespace MyThirdSDL.UserInterface
 		public event EventHandler ButtonEmployeesClicked;
 		public event EventHandler ButtonProductsClicked;
 		public event EventHandler ButtonMainMenuClicked;
+		public event EventHandler ButtonMailMenuClicked;
 
 		public ToolboxTray(Texture texture, Vector position,
 			Button buttonSelectGeneral, Button buttonSelectEquipment, Button buttonSelectRoom,
 			Button buttonFinances, Button buttonCompany, Button buttonEmployees, Button buttonProducts,
-			Button buttonMainMenu, Icon iconMoney, Icon iconTime, Label labelMoney, Label labelDate, Label labelTime)
+			Button buttonMainMenu, Button buttonMailMenu,
+			Icon iconMoney, Icon iconTime, Label labelMoney, Label labelDate, Label labelTime)
 			: base(texture, position)
 		{
 			ButtonSelectGeneral = buttonSelectGeneral;
@@ -51,6 +54,8 @@ namespace MyThirdSDL.UserInterface
 			ButtonEmployees = buttonEmployees;
 			ButtonProducts = buttonProducts;
 			ButtonMainMenu = buttonMainMenu;
+			ButtonMailMenu = buttonMailMenu;
+
 			IconMoney = iconMoney;
 			IconTime = iconTime;
 			LabelMoney = labelMoney;
@@ -65,12 +70,18 @@ namespace MyThirdSDL.UserInterface
 			ButtonEmployees.Clicked += ButtonEmployees_Clicked;
 			ButtonProducts.Clicked += ButtonProducts_Clicked;
 			ButtonMainMenu.Clicked += ButtonMainMenu_Clicked;
+			ButtonMailMenu.Clicked += ButtonMailMenu_Clicked;
 		}
 
 		public void UpdateDisplayedDateAndTime(DateTime dateTime)
 		{
 			LabelTime.Text = dateTime.ToShortTimeString();
 			LabelDate.Text = dateTime.ToShortDateString();
+		}
+
+		public void UpdateUnreadMailCount(int unreadMailCount)
+		{
+			ButtonMailMenu.Text = unreadMailCount.ToString();
 		}
 
 		public override void Update(GameTime gameTime)
@@ -85,6 +96,7 @@ namespace MyThirdSDL.UserInterface
 			ButtonEmployees.Update(gameTime);
 			ButtonProducts.Update(gameTime);
 			ButtonMainMenu.Update(gameTime);
+			ButtonMailMenu.Update(gameTime);
 
 			if (Bounds.Contains(new Point(MouseHelper.CurrentMouseState.X, MouseHelper.CurrentMouseState.Y)))
 				IsHovered = true;
@@ -104,11 +116,18 @@ namespace MyThirdSDL.UserInterface
 			ButtonEmployees.Draw(gameTime, renderer);
 			ButtonProducts.Draw(gameTime, renderer);
 			ButtonMainMenu.Draw(gameTime, renderer);
+			ButtonMailMenu.Draw(gameTime, renderer);
+
 			IconMoney.Draw(gameTime, renderer);
 			IconTime.Draw(gameTime, renderer);
 			LabelMoney.Draw(gameTime, renderer);
 			LabelDate.Draw(gameTime, renderer);
 			LabelTime.Draw(gameTime, renderer);
+		}
+
+		private void ButtonMailMenu_Clicked(object sender, EventArgs e)
+		{
+			OnButtonMailMenuClicked(sender, e);
 		}
 
 		private void ButtonMainMenu_Clicked(object sender, EventArgs e)
@@ -197,6 +216,12 @@ namespace MyThirdSDL.UserInterface
 		{
 			if (ButtonMainMenuClicked != null)
 				ButtonMainMenuClicked(sender, e);
+		}
+
+		private void OnButtonMailMenuClicked(object sender, EventArgs e)
+		{
+			if (ButtonMailMenuClicked != null)
+				ButtonMailMenuClicked(sender, e);
 		}
 	}
 }

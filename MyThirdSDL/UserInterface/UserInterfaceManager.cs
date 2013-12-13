@@ -71,6 +71,11 @@ namespace MyThirdSDL.UserInterface
 			} 
 		}
 
+		private void mailbox_UnreadMailCountChanged(object sender, EventArgs e)
+		{
+			toolboxTray.UpdateUnreadMailCount(mailbox.UnreadMailCount);
+		}
+
 		#region Constructors
 
 		public event EventHandler<PurchasableItemSelectedEventArgs> PurchasableItemSelected;
@@ -99,6 +104,10 @@ namespace MyThirdSDL.UserInterface
 			toolboxTray.ButtonEmployeesClicked += ToolboxTray_ButtonEmployeesClicked;
 			toolboxTray.ButtonProductsClicked += ToolboxTray_ButtonProductsClicked;
 			toolboxTray.ButtonMainMenuClicked += ToolboxTray_ButtonMainMenuClicked;
+			toolboxTray.ButtonMailMenuClicked += toolboxTray_ButtonMailMenuClicked;
+
+			mailbox = new Mailbox(new Mail.MailAddress("first.last@company.com", Mail.MailAddressType.Player));
+			mailbox.UnreadMailCountChanged += mailbox_UnreadMailCountChanged;
 
 			Color fontColor;
 			int fontSizeContent;
@@ -203,6 +212,15 @@ namespace MyThirdSDL.UserInterface
 
 		#region ToolboxTray Events
 
+		private void toolboxTray_ButtonMailMenuClicked(object sender, EventArgs e)
+		{
+			if (!isMenuMailboxOpen)
+			{
+				ClearMenusOpen();
+				ShowMenuMailbox();
+			}
+		}
+
 		private void ToolboxTray_ButtonMainMenuClicked(object sender, EventArgs e)
 		{
 			// show main menu
@@ -230,11 +248,6 @@ namespace MyThirdSDL.UserInterface
 
 		private void ToolboxTray_ButtonSelectRoomClicked(object sender, EventArgs e)
 		{
-			if (!isMenuMailboxOpen)
-			{
-				ClearMenusOpen();
-				ShowMenuMailbox();
-			}
 		}
 
 		private void ToolboxTray_ButtonSelectEquipmentClicked(object sender, EventArgs e)
@@ -257,10 +270,10 @@ namespace MyThirdSDL.UserInterface
 		{
 			HideMenuInspectEmployee();
 			HideMenuEquipment();
+			HideMenuMailbox();
 		}
 
 		#region Menu Mailbox Events
-
 
 		private void ShowMenuMailbox()
 		{
@@ -268,7 +281,13 @@ namespace MyThirdSDL.UserInterface
 			ChangeState(UserInterfaceState.MailboxMenuActive);
 		}
 
-		private Mailbox mailbox = new Mailbox(new Mail.MailAddress("first.last@company.com", Mail.MailAddressType.Player));
+		private void HideMenuMailbox()
+		{
+			isMenuMailboxOpen = false;
+			ChangeState(UserInterfaceState.Default);
+		}
+
+		private Mailbox mailbox;
 
 		private void CreateMenuMailbox()
 		{
@@ -292,6 +311,12 @@ namespace MyThirdSDL.UserInterface
 			mailbox.AddMailToOutbox(new MailItem("first", "first.last@company.com", "Hi", "Sexy", MailState.Read));
 			menuMailbox = controlFactory.CreateMenuMailbox(menuPosition, mailbox);
 			menuMailbox.Archived += menuMailbox_Archived;
+			menuMailbox.Closed += menuMailbox_Closed;
+		}
+
+		private void menuMailbox_Closed(object sender, EventArgs e)
+		{
+			HideMenuMailbox();
 		}
 
 		private void menuMailbox_Archived(object sender, ArchiveEventArgs e)

@@ -63,11 +63,12 @@ namespace MyThirdSDL.UserInterface
 		private Button buttonArrowRight;
 		private Button buttonView;
 		private Button buttonArchive;
+		private Button buttonCloseWindow;
 
 		#endregion
 
 		#region Icons
-		
+
 		private Icon iconFolderHeader;
 		private Icon iconInboxFolder;
 		private Icon iconOutboxFolder;
@@ -126,7 +127,7 @@ namespace MyThirdSDL.UserInterface
 					return selectedMailItemOutbox;
 				else if (activeTab == ActiveTab.Archive)
 					return selectedMailItemArchive;
-				else 
+				else
 					return null;
 			}
 			set
@@ -141,9 +142,9 @@ namespace MyThirdSDL.UserInterface
 		}
 
 		private int InboxPageCount { get { return mailItemInboxPages.Count(); } }
-		
+
 		private int OutboxPageCount { get { return mailItemOutboxPages.Count(); } }
-		
+
 		private int ArchivePageCount { get { return mailItemArchivePages.Count(); } }
 
 		#endregion
@@ -151,6 +152,7 @@ namespace MyThirdSDL.UserInterface
 		#region Public Events
 
 		public event EventHandler<ArchiveEventArgs> Archived;
+		public event EventHandler<EventArgs> Closed;
 
 		#endregion
 
@@ -159,7 +161,7 @@ namespace MyThirdSDL.UserInterface
 		public MenuMailbox(Texture texture, Vector position, Icon iconFolderHeader, Label labelFolderHeader, Label labelFrom, Label labelSubject, Label labelPageNumber,
 			Icon iconInboxFolder, Icon iconOutboxFolder, Icon iconArchiveFolder, Label labelInboxFolder, Label labelOutboxFolder, Label labelArchiveFolder,
 			Button buttonInboxFolder, Button buttonOutboxFolder, Button buttonArchiveFolder, Button buttonArrowLeft, Button buttonArrowRight, Button buttonView, Button buttonArchive,
-			Icon iconTopSeparator)
+			Icon iconTopSeparator, Button buttonCloseWindow)
 			: base(texture, position)
 		{
 			this.labelFolderHeader = labelFolderHeader;
@@ -185,18 +187,18 @@ namespace MyThirdSDL.UserInterface
 
 			this.iconTopSeparator = iconTopSeparator;
 
+			this.buttonCloseWindow = buttonCloseWindow;
+
 			this.buttonInboxFolder.Clicked += buttonInboxFolder_Clicked;
 			this.buttonOutboxFolder.Clicked += buttonOutboxFolder_Clicked;
 			this.buttonArchiveFolder.Clicked += buttonArchiveFolder_Clicked;
-
 			this.buttonArrowLeft.Clicked += buttonArrowLeft_Clicked;
 			this.buttonArrowRight.Clicked += buttonArrowRight_Clicked;
-
 			this.buttonView.Clicked += buttonView_Clicked;
 			this.buttonArchive.Clicked += buttonArchive_Clicked;
+			this.buttonCloseWindow.Clicked += buttonCloseWindow_Clicked;
 
 			this.currentDisplayedPageInbox = 1;
-
 			SetActiveTab(ActiveTab.Inbox);
 		}
 
@@ -204,9 +206,15 @@ namespace MyThirdSDL.UserInterface
 
 		#region Button Events
 
+		private void buttonCloseWindow_Clicked(object sender, EventArgs e)
+		{
+			if (Closed != null)
+				Closed(sender, e);
+		}
+
 		private void buttonArchive_Clicked(object sender, EventArgs e)
 		{
-			if(SelectedMailItem != null)
+			if (SelectedMailItem != null)
 				if (Archived != null)
 					Archived(sender, new ArchiveEventArgs(SelectedMailItem));
 		}
@@ -280,6 +288,8 @@ namespace MyThirdSDL.UserInterface
 
 			iconTopSeparator.Update(gameTime);
 
+			buttonCloseWindow.Update(gameTime);
+
 			MailItemPage currentPage = null;
 			bool success = mailItemPages.TryGetValue(CurrentDisplayedPageNumber, out currentPage);
 			if (success)
@@ -313,6 +323,8 @@ namespace MyThirdSDL.UserInterface
 
 			iconTopSeparator.Draw(gameTime, renderer);
 
+			buttonCloseWindow.Draw(gameTime, renderer);
+
 			MailItemPage currentPage = null;
 			bool success = mailItemPages.TryGetValue(CurrentDisplayedPageNumber, out currentPage);
 			if (success)
@@ -325,6 +337,8 @@ namespace MyThirdSDL.UserInterface
 		}
 
 		#endregion
+
+		#region Methods
 
 		public void AddButtonMailItemInbox(ButtonMailItem buttonMailItem, Icon iconSeparator)
 		{
@@ -504,6 +518,8 @@ namespace MyThirdSDL.UserInterface
 
 			mailItemPages = new Dictionary<int, MailItemPage>();
 		}
+
+		#endregion
 	}
 
 	public class ArchiveEventArgs : EventArgs

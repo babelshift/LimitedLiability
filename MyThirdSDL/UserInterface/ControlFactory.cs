@@ -40,13 +40,24 @@ namespace MyThirdSDL.UserInterface
 			return texture;
 		}
 
-		public MessageBox CreateMessageBox(Vector position, string text, MessageBoxType type)
+		public void AddButtonMailItemsToMenu(MenuMailbox menuMailbox, Mailbox mailbox)
 		{
-			Texture textureFrame = GetTexture("MessageBoxFrame");
-			Texture textureIcon = GetTexture("IconWarning");
-			MessageBox messageBox = new MessageBox(textureFrame, position, textureIcon, text);
-			return messageBox;
+			Vector position = menuMailbox.Position;
+
+			List<ButtonMailItem> mailItemsButtonsInbox = new List<ButtonMailItem>();
+			foreach (MailItem mailItem in mailbox.InboxMailItems)
+				menuMailbox.AddButtonMailItemInbox(CreateButtonMailItem(position, "ButtonMailItem", "ButtonMailItemHover", "ButtonMailItemSelected", mailItem), CreateIcon(position, "IconSeparator", true));
+
+			List<ButtonMailItem> mailItemsButtonsOutbox = new List<ButtonMailItem>();
+			foreach (MailItem mailItem in mailbox.OutboxMailItems)
+				menuMailbox.AddButtonMailItemOutbox(CreateButtonMailItem(position, "ButtonMailItem", "ButtonMailItemHover", "ButtonMailItemSelected", mailItem), CreateIcon(position, "IconSeparator", true));
+
+			List<ButtonMailItem> mailItemsButtonsArchive = new List<ButtonMailItem>();
+			foreach (MailItem mailItem in mailbox.ArchiveMailItems)
+				menuMailbox.AddButtonMailItemArchive(CreateButtonMailItem(position, "ButtonMailItem", "ButtonMailItemHover", "ButtonMailItemSelected", mailItem), CreateIcon(position, "IconSeparator", true));
 		}
+
+		#region Menus
 
 		public MenuInspectEmployee CreateMenuInspectEmployee(Vector bottomRightPointOfWindow)
 		{
@@ -233,101 +244,35 @@ namespace MyThirdSDL.UserInterface
 			Icon iconArchiveFolder = CreateIcon(new Vector(position.X + 150, position.Y + 5), "IconMailArchive");
 
 			Button buttonView = CreateButton(new Vector(position.X + 155, position.Y + 265), "ButtonMailAction", "ButtonMailActionHover", String.Empty, String.Empty, "View");
-			Button buttonArchive = CreateButton(new Vector(position.X + 255, position.Y + 265), "ButtonMailAction", "ButtonMailActionHover", String.Empty, String.Empty, "Archive"); 
+			Button buttonArchive = CreateButton(new Vector(position.X + 255, position.Y + 265), "ButtonMailAction", "ButtonMailActionHover", String.Empty, String.Empty, "Archive");
 
 			Icon iconTopSeparator = CreateIcon(new Vector(position.X + 156, position.Y + 65), "IconSeparator", true);
 
-			var menuMailbox = new MenuMailbox(texture, position, 
-								iconFolderOpen, 
-								labelFolder, labelFrom, labelSubject, labelPageNumber, 
-								iconInboxFolder, iconOutboxFolder, iconArchiveFolder, 
-								labelInboxFolder, labelOutboxFolder, labelArchiveFolder, 
-								buttonInboxFolder, buttonOutboxFolder, buttonArchiveFolder, buttonArrowLeft, buttonArrowRight,
-								buttonView, buttonArchive, iconTopSeparator);
+			Button buttonCloseWindow = CreateButton(new Vector(position.X + 656, position.Y - 47), "ButtonSquare", "ButtonSquareHover", "IconWindowClose", "IconWindowClose");
+
+			var menuMailbox = new MenuMailbox(texture, position,
+				iconFolderOpen,
+				labelFolder, labelFrom, labelSubject, labelPageNumber,
+				iconInboxFolder, iconOutboxFolder, iconArchiveFolder,
+				labelInboxFolder, labelOutboxFolder, labelArchiveFolder,
+				buttonInboxFolder, buttonOutboxFolder, buttonArchiveFolder, buttonArrowLeft, buttonArrowRight,
+				buttonView, buttonArchive, iconTopSeparator, buttonCloseWindow);
 
 			AddButtonMailItemsToMenu(menuMailbox, mailbox);
 
 			return menuMailbox;
 		}
 
-		public void AddButtonMailItemsToMenu(MenuMailbox menuMailbox, Mailbox mailbox)
+		#endregion
+
+		#region Controls
+
+		public MessageBox CreateMessageBox(Vector position, string text, MessageBoxType type)
 		{
-			Vector position = menuMailbox.Position;
-
-			List<ButtonMailItem> mailItemsButtonsInbox = new List<ButtonMailItem>();
-			foreach (MailItem mailItem in mailbox.InboxMailItems)
-				menuMailbox.AddButtonMailItemInbox(CreateButtonMailItem(position, "ButtonMailItem", "ButtonMailItemHover", "ButtonMailItemSelected", mailItem), CreateIcon(position, "IconSeparator", true));
-
-			List<ButtonMailItem> mailItemsButtonsOutbox = new List<ButtonMailItem>();
-			foreach (MailItem mailItem in mailbox.OutboxMailItems)
-				menuMailbox.AddButtonMailItemOutbox(CreateButtonMailItem(position, "ButtonMailItem", "ButtonMailItemHover", "ButtonMailItemSelected", mailItem), CreateIcon(position, "IconSeparator", true));
-
-			List<ButtonMailItem> mailItemsButtonsArchive = new List<ButtonMailItem>();
-			foreach (MailItem mailItem in mailbox.ArchiveMailItems)
-				menuMailbox.AddButtonMailItemArchive(CreateButtonMailItem(position, "ButtonMailItem", "ButtonMailItemHover", "ButtonMailItemSelected", mailItem), CreateIcon(position, "IconSeparator", true));
-		}
-
-		public ToolboxTray CreateToolboxTray(Vector position)
-		{
-			Texture texture = GetTexture("ToolboxTray");
-
-			int toolboxTraySpaceBetweenButtons = 41;
-			int toolboxTrayOuterEdgeWidth = 4;
-			int toolboxTrayButtonImageOffsetX = 0;
-			int toolboxTrayButtonImageOffsetY = 4;
-
-			Vector buttonOnePosition = position + new Vector(toolboxTrayOuterEdgeWidth + toolboxTrayButtonImageOffsetX, toolboxTrayButtonImageOffsetY);
-			Vector buttonTwoPosition = position + new Vector(toolboxTrayOuterEdgeWidth + toolboxTrayButtonImageOffsetX + toolboxTraySpaceBetweenButtons, toolboxTrayButtonImageOffsetY);
-			Vector buttonThreePosition = position + new Vector(toolboxTrayOuterEdgeWidth + toolboxTrayButtonImageOffsetX + toolboxTraySpaceBetweenButtons * 2, toolboxTrayButtonImageOffsetY);
-			Vector buttonFourPosition = position + new Vector(toolboxTrayOuterEdgeWidth + toolboxTrayButtonImageOffsetX + toolboxTraySpaceBetweenButtons * 3, toolboxTrayButtonImageOffsetY);
-			Vector buttonFivePosition = position + new Vector(toolboxTrayOuterEdgeWidth + toolboxTrayButtonImageOffsetX + toolboxTraySpaceBetweenButtons * 4, toolboxTrayButtonImageOffsetY);
-			Vector buttonSixPosition = position + new Vector(toolboxTrayOuterEdgeWidth + toolboxTrayButtonImageOffsetX + toolboxTraySpaceBetweenButtons * 5, toolboxTrayButtonImageOffsetY);
-			Vector buttonSevenPosition = position + new Vector(toolboxTrayOuterEdgeWidth + toolboxTrayButtonImageOffsetX + toolboxTraySpaceBetweenButtons * 6, toolboxTrayButtonImageOffsetY);
-			Vector buttonEightPosition = position + new Vector(toolboxTrayOuterEdgeWidth + toolboxTrayButtonImageOffsetX + toolboxTraySpaceBetweenButtons * 7, toolboxTrayButtonImageOffsetY);
-			Vector iconOnePosition = position + new Vector(toolboxTrayOuterEdgeWidth + toolboxTrayButtonImageOffsetX + toolboxTraySpaceBetweenButtons * 8, toolboxTrayButtonImageOffsetY);
-			Vector iconTwoPosition = position + new Vector(toolboxTrayOuterEdgeWidth + toolboxTrayButtonImageOffsetX + toolboxTraySpaceBetweenButtons * 8 + 135, toolboxTrayButtonImageOffsetY);
-
-			string buttonTexturePathKey = "ToolboxTrayButton";
-			string buttonHoverTexturePathKey = "ToolboxTrayButtonHover";
-			Button buttonSelectGeneral = CreateButton(buttonOnePosition, buttonTexturePathKey, buttonHoverTexturePathKey, "IconArrowsInward", "IconArrowsInward");
-			Button buttonSelectEquipment = CreateButton(buttonTwoPosition, buttonTexturePathKey, buttonHoverTexturePathKey, "IconHandTruck", "IconHandTruck");
-			Button buttonSelectRoom = CreateButton(buttonThreePosition, buttonTexturePathKey, buttonHoverTexturePathKey, "IconForklift", "IconForklift");
-			Button buttonFinances = CreateButton(buttonFourPosition, buttonTexturePathKey, buttonHoverTexturePathKey, "IconBarChartUp", "IconBarChartUp");
-			Button buttonCompany = CreateButton(buttonFivePosition, buttonTexturePathKey, buttonHoverTexturePathKey, "IconPenPaper", "IconPenPaper");
-			Button buttonEmployees = CreateButton(buttonSixPosition, buttonTexturePathKey, buttonHoverTexturePathKey, "IconPersonPlain", "IconPersonPlain");
-			Button buttonProducts = CreateButton(buttonSevenPosition, buttonTexturePathKey, buttonHoverTexturePathKey, "IconOpenBox", "IconOpenBox");
-			Button buttonMainMenu = CreateButton(buttonEightPosition, buttonTexturePathKey, buttonHoverTexturePathKey, "IconWindow", "IconWindow");
-			Icon iconMoney = CreateIcon(iconOnePosition, "IconMoney");
-			Icon iconTime = CreateIcon(iconTwoPosition, "IconTime");
-
-			string fontPath = contentManager.GetContentPath("Arcade");
-			Color fontColor = new Color(218, 218, 218);
-			Label labelMoney = CreateLabel(iconOnePosition + new Vector(35, 10), fontPath, 12, fontColor, "0");
-			Label labelDate = CreateLabel(iconTwoPosition + new Vector(32, 3), fontPath, 12, fontColor, DateTime.Now.ToShortDateString());
-			Label labelTime = CreateLabel(iconTwoPosition + new Vector(55, 18), fontPath, 12, fontColor, DateTime.Now.ToShortTimeString());
-
-			Tooltip tooltipSelectGeneral = CreateTooltip(new Vector(position.X, position.Y - 25), "TooltipFrame", fontPath, 8, fontColor, "Select objects to inspect them");
-			Tooltip tooltipSelectEquipment = CreateTooltip(new Vector(position.X, position.Y - 25), "TooltipFrame", fontPath, 8, fontColor, "View equipment to purchase");
-			Tooltip tooltipSelectRoom = CreateTooltip(new Vector(position.X, position.Y - 25), "TooltipFrame", fontPath, 8, fontColor, "View rooms to purchase");
-			Tooltip tooltipFinances = CreateTooltip(new Vector(position.X, position.Y - 25), "TooltipFrame", fontPath, 8, fontColor, "View your company's finances");
-			Tooltip tooltipCompany = CreateTooltip(new Vector(position.X, position.Y - 25), "TooltipFrame", fontPath, 8, fontColor, "View your company's health and statistics");
-			Tooltip tooltipEmployees = CreateTooltip(new Vector(position.X, position.Y - 25), "TooltipFrame", fontPath, 8, fontColor, "View your employee information");
-			Tooltip tooltipProducts = CreateTooltip(new Vector(position.X, position.Y - 25), "TooltipFrame", fontPath, 8, fontColor, "View your products and services");
-			Tooltip tooltipMainMenu = CreateTooltip(new Vector(position.X, position.Y - 25), "TooltipFrame", fontPath, 8, fontColor, "View the main menu");
-
-			buttonSelectGeneral.Tooltip = tooltipSelectGeneral;
-			buttonSelectEquipment.Tooltip = tooltipSelectEquipment;
-			buttonSelectRoom.Tooltip = tooltipSelectRoom;
-			buttonFinances.Tooltip = tooltipFinances;
-			buttonCompany.Tooltip = tooltipCompany;
-			buttonEmployees.Tooltip = tooltipEmployees;
-			buttonProducts.Tooltip = tooltipProducts;
-			buttonMainMenu.Tooltip = tooltipMainMenu;
-
-			ToolboxTray toolboxTray = new ToolboxTray(texture, position, buttonSelectGeneral, buttonSelectEquipment, buttonSelectRoom,
-				buttonFinances, buttonCompany, buttonEmployees, buttonProducts, buttonMainMenu, iconMoney, iconTime, labelMoney, labelDate, labelTime);
-
-			return toolboxTray;
+			Texture textureFrame = GetTexture("MessageBoxFrame");
+			Texture textureIcon = GetTexture("IconWarning");
+			MessageBox messageBox = new MessageBox(textureFrame, position, textureIcon, text);
+			return messageBox;
 		}
 
 		public ButtonMenuItem CreateButtonMenuItem(Vector position, string texturePathKey, string textureHoverPathKey, IPurchasable purchasableItem)
@@ -477,5 +422,76 @@ namespace MyThirdSDL.UserInterface
 			Texture texture = GetTexture(tooltipFrameTexturePathKey);
 			return new Tooltip(texture, position, label);
 		}
+
+		public ToolboxTray CreateToolboxTray(Vector position)
+		{
+			Texture texture = GetTexture("ToolboxTray");
+
+			int toolboxTraySpaceBetweenButtons = 41;
+			int toolboxTrayOuterEdgeWidth = 4;
+			int toolboxTrayButtonImageOffsetX = 0;
+			int toolboxTrayButtonImageOffsetY = 4;
+
+			Vector buttonOnePosition = position + new Vector(toolboxTrayOuterEdgeWidth + toolboxTrayButtonImageOffsetX, toolboxTrayButtonImageOffsetY);
+			Vector buttonTwoPosition = position + new Vector(toolboxTrayOuterEdgeWidth + toolboxTrayButtonImageOffsetX + toolboxTraySpaceBetweenButtons, toolboxTrayButtonImageOffsetY);
+			Vector buttonThreePosition = position + new Vector(toolboxTrayOuterEdgeWidth + toolboxTrayButtonImageOffsetX + toolboxTraySpaceBetweenButtons * 2, toolboxTrayButtonImageOffsetY);
+			Vector buttonFourPosition = position + new Vector(toolboxTrayOuterEdgeWidth + toolboxTrayButtonImageOffsetX + toolboxTraySpaceBetweenButtons * 3, toolboxTrayButtonImageOffsetY);
+			Vector buttonFivePosition = position + new Vector(toolboxTrayOuterEdgeWidth + toolboxTrayButtonImageOffsetX + toolboxTraySpaceBetweenButtons * 4, toolboxTrayButtonImageOffsetY);
+			Vector buttonSixPosition = position + new Vector(toolboxTrayOuterEdgeWidth + toolboxTrayButtonImageOffsetX + toolboxTraySpaceBetweenButtons * 5, toolboxTrayButtonImageOffsetY);
+			Vector buttonSevenPosition = position + new Vector(toolboxTrayOuterEdgeWidth + toolboxTrayButtonImageOffsetX + toolboxTraySpaceBetweenButtons * 6, toolboxTrayButtonImageOffsetY);
+			Vector buttonEightPosition = position + new Vector(toolboxTrayOuterEdgeWidth + toolboxTrayButtonImageOffsetX + toolboxTraySpaceBetweenButtons * 7, toolboxTrayButtonImageOffsetY);
+			Vector buttonNinePosition = position + new Vector(toolboxTrayOuterEdgeWidth + toolboxTrayButtonImageOffsetX + toolboxTraySpaceBetweenButtons * 8, toolboxTrayButtonImageOffsetY);
+			Vector iconOnePosition = position + new Vector(toolboxTrayOuterEdgeWidth + toolboxTrayButtonImageOffsetX + toolboxTraySpaceBetweenButtons * 9 + 35, toolboxTrayButtonImageOffsetY + 2);
+			Vector iconTwoPosition = position + new Vector(toolboxTrayOuterEdgeWidth + toolboxTrayButtonImageOffsetX + toolboxTraySpaceBetweenButtons * 9 + 165, toolboxTrayButtonImageOffsetY + 2);
+
+			string buttonTexturePathKey = "ToolboxTrayButton";
+			string buttonHoverTexturePathKey = "ToolboxTrayButtonHover";
+			Button buttonSelectGeneral = CreateButton(buttonOnePosition, buttonTexturePathKey, buttonHoverTexturePathKey, "IconArrowsInward", "IconArrowsInward");
+			Button buttonSelectEquipment = CreateButton(buttonTwoPosition, buttonTexturePathKey, buttonHoverTexturePathKey, "IconHandTruck", "IconHandTruck");
+			Button buttonSelectRoom = CreateButton(buttonThreePosition, buttonTexturePathKey, buttonHoverTexturePathKey, "IconForklift", "IconForklift");
+			Button buttonFinances = CreateButton(buttonFourPosition, buttonTexturePathKey, buttonHoverTexturePathKey, "IconBarChartUp", "IconBarChartUp");
+			Button buttonCompany = CreateButton(buttonFivePosition, buttonTexturePathKey, buttonHoverTexturePathKey, "IconPenPaper", "IconPenPaper");
+			Button buttonEmployees = CreateButton(buttonSixPosition, buttonTexturePathKey, buttonHoverTexturePathKey, "IconPersonPlain", "IconPersonPlain");
+			Button buttonProducts = CreateButton(buttonSevenPosition, buttonTexturePathKey, buttonHoverTexturePathKey, "IconOpenBox", "IconOpenBox");
+			Button buttonMainMenu = CreateButton(buttonEightPosition, buttonTexturePathKey, buttonHoverTexturePathKey, "IconWindow", "IconWindow");
+			Button buttonMailMenu = CreateButton(buttonNinePosition, "ToolboxTrayButtonMail", "ToolboxTrayButtonMailHover",
+				new Vector(buttonNinePosition.X + 4, buttonNinePosition.Y + 2), new Vector(buttonNinePosition.X + 37, buttonNinePosition.Y + 12),
+				"IconMailUnread", String.Empty, "0");
+			Icon iconMoney = CreateIcon(iconOnePosition, "IconMoney");
+			Icon iconTime = CreateIcon(iconTwoPosition, "IconTime");
+
+			string fontPath = contentManager.GetContentPath("Arcade");
+			Color fontColor = new Color(218, 218, 218);
+			Label labelMoney = CreateLabel(iconOnePosition + new Vector(35, 10), fontPath, 12, fontColor, "0");
+			Label labelDate = CreateLabel(iconTwoPosition + new Vector(32, 3), fontPath, 12, fontColor, DateTime.Now.ToShortDateString());
+			Label labelTime = CreateLabel(iconTwoPosition + new Vector(55, 18), fontPath, 12, fontColor, DateTime.Now.ToShortTimeString());
+
+			Tooltip tooltipSelectGeneral = CreateTooltip(new Vector(position.X, position.Y - 25), "TooltipFrame", fontPath, 8, fontColor, "Select objects to inspect them");
+			Tooltip tooltipSelectEquipment = CreateTooltip(new Vector(position.X, position.Y - 25), "TooltipFrame", fontPath, 8, fontColor, "View equipment to purchase");
+			Tooltip tooltipSelectRoom = CreateTooltip(new Vector(position.X, position.Y - 25), "TooltipFrame", fontPath, 8, fontColor, "View rooms to purchase");
+			Tooltip tooltipFinances = CreateTooltip(new Vector(position.X, position.Y - 25), "TooltipFrame", fontPath, 8, fontColor, "View your company's finances");
+			Tooltip tooltipCompany = CreateTooltip(new Vector(position.X, position.Y - 25), "TooltipFrame", fontPath, 8, fontColor, "View your company's health and statistics");
+			Tooltip tooltipEmployees = CreateTooltip(new Vector(position.X, position.Y - 25), "TooltipFrame", fontPath, 8, fontColor, "View your employee information");
+			Tooltip tooltipProducts = CreateTooltip(new Vector(position.X, position.Y - 25), "TooltipFrame", fontPath, 8, fontColor, "View your products and services");
+			Tooltip tooltipMainMenu = CreateTooltip(new Vector(position.X, position.Y - 25), "TooltipFrame", fontPath, 8, fontColor, "View the main menu");
+			Tooltip tooltipMailMenu = CreateTooltip(new Vector(position.X, position.Y - 25), "TooltipFrame", fontPath, 8, fontColor, "View your e-mail");
+
+			buttonSelectGeneral.Tooltip = tooltipSelectGeneral;
+			buttonSelectEquipment.Tooltip = tooltipSelectEquipment;
+			buttonSelectRoom.Tooltip = tooltipSelectRoom;
+			buttonFinances.Tooltip = tooltipFinances;
+			buttonCompany.Tooltip = tooltipCompany;
+			buttonEmployees.Tooltip = tooltipEmployees;
+			buttonProducts.Tooltip = tooltipProducts;
+			buttonMainMenu.Tooltip = tooltipMainMenu;
+			buttonMailMenu.Tooltip = tooltipMailMenu;
+
+			ToolboxTray toolboxTray = new ToolboxTray(texture, position, buttonSelectGeneral, buttonSelectEquipment, buttonSelectRoom,
+				buttonFinances, buttonCompany, buttonEmployees, buttonProducts, buttonMainMenu, buttonMailMenu, iconMoney, iconTime, labelMoney, labelDate, labelTime);
+
+			return toolboxTray;
+		}
+
+		#endregion
 	}
 }

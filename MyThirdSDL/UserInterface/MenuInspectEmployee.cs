@@ -40,6 +40,7 @@ namespace MyThirdSDL.UserInterface
 		public event EventHandler<EventArgs> ButtonCloseWindowClicked;
 
 		private List<Control> controls = new List<Control>();
+		private List<Label> labelValues = new List<Label>();
 
 		public void SetInfoValues(Employee employee)
 		{
@@ -74,8 +75,6 @@ namespace MyThirdSDL.UserInterface
 			labelCreativityValue.Text = String.Format("{0} {1}", (int)skills.Creativity, skills.CreativityToString());
 			labelIntelligenceValue.Text = String.Format("{0} {1}", (int)skills.Intelligence, skills.IntelligenceToString());
 		}
-
-		List<Label> labelValues = new List<Label>();
 
 		public MenuInspectEmployee(Texture texture, Vector position, Button buttonCloseWindow,
 			Label labelNameValue, Label labelAgeValue, Label labelJobValue, Label labelSalaryValue, Label labelStatusValue, Label labelBirthValue,

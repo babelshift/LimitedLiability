@@ -31,6 +31,8 @@ namespace MyThirdSDL.UserInterface
 
 		public bool IsPressed { get; private set; }
 
+		public string Text { get { return label.Text; } set { label.Text = value; } }
+
 		#endregion
 
 		#region Events

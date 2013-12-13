@@ -253,6 +253,12 @@
     <Content Include="Content\Images\User Interface\MenuMailboxFrame.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Content\Images\User Interface\ToolboxTrayButtonMail.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Images\User Interface\ToolboxTrayButtonMailHover.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Content\Maps\0_Decor_Inside.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
