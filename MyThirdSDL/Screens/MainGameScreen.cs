@@ -10,24 +10,30 @@ using MyThirdSDL.UserInterface;
 using MyThirdSDL.Descriptors;
 using SharpDL.Input;
 using SharpDL.Events;
+using MyThirdSDL.Mail;
 
 namespace MyThirdSDL.Screens
 {
 	public class MainGameScreen : Screen
 	{
-
 		#region Members
+
+		private int money = 1000;
 
 		private JobFactory jobFactory;
 		private AgentFactory agentFactory;
 		private SimulationManager simulationManager;
 		private UserInterfaceManager userInterfaceManager;
-		private List<IDrawable> allDrawables = new List<IDrawable>();
-		private Image tileHighlightImage;
-		private TiledMap tiledMap;
-		private IPurchasable selectedPurchasableItem;
-		private MapCell hoveredMapCell;
+		private MailManager mailManager;
 		private Cursor cursor;
+
+		private TiledMap tiledMap;
+		private Image tileHighlightImage;
+		private MapCell hoveredMapCell;
+
+		private IPurchasable selectedPurchasableItem;
+
+		private List<IDrawable> allDrawables = new List<IDrawable>();
 
 		private bool IsValidMapCellHovered { get { return hoveredMapCell != null; } }
 
@@ -178,6 +184,32 @@ namespace MyThirdSDL.Screens
 			Surface tileHighlightSurface = new Surface(tileHighlightTexturePath, SurfaceType.PNG);
 			tileHighlightImage = new Image(renderer, tileHighlightSurface, ImageFormat.PNG);
 
+			List<IPurchasable> purchasableItems = PopulatePurchasableItems();
+
+			cursor = new Cursor(ContentManager, renderer);
+
+			CreateAndPopulateMailbox();
+
+			Point bottomRightPointOfScreen = new Point(MainGame.SCREEN_WIDTH, MainGame.SCREEN_HEIGHT);
+			userInterfaceManager = new UserInterfaceManager(renderer, ContentManager, bottomRightPointOfScreen, 
+				purchasableItems, 
+				mailManager.PlayerInbox, 
+				mailManager.PlayerOutbox, 
+				mailManager.PlayerArchive, 
+				mailManager.PlayerUnreadMailCount, 
+				money);
+			userInterfaceManager.PurchasableItemSelected += HandleSelectEquipment;
+			userInterfaceManager.ArchiveMailButtonClicked += userInterfaceManager_ArchiveMailButtonClicked;
+		}
+
+		private void CreateAndPopulateMailbox()
+		{
+			mailManager = new MailManager();
+			mailManager.UnreadMailCountChanged += mailbox_UnreadMailCountChanged;
+		}
+
+		private List<IPurchasable> PopulatePurchasableItems()
+		{
 			List<IPurchasable> purchasableItems = new List<IPurchasable>();
 			purchasableItems.Add(agentFactory.CreateSnackMachine(TimeSpan.Zero));
 			purchasableItems.Add(agentFactory.CreateSodaMachine(TimeSpan.Zero));
@@ -191,10 +223,13 @@ namespace MyThirdSDL.Screens
 			purchasableItems.Add(agentFactory.CreateTrashBin(TimeSpan.Zero));
 			purchasableItems.Add(agentFactory.CreateSodaMachine(TimeSpan.Zero));
 			purchasableItems.Add(agentFactory.CreateWaterFountain(TimeSpan.Zero));
-			userInterfaceManager = new UserInterfaceManager(renderer, ContentManager, new Point(MainGame.SCREEN_WIDTH, MainGame.SCREEN_HEIGHT), purchasableItems);
-			userInterfaceManager.PurchasableItemSelected += HandleSelectEquipment;
+			return purchasableItems;
+		}
 
-			cursor = new Cursor(ContentManager, renderer);
+		private void userInterfaceManager_ArchiveMailButtonClicked(object sender, ArchiveEventArgs e)
+		{
+			mailManager.ArchiveMail(e.SelectedMailItem);
+			userInterfaceManager.UpdateMenuMailBox(mailManager.PlayerInbox, mailManager.PlayerOutbox, mailManager.PlayerArchive);
 		}
 
 		public override void Deactivate()
@@ -439,6 +474,12 @@ namespace MyThirdSDL.Screens
 			else
 				mouseOverScreenEdge = MouseOverScreenEdge.None;
 			return mouseOverScreenEdge;
+		}
+
+		private void mailbox_UnreadMailCountChanged(object sender, EventArgs e)
+		{
+			if(userInterfaceManager != null)
+				userInterfaceManager.UpdateUnreadMailCount(mailManager.PlayerUnreadMailCount);
 		}
 	}
 }

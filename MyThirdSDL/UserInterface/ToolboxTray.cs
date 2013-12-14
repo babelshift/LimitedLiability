@@ -79,9 +79,14 @@ namespace MyThirdSDL.UserInterface
 			LabelDate.Text = dateTime.ToShortDateString();
 		}
 
-		public void UpdateUnreadMailCount(int unreadMailCount)
+		public void UpdateDisplayedUnreadMailCount(int unreadMailCount)
 		{
 			ButtonMailMenu.Text = unreadMailCount.ToString();
+		}
+
+		public void UpdateDisplayedMoney(int money)
+		{
+			LabelMoney.Text = money.ToString();
 		}
 
 		public override void Update(GameTime gameTime)

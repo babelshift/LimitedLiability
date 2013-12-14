@@ -14,6 +14,13 @@ namespace MyThirdSDL.Mail
 		private List<Mailbox> employeeMailboxes = new List<Mailbox>();
 		private List<Mailbox> spammerMailboxes = new List<Mailbox>();
 
+		public IEnumerable<MailItem> PlayerInbox { get { return playerMailbox.InboxMailItems; } }
+		public IEnumerable<MailItem> PlayerOutbox { get { return playerMailbox.OutboxMailItems; } }
+		public IEnumerable<MailItem> PlayerArchive { get { return playerMailbox.ArchiveMailItems; } }
+		public int PlayerUnreadMailCount { get { return playerMailbox.UnreadMailCount; } }
+
+		public event EventHandler UnreadMailCountChanged;
+
 		private IEnumerable<Mailbox> AllMailboxes
 		{
 			get
@@ -47,6 +54,14 @@ namespace MyThirdSDL.Mail
 			spammerMailboxes.Add(new Mailbox(new MailAddress("no_reply@worksafeporn.com", MailAddressType.Spammer)));
 			spammerMailboxes.Add(new Mailbox(new MailAddress("no_reply@bizdev.com", MailAddressType.Spammer)));
 			spammerMailboxes.Add(new Mailbox(new MailAddress("no_reply@mylittlepony.com", MailAddressType.Spammer)));
+
+			playerMailbox.UnreadMailCountChanged += playerMailbox_UnreadMailCountChanged;
+		}
+
+		private void playerMailbox_UnreadMailCountChanged(object sender, EventArgs e)
+		{
+			if(UnreadMailCountChanged != null)
+				UnreadMailCountChanged(sender, e);
 		}
 
 		public void SendMail(MailItem mail)
@@ -61,6 +76,11 @@ namespace MyThirdSDL.Mail
 
 			fromMailbox.AddMailToOutbox(mail);
 			toMailbox.AddMailToInbox(mail);
+		}
+
+		public void ArchiveMail(MailItem mailItem)
+		{
+			playerMailbox.MoveMailToArchive(mailItem.ID);
 		}
 	}
 }

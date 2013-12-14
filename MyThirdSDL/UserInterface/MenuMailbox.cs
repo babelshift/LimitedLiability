@@ -151,8 +151,8 @@ namespace MyThirdSDL.UserInterface
 
 		#region Public Events
 
-		public event EventHandler<ArchiveEventArgs> Archived;
-		public event EventHandler<EventArgs> Closed;
+		public event EventHandler<ArchiveEventArgs> ArchiveMailButtonClicked;
+		public event EventHandler<EventArgs> CloseButtonClicked;
 
 		#endregion
 
@@ -208,15 +208,15 @@ namespace MyThirdSDL.UserInterface
 
 		private void buttonCloseWindow_Clicked(object sender, EventArgs e)
 		{
-			if (Closed != null)
-				Closed(sender, e);
+			if (CloseButtonClicked != null)
+				CloseButtonClicked(sender, e);
 		}
 
 		private void buttonArchive_Clicked(object sender, EventArgs e)
 		{
 			if (SelectedMailItem != null)
-				if (Archived != null)
-					Archived(sender, new ArchiveEventArgs(SelectedMailItem));
+				if (ArchiveMailButtonClicked != null)
+					ArchiveMailButtonClicked(sender, new ArchiveEventArgs(SelectedMailItem));
 		}
 
 		private void buttonView_Clicked(object sender, EventArgs e)

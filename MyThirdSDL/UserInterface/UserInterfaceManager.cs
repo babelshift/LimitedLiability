@@ -18,10 +18,26 @@ namespace MyThirdSDL.UserInterface
 {
 	public class UserInterfaceManager
 	{
+		#region Members
+
 		private Point bottomRightPointOfWindow;
 		private ControlFactory controlFactory;
 		private ContentManager contentManager;
 		private TimeSpan timeOfStatusChange = TimeSpan.Zero;
+
+		#endregion
+
+		#region Properties
+
+		/// <summary>
+		/// Gets the mouse mode.
+		/// </summary>
+		/// <value>The mouse mode.</value>
+		public UserInterfaceState CurrentState { get; private set; }
+
+		public TimeSpan TimeSpentInCurrentState { get; private set; }
+
+		#endregion
 
 		#region Diagnostic Items
 
@@ -53,14 +69,6 @@ namespace MyThirdSDL.UserInterface
 
 		#endregion
 
-		/// <summary>
-		/// Gets the mouse mode.
-		/// </summary>
-		/// <value>The mouse mode.</value>
-		public UserInterfaceState CurrentState { get; private set; }
-
-		public TimeSpan TimeSpentInCurrentState { get; private set; }
-
 		public bool IsToolboxTrayHovered 
 		{ 
 			get 
@@ -71,9 +79,11 @@ namespace MyThirdSDL.UserInterface
 			} 
 		}
 
-		private void mailbox_UnreadMailCountChanged(object sender, EventArgs e)
+		private void ClearMenusOpen()
 		{
-			toolboxTray.UpdateUnreadMailCount(mailbox.UnreadMailCount);
+			HideMenuInspectEmployee();
+			HideMenuEquipment();
+			HideMenuMailbox();
 		}
 
 		#region Constructors
@@ -87,7 +97,13 @@ namespace MyThirdSDL.UserInterface
 		/// <param name="contentManager">Content manager.</param>
 		/// <param name="bottomRightPointOfWindow">Bottom right point of window.</param>
 		/// <param name="purchasableItems">Purchasable items.</param>
-		public UserInterfaceManager(Renderer renderer, ContentManager contentManager, Point bottomRightPointOfWindow, IEnumerable<IPurchasable> purchasableItems)
+		public UserInterfaceManager(Renderer renderer, ContentManager contentManager, Point bottomRightPointOfWindow, 
+			IEnumerable<IPurchasable> purchasableItems,
+			IEnumerable<MailItem> inbox, 
+			IEnumerable<MailItem> outbox,
+			IEnumerable<MailItem> archive,
+			int unreadMailCount,
+			int money)
 		{
 			this.bottomRightPointOfWindow = bottomRightPointOfWindow;
 			this.purchasableItems = purchasableItems;
@@ -95,7 +111,8 @@ namespace MyThirdSDL.UserInterface
 
 			controlFactory = new ControlFactory(renderer, contentManager);
 
-			toolboxTray = controlFactory.CreateToolboxTray(new Vector(bottomRightPointOfWindow.X / 2 - 300, bottomRightPointOfWindow.Y - 50));
+			Vector toolboxTrayPosition = new Vector(bottomRightPointOfWindow.X / 2 - 300, bottomRightPointOfWindow.Y - 50);
+			toolboxTray = controlFactory.CreateToolboxTray(toolboxTrayPosition, unreadMailCount, money);
 			toolboxTray.ButtonSelectGeneralClicked += ToolboxTray_ButtonSelectGeneralClicked;
 			toolboxTray.ButtonSelectEquipmentClicked += ToolboxTray_ButtonSelectEquipmentClicked;
 			toolboxTray.ButtonSelectRoomClicked += ToolboxTray_ButtonSelectRoomClicked;
@@ -105,9 +122,6 @@ namespace MyThirdSDL.UserInterface
 			toolboxTray.ButtonProductsClicked += ToolboxTray_ButtonProductsClicked;
 			toolboxTray.ButtonMainMenuClicked += ToolboxTray_ButtonMainMenuClicked;
 			toolboxTray.ButtonMailMenuClicked += toolboxTray_ButtonMailMenuClicked;
-
-			mailbox = new Mailbox(new Mail.MailAddress("first.last@company.com", Mail.MailAddressType.Player));
-			mailbox.UnreadMailCountChanged += mailbox_UnreadMailCountChanged;
 
 			Color fontColor;
 			int fontSizeContent;
@@ -125,7 +139,7 @@ namespace MyThirdSDL.UserInterface
 
 			CreateMenuEquipment();
 			CreateMenuInspectEmployee();
-			CreateMenuMailbox();
+			CreateMenuMailbox(inbox, outbox, archive);
 
 			ChangeState(UserInterfaceState.Default);
 		}
@@ -266,14 +280,20 @@ namespace MyThirdSDL.UserInterface
 
 		#endregion
 
-		private void ClearMenusOpen()
+		#region Menu Mailbox Events
+
+		public void UpdateUnreadMailCount(int unreadMailCount)
 		{
-			HideMenuInspectEmployee();
-			HideMenuEquipment();
-			HideMenuMailbox();
+			toolboxTray.UpdateDisplayedUnreadMailCount(unreadMailCount);
 		}
 
-		#region Menu Mailbox Events
+		public void UpdateMenuMailBox(IEnumerable<MailItem> inbox, IEnumerable<MailItem> outbox, IEnumerable<MailItem> archive)
+		{
+			menuMailbox.ClearButtonsAndSeparators();
+			controlFactory.AddButtonMailItemsToMenu(menuMailbox, inbox, outbox, archive);
+		}
+
+		public event EventHandler<ArchiveEventArgs> ArchiveMailButtonClicked;
 
 		private void ShowMenuMailbox()
 		{
@@ -287,43 +307,23 @@ namespace MyThirdSDL.UserInterface
 			ChangeState(UserInterfaceState.Default);
 		}
 
-		private Mailbox mailbox;
-
-		private void CreateMenuMailbox()
+		private void CreateMenuMailbox(IEnumerable<MailItem> inbox, IEnumerable<MailItem> outbox, IEnumerable<MailItem> archive)
 		{
 			Vector menuPosition = new Vector(bottomRightPointOfWindow.X, bottomRightPointOfWindow.Y);
-			mailbox.AddMailToInbox(new MailItem("first", "first.last@company.com", "Hello World!", "PENISES", MailState.Unread));
-			mailbox.AddMailToInbox(new MailItem("first", "first.last@company.com", "Yo!", "Ho!", MailState.Unread));
-			mailbox.AddMailToInbox(new MailItem("first", "first.last@company.com", "Hi", "Sexy", MailState.Read));
-			mailbox.AddMailToInbox(new MailItem("first", "first.last@company.com", "Pills", "Free!", MailState.Unread));
-			mailbox.AddMailToInbox(new MailItem("first", "first.last@company.com", "Pills", "Free!", MailState.Unread));
-			mailbox.AddMailToInbox(new MailItem("first", "first.last@company.com", "Pills", "Free!", MailState.Unread));
-			mailbox.AddMailToInbox(new MailItem("first", "first.last@company.com", "Pills", "Free!", MailState.Unread));
-			mailbox.AddMailToInbox(new MailItem("first", "first.last@company.com", "Pills", "Free!", MailState.Unread));
-			mailbox.AddMailToInbox(new MailItem("first", "first.last@company.com", "Pills", "Free!", MailState.Unread));
-			mailbox.AddMailToOutbox(new MailItem("first", "first.last@company.com", "Hi", "Sexy", MailState.Read));
-			mailbox.AddMailToOutbox(new MailItem("first", "first.last@company.com", "Hi", "Sexy", MailState.Read));
-			mailbox.AddMailToOutbox(new MailItem("first", "first.last@company.com", "Hi", "Sexy", MailState.Read));
-			mailbox.AddMailToOutbox(new MailItem("first", "first.last@company.com", "Hi", "Sexy", MailState.Read));
-			mailbox.AddMailToOutbox(new MailItem("first", "first.last@company.com", "Hi", "Sexy", MailState.Read));
-			mailbox.AddMailToOutbox(new MailItem("first", "first.last@company.com", "Hi", "Sexy", MailState.Read));
-			mailbox.AddMailToOutbox(new MailItem("first", "first.last@company.com", "Hi", "Sexy", MailState.Read));
-			mailbox.AddMailToOutbox(new MailItem("first", "first.last@company.com", "Hi", "Sexy", MailState.Read));
-			menuMailbox = controlFactory.CreateMenuMailbox(menuPosition, mailbox);
-			menuMailbox.Archived += menuMailbox_Archived;
-			menuMailbox.Closed += menuMailbox_Closed;
+			menuMailbox = controlFactory.CreateMenuMailbox(menuPosition, inbox, outbox, archive);
+			menuMailbox.ArchiveMailButtonClicked += menuMailbox_ArchiveMailButtonClicked;
+			menuMailbox.CloseButtonClicked += menuMailbox_CloseButtonClicked;
 		}
 
-		private void menuMailbox_Closed(object sender, EventArgs e)
+		private void menuMailbox_CloseButtonClicked(object sender, EventArgs e)
 		{
 			HideMenuMailbox();
 		}
 
-		private void menuMailbox_Archived(object sender, ArchiveEventArgs e)
+		private void menuMailbox_ArchiveMailButtonClicked(object sender, ArchiveEventArgs e)
 		{
-			mailbox.MoveMailToArchive(e.SelectedMailItem.ID);
-			menuMailbox.ClearButtonsAndSeparators();
-			controlFactory.AddButtonMailItemsToMenu(menuMailbox, mailbox);
+			if(ArchiveMailButtonClicked != null)
+				ArchiveMailButtonClicked(sender, e);
 		}
 
 		#endregion
@@ -500,6 +500,5 @@ namespace MyThirdSDL.UserInterface
 		}
 
 		#endregion
-
 	}
 }

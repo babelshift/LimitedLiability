@@ -40,20 +40,20 @@ namespace MyThirdSDL.UserInterface
 			return texture;
 		}
 
-		public void AddButtonMailItemsToMenu(MenuMailbox menuMailbox, Mailbox mailbox)
+		public void AddButtonMailItemsToMenu(MenuMailbox menuMailbox, IEnumerable<MailItem> inbox, IEnumerable<MailItem> outbox, IEnumerable<MailItem> archive)
 		{
 			Vector position = menuMailbox.Position;
 
 			List<ButtonMailItem> mailItemsButtonsInbox = new List<ButtonMailItem>();
-			foreach (MailItem mailItem in mailbox.InboxMailItems)
+			foreach (MailItem mailItem in inbox)
 				menuMailbox.AddButtonMailItemInbox(CreateButtonMailItem(position, "ButtonMailItem", "ButtonMailItemHover", "ButtonMailItemSelected", mailItem), CreateIcon(position, "IconSeparator", true));
 
 			List<ButtonMailItem> mailItemsButtonsOutbox = new List<ButtonMailItem>();
-			foreach (MailItem mailItem in mailbox.OutboxMailItems)
+			foreach (MailItem mailItem in outbox)
 				menuMailbox.AddButtonMailItemOutbox(CreateButtonMailItem(position, "ButtonMailItem", "ButtonMailItemHover", "ButtonMailItemSelected", mailItem), CreateIcon(position, "IconSeparator", true));
 
 			List<ButtonMailItem> mailItemsButtonsArchive = new List<ButtonMailItem>();
-			foreach (MailItem mailItem in mailbox.ArchiveMailItems)
+			foreach (MailItem mailItem in archive)
 				menuMailbox.AddButtonMailItemArchive(CreateButtonMailItem(position, "ButtonMailItem", "ButtonMailItemHover", "ButtonMailItemSelected", mailItem), CreateIcon(position, "IconSeparator", true));
 		}
 
@@ -201,7 +201,7 @@ namespace MyThirdSDL.UserInterface
 			return menuEquipment;
 		}
 
-		public MenuMailbox CreateMenuMailbox(Vector bottomRightPointOfWindow, Mailbox mailbox)
+		public MenuMailbox CreateMenuMailbox(Vector bottomRightPointOfWindow, IEnumerable<MailItem> inbox, IEnumerable<MailItem> outbox, IEnumerable<MailItem> archive)
 		{
 			Texture texture = GetTexture("MenuMailboxFrame");
 
@@ -214,7 +214,7 @@ namespace MyThirdSDL.UserInterface
 
 			Icon iconFolderOpen = CreateIcon(new Vector(position.X + 5, position.Y + 5), "IconFolderOpen");
 			Label labelFolder = CreateLabel(new Vector(position.X + 40, position.Y + 15), fontPath, fontSizeTitle, fontColor, "Folder");
-			Label labelPageNumber = CreateLabel(new Vector(position.X + 450, position.Y + 265), fontPath, fontSizeContent, fontColor, "Page 1 of 10");
+			Label labelPageNumber = CreateLabel(new Vector(position.X + 450, position.Y + 278), fontPath, fontSizeContent, fontColor, "Page 1 of 10");
 			Label labelFrom = CreateLabel(new Vector(position.X + 208, position.Y + 50), fontPath, fontSizeContent, fontColor, "From");
 			Label labelSubject = CreateLabel(new Vector(position.X + 340, position.Y + 50), fontPath, fontSizeContent, fontColor, "Subject");
 
@@ -233,8 +233,8 @@ namespace MyThirdSDL.UserInterface
 				new Vector(buttonArchivePosition.X + 3, buttonArchivePosition.Y + 5), new Vector(buttonArchivePosition.X + 35, buttonArchivePosition.Y + 15),
 				"IconMailArchive", String.Empty, "Archive");
 
-			Button buttonArrowLeft = CreateButton(new Vector(position.X + 600, position.Y + 248), "ButtonSquare", "ButtonSquareHover", "IconArrowCircleLeft", "IconArrowCircleLeft");
-			Button buttonArrowRight = CreateButton(new Vector(position.X + 650, position.Y + 248), "ButtonSquare", "ButtonSquareHover", "IconArrowCircleRight", "IconArrowCircleRight");
+			Button buttonArrowLeft = CreateButton(new Vector(position.X + 600, position.Y + 263), "ButtonSquare", "ButtonSquareHover", "IconArrowCircleLeft", "IconArrowCircleLeft");
+			Button buttonArrowRight = CreateButton(new Vector(position.X + 650, position.Y + 263), "ButtonSquare", "ButtonSquareHover", "IconArrowCircleRight", "IconArrowCircleRight");
 
 			Label labelInboxFolder = CreateLabel(new Vector(position.X + 185, position.Y + 15), fontPath, fontSizeTitle, fontColor, "Inbox");
 			Label labelOutboxFolder = CreateLabel(new Vector(position.X + 185, position.Y + 15), fontPath, fontSizeTitle, fontColor, "Outbox");
@@ -243,8 +243,8 @@ namespace MyThirdSDL.UserInterface
 			Icon iconOutboxFolder = CreateIcon(new Vector(position.X + 150, position.Y + 5), "IconMailOutbox");
 			Icon iconArchiveFolder = CreateIcon(new Vector(position.X + 150, position.Y + 5), "IconMailArchive");
 
-			Button buttonView = CreateButton(new Vector(position.X + 155, position.Y + 265), "ButtonMailAction", "ButtonMailActionHover", String.Empty, String.Empty, "View");
-			Button buttonArchive = CreateButton(new Vector(position.X + 255, position.Y + 265), "ButtonMailAction", "ButtonMailActionHover", String.Empty, String.Empty, "Archive");
+			Button buttonView = CreateButton(new Vector(position.X + 155, position.Y + 272), "ButtonMailAction", "ButtonMailActionHover", String.Empty, String.Empty, "View");
+			Button buttonArchive = CreateButton(new Vector(position.X + 255, position.Y + 272), "ButtonMailAction", "ButtonMailActionHover", String.Empty, String.Empty, "Archive");
 
 			Icon iconTopSeparator = CreateIcon(new Vector(position.X + 156, position.Y + 65), "IconSeparator", true);
 
@@ -258,7 +258,7 @@ namespace MyThirdSDL.UserInterface
 				buttonInboxFolder, buttonOutboxFolder, buttonArchiveFolder, buttonArrowLeft, buttonArrowRight,
 				buttonView, buttonArchive, iconTopSeparator, buttonCloseWindow);
 
-			AddButtonMailItemsToMenu(menuMailbox, mailbox);
+			AddButtonMailItemsToMenu(menuMailbox, inbox, outbox, archive);
 
 			return menuMailbox;
 		}
@@ -423,7 +423,7 @@ namespace MyThirdSDL.UserInterface
 			return new Tooltip(texture, position, label);
 		}
 
-		public ToolboxTray CreateToolboxTray(Vector position)
+		public ToolboxTray CreateToolboxTray(Vector position, int unreadMailCount, int money)
 		{
 			Texture texture = GetTexture("ToolboxTray");
 
@@ -456,13 +456,13 @@ namespace MyThirdSDL.UserInterface
 			Button buttonMainMenu = CreateButton(buttonEightPosition, buttonTexturePathKey, buttonHoverTexturePathKey, "IconWindow", "IconWindow");
 			Button buttonMailMenu = CreateButton(buttonNinePosition, "ToolboxTrayButtonMail", "ToolboxTrayButtonMailHover",
 				new Vector(buttonNinePosition.X + 4, buttonNinePosition.Y + 2), new Vector(buttonNinePosition.X + 37, buttonNinePosition.Y + 12),
-				"IconMailUnread", String.Empty, "0");
+				"IconMailUnread", String.Empty, unreadMailCount.ToString());
 			Icon iconMoney = CreateIcon(iconOnePosition, "IconMoney");
 			Icon iconTime = CreateIcon(iconTwoPosition, "IconTime");
 
 			string fontPath = contentManager.GetContentPath("Arcade");
 			Color fontColor = new Color(218, 218, 218);
-			Label labelMoney = CreateLabel(iconOnePosition + new Vector(35, 10), fontPath, 12, fontColor, "0");
+			Label labelMoney = CreateLabel(iconOnePosition + new Vector(35, 10), fontPath, 12, fontColor, money.ToString());
 			Label labelDate = CreateLabel(iconTwoPosition + new Vector(32, 3), fontPath, 12, fontColor, DateTime.Now.ToShortDateString());
 			Label labelTime = CreateLabel(iconTwoPosition + new Vector(55, 18), fontPath, 12, fontColor, DateTime.Now.ToShortTimeString());
 
