@@ -88,6 +88,7 @@
     <Compile Include="Agents\SodaMachine.cs" />
     <Compile Include="Agents\TrashBin.cs" />
     <Compile Include="Agents\WaterFountain.cs" />
+    <Compile Include="BankAccount.cs" />
     <Compile Include="Camera.cs" />
     <Compile Include="Content\CompanyMetadata.cs" />
     <Compile Include="Content\ContentManager.cs" />

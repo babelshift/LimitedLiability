@@ -84,7 +84,7 @@ namespace MyThirdSDL.UserInterface
 			ButtonMailMenu.Text = unreadMailCount.ToString();
 		}
 
-		public void UpdateDisplayedMoney(int money)
+		public void UpdateDisplayedBankAccountBalance(int money)
 		{
 			LabelMoney.Text = money.ToString();
 		}

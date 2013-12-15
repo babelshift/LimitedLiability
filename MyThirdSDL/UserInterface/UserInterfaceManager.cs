@@ -69,6 +69,8 @@ namespace MyThirdSDL.UserInterface
 
 		#endregion
 
+		public event EventHandler<ArchiveEventArgs> ArchiveMailButtonClicked;
+
 		public bool IsToolboxTrayHovered 
 		{ 
 			get 
@@ -293,7 +295,10 @@ namespace MyThirdSDL.UserInterface
 			controlFactory.AddButtonMailItemsToMenu(menuMailbox, inbox, outbox, archive);
 		}
 
-		public event EventHandler<ArchiveEventArgs> ArchiveMailButtonClicked;
+		public void UpdateDisplayedBankAccountBalance(int balance)
+		{
+			toolboxTray.UpdateDisplayedBankAccountBalance(balance);
+		}
 
 		private void ShowMenuMailbox()
 		{

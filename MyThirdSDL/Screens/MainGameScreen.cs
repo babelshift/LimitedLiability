@@ -18,14 +18,13 @@ namespace MyThirdSDL.Screens
 	{
 		#region Members
 
-		private int money = 1000;
-
 		private JobFactory jobFactory;
 		private AgentFactory agentFactory;
 		private SimulationManager simulationManager;
 		private UserInterfaceManager userInterfaceManager;
 		private MailManager mailManager;
 		private Cursor cursor;
+		private BankAccount bankAccount;
 
 		private TiledMap tiledMap;
 		private Image tileHighlightImage;
@@ -165,12 +164,28 @@ namespace MyThirdSDL.Screens
 
 		public override void Activate(Renderer renderer)
 		{
-			string mapPath = ContentManager.GetContentPath("Office1");
+			// Help Variables
 			string tileHighlightTexturePath = ContentManager.GetContentPath("TileHighlight");
+			Surface tileHighlightSurface = new Surface(tileHighlightTexturePath, SurfaceType.PNG);
+			tileHighlightImage = new Image(renderer, tileHighlightSurface, ImageFormat.PNG);
+			Point bottomRightPointOfScreen = new Point(MainGame.SCREEN_WIDTH, MainGame.SCREEN_HEIGHT);
+			string mapPath = ContentManager.GetContentPath("Office1");
 
+			// Map
 			tiledMap = new TiledMap(mapPath, renderer);
+
+			// SimulationManager
 			simulationManager.CurrentMap = tiledMap;
 
+			// Mouse Cursor
+			cursor = new Cursor(ContentManager, renderer);
+
+			// Finances
+			bankAccount = new BankAccount(1000);
+			bankAccount.AmountDeposited += bankAccount_AmountDeposited;
+			bankAccount.AmountWithdrawn += bankAccount_AmountWithdrawn;
+
+			// Agents
 			var pathNodes = tiledMap.GetPathNodes();
 			Random random = new Random();
 			for (int i = 0; i < 5; i++)
@@ -181,31 +196,33 @@ namespace MyThirdSDL.Screens
 				simulationManager.AddAgent(employee);
 			}
 
-			Surface tileHighlightSurface = new Surface(tileHighlightTexturePath, SurfaceType.PNG);
-			tileHighlightImage = new Image(renderer, tileHighlightSurface, ImageFormat.PNG);
+			// MailManager
+			mailManager = new MailManager();
+			mailManager.UnreadMailCountChanged += mailbox_UnreadMailCountChanged;
 
+			// Purchasable Items
 			List<IPurchasable> purchasableItems = PopulatePurchasableItems();
 
-			cursor = new Cursor(ContentManager, renderer);
-
-			CreateAndPopulateMailbox();
-
-			Point bottomRightPointOfScreen = new Point(MainGame.SCREEN_WIDTH, MainGame.SCREEN_HEIGHT);
+			// UI Manager
 			userInterfaceManager = new UserInterfaceManager(renderer, ContentManager, bottomRightPointOfScreen, 
 				purchasableItems, 
 				mailManager.PlayerInbox, 
 				mailManager.PlayerOutbox, 
 				mailManager.PlayerArchive, 
 				mailManager.PlayerUnreadMailCount, 
-				money);
+				bankAccount.Balance);
 			userInterfaceManager.PurchasableItemSelected += HandleSelectEquipment;
 			userInterfaceManager.ArchiveMailButtonClicked += userInterfaceManager_ArchiveMailButtonClicked;
 		}
 
-		private void CreateAndPopulateMailbox()
+		private void bankAccount_AmountWithdrawn(object sender, BankAccountTransactionEventArgs e)
 		{
-			mailManager = new MailManager();
-			mailManager.UnreadMailCountChanged += mailbox_UnreadMailCountChanged;
+			userInterfaceManager.UpdateDisplayedBankAccountBalance(e.NewBalance);
+		}
+
+		private void bankAccount_AmountDeposited(object sender, BankAccountTransactionEventArgs e)
+		{
+			userInterfaceManager.UpdateDisplayedBankAccountBalance(e.NewBalance);
 		}
 
 		private List<IPurchasable> PopulatePurchasableItems()
@@ -224,12 +241,6 @@ namespace MyThirdSDL.Screens
 			purchasableItems.Add(agentFactory.CreateSodaMachine(TimeSpan.Zero));
 			purchasableItems.Add(agentFactory.CreateWaterFountain(TimeSpan.Zero));
 			return purchasableItems;
-		}
-
-		private void userInterfaceManager_ArchiveMailButtonClicked(object sender, ArchiveEventArgs e)
-		{
-			mailManager.ArchiveMail(e.SelectedMailItem);
-			userInterfaceManager.UpdateMenuMailBox(mailManager.PlayerInbox, mailManager.PlayerOutbox, mailManager.PlayerArchive);
 		}
 
 		public override void Deactivate()
@@ -360,6 +371,16 @@ namespace MyThirdSDL.Screens
 
 		#endregion
 
+		#region UI Manager Events
+
+		private void userInterfaceManager_ArchiveMailButtonClicked(object sender, ArchiveEventArgs e)
+		{
+			mailManager.ArchiveMail(e.SelectedMailItem);
+			userInterfaceManager.UpdateMenuMailBox(mailManager.PlayerInbox, mailManager.PlayerOutbox, mailManager.PlayerArchive);
+		}
+
+		#endregion
+
 		/// <summary>
 		/// Selects out the non-empty height tiles from the height layer in the tile map and sorts them by their draw depth.
 		/// </summary>
@@ -394,12 +415,13 @@ namespace MyThirdSDL.Screens
 		/// </summary>
 		/// <param name="agent">Agent.</param>
 		private void AddEquipmentToSimulationAndHoveredMapCell<T>(T agent)
-			where T : Agent
+			where T : Equipment
 		{
 			if (agent != null)
 			{
 				simulationManager.AddAgent(agent);
 				hoveredMapCell.AddDrawable(agent, (int)TileType.Object);
+				bankAccount.Withdraw(agent.Price);
 			}
 		}
 
