@@ -11,8 +11,8 @@ namespace MyThirdSDL.Agents
 	{
 		public int Price { get; private set; }
 
-		public Equipment(TimeSpan birthTime, string agentName, Texture texture, Vector startingPosition, int price)
-			: base(birthTime, agentName, texture, startingPosition)
+		public Equipment(TimeSpan birthTime, string agentName, TextureBook textureBook, Vector startingPosition, AgentOrientation orientation, int price)
+			: base(birthTime, agentName, textureBook, startingPosition, orientation)
 		{
 			Price = price;
 		}

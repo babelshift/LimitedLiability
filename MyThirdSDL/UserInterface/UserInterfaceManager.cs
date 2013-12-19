@@ -60,7 +60,7 @@ namespace MyThirdSDL.UserInterface
 
 		private ToolboxTray toolboxTray;
 		private IEnumerable<IPurchasable> purchasableItems;
-		private MenuEquipment menuEquipment;
+		private MenuPurchase menuEquipment;
 		private bool isMenuEquipmentOpen = false;
 		private MenuInspectEmployee menuInspectEmployee;
 		private bool isMenuInspectEmployeeOpen = false;

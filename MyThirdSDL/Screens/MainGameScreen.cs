@@ -30,7 +30,7 @@ namespace MyThirdSDL.Screens
 		private Image tileHighlightImage;
 		private MapCell hoveredMapCell;
 
-		private IPurchasable selectedPurchasableItem;
+		private IPurchasable selectedPurchasableEquipment;
 
 		private List<IDrawable> allDrawables = new List<IDrawable>();
 
@@ -135,17 +135,17 @@ namespace MyThirdSDL.Screens
 					// if the user has clicked or released any mouse buttons while in this mode, try to place the equipment
 					if (IsLeftMouseButtonClicked)
 					{
-						if (selectedPurchasableItem is SodaMachine)
+						if (selectedPurchasableEquipment is SodaMachine)
 						{
 							var agentToAdd = agentFactory.CreateSodaMachine(SimulationManager.SimulationTime, new Vector(hoveredMapCell.WorldPosition.X, hoveredMapCell.WorldPosition.Y));
 							AddEquipmentToSimulationAndHoveredMapCell(agentToAdd);
 						}
-						else if (selectedPurchasableItem is SnackMachine)
+						else if (selectedPurchasableEquipment is SnackMachine)
 						{
 							var agentToAdd = agentFactory.CreateSnackMachine(SimulationManager.SimulationTime, new Vector(hoveredMapCell.WorldPosition.X, hoveredMapCell.WorldPosition.Y));
 							AddEquipmentToSimulationAndHoveredMapCell(agentToAdd);
 						}
-						else if (selectedPurchasableItem is OfficeDesk)
+						else if (selectedPurchasableEquipment is OfficeDesk)
 						{
 							var agentToAdd = agentFactory.CreateOfficeDesk(SimulationManager.SimulationTime, new Vector(hoveredMapCell.WorldPosition.X, hoveredMapCell.WorldPosition.Y));
 							AddEquipmentToSimulationAndHoveredMapCell(agentToAdd);
@@ -157,7 +157,7 @@ namespace MyThirdSDL.Screens
 
 		private void HandleSelectEquipment(object sender, PurchasableItemSelectedEventArgs e)
 		{
-			selectedPurchasableItem = e.PurchasableItem;
+			selectedPurchasableEquipment = e.PurchasableItem;
 		}
 
 		#endregion
@@ -201,11 +201,12 @@ namespace MyThirdSDL.Screens
 			mailManager.UnreadMailCountChanged += mailbox_UnreadMailCountChanged;
 
 			// Purchasable Items
-			List<IPurchasable> purchasableItems = PopulatePurchasableItems();
+			List<IPurchasable> purchasableEquipment = GetPurchasableEquipment();
+			List<IPurchasable> purchasableRooms = GetPurchasableRooms();
 
 			// UI Manager
 			userInterfaceManager = new UserInterfaceManager(renderer, ContentManager, bottomRightPointOfScreen, 
-				purchasableItems, 
+				purchasableEquipment, 
 				mailManager.PlayerInbox, 
 				mailManager.PlayerOutbox, 
 				mailManager.PlayerArchive, 
@@ -225,7 +226,14 @@ namespace MyThirdSDL.Screens
 			userInterfaceManager.UpdateDisplayedBankAccountBalance(e.NewBalance);
 		}
 
-		private List<IPurchasable> PopulatePurchasableItems()
+		private List<IPurchasable> GetPurchasableRooms()
+		{
+			List<IPurchasable> purchasableItems = new List<IPurchasable>();
+
+			return purchasableItems;
+		}
+
+		private List<IPurchasable> GetPurchasableEquipment()
 		{
 			List<IPurchasable> purchasableItems = new List<IPurchasable>();
 			purchasableItems.Add(agentFactory.CreateSnackMachine(TimeSpan.Zero));
@@ -276,7 +284,7 @@ namespace MyThirdSDL.Screens
 
 					renderer.RenderTexture(tileHighlightImage.Texture, drawPosition.X, drawPosition.Y);
 
-					renderer.RenderTexture(selectedPurchasableItem.Texture, drawPosition.X, drawPosition.Y);
+					renderer.RenderTexture(selectedPurchasableEquipment.ActiveTexture, drawPosition.X, drawPosition.Y);
 				}
 			}
 

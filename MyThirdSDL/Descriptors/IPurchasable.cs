@@ -9,7 +9,7 @@ namespace MyThirdSDL.Descriptors
 {
 	public interface IPurchasable : IAffectsNecessities, ISkillsAffector
 	{
-		Texture Texture { get; }
+		Texture ActiveTexture { get; }
 		string Name { get; }
 		int Price { get; }
 		string IconTextureKey { get; }

@@ -152,7 +152,7 @@ namespace MyThirdSDL.UserInterface
 			return menuInspectEmployee;
 		}
 
-		public MenuEquipment CreateMenuEquipment(Vector bottomRightPointOfWindow, IEnumerable<IPurchasable> purchasableItems)
+		public MenuPurchase CreateMenuEquipment(Vector bottomRightPointOfWindow, IEnumerable<IPurchasable> purchasableItems)
 		{
 			Texture texture = GetTexture("MenuEquipmentFrame");
 
@@ -188,7 +188,7 @@ namespace MyThirdSDL.UserInterface
 			Button buttonArrowCircleLeft = CreateButton(new Vector(position.X + 9, position.Y + 248), "ButtonSquare", "ButtonSquareHover", "IconArrowCircleLeft", "IconArrowCircleLeft");
 			Button buttonArrowCircleRight = CreateButton(new Vector(position.X + 296, position.Y + 248), "ButtonSquare", "ButtonSquareHover", "IconArrowCircleRight", "IconArrowCircleRight");
 
-			MenuEquipment menuEquipment = new MenuEquipment(texture, position, iconMainMenu, iconInfoMenu, labelMainMenu, labelInfoMenu,
+			MenuPurchase menuEquipment = new MenuPurchase(texture, position, iconMainMenu, iconInfoMenu, labelMainMenu, labelInfoMenu,
 				iconMoney, iconHealth, iconHygiene, iconSleep, iconThirst, iconHunger, labelMoney, labelHealth, labelHygiene, labelSleep, labelThirst,
 				labelHunger, buttonArrowCircleLeft, buttonArrowCircleRight, buttonCloseWindow, buttonConfirmWindow);
 

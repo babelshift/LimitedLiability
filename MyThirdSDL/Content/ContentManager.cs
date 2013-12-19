@@ -7,6 +7,7 @@ using System.Xml;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System.IO;
+using SharpDL.Graphics;
 
 namespace MyThirdSDL.Content
 {

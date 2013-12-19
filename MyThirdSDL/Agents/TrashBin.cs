@@ -16,9 +16,9 @@ namespace MyThirdSDL.Agents
 
 		public bool IsAssignedToAnEmployee { get { return AssignedEmployee != null; } }
 
-		public TrashBin(TimeSpan birthTime, Texture texture, Vector startingPosition,
+		public TrashBin(TimeSpan birthTime, TextureBook textureBook, Vector startingPosition, AgentOrientation orientation,
 			string name, int price, string iconTextureKey, NecessityEffect necessityEffect, SkillEffect skillEffect)
-			: base(birthTime, name, texture, startingPosition, price)
+			: base(birthTime, name, textureBook, startingPosition, orientation, price)
 		{
 			NecessityEffect = necessityEffect;
 			SkillEffect = skillEffect;

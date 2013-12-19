@@ -87,6 +87,7 @@
     <Compile Include="Agents\SnackMachine.cs" />
     <Compile Include="Agents\SodaMachine.cs" />
     <Compile Include="Agents\TrashBin.cs" />
+    <Compile Include="Agents\Wall.cs" />
     <Compile Include="Agents\WaterFountain.cs" />
     <Compile Include="BankAccount.cs" />
     <Compile Include="Camera.cs" />
@@ -160,6 +161,7 @@
     <Compile Include="Simulation\SimulationMessageFactory.cs" />
     <Compile Include="Simulation\Subscription.cs" />
     <Compile Include="Simulation\Trigger.cs" />
+    <Compile Include="TextureBook.cs" />
     <Compile Include="UserInterface\Button.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -181,7 +183,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="UserInterface\MailItemPage.cs" />
-    <Compile Include="UserInterface\MenuEquipment.cs">
+    <Compile Include="UserInterface\MenuPurchase.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="UserInterface\MenuInspectEmployee.cs" />

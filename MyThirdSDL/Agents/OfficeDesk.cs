@@ -16,9 +16,9 @@ namespace MyThirdSDL.Agents
 
 		public bool IsAssignedToAnEmployee { get { return AssignedEmployee != null; } }
 
-		public OfficeDesk(TimeSpan birthTime, Texture texture, Vector startingPosition,
+		public OfficeDesk(TimeSpan birthTime, TextureBook textureBook, Vector startingPosition, AgentOrientation orientation,
 			string name, int price, string iconTextureKey, NecessityEffect necessityEffect, SkillEffect skillEffect)
-			: base(birthTime, name, texture, startingPosition, price)
+			: base(birthTime, name, textureBook, startingPosition, orientation, price)
 		{
 			NecessityEffect = necessityEffect;
 			SkillEffect = skillEffect;

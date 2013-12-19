@@ -34,7 +34,7 @@ namespace MyThirdSDL.Agents
 		public Employee CreateEmployee(TimeSpan simulationBirthTime, DateTime worldDateTime, Vector position)
 		{
 			string texturePath = contentManager.GetContentPath("MaleEmployee0001");
-			Texture texture = textureStore.GetTexture(texturePath);
+			TextureBook textureBook = textureStore.GetTextureBook(texturePath);
 
 			int employeeNumber = GetNextEmployeeNumber();
 			string firstName = contentManager.GetRandomFirstName();
@@ -43,7 +43,7 @@ namespace MyThirdSDL.Agents
 			Skills skills = Skills.GetRandomSkills();
 			Job job = jobFactory.CreateJob(skills);
 
-			Employee employee = new Employee(simulationBirthTime, "Employee " + employeeNumber, texture, position, firstName, lastName, birthday, skills, job);
+			Employee employee = new Employee(simulationBirthTime, "Employee " + employeeNumber, textureBook, position, AgentOrientation.TopLeft, firstName, lastName, birthday, skills, job);
 
 			if (log.IsDebugEnabled)
 				log.Debug(String.Format("Employee has been created with name: {0}", employee.FullName));
@@ -69,6 +69,8 @@ namespace MyThirdSDL.Agents
 		}
 
 		#endregion
+
+		#region Equipment
 
 		public TrashBin CreateTrashBin(TimeSpan birthTime)
 		{
@@ -121,16 +123,32 @@ namespace MyThirdSDL.Agents
 
 		public WaterFountain CreateWaterFountain(TimeSpan birthTime, Vector position)
 		{
-			AgentMetadata agentMetaData = contentManager.GetAgentMetadata("WaterFountain");
-			return CreateAgent<WaterFountain>(birthTime, "WaterFountain", position, agentMetaData);
+			return CreateAgent<WaterFountain>("WaterFountain", birthTime, position);
+		}
+
+		#endregion
+
+		#region Rooms
+
+		public Wall CreateWall(TimeSpan birthTime, Vector position)
+		{
+			return CreateAgent<Wall>("Wall", birthTime, position);
+		}
+
+		#endregion
+
+		public T CreateAgent<T>(string agentKeyName, TimeSpan birthTime, Vector position)
+		{
+			var metaData = contentManager.GetAgentMetadata(agentKeyName);
+			return CreateAgent<T>(birthTime, agentKeyName, position, metaData);
 		}
 
 		private T CreateAgent<T>(TimeSpan birthTime, string texturePathKey, Vector position, AgentMetadata agentMetaData)
 		{
 			if (log.IsDebugEnabled)
 				log.Debug(String.Format("Creating agent of type {0} at ({1},{2}) with birth time: {3}", typeof(T), position.X, position.Y, birthTime));
-			Texture texture = GetTextureFromStore(texturePathKey);
-			return (T)Activator.CreateInstance(typeof(T), birthTime, texture, position,
+			TextureBook textureBook = GetTextureBookFromStore(texturePathKey);
+			return (T)Activator.CreateInstance(typeof(T), birthTime, textureBook, position, AgentOrientation.TopLeft,
 				agentMetaData.Name, agentMetaData.Price, agentMetaData.IconKey, agentMetaData.NecessityEffect, agentMetaData.SkillEffect);
 		}
 
@@ -141,9 +159,10 @@ namespace MyThirdSDL.Agents
 			return texture;
 		}
 
-		private int GetNextEquipmentNumber()
+		private TextureBook GetTextureBookFromStore(string texturePathKey)
 		{
-			return currentEquipmentNumber++;
+			string texturePath = contentManager.GetContentPath(texturePathKey);
+			return textureStore.GetTextureBook(texturePath);
 		}
 	}
 }

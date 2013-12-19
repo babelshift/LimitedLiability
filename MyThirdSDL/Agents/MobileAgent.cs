@@ -67,8 +67,8 @@ namespace MyThirdSDL.Agents
 			return isAlreadyIntention;
 		}
 
-		public MobileAgent(TimeSpan birthTime, string name, Texture texture, Vector startingPosition, Vector startingSpeed)
-			: base(birthTime, name, texture, startingPosition)
+		public MobileAgent(TimeSpan birthTime, string name, TextureBook textureBook, Vector startingPosition, Vector startingSpeed, AgentOrientation orientation)
+			: base(birthTime, name, textureBook, startingPosition, orientation)
 		{
 			Activity = AgentActivity.Unknown;
 			Speed = startingSpeed;

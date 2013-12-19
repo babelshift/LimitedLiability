@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace MyThirdSDL.UserInterface
 {
-	public class MenuEquipment : Control
+	public class MenuPurchase : Control
 	{
 		private const int itemsPerPage = 4;
 
@@ -60,7 +60,7 @@ namespace MyThirdSDL.UserInterface
 
 		#region Constructor
 
-		public MenuEquipment(Texture texture, Vector position, Icon iconMainMenu, Icon iconInfoMenu, Label labelMainMenu, Label labelInfoMenu,
+		public MenuPurchase(Texture texture, Vector position, Icon iconMainMenu, Icon iconInfoMenu, Label labelMainMenu, Label labelInfoMenu,
 			Icon iconMoney, Icon iconHealth, Icon iconHygiene, Icon iconSleepy, Icon iconThirst, Icon iconHunger, Label labelMoney,
 			Label labelHealth, Label labelHygiene, Label labelSleepy, Label labelThirst, Label labelHunger,
 			Button buttonArrowCircleLeft, Button buttonArrowCircleRight, Button buttonCloseWindow, Button buttonConfirmWindow)

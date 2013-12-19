@@ -67,8 +67,9 @@ namespace MyThirdSDL.Agents
 		public event EventHandler<EventArgs> ThirstSatisfied;
 		public event EventHandler<EventArgs> HungerSatisfied;
 
-		public Employee(TimeSpan birthTime, string agentName, Texture texture, Vector position, string firstName, string lastName, DateTime birthday, Skills skills, Job job)
-			: base(birthTime, agentName, texture, position, speed)
+		public Employee(TimeSpan birthTime, string agentName, TextureBook textureBook, Vector position, AgentOrientation orientation,
+			string firstName, string lastName, DateTime birthday, Skills skills, Job job)
+			: base(birthTime, agentName, textureBook, position, speed, orientation)
 		{
 			FirstName = firstName;
 			LastName = lastName;

@@ -9,25 +9,46 @@ using MyThirdSDL.Simulation;
 
 namespace MyThirdSDL.Agents
 {
+	public enum AgentOrientation
+	{
+		TopLeft,
+		TopRight,
+		BottomLeft,
+		BottomRight
+	}
+
 	public abstract class Agent : IDrawable, ICollidable
 	{
 		#region Members
 
-		public Texture Texture { get; private set; }
-
-		public Rectangle CollisionBox
-		{
-			get
-			{
-				return new Rectangle((int)WorldPosition.X, (int)WorldPosition.Y, Texture.Width / 2, Texture.Height / 2);
-			}
-		}
-
+		private TextureBook textureBook;
+		private AgentOrientation orientation;
 		private TimeSpan SimulationBirthTime { get; set; }
 
 		#endregion
 
 		#region Properties
+
+		public Texture ActiveTexture { get { return textureBook.ActiveTexture; } }
+
+		public AgentOrientation Orientation
+		{
+			get { return orientation; }
+			set
+			{
+				orientation = value;
+
+				textureBook.SetOrientation(orientation);
+			}
+		}
+
+		public Rectangle CollisionBox
+		{
+			get
+			{
+				return new Rectangle((int)WorldPosition.X, (int)WorldPosition.Y, ActiveTexture.Width / 2, ActiveTexture.Height / 2);
+			}
+		}
 
 		public Guid ID { get; private set; }
 
@@ -60,19 +81,32 @@ namespace MyThirdSDL.Agents
 
 		#region Constructors
 
-		public Agent(TimeSpan birthTime, string name, Texture texture, Vector startingPosition)
+		public Agent(TimeSpan birthTime, string name, TextureBook textureBook, Vector startingPosition, AgentOrientation orientation)
 		{
 			ID = Guid.NewGuid();
 			SimulationBirthTime = birthTime;
 			Name = name;
-			Texture = texture;
+			this.textureBook = textureBook;
 			State = AgentState.Unknown;
 			WorldPosition = startingPosition;
+			Orientation = orientation;
 		}
 
 		#endregion
 
 		#region Utilities
+
+		public void Rotate()
+		{
+			if (Orientation == AgentOrientation.TopLeft)
+				Orientation = AgentOrientation.TopRight;
+			else if (Orientation == AgentOrientation.TopRight)
+				Orientation = AgentOrientation.BottomRight;
+			else if (Orientation == AgentOrientation.BottomRight)
+				Orientation = AgentOrientation.BottomLeft;
+			else if (Orientation == AgentOrientation.BottomLeft)
+				Orientation = AgentOrientation.TopLeft;
+		}
 
 		private void SetSimulationAge(TimeSpan simulationTime)
 		{
@@ -108,11 +142,11 @@ namespace MyThirdSDL.Agents
 			SetSimulationAge(gameTime.TotalGameTime);
 		}
 
-		public void Draw(GameTime gameTime, Renderer renderer)
+		public virtual void Draw(GameTime gameTime, Renderer renderer)
 		{
 			// adjust the positions so we draw at the center of the Texture and at the correct camera position
 			Vector drawPosition = CoordinateHelper.ProjectedPositionToDrawPosition(ProjectedPosition);
-			renderer.RenderTexture(Texture, drawPosition.X, drawPosition.Y);
+			renderer.RenderTexture(ActiveTexture, drawPosition.X, drawPosition.Y);
 		}
 
 		#endregion

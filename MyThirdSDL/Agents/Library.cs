@@ -20,8 +20,8 @@ namespace MyThirdSDL.Agents
 
 		public string IconTextureKey { get { return "IconLibrary"; } }
 
-		public Library(TimeSpan birthTime, string agentName, Texture texture, Vector position)
-			: base(birthTime, name, texture, position, widthInTiles, heightInTiles, price)
+		public Library(TimeSpan birthTime, string agentName, TextureBook textureBook, Vector startingPosition, AgentOrientation orientation)
+			: base(birthTime, name, textureBook, startingPosition, orientation, widthInTiles, heightInTiles, price)
 		{
 			NecessityEffect = new NecessityEffect(0, 0, -1, 0, 0);
 			SkillEffect = new SkillEffect(1, 1, 0, 0);
