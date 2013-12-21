@@ -42,40 +42,6 @@ namespace MyThirdSDL.UserInterface
 		private List<Control> controls = new List<Control>();
 		private List<Label> labelValues = new List<Label>();
 
-		public void SetInfoValues(Employee employee)
-		{
-			labelNameValue.Text = employee.FullName;
-			double yearsOld = DateTimeHelper.DaysToYears(employee.Age.TotalDays);
-			double daysInYearOld = DateTimeHelper.DaysRemainderInYears(yearsOld);
-			labelAgeValue.Text = String.Format("{0} years, {1} days", (int)yearsOld, (int)daysInYearOld);
-			labelJobValue.Text = employee.Job.Title;
-			labelSalaryValue.Text = employee.Job.Salary.ToString("C", CultureInfo.CreateSpecificCulture("en-US"));
-			labelStatusValue.Text = employee.Activity.ToString();
-			labelBirthValue.Text = employee.Birthday.ToString("dd MMMM yyyy", CultureInfo.CreateSpecificCulture("en-US"));
-
-			if (employee.HappinessRating >= 5)
-				iconMoodActive = iconMoodHappy;
-			else
-				iconMoodActive = iconMoodAngry;
-		}
-
-		public void SetNeedsValues(Necessities necessities)
-		{
-			labelHealthValue.Text = String.Format("{0} {1}", (int)necessities.Health, necessities.HealthToString());
-			labelHygieneValue.Text = String.Format("{0} {1}", (int)necessities.Hygiene, necessities.HygieneToString());
-			labelSleepValue.Text = String.Format("{0} {1}", (int)necessities.Sleep, necessities.SleepToString());
-			labelHungerValue.Text = String.Format("{0} {1}", (int)necessities.Hunger, necessities.HungerToString());
-			labelThirstValue.Text = String.Format("{0} {1}", (int)necessities.Thirst, necessities.ThirstToString());
-		}
-
-		public void SetSkillsValues(Skills skills)
-		{
-			labelCommunicationValue.Text = String.Format("{0} {1}", (int)skills.Communication, skills.CommunicationToString());
-			labelLeadershipValue.Text = String.Format("{0} {1}", (int)skills.Leadership, skills.LeadershipToString());
-			labelCreativityValue.Text = String.Format("{0} {1}", (int)skills.Creativity, skills.CreativityToString());
-			labelIntelligenceValue.Text = String.Format("{0} {1}", (int)skills.Intelligence, skills.IntelligenceToString());
-		}
-
 		public MenuInspectEmployee(Texture texture, Vector position, Button buttonCloseWindow,
 			Label labelNameValue, Label labelAgeValue, Label labelJobValue, Label labelSalaryValue, Label labelStatusValue, Label labelBirthValue,
 			Icon iconMoodHappy, Icon iconMoodAngry,
@@ -121,6 +87,40 @@ namespace MyThirdSDL.UserInterface
 			labelValues.Add(this.labelCreativityValue);
 			labelValues.Add(this.labelLeadershipValue);
 			labelValues.Add(this.labelIntelligenceValue);
+		}
+
+		public void SetInfoValues(Employee employee)
+		{
+			labelNameValue.Text = employee.FullName;
+			double yearsOld = DateTimeHelper.DaysToYears(employee.Age.TotalDays);
+			double daysInYearOld = DateTimeHelper.DaysRemainderInYears(yearsOld);
+			labelAgeValue.Text = String.Format("{0} years, {1} days", (int)yearsOld, (int)daysInYearOld);
+			labelJobValue.Text = employee.Job.Title;
+			labelSalaryValue.Text = employee.Job.Salary.ToString("C", CultureInfo.CreateSpecificCulture("en-US"));
+			labelStatusValue.Text = employee.Activity.ToString();
+			labelBirthValue.Text = employee.Birthday.ToString("dd MMMM yyyy", CultureInfo.CreateSpecificCulture("en-US"));
+
+			if (employee.HappinessRating >= 5)
+				iconMoodActive = iconMoodHappy;
+			else
+				iconMoodActive = iconMoodAngry;
+		}
+
+		public void SetNeedsValues(Necessities necessities)
+		{
+			labelHealthValue.Text = String.Format("{0} {1}", (int)necessities.Health, necessities.HealthToString());
+			labelHygieneValue.Text = String.Format("{0} {1}", (int)necessities.Hygiene, necessities.HygieneToString());
+			labelSleepValue.Text = String.Format("{0} {1}", (int)necessities.Sleep, necessities.SleepToString());
+			labelHungerValue.Text = String.Format("{0} {1}", (int)necessities.Hunger, necessities.HungerToString());
+			labelThirstValue.Text = String.Format("{0} {1}", (int)necessities.Thirst, necessities.ThirstToString());
+		}
+
+		public void SetSkillsValues(Skills skills)
+		{
+			labelCommunicationValue.Text = String.Format("{0} {1}", (int)skills.Communication, skills.CommunicationToString());
+			labelLeadershipValue.Text = String.Format("{0} {1}", (int)skills.Leadership, skills.LeadershipToString());
+			labelCreativityValue.Text = String.Format("{0} {1}", (int)skills.Creativity, skills.CreativityToString());
+			labelIntelligenceValue.Text = String.Format("{0} {1}", (int)skills.Intelligence, skills.IntelligenceToString());
 		}
 
 		public void AddControl(Control control)

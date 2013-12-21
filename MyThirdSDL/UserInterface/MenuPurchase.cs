@@ -11,14 +11,18 @@ namespace MyThirdSDL.UserInterface
 {
 	public class MenuPurchase : Control
 	{
+		private List<Control> controls = new List<Control>();
+
 		private const int itemsPerPage = 4;
 
 		#region Header Controls
 
-		private Icon iconMainMenu;
-		private Icon iconInfoMenu;
-		private Label labelMainMenu;
-		private Label labelInfoMenu;
+		private Icon iconMainMenuHeader;
+		private Icon iconInfoMenuHeader;
+		private Icon iconSkillsMenuHeader;
+		private Label labelMainMenuHeader;
+		private Label labelInfoMenuHeader;
+		private Label labelSkillsMenuHeader;
 
 		#endregion
 
@@ -30,12 +34,20 @@ namespace MyThirdSDL.UserInterface
 		private Icon iconSleepy;
 		private Icon iconThirst;
 		private Icon iconHunger;
+		private Icon iconCommunication;
+		private Icon iconCreativity;
+		private Icon iconIntelligence;
+		private Icon iconLeadership;
 		private Label labelMoney;
 		private Label labelHealth;
 		private Label labelHygiene;
 		private Label labelSleep;
 		private Label labelThirst;
 		private Label labelHunger;
+		private Label labelCommunication;
+		private Label labelCreativity;
+		private Label labelIntelligence;
+		private Label labelLeadership;
 
 		#endregion
 
@@ -60,16 +72,52 @@ namespace MyThirdSDL.UserInterface
 
 		#region Constructor
 
-		public MenuPurchase(Texture texture, Vector position, Icon iconMainMenu, Icon iconInfoMenu, Label labelMainMenu, Label labelInfoMenu,
+		public MenuPurchase(Texture texture, Vector position, Icon iconMainMenuHeader, Icon iconInfoMenuHeader, Label labelMainMenuHeader, Label labelInfoMenuHeader,
 			Icon iconMoney, Icon iconHealth, Icon iconHygiene, Icon iconSleepy, Icon iconThirst, Icon iconHunger, Label labelMoney,
-			Label labelHealth, Label labelHygiene, Label labelSleepy, Label labelThirst, Label labelHunger,
-			Button buttonArrowCircleLeft, Button buttonArrowCircleRight, Button buttonCloseWindow, Button buttonConfirmWindow)
+			Label labelHealth, Label labelHygiene, Label labelSleep, Label labelThirst, Label labelHunger,
+			Button buttonArrowCircleLeft, Button buttonArrowCircleRight, Button buttonCloseWindow, Button buttonConfirmWindow,
+			Icon iconSkillsMenuHeader, Label labelSkillsMenuHeader,
+			Icon iconCommunication, Icon iconCreativity, Icon iconIntelligence, Icon iconLeadership,
+			Label labelCommunication, Label labelCreativity, Label labelIntelligence, Label labelLeadership)
 			: base(texture, position)
 		{
-			this.iconMainMenu = iconMainMenu;
-			this.iconInfoMenu = iconInfoMenu;
-			this.labelMainMenu = labelMainMenu;
-			this.labelInfoMenu = labelInfoMenu;
+			controls.Add(iconMainMenuHeader);
+			controls.Add(iconInfoMenuHeader);
+			controls.Add(iconSkillsMenuHeader);
+			controls.Add(labelMainMenuHeader);
+			controls.Add(labelInfoMenuHeader);
+			controls.Add(labelSkillsMenuHeader);
+			controls.Add(iconMoney);
+			controls.Add(iconHealth);
+			controls.Add(iconHygiene);
+			controls.Add(iconSleepy);
+			controls.Add(iconThirst);
+			controls.Add(iconHunger);
+			controls.Add(labelMoney);
+			controls.Add(labelHealth);
+			controls.Add(labelSleep);
+			controls.Add(labelThirst);
+			controls.Add(labelHunger);
+			controls.Add(labelHygiene);
+			controls.Add(iconCommunication);
+			controls.Add(iconCreativity);
+			controls.Add(iconIntelligence);
+			controls.Add(iconLeadership);
+			controls.Add(labelCommunication);
+			controls.Add(labelCreativity);
+			controls.Add(labelIntelligence);
+			controls.Add(labelLeadership);
+			controls.Add(buttonArrowCircleLeft);
+			controls.Add(buttonArrowCircleRight);
+			controls.Add(buttonCloseWindow);
+			controls.Add(buttonConfirmWindow);
+
+			this.iconMainMenuHeader = iconMainMenuHeader;
+			this.iconInfoMenuHeader = iconInfoMenuHeader;
+			this.iconSkillsMenuHeader = iconSkillsMenuHeader;
+			this.labelMainMenuHeader = labelMainMenuHeader;
+			this.labelInfoMenuHeader = labelInfoMenuHeader;
+			this.labelSkillsMenuHeader = labelSkillsMenuHeader;
 			this.iconMoney = iconMoney;
 			this.iconHealth = iconHealth;
 			this.iconHygiene = iconHygiene;
@@ -79,9 +127,17 @@ namespace MyThirdSDL.UserInterface
 			this.labelMoney = labelMoney;
 			this.labelHealth = labelHealth;
 			this.labelHygiene = labelHygiene;
-			this.labelSleep = labelSleepy;
+			this.labelSleep = labelSleep;
 			this.labelThirst = labelThirst;
 			this.labelHunger = labelHunger;
+			this.iconCommunication = iconCommunication;
+			this.iconCreativity = iconCreativity;
+			this.iconIntelligence = iconIntelligence;
+			this.iconLeadership = iconLeadership;
+			this.labelCommunication = labelCommunication;
+			this.labelCreativity = labelCreativity;
+			this.labelIntelligence = labelIntelligence;
+			this.labelLeadership = labelLeadership;
 			this.buttonArrowCircleLeft = buttonArrowCircleLeft;
 			this.buttonArrowCircleRight = buttonArrowCircleRight;
 			this.buttonCloseWindow = buttonCloseWindow;
@@ -109,36 +165,16 @@ namespace MyThirdSDL.UserInterface
 				foreach (var buttonMenuItem in buttonMenuItemsOnCurrentPage)
 					buttonMenuItem.Update(gameTime);
 
-			buttonArrowCircleLeft.Update(gameTime);
-			buttonArrowCircleRight.Update(gameTime);
-			buttonCloseWindow.Update(gameTime);
-			buttonConfirmWindow.Update(gameTime);
+			foreach (var control in controls)
+				control.Update(gameTime);
 		}
 
 		public override void Draw(GameTime gameTime, Renderer renderer)
 		{
 			base.Draw(gameTime, renderer);
 
-			iconMainMenu.Draw(gameTime, renderer);
-			iconInfoMenu.Draw(gameTime, renderer);
-			labelMainMenu.Draw(gameTime, renderer);
-			labelInfoMenu.Draw(gameTime, renderer);
-			iconMoney.Draw(gameTime, renderer);
-			iconHealth.Draw(gameTime, renderer);
-			iconHygiene.Draw(gameTime, renderer);
-			iconSleepy.Draw(gameTime, renderer);
-			iconThirst.Draw(gameTime, renderer);
-			iconHunger.Draw(gameTime, renderer);
-			labelMoney.Draw(gameTime, renderer);
-			labelHealth.Draw(gameTime, renderer);
-			labelHygiene.Draw(gameTime, renderer);
-			labelSleep.Draw(gameTime, renderer);
-			labelThirst.Draw(gameTime, renderer);
-			labelHunger.Draw(gameTime, renderer);
-			buttonArrowCircleLeft.Draw(gameTime, renderer);
-			buttonArrowCircleRight.Draw(gameTime, renderer);
-			buttonCloseWindow.Draw(gameTime, renderer);
-			buttonConfirmWindow.Draw(gameTime, renderer);
+			foreach (var control in controls)
+				control.Draw(gameTime, renderer);
 
 			List<ButtonMenuItem> buttonMenuItemsOnCurrentPage = new List<ButtonMenuItem>();
 			bool success = buttonMenuItemPages.TryGetValue(currentDisplayedPage, out buttonMenuItemsOnCurrentPage);
@@ -215,6 +251,10 @@ namespace MyThirdSDL.UserInterface
 			labelHygiene.Text = e.PurchasableItem.NecessityEffect.HygieneEffectiveness.ToString();
 			labelSleep.Text = e.PurchasableItem.NecessityEffect.SleepEffectiveness.ToString();
 			labelThirst.Text = e.PurchasableItem.NecessityEffect.ThirstEffectiveness.ToString();
+			labelCommunication.Text = e.PurchasableItem.SkillEffect.CommunicationEffectiveness.ToString();
+			labelCreativity.Text = e.PurchasableItem.SkillEffect.CreativityEffectiveness.ToString();
+			labelIntelligence.Text = e.PurchasableItem.SkillEffect.IntelligenceEffectiveness.ToString();
+			labelLeadership.Text = e.PurchasableItem.SkillEffect.LeadershipEffectiveness.ToString();
 		}
 
 		#endregion

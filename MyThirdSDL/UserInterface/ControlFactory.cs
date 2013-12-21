@@ -152,9 +152,9 @@ namespace MyThirdSDL.UserInterface
 			return menuInspectEmployee;
 		}
 
-		public MenuPurchase CreateMenuEquipment(Vector bottomRightPointOfWindow, IEnumerable<IPurchasable> purchasableItems)
+		public MenuPurchase CreateMenuPurchase(Vector bottomRightPointOfWindow, IEnumerable<IPurchasable> purchasableItems)
 		{
-			Texture texture = GetTexture("MenuEquipmentFrame");
+			Texture texture = GetTexture("MenuPurchaseFrame");
 
 			Vector position = new Vector(bottomRightPointOfWindow.X / 2 - texture.Width / 2, bottomRightPointOfWindow.Y / 2 - texture.Height / 2);
 
@@ -165,8 +165,10 @@ namespace MyThirdSDL.UserInterface
 
 			Icon iconMainMenu = CreateIcon(new Vector(position.X + 3, position.Y + 5), "IconHandTruck");
 			Icon iconInfoMenu = CreateIcon(new Vector(position.X + 365, position.Y + 5), "IconStatistics");
+			Icon iconSkillsMenu = CreateIcon(new Vector(position.X + 505, position.Y + 5), "IconPenPaper");
 			Label labelMainMenu = CreateLabel(new Vector(position.X + 38, position.Y + 15), fontPath, fontSizeTitle, fontColor, "Equipment");
-			Label labelInfoMenu = CreateLabel(new Vector(position.X + 400, position.Y + 15), fontPath, fontSizeTitle, fontColor, "Info");
+			Label labelInfoMenu = CreateLabel(new Vector(position.X + 400, position.Y + 15), fontPath, fontSizeTitle, fontColor, "Needs");
+			Label labelSkillsMenu = CreateLabel(new Vector(position.X + 535, position.Y + 15), fontPath, fontSizeTitle, fontColor, "Skills");
 
 			Icon iconMoney = CreateIcon(new Vector(position.X + 365, position.Y + 50), "IconMoney");
 			Icon iconHealth = CreateIcon(new Vector(position.X + 365, position.Y + 80), "IconMedkit");
@@ -182,23 +184,35 @@ namespace MyThirdSDL.UserInterface
 			Label labelThirst = CreateLabel(new Vector(position.X + 400, position.Y + 180), fontPath, fontSizeContent, fontColor, "N/A");
 			Label labelHunger = CreateLabel(new Vector(position.X + 400, position.Y + 210), fontPath, fontSizeContent, fontColor, "N/A");
 
-			Button buttonCloseWindow = CreateButton(new Vector(position.X + 454, position.Y - 47), "ButtonSquare", "ButtonSquareHover", "IconWindowClose", "IconWindowClose");
-			Button buttonConfirmWindow = CreateButton(new Vector(position.X + 454, position.Y + 303), "ButtonSquare", "ButtonSquareHover", "IconWindowConfirm", "IconWindowConfirm");
+			Icon iconCommunication = CreateIcon(new Vector(position.X + 508, position.Y + 50), "IconCommunication");
+			Icon iconLeadership = CreateIcon(new Vector(position.X + 508, position.Y + 80), "IconLeadership");
+			Icon iconCreativity = CreateIcon(new Vector(position.X + 508, position.Y + 110), "IconCreativity");
+			Icon iconIntelligence = CreateIcon(new Vector(position.X + 508, position.Y + 140), "IconIntelligence");
+
+			Label labelCommunication = CreateLabel(new Vector(position.X + 540, position.Y + 60), fontPath, fontSizeContent, fontColor, "N/A");
+			Label labelLeadership = CreateLabel(new Vector(position.X + 540, position.Y + 90), fontPath, fontSizeContent, fontColor, "N/A");
+			Label labelCreativity = CreateLabel(new Vector(position.X + 540, position.Y + 120), fontPath, fontSizeContent, fontColor, "N/A");
+			Label labelIntelligence = CreateLabel(new Vector(position.X + 540, position.Y + 150), fontPath, fontSizeContent, fontColor, "N/A");
+
+			Button buttonCloseWindow = CreateButton(new Vector(position.X + 600, position.Y - 47), "ButtonSquare", "ButtonSquareHover", "IconWindowClose", "IconWindowClose");
+			Button buttonConfirmWindow = CreateButton(new Vector(position.X + 600, position.Y + 303), "ButtonSquare", "ButtonSquareHover", "IconWindowConfirm", "IconWindowConfirm");
 
 			Button buttonArrowCircleLeft = CreateButton(new Vector(position.X + 9, position.Y + 248), "ButtonSquare", "ButtonSquareHover", "IconArrowCircleLeft", "IconArrowCircleLeft");
 			Button buttonArrowCircleRight = CreateButton(new Vector(position.X + 296, position.Y + 248), "ButtonSquare", "ButtonSquareHover", "IconArrowCircleRight", "IconArrowCircleRight");
 
-			MenuPurchase menuEquipment = new MenuPurchase(texture, position, iconMainMenu, iconInfoMenu, labelMainMenu, labelInfoMenu,
+			MenuPurchase menuPurchase = new MenuPurchase(texture, position, iconMainMenu, iconInfoMenu, labelMainMenu, labelInfoMenu,
 				iconMoney, iconHealth, iconHygiene, iconSleep, iconThirst, iconHunger, labelMoney, labelHealth, labelHygiene, labelSleep, labelThirst,
-				labelHunger, buttonArrowCircleLeft, buttonArrowCircleRight, buttonCloseWindow, buttonConfirmWindow);
+				labelHunger, buttonArrowCircleLeft, buttonArrowCircleRight, buttonCloseWindow, buttonConfirmWindow, iconSkillsMenu, labelSkillsMenu,
+				iconCommunication, iconCreativity, iconIntelligence, iconLeadership, labelCommunication,
+				labelCreativity, labelIntelligence, labelLeadership);
 
 			foreach (var purchasableItem in purchasableItems)
 			{
 				ButtonMenuItem buttonMenuItem = CreateButtonMenuItem(position, "ButtonMenuItem", "ButtonMenuItemHover", purchasableItem);
-				menuEquipment.AddButtonMenuItem(buttonMenuItem);
+				menuPurchase.AddButtonMenuItem(buttonMenuItem);
 			}
 
-			return menuEquipment;
+			return menuPurchase;
 		}
 
 		public MenuMailbox CreateMenuMailbox(Vector bottomRightPointOfWindow, IEnumerable<MailItem> inbox, IEnumerable<MailItem> outbox, IEnumerable<MailItem> archive)

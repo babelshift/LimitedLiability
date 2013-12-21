@@ -60,7 +60,7 @@ namespace MyThirdSDL.UserInterface
 
 		private ToolboxTray toolboxTray;
 		private IEnumerable<IPurchasable> purchasableItems;
-		private MenuPurchase menuEquipment;
+		private MenuPurchase menuPurchase;
 		private bool isMenuEquipmentOpen = false;
 		private MenuInspectEmployee menuInspectEmployee;
 		private bool isMenuInspectEmployeeOpen = false;
@@ -375,9 +375,9 @@ namespace MyThirdSDL.UserInterface
 		private void CreateMenuEquipment()
 		{
 			Vector menuPosition = new Vector(bottomRightPointOfWindow.X, bottomRightPointOfWindow.Y);
-			menuEquipment = controlFactory.CreateMenuEquipment(menuPosition, purchasableItems);
-			menuEquipment.ButtonCloseWindowClicked += menuEquipment_ButtonCloseWindowClicked;
-			menuEquipment.ButtonConfirmWindowClicked += menuEquipment_ButtonConfirmWindowClicked;
+			menuPurchase = controlFactory.CreateMenuPurchase(menuPosition, purchasableItems);
+			menuPurchase.ButtonCloseWindowClicked += menuEquipment_ButtonCloseWindowClicked;
+			menuPurchase.ButtonConfirmWindowClicked += menuEquipment_ButtonConfirmWindowClicked;
 		}
 
 		private void ShowMenuEquipment()
@@ -421,7 +421,7 @@ namespace MyThirdSDL.UserInterface
 			toolboxTray.Update(gameTime);
 
 			if (isMenuEquipmentOpen)
-				menuEquipment.Update(gameTime);
+				menuPurchase.Update(gameTime);
 
 			if (isMenuInspectEmployeeOpen)
 				menuInspectEmployee.Update(gameTime);
@@ -462,7 +462,7 @@ namespace MyThirdSDL.UserInterface
 			toolboxTray.Draw(gameTime, renderer);
 
 			if (isMenuEquipmentOpen)
-				menuEquipment.Draw(gameTime, renderer);
+				menuPurchase.Draw(gameTime, renderer);
 
 			if (isMenuInspectEmployeeOpen)
 				menuInspectEmployee.Draw(gameTime, renderer);
