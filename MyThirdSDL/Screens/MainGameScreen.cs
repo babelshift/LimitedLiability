@@ -207,6 +207,7 @@ namespace MyThirdSDL.Screens
 			// UI Manager
 			userInterfaceManager = new UserInterfaceManager(renderer, ContentManager, bottomRightPointOfScreen, 
 				purchasableEquipment, 
+				purchasableRooms,
 				mailManager.PlayerInbox, 
 				mailManager.PlayerOutbox, 
 				mailManager.PlayerArchive, 

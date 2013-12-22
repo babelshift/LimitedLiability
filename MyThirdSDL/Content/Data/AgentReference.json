@@ -8,7 +8,7 @@
 		{ 
 			"key": "SnackMachine", "name": "Snack Machine", "price": "50", "icon": "IconPizza", 
 				"necessityEffect": [ { "health":  "-1", "hygiene": "0", "sleep": "0", "thirst": "0", "hunger": "10" } ],
-				"skillEffect": [ { "intelligence": "0", "creativity": "0", "communication": "0", "leadership": "0" } ]
+				"skillEffect": [ { "intelligence": "1", "creativity": "0", "communication": "0", "leadership": "0" } ]
 		},
 		{ 
 			"key": "SodaMachine", "name": "Soda Machine", "price": "50", "icon": "IconSoda", 

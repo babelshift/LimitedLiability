@@ -59,17 +59,25 @@ namespace MyThirdSDL.UserInterface
 		#region Controls
 
 		private ToolboxTray toolboxTray;
-		private IEnumerable<IPurchasable> purchasableItems;
-		private MenuPurchase menuPurchase;
+
+		private IEnumerable<IPurchasable> purchasableEquipment;
+		private MenuPurchase menuPurchaseEquipment;
 		private bool isMenuEquipmentOpen = false;
+
+		private IEnumerable<IPurchasable> purchasableRooms;
+		private MenuPurchase menuPurchaseRooms;
+		private bool isMenuRoomsOpen = false;
+
 		private MenuInspectEmployee menuInspectEmployee;
 		private bool isMenuInspectEmployeeOpen = false;
+
 		private MenuMailbox menuMailbox;
 		private bool isMenuMailboxOpen = false;
 
 		#endregion
 
 		public event EventHandler<ArchiveEventArgs> ArchiveMailButtonClicked;
+		public event EventHandler<PurchasableItemSelectedEventArgs> PurchasableItemSelected;
 
 		public bool IsToolboxTrayHovered 
 		{ 
@@ -86,11 +94,10 @@ namespace MyThirdSDL.UserInterface
 			HideMenuInspectEmployee();
 			HideMenuEquipment();
 			HideMenuMailbox();
+			HideMenuRooms();
 		}
 
 		#region Constructors
-
-		public event EventHandler<PurchasableItemSelectedEventArgs> PurchasableItemSelected;
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="MyThirdSDL.UserInterface.UserInterfaceManager"/> class.
@@ -98,9 +105,10 @@ namespace MyThirdSDL.UserInterface
 		/// <param name="renderer">Renderer.</param>
 		/// <param name="contentManager">Content manager.</param>
 		/// <param name="bottomRightPointOfWindow">Bottom right point of window.</param>
-		/// <param name="purchasableItems">Purchasable items.</param>
-		public UserInterfaceManager(Renderer renderer, ContentManager contentManager, Point bottomRightPointOfWindow, 
-			IEnumerable<IPurchasable> purchasableItems,
+		/// <param name="purchasableEquipment">Purchasable items.</param>
+		public UserInterfaceManager(Renderer renderer, ContentManager contentManager, Point bottomRightPointOfWindow,
+			IEnumerable<IPurchasable> purchasableEquipment,
+			IEnumerable<IPurchasable> purchasableRooms,
 			IEnumerable<MailItem> inbox, 
 			IEnumerable<MailItem> outbox,
 			IEnumerable<MailItem> archive,
@@ -108,8 +116,10 @@ namespace MyThirdSDL.UserInterface
 			int money)
 		{
 			this.bottomRightPointOfWindow = bottomRightPointOfWindow;
-			this.purchasableItems = purchasableItems;
 			this.contentManager = contentManager;
+
+			this.purchasableEquipment = purchasableEquipment;
+			this.purchasableRooms = purchasableRooms;
 
 			controlFactory = new ControlFactory(renderer, contentManager);
 
@@ -139,6 +149,7 @@ namespace MyThirdSDL.UserInterface
 			labels.Add(labelSimulationTime);
 			labels.Add(labelState);
 
+			CreateMenuRooms();
 			CreateMenuEquipment();
 			CreateMenuInspectEmployee();
 			CreateMenuMailbox(inbox, outbox, archive);
@@ -264,6 +275,11 @@ namespace MyThirdSDL.UserInterface
 
 		private void ToolboxTray_ButtonSelectRoomClicked(object sender, EventArgs e)
 		{
+			if (!isMenuRoomsOpen)
+			{
+				ClearMenusOpen();
+				ShowMenuRooms();
+			}
 		}
 
 		private void ToolboxTray_ButtonSelectEquipmentClicked(object sender, EventArgs e)
@@ -370,14 +386,54 @@ namespace MyThirdSDL.UserInterface
 
 		#endregion
 
+		#region Menu Rooms Events
+
+		private void CreateMenuRooms()
+		{
+			Vector menuPosition = new Vector(bottomRightPointOfWindow.X, bottomRightPointOfWindow.Y);
+			menuPurchaseRooms = controlFactory.CreateMenuPurchase(menuPosition, "Rooms", purchasableRooms);
+			menuPurchaseRooms.ButtonCloseWindowClicked += menuPurchaseRooms_ButtonCloseWindowClicked;
+			menuPurchaseRooms.ButtonConfirmWindowClicked += menuPurchaseRooms_ButtonConfirmWindowClicked;
+		}
+
+		private void ShowMenuRooms()
+		{
+			isMenuRoomsOpen = true;
+			ChangeState(UserInterfaceState.SelectRoomMenuActive);
+		}
+
+		private void HideMenuRooms()
+		{
+			isMenuRoomsOpen = false;
+			ChangeState(UserInterfaceState.Default);
+		}
+
+		private void menuPurchaseRooms_ButtonConfirmWindowClicked(object sender, ButtonConfirmWindowClickedEventArgs e)
+		{
+			IPurchasable selectedPurchasableItem = e.PurchasableItem;
+			if (PurchasableItemSelected != null)
+				PurchasableItemSelected(sender, new PurchasableItemSelectedEventArgs(e.PurchasableItem));
+
+			HideMenuRooms();
+
+			ChangeState(UserInterfaceState.PlaceRoomActive);
+		}
+
+		private void menuPurchaseRooms_ButtonCloseWindowClicked(object sender, EventArgs e)
+		{
+			HideMenuRooms();
+		}
+
+		#endregion
+
 		#region Menu Equipment Events
 
 		private void CreateMenuEquipment()
 		{
 			Vector menuPosition = new Vector(bottomRightPointOfWindow.X, bottomRightPointOfWindow.Y);
-			menuPurchase = controlFactory.CreateMenuPurchase(menuPosition, purchasableItems);
-			menuPurchase.ButtonCloseWindowClicked += menuEquipment_ButtonCloseWindowClicked;
-			menuPurchase.ButtonConfirmWindowClicked += menuEquipment_ButtonConfirmWindowClicked;
+			menuPurchaseEquipment = controlFactory.CreateMenuPurchase(menuPosition, "Equipment", purchasableEquipment);
+			menuPurchaseEquipment.ButtonCloseWindowClicked += menuEquipment_ButtonCloseWindowClicked;
+			menuPurchaseEquipment.ButtonConfirmWindowClicked += menuEquipment_ButtonConfirmWindowClicked;
 		}
 
 		private void ShowMenuEquipment()
@@ -421,7 +477,7 @@ namespace MyThirdSDL.UserInterface
 			toolboxTray.Update(gameTime);
 
 			if (isMenuEquipmentOpen)
-				menuPurchase.Update(gameTime);
+				menuPurchaseEquipment.Update(gameTime);
 
 			if (isMenuInspectEmployeeOpen)
 				menuInspectEmployee.Update(gameTime);
@@ -429,7 +485,10 @@ namespace MyThirdSDL.UserInterface
 			if (isMenuMailboxOpen)
 				menuMailbox.Update(gameTime);
 
-			if (CurrentState == UserInterfaceState.PlaceEquipmentActive)
+			if (isMenuRoomsOpen)
+				menuPurchaseRooms.Update(gameTime);
+
+			if (CurrentState == UserInterfaceState.PlaceEquipmentActive || CurrentState == UserInterfaceState.PlaceRoomActive)
 				if (MouseHelper.CurrentMouseState.ButtonsPressed.Contains(MouseButtonCode.Right))
 					ChangeState(UserInterfaceState.Default);
 
@@ -462,13 +521,16 @@ namespace MyThirdSDL.UserInterface
 			toolboxTray.Draw(gameTime, renderer);
 
 			if (isMenuEquipmentOpen)
-				menuPurchase.Draw(gameTime, renderer);
+				menuPurchaseEquipment.Draw(gameTime, renderer);
 
 			if (isMenuInspectEmployeeOpen)
 				menuInspectEmployee.Draw(gameTime, renderer);
 
 			if (isMenuMailboxOpen)
 				menuMailbox.Draw(gameTime, renderer);
+
+			if (isMenuRoomsOpen)
+				menuPurchaseRooms.Draw(gameTime, renderer);
 		}
 
 		private void UpdateDisplayedDateAndTime(DateTime dateTime)

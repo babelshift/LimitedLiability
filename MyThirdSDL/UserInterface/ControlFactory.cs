@@ -152,7 +152,7 @@ namespace MyThirdSDL.UserInterface
 			return menuInspectEmployee;
 		}
 
-		public MenuPurchase CreateMenuPurchase(Vector bottomRightPointOfWindow, IEnumerable<IPurchasable> purchasableItems)
+		public MenuPurchase CreateMenuPurchase(Vector bottomRightPointOfWindow, string menuTitle, IEnumerable<IPurchasable> purchasableItems)
 		{
 			Texture texture = GetTexture("MenuPurchaseFrame");
 
@@ -166,7 +166,7 @@ namespace MyThirdSDL.UserInterface
 			Icon iconMainMenu = CreateIcon(new Vector(position.X + 3, position.Y + 5), "IconHandTruck");
 			Icon iconInfoMenu = CreateIcon(new Vector(position.X + 365, position.Y + 5), "IconStatistics");
 			Icon iconSkillsMenu = CreateIcon(new Vector(position.X + 505, position.Y + 5), "IconPenPaper");
-			Label labelMainMenu = CreateLabel(new Vector(position.X + 38, position.Y + 15), fontPath, fontSizeTitle, fontColor, "Equipment");
+			Label labelMainMenu = CreateLabel(new Vector(position.X + 38, position.Y + 15), fontPath, fontSizeTitle, fontColor, menuTitle);
 			Label labelInfoMenu = CreateLabel(new Vector(position.X + 400, position.Y + 15), fontPath, fontSizeTitle, fontColor, "Needs");
 			Label labelSkillsMenu = CreateLabel(new Vector(position.X + 535, position.Y + 15), fontPath, fontSizeTitle, fontColor, "Skills");
 
