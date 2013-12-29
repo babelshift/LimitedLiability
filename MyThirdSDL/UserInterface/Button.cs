@@ -13,25 +13,23 @@ namespace MyThirdSDL.UserInterface
 	{
 		#region Members
 
-		private Icon icon;
-		private Icon iconHover;
-		private Texture textureHover;
-		private Texture textureSelected;
-		private Label label;
-
 		#endregion
 
 		#region Properties
 
+		public Icon Icon { get; set; }
+		public Icon IconHovered { get; set; }
+		public Texture TextureFrame { get; set; }
+		public Texture TextureFrameHovered { get; set; }
+		public Texture TextureFrameSelected { get; set; }
+		public Label Label { get; set; }
+		public Tooltip Tooltip { get; set; }
+		public string Text { get { return Label.Text; } set { Label.Text = value; } }
+		public bool IsPressed { get; private set; }
+
 		protected bool IsHovered { get; private set; }
 
 		protected bool IsClicked { get; private set; }
-
-		public Tooltip Tooltip { get; set; }
-
-		public bool IsPressed { get; private set; }
-
-		public string Text { get { return label.Text; } set { label.Text = value; } }
 
 		#endregion
 
@@ -43,14 +41,8 @@ namespace MyThirdSDL.UserInterface
 
 		#region Constructors
 
-		public Button(Texture texture, Texture textureHover, Vector position, Icon icon = null, Icon iconHover = null, Label label = null, Texture textureSelected = null)
-			: base(texture, position)
+		public Button()
 		{
-			this.textureHover = textureHover;
-			this.icon = icon;
-			this.iconHover = iconHover;
-			this.label = label;
-			this.textureSelected = textureSelected;
 		}
 
 		#endregion
@@ -59,7 +51,10 @@ namespace MyThirdSDL.UserInterface
 
 		public override void Update(GameTime gameTime)
 		{
-			base.Update(gameTime);
+			Icon.Update(gameTime);
+			IconHovered.Update(gameTime);
+			Label.Update(gameTime);
+			Tooltip.Update(gameTime);
 
 			if (Bounds.Contains(MouseHelper.ClickedMousePoint))
 				IsHovered = true;
@@ -80,31 +75,30 @@ namespace MyThirdSDL.UserInterface
 				{
 					if (Tooltip != null)
 						Tooltip.Draw(gameTime, renderer);
-					if (textureHover != null)
-						renderer.RenderTexture(textureHover, (int)Position.X, (int)Position.Y);
-					if (iconHover != null)
-						iconHover.Draw(gameTime, renderer);
+					if (TextureFrameHovered != null)
+						renderer.RenderTexture(TextureFrameHovered, (int)Position.X, (int)Position.Y);
+					if (IconHovered != null)
+						IconHovered.Draw(gameTime, renderer);
 				}
 				else if (IsPressed)
 				{
-					if (textureSelected != null)
-						renderer.RenderTexture(textureSelected, (int)Position.X, (int)Position.Y);
-					else if (textureHover != null)
-						renderer.RenderTexture(textureHover, (int)Position.X, (int)Position.Y);
+					if (TextureFrameSelected != null)
+						renderer.RenderTexture(TextureFrameSelected, (int)Position.X, (int)Position.Y);
+					else if (TextureFrameHovered != null)
+						renderer.RenderTexture(TextureFrameHovered, (int)Position.X, (int)Position.Y);
 				}
 
-				if (icon != null)
-					icon.Draw(gameTime, renderer);
+				if (Icon != null)
+					Icon.Draw(gameTime, renderer);
 			}
 			else
 			{
-				base.Draw(gameTime, renderer);
-				if (icon != null)
-					icon.Draw(gameTime, renderer);
+				if (Icon != null)
+					Icon.Draw(gameTime, renderer);
 			}
 
-			if (label != null)
-				label.Draw(gameTime, renderer);
+			if (Label != null)
+				Label.Draw(gameTime, renderer);
 		}
 
 		#endregion
@@ -143,9 +137,8 @@ namespace MyThirdSDL.UserInterface
 
 		#endregion
 
-		public override void Dispose()
+		public virtual void Dispose()
 		{
- 			base.Dispose();
 			Dispose(true);
 			GC.SuppressFinalize(this);
 		}
@@ -157,16 +150,16 @@ namespace MyThirdSDL.UserInterface
 
 		private void Dispose(bool disposing)
 		{
-			if (icon != null)
-				icon.Dispose();
-			if (iconHover != null)
-				iconHover.Dispose();
-			if (textureHover != null)
-				textureHover.Dispose();
-			if (textureSelected != null)
-				textureSelected.Dispose();
-			if (label != null)
-				label.Dispose();
+			if (Icon != null)
+				Icon.Dispose();
+			if (IconHovered != null)
+				IconHovered.Dispose();
+			if (TextureFrameHovered != null)
+				TextureFrameHovered.Dispose();
+			if (TextureFrameSelected != null)
+				TextureFrameHovered.Dispose();
+			if (Label != null)
+				Label.Dispose();
 		}
 	}
 }

@@ -183,6 +183,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="UserInterface\MailItemPage.cs" />
+    <Compile Include="UserInterface\MenuCompany.cs" />
     <Compile Include="UserInterface\MenuPurchase.cs">
       <SubType>Code</SubType>
     </Compile>

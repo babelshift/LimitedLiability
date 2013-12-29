@@ -123,7 +123,7 @@ namespace MyThirdSDL.UserInterface
 
 			controlFactory = new ControlFactory(renderer, contentManager);
 
-			Vector toolboxTrayPosition = new Vector(bottomRightPointOfWindow.X / 2 - 300, bottomRightPointOfWindow.Y - 50);
+			Vector toolboxTrayPosition = new Vector(bottomRightPointOfWindow.X / 2 - 350, bottomRightPointOfWindow.Y - 50);
 			toolboxTray = controlFactory.CreateToolboxTray(toolboxTrayPosition, unreadMailCount, money);
 			toolboxTray.ButtonSelectGeneralClicked += ToolboxTray_ButtonSelectGeneralClicked;
 			toolboxTray.ButtonSelectEquipmentClicked += ToolboxTray_ButtonSelectEquipmentClicked;
@@ -391,7 +391,7 @@ namespace MyThirdSDL.UserInterface
 		private void CreateMenuRooms()
 		{
 			Vector menuPosition = new Vector(bottomRightPointOfWindow.X, bottomRightPointOfWindow.Y);
-			menuPurchaseRooms = controlFactory.CreateMenuPurchase(menuPosition, "Rooms", purchasableRooms);
+			menuPurchaseRooms = controlFactory.CreateMenuPurchase(menuPosition, "IconForklift", "Rooms", purchasableRooms);
 			menuPurchaseRooms.ButtonCloseWindowClicked += menuPurchaseRooms_ButtonCloseWindowClicked;
 			menuPurchaseRooms.ButtonConfirmWindowClicked += menuPurchaseRooms_ButtonConfirmWindowClicked;
 		}
@@ -431,7 +431,7 @@ namespace MyThirdSDL.UserInterface
 		private void CreateMenuEquipment()
 		{
 			Vector menuPosition = new Vector(bottomRightPointOfWindow.X, bottomRightPointOfWindow.Y);
-			menuPurchaseEquipment = controlFactory.CreateMenuPurchase(menuPosition, "Equipment", purchasableEquipment);
+			menuPurchaseEquipment = controlFactory.CreateMenuPurchase(menuPosition, "IconHandTruck", "Equipment", purchasableEquipment);
 			menuPurchaseEquipment.ButtonCloseWindowClicked += menuEquipment_ButtonCloseWindowClicked;
 			menuPurchaseEquipment.ButtonConfirmWindowClicked += menuEquipment_ButtonConfirmWindowClicked;
 		}

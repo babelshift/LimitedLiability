@@ -1,4 +1,5 @@
-﻿using SharpDL.Graphics;
+﻿using SharpDL;
+using SharpDL.Graphics;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,17 +17,18 @@ namespace MyThirdSDL.UserInterface
 
 	public class MessageBox : Control
 	{
+		private MessageBoxType Type { get; set; }
 		private Button ButtonOK { get; set; }
+		private Texture TextureFrame { get; set; }
 		private Texture TextureIcon { get; set; }
 		private string Text { get; set; }
 		private bool IsVisible { get; set; }
 
-		public MessageBox(Texture texture, Vector position, Texture textureIcon, string text)
-			: base(texture, position)
+		public MessageBox(string text, MessageBoxType type)
 		{
 			//ButtonOK.Clicked += ButtonOK_Clicked;
 			Text = text;
-			TextureIcon = textureIcon;
+			Type = type;
 		}
 
 		public void Show()
@@ -39,13 +41,22 @@ namespace MyThirdSDL.UserInterface
 			IsVisible = false;
 		}
 
-		public override void Draw(SharpDL.GameTime gameTime, Renderer renderer)
+		public override void Update(GameTime gameTime)
+		{
+			if(ButtonOK != null)
+				ButtonOK.Update(gameTime);
+		}
+
+		public override void Draw(GameTime gameTime, Renderer renderer)
 		{
 			if (IsVisible)
 			{
-				base.Draw(gameTime, renderer);
-
-				//ButtonOK.Draw(gameTime, renderer);
+				if (TextureFrame != null)
+					renderer.RenderTexture(TextureFrame, Position.X, Position.Y);
+				if (TextureIcon != null)
+					renderer.RenderTexture(TextureIcon, Position.X, Position.Y);
+				if (ButtonOK != null)
+					ButtonOK.Draw(gameTime, renderer);
 			}
 		}
 

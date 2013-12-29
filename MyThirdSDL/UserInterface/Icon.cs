@@ -1,4 +1,5 @@
-﻿using SharpDL.Graphics;
+﻿using SharpDL;
+using SharpDL.Graphics;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,16 +8,45 @@ using System.Threading.Tasks;
 
 namespace MyThirdSDL.UserInterface
 {
-	public class Icon : Control
+	public class Icon : Control, IDisposable
 	{
-		public Icon(Texture texture, Vector position)
-			: base(texture, position)
+		private Texture textureFrame;
+
+		public Texture TextureFrame
+		{
+			get { return textureFrame; }
+			set
+			{
+				textureFrame = value;
+				Width = textureFrame.Width;
+				Height = textureFrame.Height;
+			}
+		}
+
+		public override void Update(GameTime gameTime)
 		{
 		}
 
-		public Icon Clone()
+		public override void Draw(GameTime gameTime, Renderer renderer)
 		{
-			return new Icon(Texture, Position);
+			renderer.RenderTexture(textureFrame, Position.X, Position.Y);
+		}
+
+		public virtual void Dispose()
+		{
+			Dispose(true);
+			GC.SuppressFinalize(this);
+		}
+
+		~Icon()
+		{
+			Dispose(false);
+		}
+
+		private void Dispose(bool disposing)
+		{
+			if (textureFrame != null)
+				textureFrame.Dispose();
 		}
 	}
 }

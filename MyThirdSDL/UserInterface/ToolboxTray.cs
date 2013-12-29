@@ -1,4 +1,5 @@
-﻿using SharpDL;
+﻿using MyThirdSDL.Content;
+using SharpDL;
 using SharpDL.Graphics;
 using System;
 using System.Collections.Generic;
@@ -10,6 +11,10 @@ namespace MyThirdSDL.UserInterface
 {
 	public class ToolboxTray : Control
 	{
+		private List<Control> controls = new List<Control>();
+
+		private Icon iconFrame;
+
 		private Button ButtonSelectGeneral { get; set; }
 		private Button ButtonSelectEquipment { get; set; }
 		private Button ButtonSelectRoom { get; set; }
@@ -39,17 +44,69 @@ namespace MyThirdSDL.UserInterface
 		public event EventHandler ButtonMainMenuClicked;
 		public event EventHandler ButtonMailMenuClicked;
 
-		public ToolboxTray(Texture texture, Vector position,
-			Button buttonSelectGeneral, Button buttonSelectEquipment, Button buttonSelectRoom,
-			Button buttonFinances, Button buttonCompany, Button buttonEmployees, Button buttonProducts,
-			Button buttonMainMenu, Button buttonMailMenu,
-			Icon iconMoney, Icon iconTime, Label labelMoney, Label labelDate, Label labelTime)
-			: base(texture, position)
+		public ToolboxTray(ContentManager contentManager)
 		{
-			ButtonSelectGeneral = buttonSelectGeneral;
-			ButtonSelectEquipment = buttonSelectEquipment;
-			ButtonSelectRoom = buttonSelectRoom;
-			ButtonFinances = buttonFinances;
+			Texture textureFrame = contentManager.GetTexture("ToolboxTray");
+			iconFrame = new Icon();
+			iconFrame.TextureFrame = textureFrame;
+
+			string buttonTexturePathKey = "ToolboxTrayButton";
+			string buttonHoverTexturePathKey = "ToolboxTrayButtonHover";
+			string tooltipTexturePathKey = "TooltipFrame";
+
+			string fontPath = contentManager.GetContentPath("Arcade");
+			Color fontColor = new Color(218, 218, 218);
+			int fontSizeContent = 12;
+			int fontSizeTooltipText = 8;
+
+			ButtonSelectGeneral = new Button();
+			ButtonSelectGeneral.TextureFrame = contentManager.GetTexture(buttonTexturePathKey);
+			ButtonSelectGeneral.TextureFrameHovered = contentManager.GetTexture(buttonHoverTexturePathKey);
+			ButtonSelectGeneral.Icon = new Icon();
+			ButtonSelectGeneral.Icon.TextureFrame = contentManager.GetTexture("IconArrowsInward");
+			ButtonSelectGeneral.IconHovered = new Icon();
+			ButtonSelectGeneral.IconHovered.TextureFrame = contentManager.GetTexture("IconArrowsInward");
+			ButtonSelectGeneral.Tooltip = new Tooltip();
+			ButtonSelectGeneral.Tooltip.TextureFrame = contentManager.GetTexture(tooltipTexturePathKey);
+			ButtonSelectGeneral.Tooltip.Label = new Label();
+			ButtonSelectGeneral.Tooltip.Label.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSizeTooltipText, fontColor, "Select objects to inspect them");
+
+			ButtonSelectEquipment = new Button();
+			ButtonSelectEquipment.TextureFrame = contentManager.GetTexture(buttonTexturePathKey);
+			ButtonSelectEquipment.TextureFrameHovered = contentManager.GetTexture(buttonHoverTexturePathKey);
+			ButtonSelectEquipment.Icon = new Icon();
+			ButtonSelectEquipment.Icon.TextureFrame = contentManager.GetTexture("IconHandTruck");
+			ButtonSelectEquipment.IconHovered = new Icon();
+			ButtonSelectEquipment.IconHovered.TextureFrame = contentManager.GetTexture("IconHandTruck");
+			ButtonSelectEquipment.Tooltip = new Tooltip();
+			ButtonSelectEquipment.Tooltip.TextureFrame = contentManager.GetTexture(tooltipTexturePathKey);
+			ButtonSelectEquipment.Tooltip.Label = new Label();
+			ButtonSelectEquipment.Tooltip.Label.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSizeTooltipText, fontColor, "View equipment to purchase");
+
+			ButtonSelectRoom = new Button();
+			ButtonSelectRoom.TextureFrame = contentManager.GetTexture(buttonTexturePathKey);
+			ButtonSelectRoom.TextureFrameHovered = contentManager.GetTexture(buttonHoverTexturePathKey);
+			ButtonSelectRoom.Icon = new Icon();
+			ButtonSelectRoom.Icon.TextureFrame = contentManager.GetTexture("IconForklift");
+			ButtonSelectRoom.IconHovered = new Icon();
+			ButtonSelectRoom.IconHovered.TextureFrame = contentManager.GetTexture("IconForklift");
+			ButtonSelectRoom.Tooltip = new Tooltip();
+			ButtonSelectRoom.Tooltip.TextureFrame = contentManager.GetTexture(tooltipTexturePathKey);
+			ButtonSelectRoom.Tooltip.Label = new Label();
+			ButtonSelectRoom.Tooltip.Label.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSizeTooltipText, fontColor, "View rooms to purchase");
+
+			ButtonFinances = new Button();
+			ButtonFinances.TextureFrame = contentManager.GetTexture(buttonTexturePathKey);
+			ButtonFinances.TextureFrameHovered = contentManager.GetTexture(buttonHoverTexturePathKey);
+			ButtonFinances.Icon = new Icon();
+			ButtonFinances.Icon.TextureFrame = contentManager.GetTexture("IconBarChartUp");
+			ButtonFinances.IconHovered = new Icon();
+			ButtonFinances.IconHovered.TextureFrame = contentManager.GetTexture("IconBarChartUp");
+			ButtonFinances.Tooltip = new Tooltip();
+			ButtonFinances.Tooltip.TextureFrame = contentManager.GetTexture(tooltipTexturePathKey);
+			ButtonFinances.Tooltip.Label = new Label();
+			ButtonFinances.Tooltip.Label.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSizeTooltipText, fontColor, "View your company's finances");
+
 			ButtonCompany = buttonCompany;
 			ButtonEmployees = buttonEmployees;
 			ButtonProducts = buttonProducts;
@@ -61,6 +118,21 @@ namespace MyThirdSDL.UserInterface
 			LabelMoney = labelMoney;
 			LabelDate = labelDate;
 			LabelTime = labelTime;
+
+			controls.Add(ButtonSelectGeneral);
+			controls.Add(ButtonSelectEquipment);
+			controls.Add(ButtonSelectRoom);
+			controls.Add(ButtonFinances);
+			controls.Add(ButtonCompany);
+			controls.Add(ButtonEmployees);
+			controls.Add(ButtonProducts);
+			controls.Add(ButtonMainMenu);
+			controls.Add(ButtonMailMenu);
+			controls.Add(IconMoney);
+			controls.Add(IconTime);
+			controls.Add(LabelMoney);
+			controls.Add(LabelDate);
+			controls.Add(LabelTime);
 
 			ButtonSelectGeneral.Clicked += ButtonSelectGeneral_Clicked;
 			ButtonSelectEquipment.Clicked += ButtonSelectEquipment_Clicked;
@@ -91,17 +163,9 @@ namespace MyThirdSDL.UserInterface
 
 		public override void Update(GameTime gameTime)
 		{
-			base.Update(gameTime);
-
-			ButtonSelectGeneral.Update(gameTime);
-			ButtonSelectEquipment.Update(gameTime);
-			ButtonSelectRoom.Update(gameTime);
-			ButtonFinances.Update(gameTime);
-			ButtonCompany.Update(gameTime);
-			ButtonEmployees.Update(gameTime);
-			ButtonProducts.Update(gameTime);
-			ButtonMainMenu.Update(gameTime);
-			ButtonMailMenu.Update(gameTime);
+			foreach (var control in controls)
+				if(control != null)
+					control.Update(gameTime);
 
 			if (Bounds.Contains(new Point(MouseHelper.CurrentMouseState.X, MouseHelper.CurrentMouseState.Y)))
 				IsHovered = true;
@@ -111,23 +175,9 @@ namespace MyThirdSDL.UserInterface
 
 		public override void Draw(GameTime gameTime, Renderer renderer)
 		{
-			base.Draw(gameTime, renderer);
-
-			ButtonSelectGeneral.Draw(gameTime, renderer);
-			ButtonSelectEquipment.Draw(gameTime, renderer);
-			ButtonSelectRoom.Draw(gameTime, renderer);
-			ButtonFinances.Draw(gameTime, renderer);
-			ButtonCompany.Draw(gameTime, renderer);
-			ButtonEmployees.Draw(gameTime, renderer);
-			ButtonProducts.Draw(gameTime, renderer);
-			ButtonMainMenu.Draw(gameTime, renderer);
-			ButtonMailMenu.Draw(gameTime, renderer);
-
-			IconMoney.Draw(gameTime, renderer);
-			IconTime.Draw(gameTime, renderer);
-			LabelMoney.Draw(gameTime, renderer);
-			LabelDate.Draw(gameTime, renderer);
-			LabelTime.Draw(gameTime, renderer);
+			foreach (var control in controls)
+				if (control != null)
+					control.Draw(gameTime, renderer);
 		}
 
 		private void ButtonMailMenu_Clicked(object sender, EventArgs e)

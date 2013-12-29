@@ -10,25 +10,32 @@ namespace MyThirdSDL.UserInterface
 {
 	public class Label : Control, IDisposable
 	{
-		private TrueTypeText trueTypeText;
+		public TrueTypeText TrueTypeText { get; set; }
 
 		public string Text
 		{
-			get { return trueTypeText.Text; }
-			set { trueTypeText.UpdateText(value); }
+			get { return TrueTypeText.Text; }
+			set { TrueTypeText.UpdateText(value); }
 		}
 
-		public Label(Vector position, TrueTypeText trueTypeText)
-			: base(trueTypeText.Texture, position)
+		public Label()
 		{
-			this.trueTypeText = trueTypeText;
 		}
 
-		public override void Dispose()
+		public override void Update(GameTime gameTime)
+		{
+		}
+
+		public override void Draw(GameTime gameTime, Renderer renderer)
+		{
+			if (TrueTypeText != null)
+				renderer.RenderTexture(TrueTypeText.Texture, Position.X, Position.Y);
+		}
+
+		public void Dispose()
 		{
 			Dispose(true);
 			GC.SuppressFinalize(this);
-			base.Dispose();
 		}
 
 		~Label()
@@ -38,8 +45,8 @@ namespace MyThirdSDL.UserInterface
 
 		private void Dispose(bool disposing)
 		{
-			if (trueTypeText != null)
-				trueTypeText.Dispose();
+			if (TrueTypeText != null)
+				TrueTypeText.Dispose();
 		}
 	}
 }

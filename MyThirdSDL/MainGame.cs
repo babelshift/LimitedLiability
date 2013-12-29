@@ -102,7 +102,7 @@ namespace MyThirdSDL
 			CreateWindow("My Third SDL", 100, 100, SCREEN_WIDTH, SCREEN_HEIGHT, WindowFlags.Shown);
 			CreateRenderer(RendererFlags.RendererAccelerated);
 
-			contentManager = new ContentManager();
+			contentManager = new ContentManager(Renderer);
 			screenManager = new ScreenManager(Renderer);
 			screenManager.Initialize();
 			screenFactory = new ScreenFactory();

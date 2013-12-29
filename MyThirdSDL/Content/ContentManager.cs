@@ -15,6 +15,8 @@ namespace MyThirdSDL.Content
 	{
 		private Random random = new Random();
 
+		private Renderer renderer;
+
 		private const string contentRoot = "Content/";
 		private const string contentDataRoot = contentRoot + "Data/";
 		private const string contentReferencePath = contentDataRoot + "ContentReference.json";
@@ -28,8 +30,10 @@ namespace MyThirdSDL.Content
 		private List<string> lastNames = new List<string>();
 		private List<CompanyMetadata> companies = new List<CompanyMetadata>();
 
-		public ContentManager()
+		public ContentManager(Renderer renderer)
 		{
+			this.renderer = renderer;
+
 			string contentReferenceJson = File.ReadAllText(contentReferencePath);
 			LoadContentFiles(contentReferenceJson);
 
@@ -41,6 +45,19 @@ namespace MyThirdSDL.Content
 
 			string companyDataJson = File.ReadAllText(companyDataPath);
 			LoadCompanyData(companyDataJson);
+		}
+
+		public Texture GetTexture(string texturePathKey)
+		{
+			string texturePath = GetContentPath(texturePathKey);
+			Surface surface = new Surface(texturePath, SurfaceType.PNG);
+			Texture texture = new Texture(renderer, surface);
+			return texture;
+		}
+
+		public TrueTypeText GetTrueTypeText(string fontPath, int fontSize, Color color, string text)
+		{
+			return TrueTypeTextFactory.CreateTrueTypeText(renderer, fontPath, fontSize, color, text);
 		}
 
 		private void LoadCompanyData(string json)

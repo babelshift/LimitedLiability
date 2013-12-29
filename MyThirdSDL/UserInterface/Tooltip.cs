@@ -10,19 +10,25 @@ namespace MyThirdSDL.UserInterface
 {
 	public class Tooltip : Control
 	{
-		private Label tooltipLabel;
+		public Texture TextureFrame { get; set; }
+		public Label Label { get; set; }
 
-		public Tooltip(Texture texture, Vector position, Label tooltipLabel)
-			: base(texture, position)
+		public Tooltip()
 		{
-			this.tooltipLabel = tooltipLabel;
+		}
+
+		public override void Update(GameTime gameTime)
+		{
+			if (Label != null)
+				Label.Update(gameTime);
 		}
 
 		public override void Draw(GameTime gameTime, Renderer renderer)
 		{
-			base.Draw(gameTime, renderer);
-
-			tooltipLabel.Draw(gameTime, renderer);
+			if (TextureFrame != null)
+				renderer.RenderTexture(TextureFrame, Position.X, Position.Y);
+			if(Label != null)
+				Label.Draw(gameTime, renderer);
 		}
 	}
 }
