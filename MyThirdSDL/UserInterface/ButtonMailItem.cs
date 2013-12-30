@@ -11,11 +11,11 @@ namespace MyThirdSDL.UserInterface
 {
 	public class ButtonMailItem : Button
 	{
-		private Icon iconMailUnread;
-		private Icon iconMailRead;
+		public Icon IconMailUnread { get; set; }
+		public Icon IconMailRead { get; set; }
 
-		private Label labelFrom;
-		private Label labelSubject;
+		public Label LabelFrom { get; set; }
+		public Label LabelSubject { get; set; }
 
 		public MailItem MailItem { get; private set; }
 
@@ -33,30 +33,43 @@ namespace MyThirdSDL.UserInterface
 				float changeX = value.X - base.Position.X;
 				float changeY = value.Y - base.Position.Y;
 
-				if (iconMailUnread != null)
-					iconMailUnread.Position = new Vector(iconMailUnread.Position.X + changeX, iconMailUnread.Position.Y + changeY);
-
-				if (iconMailRead != null)
-					iconMailRead.Position = new Vector(iconMailRead.Position.X + changeX, iconMailRead.Position.Y + changeY);
-
-				if (labelFrom != null)
-					labelFrom.Position = new Vector(labelFrom.Position.X + changeX, labelFrom.Position.Y + changeY);
-
-				if (labelSubject != null)
-					labelSubject.Position = new Vector(labelSubject.Position.X + changeX, labelSubject.Position.Y + changeY);
-
 				base.Position = value;
+
+				if (IconMailUnread != null)
+					IconMailUnread.Position = new Vector(IconMailUnread.Position.X + changeX, IconMailUnread.Position.Y + changeY);
+
+				if (IconMailRead != null)
+					IconMailRead.Position = new Vector(IconMailRead.Position.X + changeX, IconMailRead.Position.Y + changeY);
+
+				if (LabelFrom != null)
+					LabelFrom.Position = new Vector(LabelFrom.Position.X + changeX, LabelFrom.Position.Y + changeY);
+
+				if (LabelSubject != null)
+					LabelSubject.Position = new Vector(LabelSubject.Position.X + changeX, LabelSubject.Position.Y + changeY);
 			}
 		}
 
-		public ButtonMailItem(Texture texture, Texture textureHover, Vector position, Icon iconMailUnread, Icon iconMailRead, Label labelFrom, Label labelSubject, MailItem mailItem, Texture textureSelected)
-			: base(texture, textureHover, position, null, null, null, textureSelected)
+		public ButtonMailItem(MailItem mailItem)
 		{
-			this.iconMailRead = iconMailRead;
-			this.iconMailUnread = iconMailUnread;
-			this.labelFrom = labelFrom;
-			this.labelSubject = labelSubject;
-			this.MailItem = mailItem;
+			MailItem = mailItem;
+		}
+
+		public override void Update(GameTime gameTime)
+		{
+			base.Update(gameTime);
+
+			if (MailItem.MailState == MailState.Unread)
+				if (IconMailUnread != null)
+					IconMailUnread.Update(gameTime);
+				else if (MailItem.MailState == MailState.Read)
+					if (IconMailRead != null)
+						IconMailRead.Update(gameTime);
+
+			if (LabelFrom != null)
+				LabelFrom.Update(gameTime);
+
+			if (LabelSubject != null)
+				LabelSubject.Update(gameTime);
 		}
 
 		public override void Draw(GameTime gameTime, Renderer renderer)
@@ -64,12 +77,17 @@ namespace MyThirdSDL.UserInterface
 			base.Draw(gameTime, renderer);
 
 			if (MailItem.MailState == MailState.Unread)
-				iconMailUnread.Draw(gameTime, renderer);
+				if(IconMailUnread != null)
+					IconMailUnread.Draw(gameTime, renderer);
 			else if (MailItem.MailState == MailState.Read)
-				iconMailRead.Draw(gameTime, renderer);
+				if(IconMailRead != null)
+					IconMailRead.Draw(gameTime, renderer);
 
-			labelFrom.Draw(gameTime, renderer);
-			labelSubject.Draw(gameTime, renderer);
+			if(LabelFrom != null)
+				LabelFrom.Draw(gameTime, renderer);
+
+			if(LabelSubject != null)
+				LabelSubject.Draw(gameTime, renderer);
 		}
 
 		public override void Dispose()
@@ -86,14 +104,14 @@ namespace MyThirdSDL.UserInterface
 
 		private void Dispose(bool disposing)
 		{
-			if (iconMailUnread != null)
-				iconMailUnread.Dispose();
-			if (iconMailRead != null)
-				iconMailRead.Dispose();
-			if (labelFrom != null)
-				labelFrom.Dispose();
-			if (labelSubject != null)
-				labelSubject.Dispose();
+			if (IconMailUnread != null)
+				IconMailUnread.Dispose();
+			if (IconMailRead != null)
+				IconMailRead.Dispose();
+			if (LabelFrom != null)
+				LabelFrom.Dispose();
+			if (LabelSubject != null)
+				LabelSubject.Dispose();
 		}
 	}
 }

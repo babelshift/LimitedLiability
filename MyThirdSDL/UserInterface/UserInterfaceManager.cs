@@ -124,7 +124,8 @@ namespace MyThirdSDL.UserInterface
 			controlFactory = new ControlFactory(renderer, contentManager);
 
 			Vector toolboxTrayPosition = new Vector(bottomRightPointOfWindow.X / 2 - 350, bottomRightPointOfWindow.Y - 50);
-			toolboxTray = controlFactory.CreateToolboxTray(toolboxTrayPosition, unreadMailCount, money);
+			toolboxTray = new ToolboxTray(contentManager);// controlFactory.CreateToolboxTray(toolboxTrayPosition, unreadMailCount, money);
+			toolboxTray.Position = toolboxTrayPosition;
 			toolboxTray.ButtonSelectGeneralClicked += ToolboxTray_ButtonSelectGeneralClicked;
 			toolboxTray.ButtonSelectEquipmentClicked += ToolboxTray_ButtonSelectEquipmentClicked;
 			toolboxTray.ButtonSelectRoomClicked += ToolboxTray_ButtonSelectRoomClicked;
@@ -139,10 +140,21 @@ namespace MyThirdSDL.UserInterface
 			int fontSizeContent;
 			string fontPath = GetLabelFontDetails(contentManager, out fontColor, out fontSizeContent);
 
-			labelMousePositionAbsolute = controlFactory.CreateLabel(Vector.Zero, fontPath, fontSizeContent, fontColor, ".");
-			labelMousePositionIsometric = controlFactory.CreateLabel(Vector.Zero, fontPath, fontSizeContent, fontColor, ".");
-			labelSimulationTime = controlFactory.CreateLabel(Vector.Zero, fontPath, fontSizeContent, fontColor, ".");
-			labelState = controlFactory.CreateLabel(Vector.Zero, fontPath, fontSizeContent, fontColor, ".");
+			labelMousePositionAbsolute = new Label();// controlFactory.CreateLabel(Vector.Zero, fontPath, fontSizeContent, fontColor, ".");
+			labelMousePositionAbsolute.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSizeContent, fontColor, ".");
+			labelMousePositionAbsolute.Position = Vector.Zero;
+
+			labelMousePositionIsometric = new Label(); // controlFactory.CreateLabel(Vector.Zero, fontPath, fontSizeContent, fontColor, ".");
+			labelMousePositionIsometric.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSizeContent, fontColor, ".");
+			labelMousePositionIsometric.Position = Vector.Zero;
+
+			labelSimulationTime = new Label(); // controlFactory.CreateLabel(Vector.Zero, fontPath, fontSizeContent, fontColor, ".");
+			labelSimulationTime.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSizeContent, fontColor, ".");
+			labelSimulationTime.Position = Vector.Zero;
+
+			labelState = new Label(); // controlFactory.CreateLabel(Vector.Zero, fontPath, fontSizeContent, fontColor, ".");
+			labelState.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSizeContent, fontColor, ".");
+			labelState.Position = Vector.Zero;
 
 			labels.Add(labelMousePositionAbsolute);
 			labels.Add(labelMousePositionIsometric);
@@ -308,7 +320,7 @@ namespace MyThirdSDL.UserInterface
 		public void UpdateMenuMailBox(IEnumerable<MailItem> inbox, IEnumerable<MailItem> outbox, IEnumerable<MailItem> archive)
 		{
 			menuMailbox.ClearButtonsAndSeparators();
-			controlFactory.AddButtonMailItemsToMenu(menuMailbox, inbox, outbox, archive);
+			menuMailbox.AddButtonMailItems(contentManager, inbox, outbox, archive);
 		}
 
 		public void UpdateDisplayedBankAccountBalance(int balance)
@@ -330,8 +342,8 @@ namespace MyThirdSDL.UserInterface
 
 		private void CreateMenuMailbox(IEnumerable<MailItem> inbox, IEnumerable<MailItem> outbox, IEnumerable<MailItem> archive)
 		{
-			Vector menuPosition = new Vector(bottomRightPointOfWindow.X, bottomRightPointOfWindow.Y);
-			menuMailbox = controlFactory.CreateMenuMailbox(menuPosition, inbox, outbox, archive);
+			menuMailbox = new MenuMailbox(contentManager, inbox, outbox, archive); //controlFactory.CreateMenuMailbox(menuPosition, inbox, outbox, archive);
+			menuMailbox.Position = new Vector(bottomRightPointOfWindow.X / 2 - menuMailbox.Width / 2, bottomRightPointOfWindow.Y / 2 - menuMailbox.Height / 2);
 			menuMailbox.ArchiveMailButtonClicked += menuMailbox_ArchiveMailButtonClicked;
 			menuMailbox.CloseButtonClicked += menuMailbox_CloseButtonClicked;
 		}
@@ -354,7 +366,8 @@ namespace MyThirdSDL.UserInterface
 		private void CreateMenuInspectEmployee()
 		{
 			Vector menuPosition = new Vector(bottomRightPointOfWindow.X, bottomRightPointOfWindow.Y);
-			menuInspectEmployee = controlFactory.CreateMenuInspectEmployee(menuPosition);
+			menuInspectEmployee = new MenuInspectEmployee(contentManager);
+			menuInspectEmployee.Position = menuPosition;
 			menuInspectEmployee.ButtonCloseWindowClicked += menuInspectEmployee_ButtonCloseWindowClicked;
 		}
 
@@ -391,7 +404,8 @@ namespace MyThirdSDL.UserInterface
 		private void CreateMenuRooms()
 		{
 			Vector menuPosition = new Vector(bottomRightPointOfWindow.X, bottomRightPointOfWindow.Y);
-			menuPurchaseRooms = controlFactory.CreateMenuPurchase(menuPosition, "IconForklift", "Rooms", purchasableRooms);
+			menuPurchaseRooms = new MenuPurchase(contentManager, "IconForklift", "Rooms", purchasableRooms); // controlFactory.CreateMenuPurchase(menuPosition, "IconForklift", "Rooms", purchasableRooms);
+			menuPurchaseRooms.Position = menuPosition;
 			menuPurchaseRooms.ButtonCloseWindowClicked += menuPurchaseRooms_ButtonCloseWindowClicked;
 			menuPurchaseRooms.ButtonConfirmWindowClicked += menuPurchaseRooms_ButtonConfirmWindowClicked;
 		}
@@ -431,7 +445,8 @@ namespace MyThirdSDL.UserInterface
 		private void CreateMenuEquipment()
 		{
 			Vector menuPosition = new Vector(bottomRightPointOfWindow.X, bottomRightPointOfWindow.Y);
-			menuPurchaseEquipment = controlFactory.CreateMenuPurchase(menuPosition, "IconHandTruck", "Equipment", purchasableEquipment);
+			menuPurchaseEquipment = new MenuPurchase(contentManager, "IconHandTruck", "Equipment", purchasableEquipment); // controlFactory.CreateMenuPurchase(menuPosition, "IconHandTruck", "Equipment", purchasableEquipment);
+			menuPurchaseEquipment.Position = menuPosition;
 			menuPurchaseEquipment.ButtonCloseWindowClicked += menuEquipment_ButtonCloseWindowClicked;
 			menuPurchaseEquipment.ButtonConfirmWindowClicked += menuEquipment_ButtonConfirmWindowClicked;
 		}

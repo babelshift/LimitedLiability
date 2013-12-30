@@ -1,4 +1,5 @@
-﻿using MyThirdSDL.Mail;
+﻿using MyThirdSDL.Content;
+using MyThirdSDL.Mail;
 using SharpDL;
 using SharpDL.Graphics;
 using System;
@@ -12,6 +13,10 @@ namespace MyThirdSDL.UserInterface
 	public class MenuMailbox : Control
 	{
 		#region Members
+
+		private List<Control> controls = new List<Control>();
+
+		private Icon iconFrame;
 
 		private enum ActiveTab
 		{
@@ -147,6 +152,41 @@ namespace MyThirdSDL.UserInterface
 
 		private int ArchivePageCount { get { return mailItemArchivePages.Count(); } }
 
+		public override Vector Position
+		{
+			get
+			{
+				return base.Position;
+			}
+			set
+			{
+				base.Position = value;
+
+				iconFrame.Position = base.Position;
+				iconFolderHeader.Position = new Vector(base.Position.X + 5, base.Position.Y + 5);
+				labelFolderHeader.Position = new Vector(base.Position.X + 40, base.Position.Y + 15);
+				labelPageNumber.Position = new Vector(base.Position.X + 450, base.Position.Y + 278);
+				labelFrom.Position = new Vector(base.Position.X + 208, base.Position.Y + 50);
+				labelSubject.Position = new Vector(base.Position.X + 340, base.Position.Y + 50);
+				buttonInboxFolder.Position = new Vector(base.Position.X + 5, base.Position.Y + 50);
+				buttonOutboxFolder.Position = new Vector(base.Position.X + 5, base.Position.Y + 100);
+				buttonArchiveFolder.Position = new Vector(base.Position.X + 5, base.Position.Y + 150);
+				buttonArrowLeft.Position = new Vector(base.Position.X + 600, base.Position.Y + 263);
+				buttonArrowRight.Position = new Vector(base.Position.X + 650, base.Position.Y + 263);
+				labelInboxFolder.Position = new Vector(base.Position.X + 185, base.Position.Y + 15);
+				labelOutboxFolder.Position = new Vector(base.Position.X + 185, base.Position.Y + 15);
+				labelArchiveFolder.Position = new Vector(base.Position.X + 185, base.Position.Y + 15);
+				iconInboxFolder.Position = new Vector(base.Position.X + 150, base.Position.Y + 5);
+				iconOutboxFolder.Position = new Vector(base.Position.X + 150, base.Position.Y + 5);
+				iconArchiveFolder.Position = new Vector(base.Position.X + 150, base.Position.Y + 5);
+				buttonView.Position = new Vector(base.Position.X + 155, base.Position.Y + 272);
+				buttonArchive.Position = new Vector(base.Position.X + 255, base.Position.Y + 272);
+				iconTopSeparator.Position = new Vector(base.Position.X + 156, base.Position.Y + 65);
+				buttonCloseWindow.Position = new Vector(base.Position.X + 656, base.Position.Y - 47);
+				SetMailItemButtonPositions();
+			}
+		}
+
 		#endregion
 
 		#region Public Events
@@ -158,36 +198,117 @@ namespace MyThirdSDL.UserInterface
 
 		#region Constructors
 
-		public MenuMailbox(Texture texture, Vector position, Icon iconFolderHeader, Label labelFolderHeader, Label labelFrom, Label labelSubject, Label labelPageNumber,
-			Icon iconInboxFolder, Icon iconOutboxFolder, Icon iconArchiveFolder, Label labelInboxFolder, Label labelOutboxFolder, Label labelArchiveFolder,
-			Button buttonInboxFolder, Button buttonOutboxFolder, Button buttonArchiveFolder, Button buttonArrowLeft, Button buttonArrowRight, Button buttonView, Button buttonArchive,
-			Icon iconTopSeparator, Button buttonCloseWindow)
-			: base(texture, position)
+		public MenuMailbox(ContentManager contentManager, IEnumerable<MailItem> inbox, IEnumerable<MailItem> outbox, IEnumerable<MailItem> archive)
 		{
-			this.labelFolderHeader = labelFolderHeader;
-			this.labelFrom = labelFrom;
-			this.labelSubject = labelSubject;
-			this.labelPageNumber = labelPageNumber;
-			this.iconFolderHeader = iconFolderHeader;
-			this.buttonInboxFolder = buttonInboxFolder;
-			this.buttonOutboxFolder = buttonOutboxFolder;
-			this.buttonArchiveFolder = buttonArchiveFolder;
-			this.buttonArrowLeft = buttonArrowLeft;
-			this.buttonArrowRight = buttonArrowRight;
-			this.buttonView = buttonView;
-			this.buttonArchive = buttonArchive;
+			Texture texture = contentManager.GetTexture("MenuMailboxFrame");
+			iconFrame = new Icon(texture);
+			Width = iconFrame.Width;
+			Height = iconFrame.Height;
 
-			this.labelInboxFolder = labelInboxFolder;
-			this.labelOutboxFolder = labelOutboxFolder;
-			this.labelArchiveFolder = labelArchiveFolder;
+			string fontPath = contentManager.GetContentPath("Arcade");
+			Color fontColor = new Color(218, 218, 218);
+			int fontSizeTitle = 14;
+			int fontSizeContent = 12;
 
-			this.iconInboxFolder = iconInboxFolder;
-			this.iconOutboxFolder = iconOutboxFolder;
-			this.iconArchiveFolder = iconArchiveFolder;
+			iconFolderHeader = new Icon(contentManager.GetTexture("IconFolderOpen"));
+			labelFolderHeader = new Label();
+			labelFolderHeader.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSizeTitle, fontColor, "Folder");
+			labelPageNumber = new Label();
+			labelPageNumber.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSizeContent, fontColor, "N/A");
+			labelFrom = new Label();
+			labelFrom.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSizeContent, fontColor, "From");
+			labelSubject = new Label();
+			labelSubject.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSizeContent, fontColor, "Subject");
 
-			this.iconTopSeparator = iconTopSeparator;
+			buttonInboxFolder = new Button();
+			buttonInboxFolder.TextureFrame = contentManager.GetTexture("ButtonMailFolder");
+			buttonInboxFolder.TextureFrameHovered = contentManager.GetTexture("ButtonMailFolderHover");
+			buttonInboxFolder.Icon = new Icon(contentManager.GetTexture("IconMailInbox"));
+			buttonInboxFolder.Label = new Label();
+			buttonInboxFolder.Label.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSizeContent, fontColor, "Inbox");
+			buttonInboxFolder.ButtonType = ButtonType.IconAndText;
 
-			this.buttonCloseWindow = buttonCloseWindow;
+			buttonOutboxFolder = new Button();
+			buttonOutboxFolder.TextureFrame = contentManager.GetTexture("ButtonMailFolder");
+			buttonOutboxFolder.TextureFrameHovered = contentManager.GetTexture("ButtonMailFolderHover");
+			buttonOutboxFolder.Icon = new Icon(contentManager.GetTexture("IconMailOutbox"));
+			buttonOutboxFolder.Label = new Label();
+			buttonOutboxFolder.Label.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSizeContent, fontColor, "Outbox");
+			buttonOutboxFolder.ButtonType = ButtonType.IconAndText;
+
+			buttonArchiveFolder = new Button();
+			buttonArchiveFolder.TextureFrame = contentManager.GetTexture("ButtonMailFolder");
+			buttonArchiveFolder.TextureFrameHovered = contentManager.GetTexture("ButtonMailFolderHover");
+			buttonArchiveFolder.Icon = new Icon(contentManager.GetTexture("IconMailArchive"));
+			buttonArchiveFolder.Label = new Label();
+			buttonArchiveFolder.Label.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSizeContent, fontColor, "Archive");
+			buttonArchiveFolder.ButtonType = ButtonType.IconAndText;
+
+			buttonArrowLeft = new Button();
+			buttonArrowLeft.TextureFrame = contentManager.GetTexture("ButtonSquare");
+			buttonArrowLeft.TextureFrameHovered = contentManager.GetTexture("ButtonSquareHover");
+			buttonArrowLeft.Icon = new Icon(contentManager.GetTexture("IconArrowCircleLeft"));
+			buttonArrowLeft.IconHovered = new Icon(contentManager.GetTexture("IconArrowCircleLeft"));
+			buttonArrowLeft.ButtonType = ButtonType.IconOnly;
+
+			buttonArrowRight = new Button();
+			buttonArrowRight.TextureFrame = contentManager.GetTexture("ButtonSquare");
+			buttonArrowRight.TextureFrameHovered = contentManager.GetTexture("ButtonSquareHover");
+			buttonArrowRight.Icon = new Icon(contentManager.GetTexture("IconArrowCircleRight"));
+			buttonArrowRight.IconHovered = new Icon(contentManager.GetTexture("IconArrowCircleRight"));
+			buttonArrowRight.ButtonType = ButtonType.IconOnly;
+
+			labelInboxFolder = new Label();
+			labelInboxFolder.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSizeTitle, fontColor, "Inbox");
+			labelOutboxFolder = new Label();
+			labelOutboxFolder.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSizeTitle, fontColor, "Outbox");
+			labelArchiveFolder = new Label();
+			labelArchiveFolder.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSizeTitle, fontColor, "Archive");
+
+			iconInboxFolder = new Icon(contentManager.GetTexture("IconMailInbox"));
+			iconOutboxFolder = new Icon(contentManager.GetTexture("IconMailOutbox"));
+			iconArchiveFolder = new Icon(contentManager.GetTexture("IconMailArchive"));
+
+			buttonView = new Button();
+			buttonView.TextureFrame = contentManager.GetTexture("ButtonMailAction");
+			buttonView.TextureFrameHovered = contentManager.GetTexture("ButtonMailActionHover");
+			buttonView.Label = new Label();
+			buttonView.Label.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSizeContent, fontColor, "View");
+			buttonView.ButtonType = ButtonType.TextOnly;
+
+			buttonArchive = new Button();
+			buttonArchive.TextureFrame = contentManager.GetTexture("ButtonMailAction");
+			buttonArchive.TextureFrameHovered = contentManager.GetTexture("ButtonMailActionHover");
+			buttonArchive.Label = new Label();
+			buttonArchive.Label.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSizeContent, fontColor, "Archive");
+			buttonArchive.ButtonType = ButtonType.TextOnly;
+
+			iconTopSeparator = new Icon(contentManager.GetTexture("IconSeparator"));
+
+			buttonCloseWindow = new Button();
+			buttonCloseWindow.TextureFrame = contentManager.GetTexture("ButtonSquare");
+			buttonCloseWindow.TextureFrameHovered = contentManager.GetTexture("ButtonSquareHover");
+			buttonCloseWindow.Icon = new Icon(contentManager.GetTexture("IconWindowClose"));
+			buttonCloseWindow.IconHovered = new Icon(contentManager.GetTexture("IconWindowClose"));
+			buttonCloseWindow.ButtonType = ButtonType.IconOnly;
+
+			AddButtonMailItems(contentManager, inbox, outbox, archive);
+
+			controls.Add(iconFrame);
+			controls.Add(iconFolderHeader);
+			controls.Add(labelFolderHeader);
+			controls.Add(labelPageNumber);
+			controls.Add(labelFrom);
+			controls.Add(labelSubject);
+			controls.Add(buttonInboxFolder);
+			controls.Add(buttonOutboxFolder);
+			controls.Add(buttonArchiveFolder);
+			controls.Add(buttonArrowLeft);
+			controls.Add(buttonArrowRight);
+			controls.Add(buttonView);
+			controls.Add(buttonArchive);
+			controls.Add(iconTopSeparator);
+			controls.Add(buttonCloseWindow);
 
 			this.buttonInboxFolder.Clicked += buttonInboxFolder_Clicked;
 			this.buttonOutboxFolder.Clicked += buttonOutboxFolder_Clicked;
@@ -200,6 +321,62 @@ namespace MyThirdSDL.UserInterface
 
 			this.currentDisplayedPageInbox = 1;
 			SetActiveTab(ActiveTab.Inbox);
+		}
+
+		public void AddButtonMailItems(ContentManager contentManager, IEnumerable<MailItem> inbox, IEnumerable<MailItem> outbox, IEnumerable<MailItem> archive)
+		{
+			string fontPath = contentManager.GetContentPath("Arcade");
+			Color fontColor = new Color(218, 218, 218);
+			int fontSizeTitle = 14;
+			int fontSizeContent = 12;
+
+			foreach (MailItem mailItem in inbox)
+			{
+				ButtonMailItem buttonMailItem = new ButtonMailItem(mailItem);
+				buttonMailItem.TextureFrame = contentManager.GetTexture("ButtonMailItem");
+				buttonMailItem.TextureFrameHovered = contentManager.GetTexture("ButtonMailItemHover");
+				buttonMailItem.TextureFrameSelected = contentManager.GetTexture("ButtonMailItemSelected");
+				buttonMailItem.IconMailUnread = new Icon(contentManager.GetTexture("IconMailUnread"));
+				buttonMailItem.IconMailRead = new Icon(contentManager.GetTexture("IconMailRead"));
+				buttonMailItem.LabelFrom = new Label();
+				buttonMailItem.LabelFrom.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSizeContent, fontColor, mailItem.From);
+				buttonMailItem.LabelSubject = new Label();
+				buttonMailItem.LabelSubject.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSizeContent, fontColor, mailItem.Subject);
+				Icon iconSeparator = new Icon(contentManager.GetTexture("IconSeparator"));
+				AddButtonMailItemInbox(buttonMailItem, iconSeparator);
+			}
+
+			foreach (MailItem mailItem in outbox)
+			{
+				ButtonMailItem buttonMailItem = new ButtonMailItem(mailItem);
+				buttonMailItem.TextureFrame = contentManager.GetTexture("ButtonMailItem");
+				buttonMailItem.TextureFrameHovered = contentManager.GetTexture("ButtonMailItemHover");
+				buttonMailItem.TextureFrameSelected = contentManager.GetTexture("ButtonMailItemSelected");
+				buttonMailItem.IconMailUnread = new Icon(contentManager.GetTexture("IconMailUnread"));
+				buttonMailItem.IconMailRead = new Icon(contentManager.GetTexture("IconMailRead"));
+				buttonMailItem.LabelFrom = new Label();
+				buttonMailItem.LabelFrom.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSizeContent, fontColor, mailItem.From);
+				buttonMailItem.LabelSubject = new Label();
+				buttonMailItem.LabelSubject.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSizeContent, fontColor, mailItem.Subject);
+				Icon iconSeparator = new Icon(contentManager.GetTexture("IconSeparator"));
+				AddButtonMailItemOutbox(buttonMailItem, iconSeparator);
+			}
+
+			foreach (MailItem mailItem in archive)
+			{
+				ButtonMailItem buttonMailItem = new ButtonMailItem(mailItem);
+				buttonMailItem.TextureFrame = contentManager.GetTexture("ButtonMailItem");
+				buttonMailItem.TextureFrameHovered = contentManager.GetTexture("ButtonMailItemHover");
+				buttonMailItem.TextureFrameSelected = contentManager.GetTexture("ButtonMailItemSelected");
+				buttonMailItem.IconMailUnread = new Icon(contentManager.GetTexture("IconMailUnread"));
+				buttonMailItem.IconMailRead = new Icon(contentManager.GetTexture("IconMailRead"));
+				buttonMailItem.LabelFrom = new Label();
+				buttonMailItem.LabelFrom.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSizeContent, fontColor, mailItem.From);
+				buttonMailItem.LabelSubject = new Label();
+				buttonMailItem.LabelSubject.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSizeContent, fontColor, mailItem.Subject);
+				Icon iconSeparator = new Icon(contentManager.GetTexture("IconSeparator"));
+				AddButtonMailItemArchive(buttonMailItem, iconSeparator);
+			}
 		}
 
 		#endregion
@@ -268,27 +445,15 @@ namespace MyThirdSDL.UserInterface
 
 		public override void Update(GameTime gameTime)
 		{
-			base.Update(gameTime);
+			foreach (var control in controls)
+				if (control != null)
+					control.Update(gameTime);
 
-			labelFolderHeader.Update(gameTime);
-			labelFrom.Update(gameTime);
-			labelSubject.Update(gameTime);
-			labelPageNumber.Update(gameTime);
-			iconFolderHeader.Update(gameTime);
-			buttonInboxFolder.Update(gameTime);
-			buttonOutboxFolder.Update(gameTime);
-			buttonArchiveFolder.Update(gameTime);
-			buttonArrowLeft.Update(gameTime);
-			buttonArrowRight.Update(gameTime);
-			buttonView.Update(gameTime);
-			buttonArchive.Update(gameTime);
+			if (iconSelectedFolderHeader != null)
+				iconSelectedFolderHeader.Update(gameTime);
 
-			iconSelectedFolderHeader.Update(gameTime);
-			labelSelectedFolderHeader.Update(gameTime);
-
-			iconTopSeparator.Update(gameTime);
-
-			buttonCloseWindow.Update(gameTime);
+			if (labelSelectedFolderHeader != null)
+				labelSelectedFolderHeader.Update(gameTime);
 
 			MailItemPage currentPage = null;
 			bool success = mailItemPages.TryGetValue(CurrentDisplayedPageNumber, out currentPage);
@@ -303,27 +468,15 @@ namespace MyThirdSDL.UserInterface
 
 		public override void Draw(GameTime gameTime, Renderer renderer)
 		{
-			base.Draw(gameTime, renderer);
+			foreach (var control in controls)
+				if (control != null)
+					control.Draw(gameTime, renderer);
 
-			labelFolderHeader.Draw(gameTime, renderer);
-			labelFrom.Draw(gameTime, renderer);
-			labelSubject.Draw(gameTime, renderer);
-			labelPageNumber.Draw(gameTime, renderer);
-			iconFolderHeader.Draw(gameTime, renderer);
-			buttonInboxFolder.Draw(gameTime, renderer);
-			buttonOutboxFolder.Draw(gameTime, renderer);
-			buttonArchiveFolder.Draw(gameTime, renderer);
-			buttonArrowLeft.Draw(gameTime, renderer);
-			buttonArrowRight.Draw(gameTime, renderer);
-			buttonView.Draw(gameTime, renderer);
-			buttonArchive.Draw(gameTime, renderer);
+			if (iconSelectedFolderHeader != null)
+				iconSelectedFolderHeader.Draw(gameTime, renderer);
 
-			iconSelectedFolderHeader.Draw(gameTime, renderer);
-			labelSelectedFolderHeader.Draw(gameTime, renderer);
-
-			iconTopSeparator.Draw(gameTime, renderer);
-
-			buttonCloseWindow.Draw(gameTime, renderer);
+			if (labelSelectedFolderHeader != null)
+				labelSelectedFolderHeader.Draw(gameTime, renderer);
 
 			MailItemPage currentPage = null;
 			bool success = mailItemPages.TryGetValue(CurrentDisplayedPageNumber, out currentPage);
@@ -426,6 +579,44 @@ namespace MyThirdSDL.UserInterface
 
 			SetActiveTab(activeTab);
 			SetLabelPageNumber();
+		}
+
+		private void SetMailItemButtonPositions()
+		{
+			foreach (int key in mailItemPages.Keys)
+			{
+				MailItemPage currentPage = null;
+				bool success = mailItemPages.TryGetValue(key, out currentPage);
+				if (success)
+				{
+					foreach (var button in currentPage.Buttons)
+					{
+						if (currentPage.Buttons.IndexOf(button) == 0)
+							button.Position = new Vector(Position.X + 158, Position.Y + 70);
+						else if (currentPage.Buttons.IndexOf(button) == 1)
+							button.Position = new Vector(Position.X + 158, Position.Y + 107);
+						else if (currentPage.Buttons.IndexOf(button) == 2)
+							button.Position = new Vector(Position.X + 158, Position.Y + 144);
+						else if (currentPage.Buttons.IndexOf(button) == 3)
+							button.Position = new Vector(Position.X + 158, Position.Y + 181);
+						else if (currentPage.Buttons.IndexOf(button) == 4)
+							button.Position = new Vector(Position.X + 158, Position.Y + 218);
+					}
+					foreach (var separator in currentPage.Separators)
+					{
+						if (currentPage.Separators.IndexOf(separator) == 0)
+							separator.Position = new Vector(Position.X + 156, Position.Y + 102);
+						else if (currentPage.Separators.IndexOf(separator) == 1)
+							separator.Position = new Vector(Position.X + 156, Position.Y + 139);
+						else if (currentPage.Separators.IndexOf(separator) == 2)
+							separator.Position = new Vector(Position.X + 156, Position.Y + 176);
+						else if (currentPage.Separators.IndexOf(separator) == 3)
+							separator.Position = new Vector(Position.X + 156, Position.Y + 213);
+						else if (currentPage.Separators.IndexOf(separator) == 4)
+							separator.Position = new Vector(Position.X + 156, Position.Y + 250);
+					}
+				}
+			}
 		}
 
 		private void SetActiveTab(ActiveTab activeTab)

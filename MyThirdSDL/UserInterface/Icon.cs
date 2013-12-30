@@ -15,12 +15,17 @@ namespace MyThirdSDL.UserInterface
 		public Texture TextureFrame
 		{
 			get { return textureFrame; }
-			set
+			private set
 			{
 				textureFrame = value;
 				Width = textureFrame.Width;
 				Height = textureFrame.Height;
 			}
+		}
+
+		public Icon(Texture textureFrame)
+		{
+			TextureFrame = textureFrame;
 		}
 
 		public override void Update(GameTime gameTime)

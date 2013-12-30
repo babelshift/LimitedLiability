@@ -199,6 +199,11 @@ namespace MyThirdSDL.Screens
 			// MailManager
 			mailManager = new MailManager();
 			mailManager.UnreadMailCountChanged += mailbox_UnreadMailCountChanged;
+			mailManager.SendMail(new MailItem("first.last@recruiters.com", "first.last@company.com", "Test Subject 1", "Test Body 1", MailState.Unread));
+			mailManager.SendMail(new MailItem("first.last@recruiters.com", "first.last@company.com", "Test Subject 2", "Test Body 2", MailState.Unread));
+			mailManager.SendMail(new MailItem("first.last@recruiters.com", "first.last@company.com", "Test Subject 3", "Test Body 3", MailState.Unread));
+			mailManager.SendMail(new MailItem("first.last@recruiters.com", "first.last@company.com", "Test Subject 4", "Test Body 4", MailState.Unread));
+			mailManager.SendMail(new MailItem("first.last@recruiters.com", "first.last@company.com", "Test Subject 5", "Test Body 5", MailState.Unread));
 
 			// Purchasable Items
 			List<IPurchasable> purchasableEquipment = GetPurchasableEquipment();

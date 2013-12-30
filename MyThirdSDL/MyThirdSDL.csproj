@@ -165,7 +165,6 @@
     <Compile Include="UserInterface\Button.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="UserInterface\ButtonMailFolder.cs" />
     <Compile Include="UserInterface\ButtonMailItem.cs" />
     <Compile Include="UserInterface\ButtonMenuItem.cs">
       <SubType>Code</SubType>

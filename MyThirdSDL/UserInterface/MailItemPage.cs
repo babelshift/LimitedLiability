@@ -11,8 +11,8 @@ namespace MyThirdSDL.UserInterface
 		private List<ButtonMailItem> buttons = new List<ButtonMailItem>();
 		private List<Icon> separators = new List<Icon>();
 
-		public IEnumerable<ButtonMailItem> Buttons { get { return buttons; } }
-		public IEnumerable<Icon> Separators { get { return separators; } }
+		public IList<ButtonMailItem> Buttons { get { return buttons; } }
+		public IList<Icon> Separators { get { return separators; } }
 
 		public void AddButton(ButtonMailItem button)
 		{

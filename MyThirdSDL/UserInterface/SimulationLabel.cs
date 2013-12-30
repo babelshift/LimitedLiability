@@ -9,8 +9,8 @@ namespace MyThirdSDL.UserInterface
 		public SimulationMessage SimulationMessage { get; private set; }
 
 		public SimulationLabel(Vector position, TrueTypeText trueTypeText, SimulationMessage simulationMessage)
-			: base(position, trueTypeText)
 		{
+			TrueTypeText = trueTypeText;
 			SimulationMessage = simulationMessage;
 		}
 	}

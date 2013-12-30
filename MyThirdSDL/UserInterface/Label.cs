@@ -10,12 +10,28 @@ namespace MyThirdSDL.UserInterface
 {
 	public class Label : Control, IDisposable
 	{
-		public TrueTypeText TrueTypeText { get; set; }
+		private TrueTypeText trueTypeText;
+
+		public TrueTypeText TrueTypeText
+		{
+			get { return trueTypeText; }
+			set
+			{
+				trueTypeText = value;
+				Width = trueTypeText.Texture.Width;
+				Height = trueTypeText.Texture.Height;
+			}
+		}
 
 		public string Text
 		{
 			get { return TrueTypeText.Text; }
-			set { TrueTypeText.UpdateText(value); }
+			set 
+			{ 
+				TrueTypeText.UpdateText(value);
+				Width = TrueTypeText.Texture.Width;
+				Height = TrueTypeText.Texture.Height;
+			}
 		}
 
 		public Label()

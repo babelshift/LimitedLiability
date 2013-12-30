@@ -1,4 +1,5 @@
-﻿using MyThirdSDL.Descriptors;
+﻿using MyThirdSDL.Content;
+using MyThirdSDL.Descriptors;
 using SharpDL;
 using SharpDL.Graphics;
 using System;
@@ -14,6 +15,8 @@ namespace MyThirdSDL.UserInterface
 		private List<Control> controls = new List<Control>();
 
 		private const int itemsPerPage = 4;
+
+		private Icon iconFrame;
 
 		#region Header Controls
 
@@ -31,7 +34,7 @@ namespace MyThirdSDL.UserInterface
 		private Icon iconMoney;
 		private Icon iconHealth;
 		private Icon iconHygiene;
-		private Icon iconSleepy;
+		private Icon iconSleep;
 		private Icon iconThirst;
 		private Icon iconHunger;
 		private Icon iconCommunication;
@@ -70,17 +73,146 @@ namespace MyThirdSDL.UserInterface
 
 		#endregion
 
+		public override Vector Position
+		{
+			get
+			{
+				return base.Position;
+			}
+			set
+			{
+				base.Position = value;
+
+				iconFrame.Position = base.Position;
+				iconMainMenuHeader.Position = new Vector(base.Position.X + 3, base.Position.Y + 5);
+				iconInfoMenuHeader.Position = new Vector(base.Position.X + 365, base.Position.Y + 5);
+				iconSkillsMenuHeader.Position = new Vector(base.Position.X + 505, base.Position.Y + 5);
+				labelMainMenuHeader.Position = new Vector(base.Position.X + 38, base.Position.Y + 15);
+				labelInfoMenuHeader.Position = new Vector(base.Position.X + 400, base.Position.Y + 15);
+				labelSkillsMenuHeader.Position = new Vector(base.Position.X + 535, base.Position.Y + 15);
+				iconMoney.Position = new Vector(base.Position.X + 365, base.Position.Y + 50);
+				iconHealth.Position = new Vector(base.Position.X + 365, base.Position.Y + 80);
+				iconHygiene.Position = new Vector(base.Position.X + 365, base.Position.Y + 110);
+				iconSleep.Position = new Vector(base.Position.X + 365, base.Position.Y + 140);
+				iconThirst.Position = new Vector(base.Position.X + 365, base.Position.Y + 170);
+				iconHunger.Position = new Vector(base.Position.X + 365, base.Position.Y + 200);
+				labelMoney.Position = new Vector(base.Position.X + 400, base.Position.Y + 60);
+				labelHealth.Position = new Vector(base.Position.X + 400, base.Position.Y + 90);
+				labelHygiene.Position = new Vector(base.Position.X + 400, base.Position.Y + 120);
+				labelSleep.Position = new Vector(base.Position.X + 400, base.Position.Y + 150);
+				labelThirst.Position = new Vector(base.Position.X + 400, base.Position.Y + 180);
+				labelHunger.Position = new Vector(base.Position.X + 400, base.Position.Y + 210);
+				iconCommunication.Position = new Vector(base.Position.X + 508, base.Position.Y + 50);
+				iconLeadership.Position = new Vector(base.Position.X + 508, base.Position.Y + 80);
+				iconCreativity.Position = new Vector(base.Position.X + 508, base.Position.Y + 110);
+				iconIntelligence.Position = new Vector(base.Position.X + 508, base.Position.Y + 140);
+				labelCommunication.Position = new Vector(base.Position.X + 540, base.Position.Y + 60);
+				labelLeadership.Position = new Vector(base.Position.X + 540, base.Position.Y + 90);
+				labelCreativity.Position = new Vector(base.Position.X + 540, base.Position.Y + 120);
+				labelIntelligence.Position = new Vector(base.Position.X + 540, base.Position.Y + 150);
+				buttonCloseWindow.Position = new Vector(base.Position.X + 600, base.Position.Y - 47);
+				buttonConfirmWindow.Position = new Vector(base.Position.X + 600, base.Position.Y + 303);
+				buttonArrowCircleLeft.Position = new Vector(base.Position.X + 9, base.Position.Y + 248);
+				buttonArrowCircleRight.Position = new Vector(base.Position.X + 296, base.Position.Y + 248);
+			}
+		}
+
 		#region Constructor
 
-		public MenuPurchase(Texture texture, Vector position, Icon iconMainMenuHeader, Icon iconInfoMenuHeader, Label labelMainMenuHeader, Label labelInfoMenuHeader,
-			Icon iconMoney, Icon iconHealth, Icon iconHygiene, Icon iconSleepy, Icon iconThirst, Icon iconHunger, Label labelMoney,
-			Label labelHealth, Label labelHygiene, Label labelSleep, Label labelThirst, Label labelHunger,
-			Button buttonArrowCircleLeft, Button buttonArrowCircleRight, Button buttonCloseWindow, Button buttonConfirmWindow,
-			Icon iconSkillsMenuHeader, Label labelSkillsMenuHeader,
-			Icon iconCommunication, Icon iconCreativity, Icon iconIntelligence, Icon iconLeadership,
-			Label labelCommunication, Label labelCreativity, Label labelIntelligence, Label labelLeadership)
-			: base(texture, position)
+		public MenuPurchase(ContentManager contentManager, string iconMainMenuContentPathKey, string menuTitle, IEnumerable<IPurchasable> purchasableItems)
 		{
+			Texture textureFrame = contentManager.GetTexture("MenuPurchaseFrame");
+			iconFrame = new Icon(textureFrame);
+
+			string fontPath = contentManager.GetContentPath("Arcade");
+			Color fontColor = new Color(218, 218, 218);
+			int fontSizeTitle = 14;
+			int fontSizeContent = 12;
+
+			iconMainMenuHeader = new Icon(contentManager.GetTexture(iconMainMenuContentPathKey));
+			iconInfoMenuHeader = new Icon(contentManager.GetTexture("IconStatistics"));
+			iconSkillsMenuHeader = new Icon(contentManager.GetTexture("IconPenPaper"));
+
+			labelMainMenuHeader = new Label();
+			labelMainMenuHeader.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSizeTitle, fontColor, menuTitle);
+			labelInfoMenuHeader = new Label();
+			labelInfoMenuHeader.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSizeTitle, fontColor, "Needs");
+			labelSkillsMenuHeader = new Label();
+			labelSkillsMenuHeader.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSizeTitle, fontColor, "Skills");
+
+			iconMoney = new Icon(contentManager.GetTexture("IconMoney"));
+
+			iconHealth = new Icon(contentManager.GetTexture("IconMedkit"));
+			iconHygiene = new Icon(contentManager.GetTexture("IconToothbrush"));
+			iconSleep = new Icon(contentManager.GetTexture("IconPersonTired"));
+			iconThirst = new Icon(contentManager.GetTexture("IconSoda"));
+			iconHunger = new Icon(contentManager.GetTexture("IconChicken"));
+
+			labelMoney = new Label();
+			labelMoney.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSizeContent, fontColor, "N/A");
+			labelHealth = new Label();
+			labelHealth.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSizeContent, fontColor, "N/A");
+			labelHygiene = new Label();
+			labelHygiene.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSizeContent, fontColor, "N/A");
+			labelSleep = new Label();
+			labelSleep.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSizeContent, fontColor, "N/A");
+			labelThirst = new Label();
+			labelThirst.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSizeContent, fontColor, "N/A");
+			labelHunger = new Label();
+			labelHunger.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSizeContent, fontColor, "N/A");
+
+			iconCommunication = new Icon(contentManager.GetTexture("IconCommunication"));
+			iconLeadership = new Icon(contentManager.GetTexture("IconLeadership"));
+			iconCreativity = new Icon(contentManager.GetTexture("IconCreativity"));
+			iconIntelligence = new Icon(contentManager.GetTexture("IconIntelligence"));
+
+			labelCommunication = new Label();
+			labelCommunication.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSizeContent, fontColor, "N/A");
+			labelLeadership = new Label();
+			labelLeadership.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSizeContent, fontColor, "N/A");
+			labelCreativity = new Label();
+			labelCreativity.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSizeContent, fontColor, "N/A");
+			labelIntelligence = new Label();
+			labelIntelligence.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSizeContent, fontColor, "N/A");
+
+			buttonCloseWindow = new Button();
+			buttonCloseWindow.TextureFrame = contentManager.GetTexture("ButtonSquare");
+			buttonCloseWindow.TextureFrameHovered = contentManager.GetTexture("ButtonSquareHover");
+			buttonCloseWindow.Icon = new Icon(contentManager.GetTexture("IconWindowClose"));
+			buttonCloseWindow.IconHovered = new Icon(contentManager.GetTexture("IconWindowClose"));
+
+			buttonConfirmWindow = new Button();
+			buttonConfirmWindow.TextureFrame = contentManager.GetTexture("IconWindowClose");
+			buttonConfirmWindow.TextureFrameHovered = contentManager.GetTexture("IconWindowClose");
+			buttonConfirmWindow.Icon = new Icon(contentManager.GetTexture("ButtonSquare"));
+			buttonConfirmWindow.IconHovered = new Icon(contentManager.GetTexture("ButtonSquareHover"));
+
+			buttonArrowCircleLeft = new Button();
+			buttonArrowCircleLeft.TextureFrame = contentManager.GetTexture("IconArrowCircleLeft");
+			buttonArrowCircleLeft.TextureFrameHovered = contentManager.GetTexture("IconArrowCircleLeft");
+			buttonArrowCircleLeft.Icon = new Icon(contentManager.GetTexture("ButtonSquare"));
+			buttonArrowCircleLeft.IconHovered = new Icon(contentManager.GetTexture("ButtonSquareHover"));
+
+			buttonArrowCircleRight = new Button();
+			buttonArrowCircleRight.TextureFrame = contentManager.GetTexture("IconArrowCircleLeft");
+			buttonArrowCircleRight.TextureFrameHovered = contentManager.GetTexture("IconArrowCircleLeft");
+			buttonArrowCircleRight.Icon = new Icon(contentManager.GetTexture("ButtonSquare"));
+			buttonArrowCircleRight.IconHovered = new Icon(contentManager.GetTexture("ButtonSquareHover"));
+
+			foreach (var purchasableItem in purchasableItems)
+			{
+				ButtonMenuItem buttonMenuItem = new ButtonMenuItem(purchasableItem);
+				buttonMenuItem.TextureFrame = contentManager.GetTexture("ButtonMenuItem");
+				buttonMenuItem.TextureFrameHovered = contentManager.GetTexture("ButtonMenuItemHover");
+				buttonMenuItem.IconMain = new Icon(contentManager.GetTexture(purchasableItem.IconTextureKey));
+				buttonMenuItem.IconMoney = new Icon(contentManager.GetTexture("IconMoney"));
+				buttonMenuItem.LabelMain = new Label();
+				buttonMenuItem.LabelMain.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSizeContent, fontColor, purchasableItem.Name);
+				buttonMenuItem.LabelMoney = new Label();
+				buttonMenuItem.LabelMoney.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSizeContent, fontColor, purchasableItem.Price.ToString());
+				AddButtonMenuItem(buttonMenuItem);
+			}
+
 			controls.Add(iconMainMenuHeader);
 			controls.Add(iconInfoMenuHeader);
 			controls.Add(iconSkillsMenuHeader);
@@ -90,7 +222,7 @@ namespace MyThirdSDL.UserInterface
 			controls.Add(iconMoney);
 			controls.Add(iconHealth);
 			controls.Add(iconHygiene);
-			controls.Add(iconSleepy);
+			controls.Add(iconSleep);
 			controls.Add(iconThirst);
 			controls.Add(iconHunger);
 			controls.Add(labelMoney);
@@ -112,37 +244,6 @@ namespace MyThirdSDL.UserInterface
 			controls.Add(buttonCloseWindow);
 			controls.Add(buttonConfirmWindow);
 
-			this.iconMainMenuHeader = iconMainMenuHeader;
-			this.iconInfoMenuHeader = iconInfoMenuHeader;
-			this.iconSkillsMenuHeader = iconSkillsMenuHeader;
-			this.labelMainMenuHeader = labelMainMenuHeader;
-			this.labelInfoMenuHeader = labelInfoMenuHeader;
-			this.labelSkillsMenuHeader = labelSkillsMenuHeader;
-			this.iconMoney = iconMoney;
-			this.iconHealth = iconHealth;
-			this.iconHygiene = iconHygiene;
-			this.iconSleepy = iconSleepy;
-			this.iconThirst = iconThirst;
-			this.iconHunger = iconHunger;
-			this.labelMoney = labelMoney;
-			this.labelHealth = labelHealth;
-			this.labelHygiene = labelHygiene;
-			this.labelSleep = labelSleep;
-			this.labelThirst = labelThirst;
-			this.labelHunger = labelHunger;
-			this.iconCommunication = iconCommunication;
-			this.iconCreativity = iconCreativity;
-			this.iconIntelligence = iconIntelligence;
-			this.iconLeadership = iconLeadership;
-			this.labelCommunication = labelCommunication;
-			this.labelCreativity = labelCreativity;
-			this.labelIntelligence = labelIntelligence;
-			this.labelLeadership = labelLeadership;
-			this.buttonArrowCircleLeft = buttonArrowCircleLeft;
-			this.buttonArrowCircleRight = buttonArrowCircleRight;
-			this.buttonCloseWindow = buttonCloseWindow;
-			this.buttonConfirmWindow = buttonConfirmWindow;
-
 			this.buttonArrowCircleLeft.Clicked += buttonArrowCircleLeft_Clicked;
 			this.buttonArrowCircleRight.Clicked += buttonArrowCircleRight_Clicked;
 			this.buttonCloseWindow.Clicked += buttonCloseWindow_Clicked;
@@ -157,8 +258,6 @@ namespace MyThirdSDL.UserInterface
 
 		public override void Update(GameTime gameTime)
 		{
-			base.Update(gameTime);
-
 			List<ButtonMenuItem> buttonMenuItemsOnCurrentPage = new List<ButtonMenuItem>();
 			bool success = buttonMenuItemPages.TryGetValue(currentDisplayedPage, out buttonMenuItemsOnCurrentPage);
 			if (success)
@@ -166,15 +265,15 @@ namespace MyThirdSDL.UserInterface
 					buttonMenuItem.Update(gameTime);
 
 			foreach (var control in controls)
-				control.Update(gameTime);
+				if(control != null)
+					control.Update(gameTime);
 		}
 
 		public override void Draw(GameTime gameTime, Renderer renderer)
 		{
-			base.Draw(gameTime, renderer);
-
 			foreach (var control in controls)
-				control.Draw(gameTime, renderer);
+				if (control != null)
+					control.Draw(gameTime, renderer);
 
 			List<ButtonMenuItem> buttonMenuItemsOnCurrentPage = new List<ButtonMenuItem>();
 			bool success = buttonMenuItemPages.TryGetValue(currentDisplayedPage, out buttonMenuItemsOnCurrentPage);
