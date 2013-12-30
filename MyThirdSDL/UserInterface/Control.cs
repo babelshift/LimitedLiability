@@ -20,10 +20,22 @@ namespace MyThirdSDL.UserInterface
 			}
 		}
 
+		/// <summary>
+		/// The position of the control in a 2D space. Objects inheriting from this class must explicitly override this property if
+		/// special positioning of child or containing controls is required.
+		/// </summary>
 		public virtual Vector Position { get; set; }
 
+		/// <summary>
+		/// The width of the control as defined in whole pixels. Objects inheriting from this class must explicitly set this value
+		/// based on its own conditions.
+		/// </summary>
 		public int Width { get; protected set; }
 
+		/// <summary>
+		/// The height of the control as defined in whole pixels. Objects inheriting from this class must explicitly set this value
+		/// based on its own conditions.
+		/// </summary>
 		public int Height { get; protected set; }
 
 		public Control()

@@ -121,7 +121,7 @@ namespace MyThirdSDL.UserInterface
 			this.purchasableEquipment = purchasableEquipment;
 			this.purchasableRooms = purchasableRooms;
 
-			controlFactory = new ControlFactory(renderer, contentManager);
+			controlFactory = new ControlFactory(contentManager);
 
 			Vector toolboxTrayPosition = new Vector(bottomRightPointOfWindow.X / 2 - 350, bottomRightPointOfWindow.Y - 50);
 			toolboxTray = new ToolboxTray(contentManager, unreadMailCount, money);// controlFactory.CreateToolboxTray(toolboxTrayPosition, unreadMailCount, money);
