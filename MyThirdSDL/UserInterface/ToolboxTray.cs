@@ -99,7 +99,7 @@ namespace MyThirdSDL.UserInterface
 			}
 		}
 
-		public ToolboxTray(ContentManager contentManager)
+		public ToolboxTray(ContentManager contentManager, int unreadMailCount, int money)
 		{
 			Texture textureFrame = contentManager.GetTexture("ToolboxTray");
 			iconFrame = new Icon(textureFrame);
@@ -212,6 +212,8 @@ namespace MyThirdSDL.UserInterface
 			ButtonMailMenu.Tooltip.TextureFrame = contentManager.GetTexture(tooltipTexturePathKey);
 			ButtonMailMenu.Tooltip.Label = new Label();
 			ButtonMailMenu.Tooltip.Label.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSizeTooltipText, fontColor, "View your e-mail messages");
+			ButtonMailMenu.Label = new Label();
+			ButtonMailMenu.Label.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSizeContent, fontColor, unreadMailCount.ToString());
 			ButtonMailMenu.ButtonType = ButtonType.IconAndText;
 
 			Texture textureIconMoney = contentManager.GetTexture("IconMoney");
@@ -221,7 +223,7 @@ namespace MyThirdSDL.UserInterface
 			IconTime = new Icon(textureIconTime);
 
 			LabelMoney = new Label();
-			LabelMoney.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSizeContent, fontColor, "0");
+			LabelMoney.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSizeContent, fontColor, money.ToString());
 
 			LabelDate = new Label();
 			LabelDate.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSizeContent, fontColor, DateTime.Now.ToShortDateString());

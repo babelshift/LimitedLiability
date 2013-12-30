@@ -114,6 +114,7 @@ namespace MyThirdSDL.UserInterface
 				buttonConfirmWindow.Position = new Vector(base.Position.X + 600, base.Position.Y + 303);
 				buttonArrowCircleLeft.Position = new Vector(base.Position.X + 9, base.Position.Y + 248);
 				buttonArrowCircleRight.Position = new Vector(base.Position.X + 296, base.Position.Y + 248);
+				SetMenuItemButtonPositions();
 			}
 		}
 
@@ -123,6 +124,8 @@ namespace MyThirdSDL.UserInterface
 		{
 			Texture textureFrame = contentManager.GetTexture("MenuPurchaseFrame");
 			iconFrame = new Icon(textureFrame);
+			Width = iconFrame.Width;
+			Height = iconFrame.Height;
 
 			string fontPath = contentManager.GetContentPath("Arcade");
 			Color fontColor = new Color(218, 218, 218);
@@ -180,24 +183,28 @@ namespace MyThirdSDL.UserInterface
 			buttonCloseWindow.TextureFrameHovered = contentManager.GetTexture("ButtonSquareHover");
 			buttonCloseWindow.Icon = new Icon(contentManager.GetTexture("IconWindowClose"));
 			buttonCloseWindow.IconHovered = new Icon(contentManager.GetTexture("IconWindowClose"));
+			buttonCloseWindow.ButtonType = ButtonType.IconOnly;
 
 			buttonConfirmWindow = new Button();
-			buttonConfirmWindow.TextureFrame = contentManager.GetTexture("IconWindowClose");
-			buttonConfirmWindow.TextureFrameHovered = contentManager.GetTexture("IconWindowClose");
-			buttonConfirmWindow.Icon = new Icon(contentManager.GetTexture("ButtonSquare"));
-			buttonConfirmWindow.IconHovered = new Icon(contentManager.GetTexture("ButtonSquareHover"));
+			buttonConfirmWindow.TextureFrame = contentManager.GetTexture("ButtonSquare");
+			buttonConfirmWindow.TextureFrameHovered = contentManager.GetTexture("ButtonSquareHover");
+			buttonConfirmWindow.Icon = new Icon(contentManager.GetTexture("IconWindowConfirm"));
+			buttonConfirmWindow.IconHovered = new Icon(contentManager.GetTexture("IconWindowConfirm"));
+			buttonConfirmWindow.ButtonType = ButtonType.IconOnly;
 
 			buttonArrowCircleLeft = new Button();
-			buttonArrowCircleLeft.TextureFrame = contentManager.GetTexture("IconArrowCircleLeft");
-			buttonArrowCircleLeft.TextureFrameHovered = contentManager.GetTexture("IconArrowCircleLeft");
-			buttonArrowCircleLeft.Icon = new Icon(contentManager.GetTexture("ButtonSquare"));
-			buttonArrowCircleLeft.IconHovered = new Icon(contentManager.GetTexture("ButtonSquareHover"));
+			buttonArrowCircleLeft.TextureFrame = contentManager.GetTexture("ButtonSquare");
+			buttonArrowCircleLeft.TextureFrameHovered = contentManager.GetTexture("ButtonSquareHover");
+			buttonArrowCircleLeft.Icon = new Icon(contentManager.GetTexture("IconArrowCircleLeft"));
+			buttonArrowCircleLeft.IconHovered = new Icon(contentManager.GetTexture("IconArrowCircleLeft"));
+			buttonArrowCircleLeft.ButtonType = ButtonType.IconOnly;
 
 			buttonArrowCircleRight = new Button();
-			buttonArrowCircleRight.TextureFrame = contentManager.GetTexture("IconArrowCircleLeft");
-			buttonArrowCircleRight.TextureFrameHovered = contentManager.GetTexture("IconArrowCircleLeft");
-			buttonArrowCircleRight.Icon = new Icon(contentManager.GetTexture("ButtonSquare"));
-			buttonArrowCircleRight.IconHovered = new Icon(contentManager.GetTexture("ButtonSquareHover"));
+			buttonArrowCircleRight.TextureFrame = contentManager.GetTexture("ButtonSquare");
+			buttonArrowCircleRight.TextureFrameHovered = contentManager.GetTexture("ButtonSquareHover");
+			buttonArrowCircleRight.Icon = new Icon(contentManager.GetTexture("IconArrowCircleRight"));
+			buttonArrowCircleRight.IconHovered = new Icon(contentManager.GetTexture("IconArrowCircleRight"));
+			buttonArrowCircleRight.ButtonType = ButtonType.IconOnly;
 
 			foreach (var purchasableItem in purchasableItems)
 			{
@@ -213,6 +220,7 @@ namespace MyThirdSDL.UserInterface
 				AddButtonMenuItem(buttonMenuItem);
 			}
 
+			controls.Add(iconFrame);
 			controls.Add(iconMainMenuHeader);
 			controls.Add(iconInfoMenuHeader);
 			controls.Add(iconSkillsMenuHeader);
@@ -330,6 +338,29 @@ namespace MyThirdSDL.UserInterface
 
 			buttonMenuItem.Position = buttonMenuItemPosition;
 			buttonMenuItem.Clicked += buttonMenuItem_Clicked;
+		}
+
+		private void SetMenuItemButtonPositions()
+		{
+			foreach (int key in buttonMenuItemPages.Keys)
+			{
+				List<ButtonMenuItem> currentPage = null;
+				bool success = buttonMenuItemPages.TryGetValue(key, out currentPage);
+				if (success)
+				{
+					foreach (var buttonMenuItem in currentPage)
+					{
+						if (currentPage.IndexOf(buttonMenuItem) == 0)
+							buttonMenuItem.Position = new Vector(Position.X + 10, Position.Y + 50);
+						if (currentPage.IndexOf(buttonMenuItem) == 1)
+							buttonMenuItem.Position = new Vector(Position.X + 10, Position.Y + 100);
+						if (currentPage.IndexOf(buttonMenuItem) == 2)
+							buttonMenuItem.Position = new Vector(Position.X + 10, Position.Y + 150);
+						if (currentPage.IndexOf(buttonMenuItem) == 3)
+							buttonMenuItem.Position = new Vector(Position.X + 10, Position.Y + 200);
+					}
+				}
+			}
 		}
 
 		private void buttonMenuItem_Clicked(object sender, PurchasableItemSelectedEventArgs e)

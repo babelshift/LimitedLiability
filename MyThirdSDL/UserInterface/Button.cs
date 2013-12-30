@@ -73,7 +73,7 @@ namespace MyThirdSDL.UserInterface
 						IconHovered.Position = new Vector(base.Position.X + 5, base.Position.Y + (TextureFrame.Height / 2 - IconHovered.Height / 2));
 
 					if (Label != null)
-						Label.Position = new Vector(Icon.Position.X + (TextureFrame.Width / 2 - Label.Width / 2), Icon.Position.Y + (TextureFrame.Height / 2 - Label.Height / 2));
+						Label.Position = new Vector(Icon.Position.X + Icon.Width + 3, Icon.Position.Y + (TextureFrame.Height / 2 - Label.Height / 2));
 				}
 			}
 		}
@@ -114,7 +114,7 @@ namespace MyThirdSDL.UserInterface
 						IconHovered.Position = new Vector(base.Position.X + 5, base.Position.Y + (TextureFrame.Height / 2 - IconHovered.Height / 2));
 
 					if (Label != null)
-						Label.Position = new Vector(Icon.Position.X + (TextureFrame.Width / 2 - Label.Width / 2), Icon.Position.Y + (TextureFrame.Height / 2 - Label.Height / 2));
+						Label.Position = new Vector(Icon.Position.X + Icon.Width + 3, Icon.Position.Y + (TextureFrame.Height / 2 - Label.Height / 2));
 				}
 			}
 		}

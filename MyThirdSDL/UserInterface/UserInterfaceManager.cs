@@ -124,7 +124,7 @@ namespace MyThirdSDL.UserInterface
 			controlFactory = new ControlFactory(renderer, contentManager);
 
 			Vector toolboxTrayPosition = new Vector(bottomRightPointOfWindow.X / 2 - 350, bottomRightPointOfWindow.Y - 50);
-			toolboxTray = new ToolboxTray(contentManager);// controlFactory.CreateToolboxTray(toolboxTrayPosition, unreadMailCount, money);
+			toolboxTray = new ToolboxTray(contentManager, unreadMailCount, money);// controlFactory.CreateToolboxTray(toolboxTrayPosition, unreadMailCount, money);
 			toolboxTray.Position = toolboxTrayPosition;
 			toolboxTray.ButtonSelectGeneralClicked += ToolboxTray_ButtonSelectGeneralClicked;
 			toolboxTray.ButtonSelectEquipmentClicked += ToolboxTray_ButtonSelectEquipmentClicked;
@@ -365,9 +365,8 @@ namespace MyThirdSDL.UserInterface
 
 		private void CreateMenuInspectEmployee()
 		{
-			Vector menuPosition = new Vector(bottomRightPointOfWindow.X, bottomRightPointOfWindow.Y);
 			menuInspectEmployee = new MenuInspectEmployee(contentManager);
-			menuInspectEmployee.Position = menuPosition;
+			menuInspectEmployee.Position = new Vector(bottomRightPointOfWindow.X / 2 - menuInspectEmployee.Width / 2, bottomRightPointOfWindow.Y / 2 - menuInspectEmployee.Height / 2);
 			menuInspectEmployee.ButtonCloseWindowClicked += menuInspectEmployee_ButtonCloseWindowClicked;
 		}
 
@@ -403,9 +402,8 @@ namespace MyThirdSDL.UserInterface
 
 		private void CreateMenuRooms()
 		{
-			Vector menuPosition = new Vector(bottomRightPointOfWindow.X, bottomRightPointOfWindow.Y);
 			menuPurchaseRooms = new MenuPurchase(contentManager, "IconForklift", "Rooms", purchasableRooms); // controlFactory.CreateMenuPurchase(menuPosition, "IconForklift", "Rooms", purchasableRooms);
-			menuPurchaseRooms.Position = menuPosition;
+			menuPurchaseRooms.Position = new Vector(bottomRightPointOfWindow.X / 2 - menuPurchaseRooms.Width / 2, bottomRightPointOfWindow.Y / 2 - menuPurchaseRooms.Height / 2);
 			menuPurchaseRooms.ButtonCloseWindowClicked += menuPurchaseRooms_ButtonCloseWindowClicked;
 			menuPurchaseRooms.ButtonConfirmWindowClicked += menuPurchaseRooms_ButtonConfirmWindowClicked;
 		}
@@ -444,9 +442,8 @@ namespace MyThirdSDL.UserInterface
 
 		private void CreateMenuEquipment()
 		{
-			Vector menuPosition = new Vector(bottomRightPointOfWindow.X, bottomRightPointOfWindow.Y);
 			menuPurchaseEquipment = new MenuPurchase(contentManager, "IconHandTruck", "Equipment", purchasableEquipment); // controlFactory.CreateMenuPurchase(menuPosition, "IconHandTruck", "Equipment", purchasableEquipment);
-			menuPurchaseEquipment.Position = menuPosition;
+			menuPurchaseEquipment.Position = new Vector(bottomRightPointOfWindow.X / 2 - menuPurchaseEquipment.Width / 2, bottomRightPointOfWindow.Y / 2 - menuPurchaseEquipment.Height / 2);
 			menuPurchaseEquipment.ButtonCloseWindowClicked += menuEquipment_ButtonCloseWindowClicked;
 			menuPurchaseEquipment.ButtonConfirmWindowClicked += menuEquipment_ButtonConfirmWindowClicked;
 		}

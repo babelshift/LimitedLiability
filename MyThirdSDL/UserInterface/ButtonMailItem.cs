@@ -29,23 +29,19 @@ namespace MyThirdSDL.UserInterface
 			}
 			set
 			{
-				// calculate the change in position for the parent and move the children by that amount
-				float changeX = value.X - base.Position.X;
-				float changeY = value.Y - base.Position.Y;
-
 				base.Position = value;
 
 				if (IconMailUnread != null)
-					IconMailUnread.Position = new Vector(IconMailUnread.Position.X + changeX, IconMailUnread.Position.Y + changeY);
+					IconMailUnread.Position = new Vector(base.Position.X + 5, base.Position.Y);
 
 				if (IconMailRead != null)
-					IconMailRead.Position = new Vector(IconMailRead.Position.X + changeX, IconMailRead.Position.Y + changeY);
+					IconMailRead.Position = new Vector(base.Position.X + 5, base.Position.Y);
 
 				if (LabelFrom != null)
-					LabelFrom.Position = new Vector(LabelFrom.Position.X + changeX, LabelFrom.Position.Y + changeY);
+					LabelFrom.Position = new Vector(base.Position.X + 50, base.Position.Y + 10);
 
 				if (LabelSubject != null)
-					LabelSubject.Position = new Vector(LabelSubject.Position.X + changeX, LabelSubject.Position.Y + changeY);
+					LabelSubject.Position = new Vector(base.Position.X + 181, base.Position.Y + 10);
 			}
 		}
 

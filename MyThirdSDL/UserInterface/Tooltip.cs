@@ -13,6 +13,20 @@ namespace MyThirdSDL.UserInterface
 		public Texture TextureFrame { get; set; }
 		public Label Label { get; set; }
 
+		public override Vector Position
+		{
+			get
+			{
+				return base.Position;
+			}
+			set
+			{
+				base.Position = value;
+
+				Label.Position = base.Position + new Vector(7, 8);
+			}
+		}
+
 		public Tooltip()
 		{
 		}

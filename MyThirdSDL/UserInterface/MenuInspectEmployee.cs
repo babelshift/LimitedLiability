@@ -97,8 +97,8 @@ namespace MyThirdSDL.UserInterface
 				labelThirstValue.Position = new Vector(base.Position.X + 395, base.Position.Y + 150);
 				labelHungerValue.Position = new Vector(base.Position.X + 395, base.Position.Y + 180);
 				iconCommunication.Position = new Vector(base.Position.X + 508, base.Position.Y + 50);
-				iconLeadership.Position = new Vector(base.Position.X + 540, base.Position.Y + 90);
-				iconCreativity.Position = new Vector(base.Position.X + 540, base.Position.Y + 120);
+				iconLeadership.Position = new Vector(base.Position.X + 508, base.Position.Y + 80);
+				iconCreativity.Position = new Vector(base.Position.X + 508, base.Position.Y + 110);
 				iconIntelligence.Position = new Vector(base.Position.X + 508, base.Position.Y + 140);
 				labelCommunicationValue.Position = new Vector(base.Position.X + 540, base.Position.Y + 60);
 				labelLeadershipValue.Position = new Vector(base.Position.X + 540, base.Position.Y + 90);
@@ -127,6 +127,8 @@ namespace MyThirdSDL.UserInterface
 		{
 			Texture textureFrame = contentManager.GetTexture("MenuInspectEmployeeFrame");
 			iconFrame = new Icon(textureFrame);
+			Width = iconFrame.Width;
+			Height = iconFrame.Height;
 
 			string fontPath = contentManager.GetContentPath("Arcade");
 			Color fontColor = new Color(218, 218, 218);
@@ -138,6 +140,7 @@ namespace MyThirdSDL.UserInterface
 			this.buttonCloseWindow.TextureFrameHovered = contentManager.GetTexture("ButtonSquareHover");
 			this.buttonCloseWindow.Icon = new Icon(contentManager.GetTexture("IconWindowClose"));
 			this.buttonCloseWindow.IconHovered = new Icon(contentManager.GetTexture("IconWindowClose"));
+			buttonCloseWindow.ButtonType = ButtonType.IconOnly;
 			this.buttonCloseWindow.Clicked += (object sender, EventArgs e) => EventHelper.FireEvent(ButtonCloseWindowClicked, this, EventArgs.Empty);
 
 			this.iconMainMenu = new Icon(contentManager.GetTexture("IconPersonPlain"));
@@ -252,7 +255,6 @@ namespace MyThirdSDL.UserInterface
 			controls.Add(labelSalaryValue);
 			controls.Add(labelStatusValue);
 			controls.Add(labelBirthValue);
-			controls.Add(iconMoodActive);
 		}
 
 		public void SetInfoValues(Employee employee)
@@ -294,6 +296,8 @@ namespace MyThirdSDL.UserInterface
 			foreach (var control in controls)
 				if(control != null)
 					control.Update(gameTime);
+
+			iconMoodActive.Update(gameTime);
 		}
 
 		public override void Draw(GameTime gameTime, Renderer renderer)
@@ -301,6 +305,8 @@ namespace MyThirdSDL.UserInterface
 			foreach (var control in controls)
 				if (control != null)
 					control.Draw(gameTime, renderer);
+
+			iconMoodActive.Draw(gameTime, renderer);
 		}
 	}
 }
