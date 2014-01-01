@@ -127,21 +127,21 @@ namespace MyThirdSDL.UserInterface
 			Width = iconFrame.Width;
 			Height = iconFrame.Height;
 
-			string fontPath = contentManager.GetContentPath("Arcade");
-			Color fontColor = new Color(218, 218, 218);
-			int fontSizeTitle = 14;
-			int fontSizeContent = 12;
+			string fontPath = contentManager.GetContentPath(Styles.FontPaths.Arcade);
+			Color fontColorTitle = Styles.Colors.Title;
+			int fontSizeTitle = Styles.FontSizes.Title;
+			int fontSizeContent = Styles.FontSizes.Content;
 
 			iconMainMenuHeader = new Icon(contentManager.GetTexture(iconMainMenuContentPathKey));
 			iconInfoMenuHeader = new Icon(contentManager.GetTexture("IconStatistics"));
 			iconSkillsMenuHeader = new Icon(contentManager.GetTexture("IconPenPaper"));
 
 			labelMainMenuHeader = new Label();
-			labelMainMenuHeader.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSizeTitle, fontColor, menuTitle);
+			labelMainMenuHeader.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSizeTitle, fontColorTitle, menuTitle);
 			labelInfoMenuHeader = new Label();
-			labelInfoMenuHeader.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSizeTitle, fontColor, "Needs");
+			labelInfoMenuHeader.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSizeTitle, fontColorTitle, "Needs");
 			labelSkillsMenuHeader = new Label();
-			labelSkillsMenuHeader.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSizeTitle, fontColor, "Skills");
+			labelSkillsMenuHeader.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSizeTitle, fontColorTitle, "Skills");
 
 			iconMoney = new Icon(contentManager.GetTexture("IconMoney"));
 
@@ -152,17 +152,17 @@ namespace MyThirdSDL.UserInterface
 			iconHunger = new Icon(contentManager.GetTexture("IconChicken"));
 
 			labelMoney = new Label();
-			labelMoney.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSizeContent, fontColor, "N/A");
+			labelMoney.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSizeContent, fontColorTitle, "N/A");
 			labelHealth = new Label();
-			labelHealth.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSizeContent, fontColor, "N/A");
+			labelHealth.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSizeContent, fontColorTitle, "N/A");
 			labelHygiene = new Label();
-			labelHygiene.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSizeContent, fontColor, "N/A");
+			labelHygiene.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSizeContent, fontColorTitle, "N/A");
 			labelSleep = new Label();
-			labelSleep.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSizeContent, fontColor, "N/A");
+			labelSleep.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSizeContent, fontColorTitle, "N/A");
 			labelThirst = new Label();
-			labelThirst.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSizeContent, fontColor, "N/A");
+			labelThirst.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSizeContent, fontColorTitle, "N/A");
 			labelHunger = new Label();
-			labelHunger.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSizeContent, fontColor, "N/A");
+			labelHunger.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSizeContent, fontColorTitle, "N/A");
 
 			iconCommunication = new Icon(contentManager.GetTexture("IconCommunication"));
 			iconLeadership = new Icon(contentManager.GetTexture("IconLeadership"));
@@ -170,13 +170,13 @@ namespace MyThirdSDL.UserInterface
 			iconIntelligence = new Icon(contentManager.GetTexture("IconIntelligence"));
 
 			labelCommunication = new Label();
-			labelCommunication.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSizeContent, fontColor, "N/A");
+			labelCommunication.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSizeContent, fontColorTitle, "N/A");
 			labelLeadership = new Label();
-			labelLeadership.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSizeContent, fontColor, "N/A");
+			labelLeadership.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSizeContent, fontColorTitle, "N/A");
 			labelCreativity = new Label();
-			labelCreativity.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSizeContent, fontColor, "N/A");
+			labelCreativity.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSizeContent, fontColorTitle, "N/A");
 			labelIntelligence = new Label();
-			labelIntelligence.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSizeContent, fontColor, "N/A");
+			labelIntelligence.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSizeContent, fontColorTitle, "N/A");
 
 			buttonCloseWindow = new Button();
 			buttonCloseWindow.TextureFrame = contentManager.GetTexture("ButtonSquare");
@@ -214,9 +214,9 @@ namespace MyThirdSDL.UserInterface
 				buttonMenuItem.IconMain = new Icon(contentManager.GetTexture(purchasableItem.IconTextureKey));
 				buttonMenuItem.IconMoney = new Icon(contentManager.GetTexture("IconMoney"));
 				buttonMenuItem.LabelMain = new Label();
-				buttonMenuItem.LabelMain.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSizeContent, fontColor, purchasableItem.Name);
+				buttonMenuItem.LabelMain.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSizeContent, fontColorTitle, purchasableItem.Name);
 				buttonMenuItem.LabelMoney = new Label();
-				buttonMenuItem.LabelMoney.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSizeContent, fontColor, purchasableItem.Price.ToString());
+				buttonMenuItem.LabelMoney.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSizeContent, fontColorTitle, purchasableItem.Price.ToString());
 				AddButtonMenuItem(buttonMenuItem);
 			}
 
@@ -338,6 +338,7 @@ namespace MyThirdSDL.UserInterface
 
 			buttonMenuItem.Position = buttonMenuItemPosition;
 			buttonMenuItem.Clicked += buttonMenuItem_Clicked;
+			buttonMenuItem.Hovered += buttonMenuItem_Hovered;
 		}
 
 		private void SetMenuItemButtonPositions()
@@ -374,7 +375,10 @@ namespace MyThirdSDL.UserInterface
 						buttonMenuItem.ToggleOff();
 				clickedButtonMenuItem.ToggleOn();
 			}
+		}
 
+		private void buttonMenuItem_Hovered(object sender, PurchasableItemSelectedEventArgs e)
+		{
 			labelMoney.Text = e.PurchasableItem.Price.ToString();
 			labelHealth.Text = e.PurchasableItem.NecessityEffect.HealthEffectiveness.ToString();
 			labelHunger.Text = e.PurchasableItem.NecessityEffect.HungerEffectiveness.ToString();
@@ -386,6 +390,7 @@ namespace MyThirdSDL.UserInterface
 			labelIntelligence.Text = e.PurchasableItem.SkillEffect.IntelligenceEffectiveness.ToString();
 			labelLeadership.Text = e.PurchasableItem.SkillEffect.LeadershipEffectiveness.ToString();
 		}
+
 
 		#endregion
 

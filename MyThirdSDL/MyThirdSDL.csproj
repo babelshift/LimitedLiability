@@ -196,6 +196,7 @@
     <Compile Include="UserInterface\SimulationLabel.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="UserInterface\Styles.cs" />
     <Compile Include="UserInterface\ToolboxTray.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -263,6 +264,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\Images\User Interface\IconSeparator.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Images\User Interface\MenuCompanyFrame.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\Images\User Interface\MenuMailboxFrame.png">

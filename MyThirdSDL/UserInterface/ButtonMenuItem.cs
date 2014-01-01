@@ -18,6 +18,7 @@ namespace MyThirdSDL.UserInterface
 		private IPurchasable purchasableItem;
 
 		public new event EventHandler<PurchasableItemSelectedEventArgs> Clicked;
+		public new event EventHandler<PurchasableItemSelectedEventArgs> Hovered;
 
 		public override Vector Position
 		{
@@ -62,6 +63,9 @@ namespace MyThirdSDL.UserInterface
 			if (LabelMoney != null)
 				LabelMoney.Update(gameTime);
 
+			if (IsHovered)
+				OnHovered();
+
 			if (IsClicked)
 				OnClicked();
 		}
@@ -86,6 +90,14 @@ namespace MyThirdSDL.UserInterface
 
 			if (Clicked != null)
 				Clicked(this, e);
+		}
+
+		private void OnHovered()
+		{
+			PurchasableItemSelectedEventArgs e = new PurchasableItemSelectedEventArgs(purchasableItem);
+
+			if (Hovered != null)
+				Hovered(this, e);
 		}
 
 		public override void Dispose()

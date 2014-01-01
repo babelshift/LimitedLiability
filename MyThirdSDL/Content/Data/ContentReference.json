@@ -23,6 +23,7 @@
 		{ "key": "MenuPurchaseFrame",			"value": "Images/User Interface/MenuPurchaseFrame.png" },
 		{ "key": "MenuInspectEmployeeFrame",	"value": "Images/User Interface/MenuInspectEmployeeFrame.png" },
 		{ "key": "MenuMailboxFrame",			"value": "Images/User Interface/MenuMailboxFrame.png" },
+		{ "key": "MenuCompanyFrame",			"value": "Images/User Interface/MenuCompanyFrame.png" },
 		
 		{ "key": "ButtonMenuItem",				"value": "Images/User Interface/ButtonMenuItem.png" },
 		{ "key": "ButtonMenuItemHover",			"value": "Images/User Interface/ButtonMenuItemHover.png" },

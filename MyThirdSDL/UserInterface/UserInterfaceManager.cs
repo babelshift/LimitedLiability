@@ -74,6 +74,9 @@ namespace MyThirdSDL.UserInterface
 		private MenuMailbox menuMailbox;
 		private bool isMenuMailboxOpen = false;
 
+		private MenuCompany menuCompany;
+		private bool isMenuCompanyOpen = false;
+
 		#endregion
 
 		public event EventHandler<ArchiveEventArgs> ArchiveMailButtonClicked;
@@ -95,6 +98,7 @@ namespace MyThirdSDL.UserInterface
 			HideMenuEquipment();
 			HideMenuMailbox();
 			HideMenuRooms();
+			HideMenuCompany();
 		}
 
 		#region Constructors
@@ -113,7 +117,8 @@ namespace MyThirdSDL.UserInterface
 			IEnumerable<MailItem> outbox,
 			IEnumerable<MailItem> archive,
 			int unreadMailCount,
-			int money)
+			int money,
+			int employeeCount)
 		{
 			this.bottomRightPointOfWindow = bottomRightPointOfWindow;
 			this.contentManager = contentManager;
@@ -134,7 +139,7 @@ namespace MyThirdSDL.UserInterface
 			toolboxTray.ButtonEmployeesClicked += ToolboxTray_ButtonEmployeesClicked;
 			toolboxTray.ButtonProductsClicked += ToolboxTray_ButtonProductsClicked;
 			toolboxTray.ButtonMainMenuClicked += ToolboxTray_ButtonMainMenuClicked;
-			toolboxTray.ButtonMailMenuClicked += toolboxTray_ButtonMailMenuClicked;
+			toolboxTray.ButtonMailMenuClicked += ToolboxTray_ButtonMailMenuClicked;
 
 			Color fontColor;
 			int fontSizeContent;
@@ -165,6 +170,7 @@ namespace MyThirdSDL.UserInterface
 			CreateMenuEquipment();
 			CreateMenuInspectEmployee();
 			CreateMenuMailbox(inbox, outbox, archive);
+			CreateMenuCompany(employeeCount);
 
 			ChangeState(UserInterfaceState.Default);
 		}
@@ -251,7 +257,7 @@ namespace MyThirdSDL.UserInterface
 
 		#region ToolboxTray Events
 
-		private void toolboxTray_ButtonMailMenuClicked(object sender, EventArgs e)
+		private void ToolboxTray_ButtonMailMenuClicked(object sender, EventArgs e)
 		{
 			if (!isMenuMailboxOpen)
 			{
@@ -277,7 +283,11 @@ namespace MyThirdSDL.UserInterface
 
 		private void ToolboxTray_ButtonCompanyClicked(object sender, EventArgs e)
 		{
-			// show company menu
+			if (!isMenuCompanyOpen)
+			{
+				ClearMenusOpen();
+				ShowMenuCompany();
+			}
 		}
 
 		private void ToolboxTray_ButtonFinancesClicked(object sender, EventArgs e)
@@ -478,6 +488,39 @@ namespace MyThirdSDL.UserInterface
 
 		#endregion
 
+		#region Menu Company
+
+		public void UpdateTrackedEmployeeCount(int trackedEmployeeCount)
+		{
+			menuCompany.UpdateEmployeeCount(trackedEmployeeCount);
+		}
+
+		private void CreateMenuCompany(int employeeCount)
+		{
+			menuCompany = new MenuCompany(contentManager, "Skiles Inc.", employeeCount, 10, 15, "Energy", 500000);
+			menuCompany.Position = new Vector(bottomRightPointOfWindow.X / 2 - menuCompany.Width / 2, bottomRightPointOfWindow.Y / 2 - menuCompany.Height / 2);
+			menuCompany.CloseButtonClicked += menuCompany_CloseButtonClicked;
+		}
+
+		private void ShowMenuCompany()
+		{
+			isMenuCompanyOpen = true;
+			ChangeState(UserInterfaceState.CompanyMenuActive);
+		}
+
+		private void HideMenuCompany()
+		{
+			isMenuCompanyOpen = false;
+			ChangeState(UserInterfaceState.Default);
+		}
+
+		private void menuCompany_CloseButtonClicked(object sender, EventArgs e)
+		{
+			HideMenuCompany();
+		}
+
+		#endregion
+
 		#region Game Loop
 
 		public void Update(GameTime gameTime, DateTime worldDateTime)
@@ -499,6 +542,9 @@ namespace MyThirdSDL.UserInterface
 
 			if (isMenuRoomsOpen)
 				menuPurchaseRooms.Update(gameTime);
+
+			if (isMenuCompanyOpen)
+				menuCompany.Update(gameTime);
 
 			if (CurrentState == UserInterfaceState.PlaceEquipmentActive || CurrentState == UserInterfaceState.PlaceRoomActive)
 				if (MouseHelper.CurrentMouseState.ButtonsPressed.Contains(MouseButtonCode.Right))
@@ -543,6 +589,9 @@ namespace MyThirdSDL.UserInterface
 
 			if (isMenuRoomsOpen)
 				menuPurchaseRooms.Draw(gameTime, renderer);
+
+			if (isMenuCompanyOpen)
+				menuCompany.Draw(gameTime, renderer);
 		}
 
 		private void UpdateDisplayedDateAndTime(DateTime dateTime)

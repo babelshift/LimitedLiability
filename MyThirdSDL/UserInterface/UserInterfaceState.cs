@@ -23,6 +23,7 @@ namespace MyThirdSDL.UserInterface
 		InspectEmployeeMenuActive,
 		PlaceEquipmentActive,
 		PlaceRoomActive,
-		MailboxMenuActive
+		MailboxMenuActive,
+		CompanyMenuActive
 	}
 }

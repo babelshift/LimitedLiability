@@ -124,6 +124,7 @@ namespace MyThirdSDL.UserInterface
 		#region Events
 
 		public event EventHandler Clicked;
+		public event EventHandler Hovered;
 
 		#endregion
 
@@ -131,6 +132,7 @@ namespace MyThirdSDL.UserInterface
 
 		public Button()
 		{
+			Visible = true;
 		}
 
 		#endregion
@@ -156,6 +158,9 @@ namespace MyThirdSDL.UserInterface
 			else
 				IsHovered = false;
 
+			if (IsHovered)
+				OnHovered(EventArgs.Empty);
+
 			IsClicked = GetClicked(MouseHelper.CurrentMouseState, MouseHelper.PreviousMouseState);
 
 			if (IsClicked)
@@ -164,38 +169,41 @@ namespace MyThirdSDL.UserInterface
 
 		public override void Draw(GameTime gameTime, Renderer renderer)
 		{
-			renderer.RenderTexture(TextureFrame, (int)Position.X, (int)Position.Y);
-
-			if (IsPressed || IsHovered)
+			if (Visible)
 			{
-				if (IsHovered)
+				renderer.RenderTexture(TextureFrame, (int)Position.X, (int)Position.Y);
+
+				if (IsPressed || IsHovered)
 				{
-					if (Tooltip != null)
-						Tooltip.Draw(gameTime, renderer);
-					if (TextureFrameHovered != null)
-						renderer.RenderTexture(TextureFrameHovered, (int)Position.X, (int)Position.Y);
-					if (IconHovered != null)
-						IconHovered.Draw(gameTime, renderer);
+					if (IsHovered)
+					{
+						if (Tooltip != null)
+							Tooltip.Draw(gameTime, renderer);
+						if (TextureFrameHovered != null)
+							renderer.RenderTexture(TextureFrameHovered, (int)Position.X, (int)Position.Y);
+						if (IconHovered != null)
+							IconHovered.Draw(gameTime, renderer);
+					}
+					else if (IsPressed)
+					{
+						if (TextureFrameSelected != null)
+							renderer.RenderTexture(TextureFrameSelected, (int)Position.X, (int)Position.Y);
+						else if (TextureFrameHovered != null)
+							renderer.RenderTexture(TextureFrameHovered, (int)Position.X, (int)Position.Y);
+					}
+
+					if (Icon != null)
+						Icon.Draw(gameTime, renderer);
 				}
-				else if (IsPressed)
+				else
 				{
-					if (TextureFrameSelected != null)
-						renderer.RenderTexture(TextureFrameSelected, (int)Position.X, (int)Position.Y);
-					else if (TextureFrameHovered != null)
-						renderer.RenderTexture(TextureFrameHovered, (int)Position.X, (int)Position.Y);
+					if (Icon != null)
+						Icon.Draw(gameTime, renderer);
 				}
 
-				if (Icon != null)
-					Icon.Draw(gameTime, renderer);
+				if (Label != null)
+					Label.Draw(gameTime, renderer);
 			}
-			else
-			{
-				if (Icon != null)
-					Icon.Draw(gameTime, renderer);
-			}
-
-			if (Label != null)
-				Label.Draw(gameTime, renderer);
 		}
 
 		#endregion
@@ -230,6 +238,12 @@ namespace MyThirdSDL.UserInterface
 		{
 			if (Clicked != null)
 				Clicked(this, e);
+		}
+
+		private void OnHovered(EventArgs e)
+		{
+			if (Hovered != null)
+				Hovered(this, e);
 		}
 
 		#endregion

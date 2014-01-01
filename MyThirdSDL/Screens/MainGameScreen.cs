@@ -188,7 +188,7 @@ namespace MyThirdSDL.Screens
 			// Agents
 			var pathNodes = tiledMap.GetPathNodes();
 			Random random = new Random();
-			for (int i = 0; i < 5; i++)
+			for (int i = 0; i < 10; i++)
 			{
 				int x = random.Next(0, pathNodes.Count);
 				var pathNode = pathNodes[x];
@@ -217,7 +217,9 @@ namespace MyThirdSDL.Screens
 				mailManager.PlayerOutbox, 
 				mailManager.PlayerArchive, 
 				mailManager.PlayerUnreadMailCount, 
-				bankAccount.Balance);
+				bankAccount.Balance,
+				simulationManager.TrackedEmployees.Count());
+
 			userInterfaceManager.PurchasableItemSelected += HandleSelectEquipment;
 			userInterfaceManager.ArchiveMailButtonClicked += userInterfaceManager_ArchiveMailButtonClicked;
 		}
@@ -269,6 +271,7 @@ namespace MyThirdSDL.Screens
 			simulationManager.Update(gameTime);
 
 			userInterfaceManager.Update(gameTime, simulationManager.WorldDateTime);
+			userInterfaceManager.UpdateTrackedEmployeeCount(simulationManager.TrackedEmployees.Count());
 		}
 
 		public override void Draw(GameTime gameTime, Renderer renderer)

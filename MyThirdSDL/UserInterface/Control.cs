@@ -12,6 +12,8 @@ namespace MyThirdSDL.UserInterface
 	{
 		public Guid ID { get; private set; }
 
+		public bool Visible { get; set; }
+
 		protected Rectangle Bounds
 		{
 			get

@@ -275,6 +275,7 @@ namespace MyThirdSDL.UserInterface
 			buttonView.Label = new Label();
 			buttonView.Label.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSizeContent, fontColor, "View");
 			buttonView.ButtonType = ButtonType.TextOnly;
+			buttonView.Visible = false;
 
 			buttonArchive = new Button();
 			buttonArchive.TextureFrame = contentManager.GetTexture("ButtonMailAction");
@@ -282,6 +283,7 @@ namespace MyThirdSDL.UserInterface
 			buttonArchive.Label = new Label();
 			buttonArchive.Label.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSizeContent, fontColor, "Archive");
 			buttonArchive.ButtonType = ButtonType.TextOnly;
+			buttonArchive.Visible = true;
 
 			iconTopSeparator = new Icon(contentManager.GetTexture("IconSeparator"));
 
@@ -325,10 +327,10 @@ namespace MyThirdSDL.UserInterface
 
 		public void AddButtonMailItems(ContentManager contentManager, IEnumerable<MailItem> inbox, IEnumerable<MailItem> outbox, IEnumerable<MailItem> archive)
 		{
-			string fontPath = contentManager.GetContentPath("Arcade");
-			Color fontColor = new Color(218, 218, 218);
-			int fontSizeTitle = 14;
-			int fontSizeContent = 12;
+			string fontPath = contentManager.GetContentPath(Styles.FontPaths.Arcade);
+			Color fontColorTitle = Styles.Colors.Title;
+			int fontSizeTitle = Styles.FontSizes.Title;
+			int fontSizeContent = Styles.FontSizes.Content;
 
 			foreach (MailItem mailItem in inbox)
 			{
@@ -339,9 +341,9 @@ namespace MyThirdSDL.UserInterface
 				buttonMailItem.IconMailUnread = new Icon(contentManager.GetTexture("IconMailUnread"));
 				buttonMailItem.IconMailRead = new Icon(contentManager.GetTexture("IconMailRead"));
 				buttonMailItem.LabelFrom = new Label();
-				buttonMailItem.LabelFrom.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSizeContent, fontColor, mailItem.From);
+				buttonMailItem.LabelFrom.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSizeContent, fontColorTitle, mailItem.From);
 				buttonMailItem.LabelSubject = new Label();
-				buttonMailItem.LabelSubject.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSizeContent, fontColor, mailItem.Subject);
+				buttonMailItem.LabelSubject.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSizeContent, fontColorTitle, mailItem.Subject);
 				Icon iconSeparator = new Icon(contentManager.GetTexture("IconSeparator"));
 				AddButtonMailItemInbox(buttonMailItem, iconSeparator);
 			}
@@ -355,9 +357,9 @@ namespace MyThirdSDL.UserInterface
 				buttonMailItem.IconMailUnread = new Icon(contentManager.GetTexture("IconMailUnread"));
 				buttonMailItem.IconMailRead = new Icon(contentManager.GetTexture("IconMailRead"));
 				buttonMailItem.LabelFrom = new Label();
-				buttonMailItem.LabelFrom.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSizeContent, fontColor, mailItem.From);
+				buttonMailItem.LabelFrom.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSizeContent, fontColorTitle, mailItem.From);
 				buttonMailItem.LabelSubject = new Label();
-				buttonMailItem.LabelSubject.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSizeContent, fontColor, mailItem.Subject);
+				buttonMailItem.LabelSubject.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSizeContent, fontColorTitle, mailItem.Subject);
 				Icon iconSeparator = new Icon(contentManager.GetTexture("IconSeparator"));
 				AddButtonMailItemOutbox(buttonMailItem, iconSeparator);
 			}
@@ -371,12 +373,15 @@ namespace MyThirdSDL.UserInterface
 				buttonMailItem.IconMailUnread = new Icon(contentManager.GetTexture("IconMailUnread"));
 				buttonMailItem.IconMailRead = new Icon(contentManager.GetTexture("IconMailRead"));
 				buttonMailItem.LabelFrom = new Label();
-				buttonMailItem.LabelFrom.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSizeContent, fontColor, mailItem.From);
+				buttonMailItem.LabelFrom.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSizeContent, fontColorTitle, mailItem.From);
 				buttonMailItem.LabelSubject = new Label();
-				buttonMailItem.LabelSubject.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSizeContent, fontColor, mailItem.Subject);
+				buttonMailItem.LabelSubject.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSizeContent, fontColorTitle, mailItem.Subject);
 				Icon iconSeparator = new Icon(contentManager.GetTexture("IconSeparator"));
 				AddButtonMailItemArchive(buttonMailItem, iconSeparator);
 			}
+
+			buttonView.Visible = false;
+			buttonArchive.Visible = false;
 		}
 
 		#endregion
@@ -421,6 +426,8 @@ namespace MyThirdSDL.UserInterface
 						button.ToggleOff();
 				clickedButtonMailItem.ToggleOn();
 				SelectedMailItem = clickedButtonMailItem.MailItem;
+				buttonView.Visible = true;
+				buttonArchive.Visible = true;
 			}
 		}
 
