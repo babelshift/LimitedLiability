@@ -59,7 +59,7 @@ namespace MyThirdSDL.Screens
 		public MainGameScreen(Renderer renderer, ContentManager contentManager)
 			: base(contentManager)
 		{
-			simulationManager = new SimulationManager(DateTime.Now);
+			simulationManager = new SimulationManager(DateTime.Now, contentManager.ThoughtPool);
 			jobFactory = new JobFactory();
 			agentFactory = new AgentFactory(renderer, contentManager, jobFactory);
 

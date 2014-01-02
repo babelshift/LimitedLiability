@@ -23,9 +23,8 @@ namespace MyThirdSDL.UserInterface
 
 		public static class Colors
 		{
-			public static Color Title = new Color(218, 218, 218);
-			public static Color Label = new Color(218, 218, 218);
-			public static Color LabelValue = new Color(255, 190, 50);
+			public static Color White = new Color(218, 218, 218);
+			public static Color Yellow = new Color(255, 190, 50);
 		}
 	}
 }

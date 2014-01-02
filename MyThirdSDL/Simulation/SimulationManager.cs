@@ -16,8 +16,10 @@ namespace MyThirdSDL.Simulation
 	{
 		public static readonly int SimulationTimeToWorldTimeMultiplier = 540;
 
+		private IEnumerable<ThoughtMetadata> thoughtPool;
 		private Dictionary<System.Type, List<Agent>> trackedAgents = new Dictionary<Type, List<Agent>>();
 		private DateTime startingWorldDateTime;
+		private Random random = new Random();
 
 		public DateTime WorldDateTime { get { return startingWorldDateTime.Add(WorldTimePassed); } }
 
@@ -85,9 +87,10 @@ namespace MyThirdSDL.Simulation
 
 		#endregion
 
-		public SimulationManager(DateTime startingWorldDateTime)
+		public SimulationManager(DateTime startingWorldDateTime, IEnumerable<ThoughtMetadata> thoughtPool)
 		{
 			this.startingWorldDateTime = startingWorldDateTime;
+			this.thoughtPool = thoughtPool;
 		}
 
 		/// <summary>
@@ -155,6 +158,14 @@ namespace MyThirdSDL.Simulation
 		}
 
 		#region Employee Events
+
+		private void HandleHadThought(object sender, ThoughtEventArgs e)
+		{
+			Thought thought = GenerateThought(e.Type);
+			Employee employee = sender as Employee;
+			if (employee != null)
+				employee.AddThought(thought);
+		}
 
 		private void HandleIsIdle(object sender, EventArgs e)
 		{
@@ -274,6 +285,7 @@ namespace MyThirdSDL.Simulation
 					employee.IsUnhappy += HandleIsUnhappy;
 					employee.NeedsOfficeDeskAssignment += HandleNeedsOfficeDeskAssignment;
 					employee.IsIdle += HandleIsIdle;
+					employee.HadThought += HandleHadThought;
 
 					employee.ThirstSatisfied += HandleThirstSatisfied;
 					employee.HungerSatisfied += HandleHungerSatisfied;
@@ -341,7 +353,8 @@ namespace MyThirdSDL.Simulation
 					employee.IsUnhealthy -= EmployeeIsUnhealthy;
 					employee.IsUnhappy -= EmployeeIsUnhappy;
 					employee.NeedsOfficeDeskAssignment -= EmployeeNeedsOfficeDeskAssignment;
-					employee.IsIdle += HandleIsIdle;
+					employee.IsIdle -= HandleIsIdle;
+					employee.HadThought -= HandleHadThought;
 
 					employee.ThirstSatisfied -= HandleThirstSatisfied;
 					employee.HungerSatisfied -= HandleHungerSatisfied;
@@ -645,5 +658,12 @@ namespace MyThirdSDL.Simulation
 
 		#endregion
 
+		private Thought GenerateThought(ThoughtType type)
+		{
+			ThoughtMetadata[] thoughtMatches = thoughtPool.Where(t => t.Type == type).ToArray();
+			int randomIndex = random.Next(0, thoughtMatches.Count() - 1);
+			ThoughtMetadata thought = thoughtMatches[randomIndex];
+			return new Thought(thought.Idea, thought.Type, WorldDateTime, SimulationTime);
+		}
 	}
 }

@@ -82,8 +82,9 @@ namespace MyThirdSDL.UserInterface
 			Height = iconFrame.Height;
 
 			string fontPath = contentManager.GetContentPath(Styles.FontPaths.Arcade);
-			Color fontColorTitle = Styles.Colors.Title;
-			Color fontColorLabelValue = Styles.Colors.LabelValue;
+			Color fontColorTitle = Styles.Colors.White;
+			Color fontColorLabel = Styles.Colors.White;
+			Color fontColorLabelValue = Styles.Colors.Yellow;
 			int fontSizeTitle = Styles.FontSizes.Title;
 			int fontSizeContent = Styles.FontSizes.Content;
 
@@ -92,17 +93,17 @@ namespace MyThirdSDL.UserInterface
 			labelMainHeader.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSizeTitle, fontColorTitle, "Company Statistics");
 
 			labelCompanyName = new Label();
-			labelCompanyName.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSizeContent, fontColorTitle, "Company Name:");
+			labelCompanyName.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSizeContent, fontColorLabel, "Company Name:");
 			labelNumberOfEmployees = new Label();
-			labelNumberOfEmployees.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSizeContent, fontColorTitle, "# of Employees:");
+			labelNumberOfEmployees.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSizeContent, fontColorLabel, "# of Employees:");
 			labelNumberOfCompetitors = new Label();
-			labelNumberOfCompetitors.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSizeContent, fontColorTitle, "# of Competitors:");
+			labelNumberOfCompetitors.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSizeContent, fontColorLabel, "# of Competitors:");
 			labelNumberOfProducts = new Label();
-			labelNumberOfProducts.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSizeContent, fontColorTitle, "# of Products:");
+			labelNumberOfProducts.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSizeContent, fontColorLabel, "# of Products:");
 			labelIndustryType = new Label();
-			labelIndustryType.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSizeContent, fontColorTitle, "Industry:");
+			labelIndustryType.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSizeContent, fontColorLabel, "Industry:");
 			labelGrossIncome = new Label();
-			labelGrossIncome.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSizeContent, fontColorTitle, "Gross Income:");
+			labelGrossIncome.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSizeContent, fontColorLabel, "Gross Income:");
 
 			labelCompanyNameValue = new Label();
 			labelCompanyNameValue.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSizeContent, fontColorLabelValue, companyName);
@@ -121,28 +122,28 @@ namespace MyThirdSDL.UserInterface
 			buttonViewEmployees.TextureFrame = contentManager.GetTexture("ButtonMailAction");
 			buttonViewEmployees.TextureFrameHovered = contentManager.GetTexture("ButtonMailActionHover");
 			buttonViewEmployees.Label = new Label();
-			buttonViewEmployees.Label.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSizeContent, fontColorTitle, "View");
+			buttonViewEmployees.Label.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSizeContent, fontColorLabel, "View");
 			buttonViewEmployees.ButtonType = ButtonType.TextOnly;
 
 			buttonViewCompetitors = new Button();
 			buttonViewCompetitors.TextureFrame = contentManager.GetTexture("ButtonMailAction");
 			buttonViewCompetitors.TextureFrameHovered = contentManager.GetTexture("ButtonMailActionHover");
 			buttonViewCompetitors.Label = new Label();
-			buttonViewCompetitors.Label.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSizeContent, fontColorTitle, "View");
+			buttonViewCompetitors.Label.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSizeContent, fontColorLabel, "View");
 			buttonViewCompetitors.ButtonType = ButtonType.TextOnly;
 
 			buttonViewProducts = new Button();
 			buttonViewProducts.TextureFrame = contentManager.GetTexture("ButtonMailAction");
 			buttonViewProducts.TextureFrameHovered = contentManager.GetTexture("ButtonMailActionHover");
 			buttonViewProducts.Label = new Label();
-			buttonViewProducts.Label.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSizeContent, fontColorTitle, "View");
+			buttonViewProducts.Label.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSizeContent, fontColorLabel, "View");
 			buttonViewProducts.ButtonType = ButtonType.TextOnly;
 
 			buttonViewFinances = new Button();
 			buttonViewFinances.TextureFrame = contentManager.GetTexture("ButtonMailAction");
 			buttonViewFinances.TextureFrameHovered = contentManager.GetTexture("ButtonMailActionHover");
 			buttonViewFinances.Label = new Label();
-			buttonViewFinances.Label.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSizeContent, fontColorTitle, "View");
+			buttonViewFinances.Label.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSizeContent, fontColorLabel, "View");
 			buttonViewFinances.ButtonType = ButtonType.TextOnly;
 
 			buttonCloseWindow = new Button();

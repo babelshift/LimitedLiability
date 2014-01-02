@@ -328,7 +328,7 @@ namespace MyThirdSDL.UserInterface
 		public void AddButtonMailItems(ContentManager contentManager, IEnumerable<MailItem> inbox, IEnumerable<MailItem> outbox, IEnumerable<MailItem> archive)
 		{
 			string fontPath = contentManager.GetContentPath(Styles.FontPaths.Arcade);
-			Color fontColorTitle = Styles.Colors.Title;
+			Color fontColorTitle = Styles.Colors.White;
 			int fontSizeTitle = Styles.FontSizes.Title;
 			int fontSizeContent = Styles.FontSizes.Content;
 

@@ -8,6 +8,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System.IO;
 using SharpDL.Graphics;
+using MyThirdSDL.Agents;
 
 namespace MyThirdSDL.Content
 {
@@ -23,12 +24,16 @@ namespace MyThirdSDL.Content
 		private const string agentReferencePath = contentDataRoot + "AgentReference.json";
 		private const string peopleNamesPath = contentDataRoot + "PeopleNames.json";
 		private const string companyDataPath = contentDataRoot + "CompanyData.json";
+		private const string thoughtReferencePath = contentDataRoot + "ThoughtReference.json";
 
 		private Dictionary<string, string> contentReference = new Dictionary<string, string>();
 		private Dictionary<string, AgentMetadata> agentMetadataDictionary = new Dictionary<string, AgentMetadata>();
 		private List<string> firstNames = new List<string>();
 		private List<string> lastNames = new List<string>();
 		private List<CompanyMetadata> companies = new List<CompanyMetadata>();
+		private List<ThoughtMetadata> thoughtPool = new List<ThoughtMetadata>();
+
+		public IEnumerable<ThoughtMetadata> ThoughtPool { get { return thoughtPool; } }
 
 		public ContentManager(Renderer renderer)
 		{
@@ -45,6 +50,9 @@ namespace MyThirdSDL.Content
 
 			string companyDataJson = File.ReadAllText(companyDataPath);
 			LoadCompanyData(companyDataJson);
+
+			string thoughtReferenceJson = File.ReadAllText(thoughtReferencePath);
+			LoadThoughtData(thoughtReferenceJson);
 		}
 
 		public Texture GetTexture(string texturePathKey)
@@ -192,6 +200,36 @@ namespace MyThirdSDL.Content
 		{
 			int index = random.Next(0, lastNames.Count() - 1);
 			return lastNames[index];
+		}
+
+		private void LoadThoughtData(string json)
+		{
+			JObject o = JObject.Parse(json);
+
+			foreach (var equipment in o["thirsty"])
+				AddThoughtToCollection(equipment, ThoughtType.Thirsty);
+
+			foreach (var equipment in o["hungry"])
+				AddThoughtToCollection(equipment, ThoughtType.Hungry);
+
+			foreach (var equipment in o["sleepy"])
+				AddThoughtToCollection(equipment, ThoughtType.Sleepy);
+
+			foreach (var equipment in o["miscellaneous"])
+				AddThoughtToCollection(equipment, ThoughtType.Miscellaneous);
+
+			foreach (var equipment in o["notEnoughEquipment"])
+				AddThoughtToCollection(equipment, ThoughtType.NotEnoughEquipment);
+
+			foreach (var equipment in o["notChallenged"])
+				AddThoughtToCollection(equipment, ThoughtType.NotChallenged);
+		}
+
+		private void AddThoughtToCollection(JToken equipment, ThoughtType type)
+		{
+			string idea = equipment["idea"].ToString();
+			ThoughtMetadata thoughtMetadata = new ThoughtMetadata(type, idea);
+			thoughtPool.Add(thoughtMetadata);
 		}
 	}
 }

@@ -128,7 +128,8 @@ namespace MyThirdSDL.UserInterface
 			Height = iconFrame.Height;
 
 			string fontPath = contentManager.GetContentPath(Styles.FontPaths.Arcade);
-			Color fontColorTitle = Styles.Colors.Title;
+			Color fontColorTitle = Styles.Colors.White;
+			Color fontColorLabelValue = Styles.Colors.Yellow;
 			int fontSizeTitle = Styles.FontSizes.Title;
 			int fontSizeContent = Styles.FontSizes.Content;
 
@@ -152,17 +153,17 @@ namespace MyThirdSDL.UserInterface
 			iconHunger = new Icon(contentManager.GetTexture("IconChicken"));
 
 			labelMoney = new Label();
-			labelMoney.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSizeContent, fontColorTitle, "N/A");
+			labelMoney.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSizeContent, fontColorLabelValue, "N/A");
 			labelHealth = new Label();
-			labelHealth.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSizeContent, fontColorTitle, "N/A");
+			labelHealth.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSizeContent, fontColorLabelValue, "N/A");
 			labelHygiene = new Label();
-			labelHygiene.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSizeContent, fontColorTitle, "N/A");
+			labelHygiene.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSizeContent, fontColorLabelValue, "N/A");
 			labelSleep = new Label();
-			labelSleep.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSizeContent, fontColorTitle, "N/A");
+			labelSleep.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSizeContent, fontColorLabelValue, "N/A");
 			labelThirst = new Label();
-			labelThirst.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSizeContent, fontColorTitle, "N/A");
+			labelThirst.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSizeContent, fontColorLabelValue, "N/A");
 			labelHunger = new Label();
-			labelHunger.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSizeContent, fontColorTitle, "N/A");
+			labelHunger.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSizeContent, fontColorLabelValue, "N/A");
 
 			iconCommunication = new Icon(contentManager.GetTexture("IconCommunication"));
 			iconLeadership = new Icon(contentManager.GetTexture("IconLeadership"));
@@ -170,13 +171,13 @@ namespace MyThirdSDL.UserInterface
 			iconIntelligence = new Icon(contentManager.GetTexture("IconIntelligence"));
 
 			labelCommunication = new Label();
-			labelCommunication.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSizeContent, fontColorTitle, "N/A");
+			labelCommunication.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSizeContent, fontColorLabelValue, "N/A");
 			labelLeadership = new Label();
-			labelLeadership.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSizeContent, fontColorTitle, "N/A");
+			labelLeadership.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSizeContent, fontColorLabelValue, "N/A");
 			labelCreativity = new Label();
-			labelCreativity.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSizeContent, fontColorTitle, "N/A");
+			labelCreativity.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSizeContent, fontColorLabelValue, "N/A");
 			labelIntelligence = new Label();
-			labelIntelligence.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSizeContent, fontColorTitle, "N/A");
+			labelIntelligence.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSizeContent, fontColorLabelValue, "N/A");
 
 			buttonCloseWindow = new Button();
 			buttonCloseWindow.TextureFrame = contentManager.GetTexture("ButtonSquare");
@@ -214,9 +215,9 @@ namespace MyThirdSDL.UserInterface
 				buttonMenuItem.IconMain = new Icon(contentManager.GetTexture(purchasableItem.IconTextureKey));
 				buttonMenuItem.IconMoney = new Icon(contentManager.GetTexture("IconMoney"));
 				buttonMenuItem.LabelMain = new Label();
-				buttonMenuItem.LabelMain.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSizeContent, fontColorTitle, purchasableItem.Name);
+				buttonMenuItem.LabelMain.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSizeContent, fontColorLabelValue, purchasableItem.Name);
 				buttonMenuItem.LabelMoney = new Label();
-				buttonMenuItem.LabelMoney.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSizeContent, fontColorTitle, purchasableItem.Price.ToString());
+				buttonMenuItem.LabelMoney.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSizeContent, fontColorLabelValue, purchasableItem.Price.ToString());
 				AddButtonMenuItem(buttonMenuItem);
 			}
 

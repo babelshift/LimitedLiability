@@ -86,6 +86,8 @@
     <Compile Include="Agents\Room.cs" />
     <Compile Include="Agents\SnackMachine.cs" />
     <Compile Include="Agents\SodaMachine.cs" />
+    <Compile Include="Agents\Thought.cs" />
+    <Compile Include="Agents\ThoughtEventArgs.cs" />
     <Compile Include="Agents\TrashBin.cs" />
     <Compile Include="Agents\Wall.cs" />
     <Compile Include="Agents\WaterFountain.cs" />
@@ -99,6 +101,7 @@
     <Compile Include="Content\MapObjectLayerType.cs" />
     <Compile Include="Content\MapObjectType.cs" />
     <Compile Include="Content\TextureStore.cs" />
+    <Compile Include="Content\ThoughtMetadata.cs" />
     <Compile Include="Content\Tile.cs" />
     <Compile Include="Content\TiledMap.cs" />
     <Compile Include="Content\TileLayer.cs" />
@@ -314,6 +317,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\Fonts\Arcade N.ttf">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Data\ThoughtReference.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <None Include="Content\Maps\Map3.tmx">

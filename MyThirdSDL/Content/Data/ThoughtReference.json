@@ -1,0 +1,32 @@
+﻿{
+	"thirsty": [
+		{ "idea": "I am really thirsty!" },
+		{ "idea": "If I do not get a drink soon, I might pass out!" },
+		{ "idea": "I cannot concentrate because I am too thirsty." }
+	],
+	"hungry": [
+		{ "idea": "I am really hungry!" },
+		{ "idea": "I could kill for some food right now." },
+		{ "idea": "I cannot concentrate because I am too hungry." }
+	],
+	"sleepy": [
+		{ "idea": "I am really sleepy!" },
+		{ "idea": "I feel like I am going to pass out." },
+		{ "idea": "Maybe I will try to take a nap at my desk." },
+		{ "idea": "I cannot concentrate because I am too sleepy." }
+	],
+	"miscellaneous": [
+		{ "idea": "I think {0} is plotting against me." },
+		{ "idea": "I wonder if {0} likes me." },
+		{ "idea": "I wonder what my boss thinks of me." },
+		{ "idea": "I hope that I can be a manager one day." } 
+	],
+	"notEnoughEquipment": [
+		{ "idea": "This office needs more {0}." },
+		{ "idea": "There are not enough {0} in this office." } 
+	],
+	"notChallenged": [
+		{ "idea": "This job is not challenging enough." },
+		{ "idea": "I think I should quit this boring job." }
+	] 
+}

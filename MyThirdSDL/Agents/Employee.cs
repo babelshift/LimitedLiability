@@ -17,6 +17,9 @@ namespace MyThirdSDL.Agents
 		private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 		private double necessityDecayRate = -0.005;
 		private static Vector speed = new Vector(25, 25);
+		private List<Thought> thoughts = new List<Thought>();
+
+		public IEnumerable<Thought> Thoughts { get { return thoughts; } }
 
 		public string FullName { get { return FirstName + " " + LastName; } }
 
@@ -66,6 +69,7 @@ namespace MyThirdSDL.Agents
 		public event EventHandler<EventArgs> IsIdle;
 		public event EventHandler<EventArgs> ThirstSatisfied;
 		public event EventHandler<EventArgs> HungerSatisfied;
+		public event EventHandler<ThoughtEventArgs> HadThought;
 
 		public Employee(TimeSpan birthTime, string agentName, TextureBook textureBook, Vector position, AgentOrientation orientation,
 			string firstName, string lastName, DateTime birthday, Skills skills, Job job)
@@ -212,7 +216,11 @@ namespace MyThirdSDL.Agents
 		{
 			// if hungry, find vending machine / lunch room, eat
 			if (Necessities.Hunger < Necessities.Rating.Neutral)
+			{
+				// TODO: don't fire these events continuously, try to figure out a way to delay between events
 				EventHelper.FireEvent(IsHungry, this, EventArgs.Empty);
+				// EventHelper.FireEvent<ThoughtEventArgs>(HadThought, this, new ThoughtEventArgs(ThoughtType.Hungry));
+			}
 			// if thirsty, find vending machine / lunch room, drink
 			if (Necessities.Thirst < Necessities.Rating.Neutral)
 				EventHelper.FireEvent(IsThirsty, this, EventArgs.Empty);
@@ -258,6 +266,11 @@ namespace MyThirdSDL.Agents
 		public void UpdateAge(DateTime worldDateTime)
 		{
 			Age = worldDateTime.Subtract(Birthday);
+		}
+
+		public void AddThought(Thought thought)
+		{
+			thoughts.Add(thought);
 		}
 	}
 }
