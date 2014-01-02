@@ -208,19 +208,15 @@ namespace MyThirdSDL.Agents
 				IsAtOfficeDesk = false;
 
 			AdjustNecessities(necessityDecayRate);
-			CheckIfEmployeeNeedsAnything();
+			CheckIfEmployeeNeedsAnything(gameTime.TotalGameTime);
 			CheckIfEmployeeIsUnhappy();
 		}
 
-		private void CheckIfEmployeeNeedsAnything()
+		private void CheckIfEmployeeNeedsAnything(TimeSpan simulationTime)
 		{
 			// if hungry, find vending machine / lunch room, eat
 			if (Necessities.Hunger < Necessities.Rating.Neutral)
-			{
-				// TODO: don't fire these events continuously, try to figure out a way to delay between events
-				EventHelper.FireEvent(IsHungry, this, EventArgs.Empty);
-				// EventHelper.FireEvent<ThoughtEventArgs>(HadThought, this, new ThoughtEventArgs(ThoughtType.Hungry));
-			}
+				OnHungry(simulationTime);
 			// if thirsty, find vending machine / lunch room, drink
 			if (Necessities.Thirst < Necessities.Rating.Neutral)
 				EventHelper.FireEvent(IsThirsty, this, EventArgs.Empty);
@@ -268,9 +264,29 @@ namespace MyThirdSDL.Agents
 			Age = worldDateTime.Subtract(Birthday);
 		}
 
+		private void OnHungry(TimeSpan simulationTime)
+		{
+			EventHelper.FireEvent(IsHungry, this, EventArgs.Empty);
+
+			TimeSpan timeBetweenThoughts = TimeSpan.FromSeconds(1);
+			TimeSpan timeOfMostRecentHungerThought = GetTimeOfMostRecentThoughtByType(ThoughtType.Hungry);
+
+			if(timeOfMostRecentHungerThought == TimeSpan.Zero || simulationTime.Subtract(timeOfMostRecentHungerThought) > timeBetweenThoughts)
+				EventHelper.FireEvent<ThoughtEventArgs>(HadThought, this, new ThoughtEventArgs(ThoughtType.Hungry));
+		}
+
 		public void AddThought(Thought thought)
 		{
 			thoughts.Add(thought);
+		}
+
+		private TimeSpan GetTimeOfMostRecentThoughtByType(ThoughtType type)
+		{
+			IEnumerable<Thought> filteredThoughts = thoughts.Where(t => t.Type == type);
+			if (filteredThoughts.Count() > 0)
+				return filteredThoughts.Max(t => t.SimulationTime);
+			else
+				return TimeSpan.Zero;
 		}
 	}
 }
