@@ -17,6 +17,11 @@ namespace MyThirdSDL.Agents
 			Price = price;
 		}
 
+		/// <summary>
+		/// Equipment needs to be drawn offset if its height expands beyond more than one tile
+		/// </summary>
+		/// <param name="gameTime"></param>
+		/// <param name="renderer"></param>
 		public override void Draw(SharpDL.GameTime gameTime, Renderer renderer)
 		{
 			Vector drawPosition = new Vector(ProjectedPosition.X - Camera.Position.X, ProjectedPosition.Y - Camera.Position.Y);

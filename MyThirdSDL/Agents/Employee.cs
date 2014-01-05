@@ -81,6 +81,7 @@ namespace MyThirdSDL.Agents
 		{
 			AssignedOfficeDesk = officeDesk;
 			officeDesk.AssignEmployee(this);
+			OnThoughtSatisfied(ThoughtType.NeedsDeskAssignment);
 		}
 
 		private void AdjustNecessities(double necessityEffect)
@@ -236,7 +237,7 @@ namespace MyThirdSDL.Agents
 		{
 			// if unhappy, complain, threaten to quit, quit, lash out at office / others
 			if (HappinessRating < (int)Necessities.Rating.Neutral)
-				OnThoughtSatisfied(ThoughtType.Unhappy);
+				OnThought(ThoughtType.Unhappy);
 		}
 
 		/// <summary>
