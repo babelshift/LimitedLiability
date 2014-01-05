@@ -1,4 +1,19 @@
 ﻿{
+	"needsDeskAssignment": [
+		{ "idea": "They hired me but did not give me a desk to do my work?" }
+	], 
+	"unhealthy": [
+		{ "idea": "I am getting really flabby and should probably go to the gym." }
+	], 
+	"dirty": [
+		{ "idea": "I need a shower as soon as possible." }
+	], 
+	"unhappy": [
+		{ "idea": "I am miserable." }
+	], 
+	"idle": [
+		{ "idea": "I am bored and have nothing to do." }
+	], 
 	"thirsty": [
 		{ "idea": "I am really thirsty!" },
 		{ "idea": "If I do not get a drink soon, I might pass out!" },

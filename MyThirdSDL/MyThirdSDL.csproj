@@ -88,6 +88,7 @@
     <Compile Include="Agents\SodaMachine.cs" />
     <Compile Include="Agents\Thought.cs" />
     <Compile Include="Agents\ThoughtEventArgs.cs" />
+    <Compile Include="Agents\ThoughtType.cs" />
     <Compile Include="Agents\TrashBin.cs" />
     <Compile Include="Agents\Wall.cs" />
     <Compile Include="Agents\WaterFountain.cs" />

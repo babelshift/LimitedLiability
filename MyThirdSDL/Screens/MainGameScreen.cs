@@ -37,9 +37,9 @@ namespace MyThirdSDL.Screens
 		private bool IsValidMapCellHovered { get { return hoveredMapCell != null; } }
 
 		private bool IsLeftMouseButtonClicked
-		{ 
+		{
 			get
-			{ 
+			{
 				if (MouseHelper.CurrentMouseState.ButtonsPressed != null && MouseHelper.PreviousMouseState.ButtonsPressed != null)
 				{
 					if (!MouseHelper.CurrentMouseState.ButtonsPressed.Contains(MouseButtonCode.Left) && MouseHelper.PreviousMouseState.ButtonsPressed.Contains(MouseButtonCode.Left))
@@ -47,7 +47,7 @@ namespace MyThirdSDL.Screens
 				}
 
 				return false;
-			} 
+			}
 		}
 
 		private bool IsUserInterfaceStateChangeDelayPassed { get { return userInterfaceManager.TimeSpentInCurrentState > TimeSpan.FromSeconds(1.0); } }
@@ -63,13 +63,7 @@ namespace MyThirdSDL.Screens
 			jobFactory = new JobFactory();
 			agentFactory = new AgentFactory(renderer, contentManager, jobFactory);
 
-			simulationManager.EmployeeIsDirty += HandleEmployeeIsDirty;
-			simulationManager.EmployeeIsHungry += HandleEmployeeIsHungry;
-			simulationManager.EmployeeIsSleepy += HandleEmployeeIsSleepy;
-			simulationManager.EmployeeIsThirsty += HandleEmployeeIsThirsty;
-			simulationManager.EmployeeIsUnhappy += HandleEmployeeIsUnhappy;
-			simulationManager.EmployeeIsUnhealthy += HandleEmployeeIsUnhealthy;
-			simulationManager.EmployeeNeedsOfficeDeskAssignment += HandleEmployeeNeedsOfficeDesk;
+			simulationManager.HadThought += HandleEmployeeHadThought;
 			simulationManager.EmployeeThirstSatisfied += HandleEmployeeThirstSatisfied;
 			simulationManager.EmployeeHungerSatisfied += HandleEmployeeHungerSatisfied;
 			simulationManager.EmployeeClicked += HandleEmployeeClicked;
@@ -210,13 +204,13 @@ namespace MyThirdSDL.Screens
 			List<IPurchasable> purchasableRooms = GetPurchasableRooms();
 
 			// UI Manager
-			userInterfaceManager = new UserInterfaceManager(renderer, ContentManager, bottomRightPointOfScreen, 
-				purchasableEquipment, 
+			userInterfaceManager = new UserInterfaceManager(renderer, ContentManager, bottomRightPointOfScreen,
+				purchasableEquipment,
 				purchasableRooms,
-				mailManager.PlayerInbox, 
-				mailManager.PlayerOutbox, 
-				mailManager.PlayerArchive, 
-				mailManager.PlayerUnreadMailCount, 
+				mailManager.PlayerInbox,
+				mailManager.PlayerOutbox,
+				mailManager.PlayerArchive,
+				mailManager.PlayerUnreadMailCount,
 				bankAccount.Balance,
 				simulationManager.TrackedEmployees.Count());
 
@@ -322,7 +316,7 @@ namespace MyThirdSDL.Screens
 
 		private void HandleEmployeeClicked(object sender, EmployeeClickedEventArgs e)
 		{
-			if(userInterfaceManager.CurrentState == UserInterfaceState.Default)
+			if (userInterfaceManager.CurrentState == UserInterfaceState.Default)
 				userInterfaceManager.SetEmployeeBeingInspected(e.Employee);
 		}
 
@@ -344,46 +338,24 @@ namespace MyThirdSDL.Screens
 			userInterfaceManager.AddMessageForAgent(employee.ID, message);
 		}
 
-		private void HandleEmployeeIsUnhappy(object sender, EventArgs e)
+		private void HandleEmployeeHadThought(object sender, ThoughtEventArgs e)
 		{
 			var employee = GetEmployeeFromEventSender(sender);
-			SendEmployeeMessageToUserInterface(employee, String.Format("{0} is unhappy!", employee.FullName), SimulationMessageType.EmployeeIsUnhappy);
-		}
 
-		private void HandleEmployeeNeedsOfficeDesk(object sender, EventArgs e)
-		{
-			var employee = GetEmployeeFromEventSender(sender);
-			//SendEmployeeMessageToUserInterface(employee, String.Format("{0} needs and office desk to work!", employee.FullName), SimulationMessageType.EmployeeNeedsDesk);
-		}
-
-		private void HandleEmployeeIsUnhealthy(object sender, EventArgs e)
-		{
-			var employee = GetEmployeeFromEventSender(sender);
-			SendEmployeeMessageToUserInterface(employee, String.Format("{0} is unhealthy!", employee.FullName), SimulationMessageType.EmployeeIsUnhealthy);
-		}
-
-		private void HandleEmployeeIsSleepy(object sender, EventArgs e)
-		{
-			var employee = GetEmployeeFromEventSender(sender);
-			SendEmployeeMessageToUserInterface(employee, String.Format("{0} is sleepy!", employee.FullName), SimulationMessageType.EmployeeIsSleepy);
-		}
-
-		private void HandleEmployeeIsThirsty(object sender, EventArgs e)
-		{
-			var employee = GetEmployeeFromEventSender(sender);
-			//SendEmployeeMessageToUserInterface(employee, String.Format("{0} is thirsty!", employee.FullName), SimulationMessageType.EmployeeIsThirsty);
-		}
-
-		private void HandleEmployeeIsHungry(object sender, EventArgs e)
-		{
-			var employee = GetEmployeeFromEventSender(sender);
-			//SendEmployeeMessageToUserInterface(employee, String.Format("{0} is hungry!", employee.FullName), SimulationMessageType.EmployeeIsHungry);
-		}
-
-		private void HandleEmployeeIsDirty(object sender, EventArgs e)
-		{
-			var employee = GetEmployeeFromEventSender(sender);
-			SendEmployeeMessageToUserInterface(employee, String.Format("{0} is dirty!", employee.FullName), SimulationMessageType.EmployeeIsDirty);
+			if (e.Type == ThoughtType.Hungry)
+				SendEmployeeMessageToUserInterface(employee, String.Format("{0} is hungry!", employee.FullName), SimulationMessageType.EmployeeIsHungry);
+			else if (e.Type == ThoughtType.Thirsty)
+				SendEmployeeMessageToUserInterface(employee, String.Format("{0} is thirsty!", employee.FullName), SimulationMessageType.EmployeeIsThirsty);
+			else if (e.Type == ThoughtType.Dirty)
+				SendEmployeeMessageToUserInterface(employee, String.Format("{0} is dirty!", employee.FullName), SimulationMessageType.EmployeeIsDirty);
+			else if (e.Type == ThoughtType.NeedsDeskAssignment)
+				SendEmployeeMessageToUserInterface(employee, String.Format("{0} needs and office desk to work!", employee.FullName), SimulationMessageType.EmployeeNeedsDesk);
+			else if (e.Type == ThoughtType.Sleepy)
+				SendEmployeeMessageToUserInterface(employee, String.Format("{0} is sleepy!", employee.FullName), SimulationMessageType.EmployeeIsSleepy);
+			else if (e.Type == ThoughtType.Unhappy)
+				SendEmployeeMessageToUserInterface(employee, String.Format("{0} is unhappy!", employee.FullName), SimulationMessageType.EmployeeIsUnhappy);
+			else if (e.Type == ThoughtType.Unhealthy)
+				SendEmployeeMessageToUserInterface(employee, String.Format("{0} is unhealthy!", employee.FullName), SimulationMessageType.EmployeeIsUnhealthy);
 		}
 
 		#endregion
@@ -414,9 +386,9 @@ namespace MyThirdSDL.Screens
 			int mousePositionY = MouseHelper.CurrentMouseState.Y;
 
 			Vector worldPositionAtMousePosition = CoordinateHelper.ScreenSpaceToWorldSpace(
-				                                      mousePositionX, mousePositionY,
-				                                      CoordinateHelper.ScreenOffset, 
-				                                      CoordinateHelper.ScreenProjectionType.Isometric);
+				mousePositionX, mousePositionY,
+				CoordinateHelper.ScreenOffset,
+				CoordinateHelper.ScreenProjectionType.Isometric);
 
 			return tiledMap.GetMapCellAtWorldPosition(worldPositionAtMousePosition);
 		}
@@ -462,10 +434,10 @@ namespace MyThirdSDL.Screens
 				Primitive.DrawLine(renderer, (int)projected2.X, (int)projected2.Y, (int)projected4.X, (int)projected4.Y); // top right to bottom right
 				Primitive.DrawLine(renderer, (int)projected3.X, (int)projected3.Y, (int)projected4.X, (int)projected4.Y); // bottom left to bottom right
 
-//				Primitive.DrawLine(renderer, employee.CollisionBox.X, employee.CollisionBox.Y, employee.CollisionBox.Right, employee.CollisionBox.Y);
-//				Primitive.DrawLine(renderer, employee.CollisionBox.X, employee.CollisionBox.Y, employee.CollisionBox.X, employee.CollisionBox.Bottom);
-//				Primitive.DrawLine(renderer, employee.CollisionBox.Right, employee.CollisionBox.Y, employee.CollisionBox.Right, employee.CollisionBox.Bottom);
-//				Primitive.DrawLine(renderer, employee.CollisionBox.X, employee.CollisionBox.Bottom, employee.CollisionBox.Right, employee.CollisionBox.Bottom);
+				//				Primitive.DrawLine(renderer, employee.CollisionBox.X, employee.CollisionBox.Y, employee.CollisionBox.Right, employee.CollisionBox.Y);
+				//				Primitive.DrawLine(renderer, employee.CollisionBox.X, employee.CollisionBox.Y, employee.CollisionBox.X, employee.CollisionBox.Bottom);
+				//				Primitive.DrawLine(renderer, employee.CollisionBox.Right, employee.CollisionBox.Y, employee.CollisionBox.Right, employee.CollisionBox.Bottom);
+				//				Primitive.DrawLine(renderer, employee.CollisionBox.X, employee.CollisionBox.Bottom, employee.CollisionBox.Right, employee.CollisionBox.Bottom);
 				renderer.SetDrawColor(0, 0, 0, 255);
 			}
 		}
@@ -491,14 +463,14 @@ namespace MyThirdSDL.Screens
 				Primitive.DrawLine(renderer, (int)projected2.X, (int)projected2.Y, (int)projected4.X, (int)projected4.Y); // top right to bottom right
 				Primitive.DrawLine(renderer, (int)projected3.X, (int)projected3.Y, (int)projected4.X, (int)projected4.Y); // bottom left to bottom right
 
-//				Primitive.DrawLine(renderer, pathNode.Bounds.X, pathNode.Bounds.Y, pathNode.Bounds.Right, pathNode.Bounds.Y);
-//				Primitive.DrawLine(renderer, pathNode.Bounds.X, pathNode.Bounds.Y, pathNode.Bounds.X, pathNode.Bounds.Bottom);
-//				Primitive.DrawLine(renderer, pathNode.Bounds.Right, pathNode.Bounds.Y, pathNode.Bounds.Right, pathNode.Bounds.Bottom);
-//				Primitive.DrawLine(renderer, pathNode.Bounds.X, pathNode.Bounds.Bottom, pathNode.Bounds.Right, pathNode.Bounds.Bottom);
+				//				Primitive.DrawLine(renderer, pathNode.Bounds.X, pathNode.Bounds.Y, pathNode.Bounds.Right, pathNode.Bounds.Y);
+				//				Primitive.DrawLine(renderer, pathNode.Bounds.X, pathNode.Bounds.Y, pathNode.Bounds.X, pathNode.Bounds.Bottom);
+				//				Primitive.DrawLine(renderer, pathNode.Bounds.Right, pathNode.Bounds.Y, pathNode.Bounds.Right, pathNode.Bounds.Bottom);
+				//				Primitive.DrawLine(renderer, pathNode.Bounds.X, pathNode.Bounds.Bottom, pathNode.Bounds.Right, pathNode.Bounds.Bottom);
 				renderer.SetDrawColor(0, 0, 0, 255);
 			}
 		}
-	
+
 		private MouseOverScreenEdge GetMouseOverScreenEdge()
 		{
 			MouseOverScreenEdge mouseOverScreenEdge = MouseOverScreenEdge.Unknown;
@@ -517,7 +489,7 @@ namespace MyThirdSDL.Screens
 
 		private void mailbox_UnreadMailCountChanged(object sender, EventArgs e)
 		{
-			if(userInterfaceManager != null)
+			if (userInterfaceManager != null)
 				userInterfaceManager.UpdateUnreadMailCount(mailManager.PlayerUnreadMailCount);
 		}
 	}

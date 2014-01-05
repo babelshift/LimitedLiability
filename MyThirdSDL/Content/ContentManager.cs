@@ -206,6 +206,21 @@ namespace MyThirdSDL.Content
 		{
 			JObject o = JObject.Parse(json);
 
+			foreach (var equipment in o["idle"])
+				AddThoughtToCollection(equipment, ThoughtType.IsIdle);
+
+			foreach (var equipment in o["unhappy"])
+				AddThoughtToCollection(equipment, ThoughtType.Unhappy);
+
+			foreach (var equipment in o["dirty"])
+				AddThoughtToCollection(equipment, ThoughtType.Dirty);
+
+			foreach (var equipment in o["unhealthy"])
+				AddThoughtToCollection(equipment, ThoughtType.Unhealthy);
+
+			foreach (var equipment in o["needsDeskAssignment"])
+				AddThoughtToCollection(equipment, ThoughtType.NeedsDeskAssignment);
+
 			foreach (var equipment in o["thirsty"])
 				AddThoughtToCollection(equipment, ThoughtType.Thirsty);
 

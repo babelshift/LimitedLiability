@@ -17,9 +17,11 @@ namespace MyThirdSDL.Agents
 		private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 		private double necessityDecayRate = -0.005;
 		private static Vector speed = new Vector(25, 25);
-		private List<Thought> thoughts = new List<Thought>();
+		private List<Thought> thoughtLog = new List<Thought>();
+		private Dictionary<ThoughtType, Thought> unsatisfiedThoughts = new Dictionary<ThoughtType, Thought>();
 
-		public IEnumerable<Thought> Thoughts { get { return thoughts; } }
+		public IEnumerable<Thought> UnsatisfiedThoughts { get { return unsatisfiedThoughts.Values; } }
+		public IEnumerable<Thought> ThoughtLog { get { return thoughtLog; } }
 
 		public string FullName { get { return FirstName + " " + LastName; } }
 
@@ -57,19 +59,10 @@ namespace MyThirdSDL.Agents
 			}
 		}
 
-		public MapCell OccupiedMapCell { get; set; } 
+		public MapCell OccupiedMapCell { get; set; }
 
-		public event EventHandler<EventArgs> IsSleepy;
-		public event EventHandler<EventArgs> IsUnhealthy;
-		public event EventHandler<EventArgs> IsDirty;
-		public event EventHandler<EventArgs> IsHungry;
-		public event EventHandler<EventArgs> IsThirsty;
-		public event EventHandler<EventArgs> IsUnhappy;
-		public event EventHandler<EventArgs> NeedsOfficeDeskAssignment;
-		public event EventHandler<EventArgs> IsIdle;
-		public event EventHandler<EventArgs> ThirstSatisfied;
-		public event EventHandler<EventArgs> HungerSatisfied;
 		public event EventHandler<ThoughtEventArgs> HadThought;
+		public event EventHandler<ThoughtEventArgs> ThoughtSatisfied;
 
 		public Employee(TimeSpan birthTime, string agentName, TextureBook textureBook, Vector position, AgentOrientation orientation,
 			string firstName, string lastName, DateTime birthday, Skills skills, Job job)
@@ -117,7 +110,7 @@ namespace MyThirdSDL.Agents
 
 			// if, after drinking, our thirst is above the threshold AND our previous thirst was below the threshold, our thirst has been satisfied, notify subscribers
 			if (Necessities.Thirst >= Necessities.Rating.Neutral && previousThirstRating < Necessities.Rating.Neutral)
-				EventHelper.FireEvent(ThirstSatisfied, this, EventArgs.Empty);
+				OnThoughtSatisfied(ThoughtType.Thirsty);
 		}
 
 		public void Eat(int hungerEffectiveness)
@@ -129,7 +122,7 @@ namespace MyThirdSDL.Agents
 
 			// if, after eating, our hunger is above the threshold AND our previous hunger was below the threshold, our hunger has been satisfied, notify subscribers
 			if (Necessities.Hunger >= Necessities.Rating.Neutral && previousHungerRating < Necessities.Rating.Neutral)
-				EventHelper.FireEvent(HungerSatisfied, this, EventArgs.Empty);
+				OnThoughtSatisfied(ThoughtType.Hungry);
 		}
 
 		public override void Update(GameTime gameTime)
@@ -200,7 +193,7 @@ namespace MyThirdSDL.Agents
 					if (IsAtOfficeDesk)
 						ChangeActivity(AgentActivity.WorkingAtDesk);
 					else
-						EventHelper.FireEvent(IsIdle, this, EventArgs.Empty);
+						OnThought(ThoughtType.IsIdle);
 				}
 			}
 			// if we have an intention, then we need something, so we are not at our office desk anymore
@@ -216,34 +209,34 @@ namespace MyThirdSDL.Agents
 		{
 			// if hungry, find vending machine / lunch room, eat
 			if (Necessities.Hunger < Necessities.Rating.Neutral)
-				OnHungry(simulationTime);
+				OnThought(ThoughtType.Hungry);
 			// if thirsty, find vending machine / lunch room, drink
 			if (Necessities.Thirst < Necessities.Rating.Neutral)
-				EventHelper.FireEvent(IsThirsty, this, EventArgs.Empty);
+				OnThought(ThoughtType.Thirsty);
 			// if dirty, find bathroom, wash, relieve self
 			if (Necessities.Hygiene < Necessities.Rating.Neutral)
-				EventHelper.FireEvent(IsDirty, this, EventArgs.Empty);
+				OnThought(ThoughtType.Dirty);
 			// if unhealthy, find gym/go exercise
 			if (Necessities.Health < Necessities.Rating.Neutral)
-				EventHelper.FireEvent(IsUnhealthy, this, EventArgs.Empty);
+				OnThought(ThoughtType.Unhealthy);
 			// if sleepy
 			if (Necessities.Sleep < Necessities.Rating.Neutral)
 			{
-				EventHelper.FireEvent(IsSleepy, this, EventArgs.Empty);
+				OnThought(ThoughtType.Sleepy);
 				// if during work hours, sleep at desk, perform poorly, complain
 				// if after work hours, leave work
 			}
 
 			// else reduce happiness somehow (skills slowly go down?)
 			if (!IsAssignedAnOfficeDesk)
-				EventHelper.FireEvent(NeedsOfficeDeskAssignment, this, EventArgs.Empty);
+				OnThought(ThoughtType.NeedsDeskAssignment);
 		}
 
 		private void CheckIfEmployeeIsUnhappy()
 		{
 			// if unhappy, complain, threaten to quit, quit, lash out at office / others
 			if (HappinessRating < (int)Necessities.Rating.Neutral)
-				EventHelper.FireEvent(IsUnhappy, this, EventArgs.Empty);
+				OnThoughtSatisfied(ThoughtType.Unhappy);
 		}
 
 		/// <summary>
@@ -264,29 +257,43 @@ namespace MyThirdSDL.Agents
 			Age = worldDateTime.Subtract(Birthday);
 		}
 
-		private void OnHungry(TimeSpan simulationTime)
+		private void OnThought(ThoughtType type)
 		{
-			EventHelper.FireEvent(IsHungry, this, EventArgs.Empty);
-
-			TimeSpan timeBetweenThoughts = TimeSpan.FromSeconds(1);
-			TimeSpan timeOfMostRecentHungerThought = GetTimeOfMostRecentThoughtByType(ThoughtType.Hungry);
-
-			if(timeOfMostRecentHungerThought == TimeSpan.Zero || simulationTime.Subtract(timeOfMostRecentHungerThought) > timeBetweenThoughts)
-				EventHelper.FireEvent<ThoughtEventArgs>(HadThought, this, new ThoughtEventArgs(ThoughtType.Hungry));
+			// only think about this if we are previously satisfied
+			if(!unsatisfiedThoughts.Any(t => t.Key == type))
+				EventHelper.FireEvent<ThoughtEventArgs>(HadThought, this, new ThoughtEventArgs(type));
 		}
 
-		public void AddThought(Thought thought)
+		public void AddUnsatisfiedThought(Thought thought)
 		{
-			thoughts.Add(thought);
+			unsatisfiedThoughts.Add(thought.Type, thought);
 		}
 
-		private TimeSpan GetTimeOfMostRecentThoughtByType(ThoughtType type)
+		private void OnThoughtSatisfied(ThoughtType type)
 		{
-			IEnumerable<Thought> filteredThoughts = thoughts.Where(t => t.Type == type);
-			if (filteredThoughts.Count() > 0)
-				return filteredThoughts.Max(t => t.SimulationTime);
-			else
-				return TimeSpan.Zero;
+			SatisfyThought(type);
+			EventHelper.FireEvent<ThoughtEventArgs>(ThoughtSatisfied, this, new ThoughtEventArgs(type));
 		}
+
+		private void SatisfyThought(ThoughtType type)
+		{
+			Thought satisfiedThought = null;
+			bool success = unsatisfiedThoughts.TryGetValue(type, out satisfiedThought);
+
+			if (success)
+			{
+				thoughtLog.Add(satisfiedThought);
+				unsatisfiedThoughts.Remove(type);
+			}
+		}
+
+		//private TimeSpan GetTimeOfMostRecentThoughtByType(ThoughtType type)
+		//{
+		//	IEnumerable<Thought> filteredThoughts = thoughtLog.Where(t => t.Type == type);
+		//	if (filteredThoughts.Count() > 0)
+		//		return filteredThoughts.Max(t => t.SimulationTime);
+		//	else
+		//		return TimeSpan.Zero;
+		//}
 	}
 }

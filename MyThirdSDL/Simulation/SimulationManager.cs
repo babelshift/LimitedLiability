@@ -69,13 +69,7 @@ namespace MyThirdSDL.Simulation
 
 		#region Public Simulation Events
 
-		public event EventHandler<EventArgs> EmployeeIsSleepy;
-		public event EventHandler<EventArgs> EmployeeIsUnhealthy;
-		public event EventHandler<EventArgs> EmployeeIsDirty;
-		public event EventHandler<EventArgs> EmployeeIsHungry;
-		public event EventHandler<EventArgs> EmployeeIsThirsty;
-		public event EventHandler<EventArgs> EmployeeIsUnhappy;
-		public event EventHandler<EventArgs> EmployeeNeedsOfficeDeskAssignment;
+		public event EventHandler<ThoughtEventArgs> HadThought;
 		public event EventHandler<EventArgs> EmployeeThirstSatisfied;
 		public event EventHandler<EventArgs> EmployeeHungerSatisfied;
 
@@ -111,6 +105,10 @@ namespace MyThirdSDL.Simulation
 					if (agent is Employee)
 					{
 						var employee = agent as Employee;
+
+						// TODO: delay updating this until 1-2 seconds has passed? we don't really need to update this often
+						foreach (var unsatisfiedThought in employee.UnsatisfiedThoughts)
+							TakeActionBasedOnThought(employee, unsatisfiedThought.Type);
 
 						// update the employee's age based on the updated world date time
 						employee.UpdateAge(WorldDateTime);
@@ -164,72 +162,24 @@ namespace MyThirdSDL.Simulation
 			Thought thought = GenerateThought(e.Type);
 			Employee employee = sender as Employee;
 			if (employee != null)
-				employee.AddThought(thought);
+			{
+				employee.AddUnsatisfiedThought(thought);
+				TakeActionBasedOnThought(employee, thought.Type);
+				if (HadThought != null)
+					HadThought(sender, e);
+			}
 		}
 
-		private void HandleIsIdle(object sender, EventArgs e)
+		private void TakeActionBasedOnThought(Employee employee, ThoughtType thoughtType)
 		{
-			var employee = GetEmployeeFromEventSender(sender);
-			WalkEmployeeToAssignedOfficeDesk(employee);
-		}
-
-		private void HandleNeedsOfficeDeskAssignment(object sender, EventArgs e)
-		{
-			var employee = GetEmployeeFromEventSender(sender);
-			EventHelper.FireEvent(EmployeeNeedsOfficeDeskAssignment, sender, e);
-			WalkMobileAgentToClosest<OfficeDesk>(employee);
-		}
-
-		private void HandleIsUnhappy(object sender, EventArgs e)
-		{
-
-		}
-
-		private void HandleIsUnhealthy(object sender, EventArgs e)
-		{
-
-		}
-
-		private void HandleIsThirsty(object sender, EventArgs e)
-		{
-			var employee = GetEmployeeFromEventSender(sender);
-			EventHelper.FireEvent(EmployeeIsThirsty, sender, e);
-			WalkMobileAgentToClosest<SodaMachine>(employee);
-		}
-
-		private void HandleIsHungry(object sender, EventArgs e)
-		{
-			var employee = GetEmployeeFromEventSender(sender);
-			EventHelper.FireEvent(EmployeeIsHungry, sender, e);
-			WalkMobileAgentToClosest<SnackMachine>(employee);
-		}
-
-		private void HandleIsDirty(object sender, EventArgs e)
-		{
-
-		}
-
-		private void HandleIsSleepy(object sender, EventArgs e)
-		{
-
-		}
-
-		private Employee GetEmployeeFromEventSender(object sender)
-		{
-			var employee = sender as Employee;
-			if (employee == null)
-				throw new ArgumentException("HandleEmployee handlers can only work with Employee objects!");
-			return employee;
-		}
-
-		private void HandleHungerSatisfied(object sender, EventArgs e)
-		{
-			EventHelper.FireEvent(EmployeeHungerSatisfied, sender, e);
-		}
-
-		private void HandleThirstSatisfied(object sender, EventArgs e)
-		{
-			EventHelper.FireEvent(EmployeeThirstSatisfied, sender, e);
+			if (thoughtType == ThoughtType.Hungry)
+				WalkMobileAgentToClosest<SnackMachine>(employee);
+			else if (thoughtType == ThoughtType.Thirsty)
+				WalkMobileAgentToClosest<SodaMachine>(employee);
+			else if (thoughtType == ThoughtType.NeedsDeskAssignment)
+				WalkMobileAgentToClosest<OfficeDesk>(employee);
+			else if (thoughtType == ThoughtType.IsIdle)
+				WalkEmployeeToAssignedOfficeDesk(employee);
 		}
 
 		#endregion
@@ -277,24 +227,22 @@ namespace MyThirdSDL.Simulation
 				{
 					var employee = agent as Employee;
 
-					employee.IsSleepy += HandleIsSleepy;
-					employee.IsDirty += HandleIsDirty;
-					employee.IsHungry += HandleIsHungry;
-					employee.IsThirsty += HandleIsThirsty;
-					employee.IsUnhealthy += HandleIsUnhealthy;
-					employee.IsUnhappy += HandleIsUnhappy;
-					employee.NeedsOfficeDeskAssignment += HandleNeedsOfficeDeskAssignment;
-					employee.IsIdle += HandleIsIdle;
 					employee.HadThought += HandleHadThought;
-
-					employee.ThirstSatisfied += HandleThirstSatisfied;
-					employee.HungerSatisfied += HandleHungerSatisfied;
+					employee.ThoughtSatisfied += HandleThoughtSatisfied;
 
 					StartTrackingAgent<T>(employee);
 				}
 				else
 					StartTrackingAgent<T>(agent);
 			}
+		}
+
+		private void HandleThoughtSatisfied(object sender, ThoughtEventArgs e)
+		{
+			if(e.Type == ThoughtType.Hungry)
+				EventHelper.FireEvent(EmployeeHungerSatisfied, sender, e);
+			else if (e.Type == ThoughtType.Thirsty)
+				EventHelper.FireEvent(EmployeeThirstSatisfied, sender, e);
 		}
 
 		/// <summary>
@@ -346,18 +294,8 @@ namespace MyThirdSDL.Simulation
 				{
 					var employee = agent as Employee;
 
-					employee.IsSleepy -= EmployeeIsSleepy;
-					employee.IsDirty -= EmployeeIsDirty;
-					employee.IsHungry -= EmployeeIsHungry;
-					employee.IsThirsty -= EmployeeIsThirsty;
-					employee.IsUnhealthy -= EmployeeIsUnhealthy;
-					employee.IsUnhappy -= EmployeeIsUnhappy;
-					employee.NeedsOfficeDeskAssignment -= EmployeeNeedsOfficeDeskAssignment;
-					employee.IsIdle -= HandleIsIdle;
 					employee.HadThought -= HandleHadThought;
-
-					employee.ThirstSatisfied -= HandleThirstSatisfied;
-					employee.HungerSatisfied -= HandleHungerSatisfied;
+					employee.ThoughtSatisfied -= HandleThoughtSatisfied;
 				}
 
 				StopTrackingAgent<T>(agentId);

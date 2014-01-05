@@ -6,16 +6,6 @@ using System.Threading.Tasks;
 
 namespace MyThirdSDL.Agents
 {
-	public enum ThoughtType
-	{
-		Thirsty,
-		Hungry,
-		Sleepy,
-		Miscellaneous,
-		NotEnoughEquipment,
-		NotChallenged
-	}
-
 	public class Thought
 	{
 		public string Idea { get; private set; }
