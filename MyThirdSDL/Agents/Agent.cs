@@ -70,7 +70,7 @@ namespace MyThirdSDL.Agents
 					WorldPosition.X,
 					WorldPosition.Y,
 					CoordinateHelper.ScreenOffset,
-					CoordinateHelper.ScreenProjectionType.Isometric
+					CoordinateHelper.ScreenProjectionType.Orthogonal
 				);
 
 				return projectedPosition;

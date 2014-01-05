@@ -118,12 +118,10 @@ namespace MyThirdSDL.Content
 			TileLayerType tileLayerType = TileLayerType.None;
 			if (layerContent.Name.Contains("Ground"))
 				tileLayerType = TileLayerType.Ground;
-			else if (layerContent.Name.Contains("BackWalls"))
-				tileLayerType = TileLayerType.BackWalls;
+			else if (layerContent.Name.Contains("Walls"))
+				tileLayerType = TileLayerType.Walls;
 			else if (layerContent.Name.Contains("Objects"))
 				tileLayerType = TileLayerType.Objects;
-			else if (layerContent.Name.Contains("FrontWalls"))
-				tileLayerType = TileLayerType.FrontWalls;
 
 			TileLayer tileLayer = new TileLayer(layerContent.Name, tileLayerContent.Width, tileLayerContent.Height, tileLayerType);
 			for (int i = 0; i < tileLayerContent.Data.Length; i++)
@@ -161,7 +159,7 @@ namespace MyThirdSDL.Content
 					if (tileIndex - tileSet.FirstGID < tileSet.Tiles.Count)
 					{
 						tileSetTexture = tileSet.Texture;
-						source = tileSet.Tiles[(int)(tileIndex - tileSet.FirstGID)].SourceTextureBounds;
+						source = tileSet.Tiles[tileIndex - tileSet.FirstGID].SourceTextureBounds;
 						break;
 					}
 				}
@@ -169,12 +167,10 @@ namespace MyThirdSDL.Content
 				TileType tileType = TileType.None;
 				if (tileLayerType == TileLayerType.Ground)
 					tileType = TileType.Ground;
-				else if (tileLayerType == TileLayerType.BackWalls)
-					tileType = TileType.BackWall;
+				else if (tileLayerType == TileLayerType.Walls)
+					tileType = TileType.Wall;
 				if (tileLayerType == TileLayerType.Objects)
 					tileType = TileType.Object;
-				if (tileLayerType == TileLayerType.FrontWalls)
-					tileType = TileType.FrontWall;
 
 				tile = new Tile(tileSetTexture, source, TileWidth, TileHeight, tileType);
 			}
@@ -350,7 +346,7 @@ namespace MyThirdSDL.Content
 							// in world space in a 40 wide by 40 high grid
 							worldPosition = new Vector(x * TileWidth / 2, y * TileHeight);
 							projectedPosition = CoordinateHelper.WorldSpaceToScreenSpace(worldPosition.X, worldPosition.Y,
-								CoordinateHelper.ScreenOffset, CoordinateHelper.ScreenProjectionType.Isometric);
+								CoordinateHelper.ScreenOffset, CoordinateHelper.ScreenProjectionType.Orthogonal);
 						}
 						else if (mapOrientation == Orientation.Orthogonal)
 						{

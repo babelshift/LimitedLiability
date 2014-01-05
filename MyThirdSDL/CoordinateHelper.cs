@@ -10,12 +10,12 @@ namespace MyThirdSDL
 	public static class CoordinateHelper
 	{
 		// TODO: set these values on init based on .tmx file?
-		public static readonly int TileMapTileWidth = 80;
-		public static readonly int TileMapTileHeight = 40;
-		public static readonly int WorldGridCellWidth = 40;
-		public static readonly int WorldGridCellHeight = 40;
-		public static readonly int PathNodeGridCellWidth = 20;
-		public static readonly int PathNodeGridCellHeight = 20;
+		public static readonly int TileMapTileWidth = 32;
+		public static readonly int TileMapTileHeight = 32;
+		public static readonly int WorldGridCellWidth = 32;
+		public static readonly int WorldGridCellHeight = 32;
+		public static readonly int PathNodeGridCellWidth = 32;
+		public static readonly int PathNodeGridCellHeight = 32;
 		public static Point DefaultPoint = new Point(-9999, -9999);
 		public static Vector DefaultVector = new Vector(-9999, -9999);
 

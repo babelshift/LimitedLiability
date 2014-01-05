@@ -163,13 +163,13 @@ namespace MyThirdSDL.Screens
 			Surface tileHighlightSurface = new Surface(tileHighlightTexturePath, SurfaceType.PNG);
 			tileHighlightImage = new Image(renderer, tileHighlightSurface, ImageFormat.PNG);
 			Point bottomRightPointOfScreen = new Point(MainGame.SCREEN_WIDTH, MainGame.SCREEN_HEIGHT);
-			string mapPath = ContentManager.GetContentPath("Office1");
+			string mapPath = ContentManager.GetContentPath("OfficeOrthogonal1");
 
 			// Map
 			tiledMap = new TiledMap(mapPath, renderer);
 
 			// SimulationManager
-			simulationManager.CurrentMap = tiledMap;
+			simulationManager.SetCurrentMap(tiledMap);
 
 			// Mouse Cursor
 			cursor = new Cursor(ContentManager, renderer);
@@ -388,7 +388,7 @@ namespace MyThirdSDL.Screens
 			Vector worldPositionAtMousePosition = CoordinateHelper.ScreenSpaceToWorldSpace(
 				mousePositionX, mousePositionY,
 				CoordinateHelper.ScreenOffset,
-				CoordinateHelper.ScreenProjectionType.Isometric);
+				CoordinateHelper.ScreenProjectionType.Orthogonal);
 
 			return tiledMap.GetMapCellAtWorldPosition(worldPositionAtMousePosition);
 		}
@@ -422,10 +422,10 @@ namespace MyThirdSDL.Screens
 		{
 			foreach (var employee in simulationManager.TrackedEmployees)
 			{
-				Vector projected1 = CoordinateHelper.WorldSpaceToScreenSpace(employee.CollisionBox.X, employee.CollisionBox.Y, CoordinateHelper.ScreenOffset, CoordinateHelper.ScreenProjectionType.Isometric);
-				Vector projected2 = CoordinateHelper.WorldSpaceToScreenSpace(employee.CollisionBox.Right, employee.CollisionBox.Y, CoordinateHelper.ScreenOffset, CoordinateHelper.ScreenProjectionType.Isometric);
-				Vector projected3 = CoordinateHelper.WorldSpaceToScreenSpace(employee.CollisionBox.X, employee.CollisionBox.Bottom, CoordinateHelper.ScreenOffset, CoordinateHelper.ScreenProjectionType.Isometric);
-				Vector projected4 = CoordinateHelper.WorldSpaceToScreenSpace(employee.CollisionBox.Right, employee.CollisionBox.Bottom, CoordinateHelper.ScreenOffset, CoordinateHelper.ScreenProjectionType.Isometric);
+				Vector projected1 = CoordinateHelper.WorldSpaceToScreenSpace(employee.CollisionBox.X, employee.CollisionBox.Y, CoordinateHelper.ScreenOffset, CoordinateHelper.ScreenProjectionType.Orthogonal);
+				Vector projected2 = CoordinateHelper.WorldSpaceToScreenSpace(employee.CollisionBox.Right, employee.CollisionBox.Y, CoordinateHelper.ScreenOffset, CoordinateHelper.ScreenProjectionType.Orthogonal);
+				Vector projected3 = CoordinateHelper.WorldSpaceToScreenSpace(employee.CollisionBox.X, employee.CollisionBox.Bottom, CoordinateHelper.ScreenOffset, CoordinateHelper.ScreenProjectionType.Orthogonal);
+				Vector projected4 = CoordinateHelper.WorldSpaceToScreenSpace(employee.CollisionBox.Right, employee.CollisionBox.Bottom, CoordinateHelper.ScreenOffset, CoordinateHelper.ScreenProjectionType.Orthogonal);
 
 				renderer.SetDrawColor(8, 255, 8, 255);
 
@@ -451,10 +451,10 @@ namespace MyThirdSDL.Screens
 			var pathNodes = tiledMap.GetActivePathNodes();
 			foreach (var pathNode in pathNodes)
 			{
-				Vector projected1 = CoordinateHelper.WorldSpaceToScreenSpace(pathNode.Bounds.X, pathNode.Bounds.Y, CoordinateHelper.ScreenOffset, CoordinateHelper.ScreenProjectionType.Isometric);
-				Vector projected2 = CoordinateHelper.WorldSpaceToScreenSpace(pathNode.Bounds.Right, pathNode.Bounds.Y, CoordinateHelper.ScreenOffset, CoordinateHelper.ScreenProjectionType.Isometric);
-				Vector projected3 = CoordinateHelper.WorldSpaceToScreenSpace(pathNode.Bounds.X, pathNode.Bounds.Bottom, CoordinateHelper.ScreenOffset, CoordinateHelper.ScreenProjectionType.Isometric);
-				Vector projected4 = CoordinateHelper.WorldSpaceToScreenSpace(pathNode.Bounds.Right, pathNode.Bounds.Bottom, CoordinateHelper.ScreenOffset, CoordinateHelper.ScreenProjectionType.Isometric);
+				Vector projected1 = CoordinateHelper.WorldSpaceToScreenSpace(pathNode.Bounds.X, pathNode.Bounds.Y, CoordinateHelper.ScreenOffset, CoordinateHelper.ScreenProjectionType.Orthogonal);
+				Vector projected2 = CoordinateHelper.WorldSpaceToScreenSpace(pathNode.Bounds.Right, pathNode.Bounds.Y, CoordinateHelper.ScreenOffset, CoordinateHelper.ScreenProjectionType.Orthogonal);
+				Vector projected3 = CoordinateHelper.WorldSpaceToScreenSpace(pathNode.Bounds.X, pathNode.Bounds.Bottom, CoordinateHelper.ScreenOffset, CoordinateHelper.ScreenProjectionType.Orthogonal);
+				Vector projected4 = CoordinateHelper.WorldSpaceToScreenSpace(pathNode.Bounds.Right, pathNode.Bounds.Bottom, CoordinateHelper.ScreenOffset, CoordinateHelper.ScreenProjectionType.Orthogonal);
 
 				renderer.SetDrawColor(255, 8, 8, 255);
 

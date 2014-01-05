@@ -59,7 +59,8 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\Libs\SharpDL.Input.dll</HintPath>
     </Reference>
-    <Reference Include="SharpTiles">
+    <Reference Include="SharpTiles, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\Libs\SharpTiles.dll</HintPath>
     </Reference>
     <Reference Include="System" />
@@ -333,6 +334,9 @@
     <None Include="Content\Maps\Office3.tmx">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <Content Include="Content\Maps\OfficeOrthogonal1.tmx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>

@@ -14,12 +14,19 @@ namespace MyThirdSDL.Simulation
 {
 	public class SimulationManager
 	{
+		#region Members
+
 		public static readonly int SimulationTimeToWorldTimeMultiplier = 540;
 
 		private IEnumerable<ThoughtMetadata> thoughtPool;
 		private Dictionary<System.Type, List<Agent>> trackedAgents = new Dictionary<Type, List<Agent>>();
 		private DateTime startingWorldDateTime;
 		private Random random = new Random();
+		private TiledMap currentMap;
+
+		#endregion
+
+		#region Properties
 
 		public DateTime WorldDateTime { get { return startingWorldDateTime.Add(WorldTimePassed); } }
 
@@ -34,8 +41,6 @@ namespace MyThirdSDL.Simulation
 		}
 
 		public static TimeSpan SimulationTime { get; private set; }
-
-		public TiledMap CurrentMap { get; set; }
 
 		/// <summary>
 		/// Returns an enumerable of all tracked agents in the simulation.
@@ -66,6 +71,8 @@ namespace MyThirdSDL.Simulation
 				return agents;
 			}
 		}
+
+		#endregion
 
 		#region Public Simulation Events
 
@@ -131,9 +138,11 @@ namespace MyThirdSDL.Simulation
 			}
 		}
 
+		#region Employee Events
+
 		private MapCell GetMapCellOccupiedByEmployee(Employee employee)
 		{
-			MapCell mapCell = CurrentMap.MapCells.FirstOrDefault(mc => mc.Bounds.Contains(employee.CollisionBox.Center));
+			MapCell mapCell = currentMap.MapCells.FirstOrDefault(mc => mc.Bounds.Contains(employee.CollisionBox.Center));
 			return mapCell;
 		}
 
@@ -154,8 +163,6 @@ namespace MyThirdSDL.Simulation
 			else
 				return false;
 		}
-
-		#region Employee Events
 
 		private void HandleHadThought(object sender, ThoughtEventArgs e)
 		{
@@ -351,6 +358,8 @@ namespace MyThirdSDL.Simulation
 
 		#endregion
 
+		#region Employee Triggers
+
 		/// <summary>
 		/// Attempts to walk the employee to its assigned office desk. This will queue up an intention of "Go To Desk" for the employee.
 		/// </summary>
@@ -440,6 +449,8 @@ namespace MyThirdSDL.Simulation
 			fromAgent.AddIntention(new Intention(toAgent, bestPathToClosestAgent, intentionType));
 		}
 
+		#endregion
+
 		#region Path Finding
 
 		/// <summary>
@@ -451,8 +462,8 @@ namespace MyThirdSDL.Simulation
 		/// <returns></returns>
 		private Queue<PathNode> FindBestPath(Vector startWorldPosition, Vector endWorldPosition)
 		{
-			PathNode start = CurrentMap.GetPathNodeAtWorldPosition(startWorldPosition);
-			PathNode end = CurrentMap.GetPathNodeAtWorldPosition(endWorldPosition);
+			PathNode start = currentMap.GetPathNodeAtWorldPosition(startWorldPosition);
+			PathNode end = currentMap.GetPathNodeAtWorldPosition(endWorldPosition);
 			Path<PathNode> bestPath = FindPath<PathNode>(start, end);//, ExactDistance, ManhattanDistance);
 			IEnumerable<PathNode> bestPathReversed = bestPath.Reverse();
 			Queue<PathNode> result = new Queue<PathNode>();
@@ -602,6 +613,11 @@ namespace MyThirdSDL.Simulation
 			int randomIndex = random.Next(0, thoughtMatches.Count() - 1);
 			ThoughtMetadata thought = thoughtMatches[randomIndex];
 			return new Thought(thought.Idea, thought.Type, WorldDateTime, SimulationTime);
+		}
+
+		public void SetCurrentMap(TiledMap tiledMap)
+		{
+			currentMap = tiledMap;
 		}
 	}
 }

@@ -15,8 +15,7 @@ namespace MyThirdSDL.Content
 	{
 		None,
 		Ground,
-		BackWalls,
-		Objects,
-		FrontWalls
+		Walls,
+		Objects
 	}
 }

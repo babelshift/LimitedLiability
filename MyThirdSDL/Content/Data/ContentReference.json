@@ -85,6 +85,7 @@
 		{ "key": "CursorHandDown",				"value": "Images/User Interface/CursorHandDown.png" }
 	],
 	"maps": [
-		{ "key": "Office1",						"value": "Maps/Office1.tmx" }
+		{ "key": "Office1",						"value": "Maps/Office1.tmx" },
+		{ "key": "OfficeOrthogonal1",			"value": "Maps/OfficeOrthogonal1.tmx" }
 	] 
 }

@@ -6,9 +6,8 @@ namespace MyThirdSDL
 	{
 		None,
 		Ground,
-		BackWall,
-		Object,
-		FrontWall
+		Wall,
+		Object
 	}
 }
 
