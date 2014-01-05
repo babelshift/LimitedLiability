@@ -414,8 +414,8 @@ namespace MyThirdSDL.Content
 		/// <returns></returns>
 		public MapCell GetMapCellAtWorldPosition(Vector worldPosition)
 		{
-			int worldX = (int)(Math.Round(worldPosition.X / CoordinateHelper.WorldGridCellWidth));
-			int worldY = (int)(Math.Round(worldPosition.Y / CoordinateHelper.WorldGridCellHeight));
+			int worldX = (int)(Math.Floor(worldPosition.X / CoordinateHelper.WorldGridCellWidth));
+			int worldY = (int)(Math.Floor(worldPosition.Y / CoordinateHelper.WorldGridCellHeight));
 
 			// if we are within the bounds of the world
 			if (worldX >= 0 && worldY >= 0 && worldX < HorizontalTileCount && worldY < VerticalTileCount)

@@ -46,7 +46,7 @@ namespace MyThirdSDL.Agents
 		{
 			get
 			{
-				return new Rectangle((int)WorldPosition.X, (int)WorldPosition.Y, ActiveTexture.Width / 2, ActiveTexture.Height / 2);
+				return new Rectangle((int)WorldPosition.X, (int)WorldPosition.Y, ActiveTexture.Width, ActiveTexture.Height);
 			}
 		}
 
@@ -144,9 +144,11 @@ namespace MyThirdSDL.Agents
 
 		public virtual void Draw(GameTime gameTime, Renderer renderer)
 		{
-			// adjust the positions so we draw at the center of the Texture and at the correct camera position
-			Vector drawPosition = CoordinateHelper.ProjectedPositionToDrawPosition(ProjectedPosition);
-			renderer.RenderTexture(ActiveTexture, drawPosition.X, drawPosition.Y);
+			renderer.RenderTexture(
+				ActiveTexture,
+				ProjectedPosition.X - Camera.Position.X,
+				ProjectedPosition.Y - Camera.Position.Y
+			);
 		}
 
 		#endregion

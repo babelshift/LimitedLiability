@@ -279,6 +279,9 @@ namespace MyThirdSDL.Screens
 			foreach (var drawable in allDrawables)
 				drawable.Draw(gameTime, renderer);
 
+			foreach (var agent in simulationManager.TrackedAgents)
+				agent.Draw(gameTime, renderer);
+
 			if (userInterfaceManager.CurrentState == UserInterfaceState.PlaceEquipmentActive)
 			{
 				if (hoveredMapCell != null)
@@ -291,8 +294,8 @@ namespace MyThirdSDL.Screens
 				}
 			}
 
-			//DrawActiveNodeCenters(renderer);
-			//DrawEmployeCollisionBoxes(renderer);
+			DrawActiveNodeCenters(renderer);
+			DrawEmployeCollisionBoxes(renderer);
 
 			userInterfaceManager.Draw(gameTime, renderer);
 
@@ -342,20 +345,20 @@ namespace MyThirdSDL.Screens
 		{
 			var employee = GetEmployeeFromEventSender(sender);
 
-			if (e.Type == ThoughtType.Hungry)
-				SendEmployeeMessageToUserInterface(employee, String.Format("{0} is hungry!", employee.FullName), SimulationMessageType.EmployeeIsHungry);
-			else if (e.Type == ThoughtType.Thirsty)
-				SendEmployeeMessageToUserInterface(employee, String.Format("{0} is thirsty!", employee.FullName), SimulationMessageType.EmployeeIsThirsty);
-			else if (e.Type == ThoughtType.Dirty)
-				SendEmployeeMessageToUserInterface(employee, String.Format("{0} is dirty!", employee.FullName), SimulationMessageType.EmployeeIsDirty);
-			else if (e.Type == ThoughtType.NeedsDeskAssignment)
-				SendEmployeeMessageToUserInterface(employee, String.Format("{0} needs and office desk to work!", employee.FullName), SimulationMessageType.EmployeeNeedsDesk);
-			else if (e.Type == ThoughtType.Sleepy)
-				SendEmployeeMessageToUserInterface(employee, String.Format("{0} is sleepy!", employee.FullName), SimulationMessageType.EmployeeIsSleepy);
-			else if (e.Type == ThoughtType.Unhappy)
-				SendEmployeeMessageToUserInterface(employee, String.Format("{0} is unhappy!", employee.FullName), SimulationMessageType.EmployeeIsUnhappy);
-			else if (e.Type == ThoughtType.Unhealthy)
-				SendEmployeeMessageToUserInterface(employee, String.Format("{0} is unhealthy!", employee.FullName), SimulationMessageType.EmployeeIsUnhealthy);
+			//if (e.Type == ThoughtType.Hungry)
+			//	SendEmployeeMessageToUserInterface(employee, String.Format("{0} is hungry!", employee.FullName), SimulationMessageType.EmployeeIsHungry);
+			//else if (e.Type == ThoughtType.Thirsty)
+			//	SendEmployeeMessageToUserInterface(employee, String.Format("{0} is thirsty!", employee.FullName), SimulationMessageType.EmployeeIsThirsty);
+			//else if (e.Type == ThoughtType.Dirty)
+			//	SendEmployeeMessageToUserInterface(employee, String.Format("{0} is dirty!", employee.FullName), SimulationMessageType.EmployeeIsDirty);
+			//else if (e.Type == ThoughtType.NeedsDeskAssignment)
+			//	SendEmployeeMessageToUserInterface(employee, String.Format("{0} needs and office desk to work!", employee.FullName), SimulationMessageType.EmployeeNeedsDesk);
+			//else if (e.Type == ThoughtType.Sleepy)
+			//	SendEmployeeMessageToUserInterface(employee, String.Format("{0} is sleepy!", employee.FullName), SimulationMessageType.EmployeeIsSleepy);
+			//else if (e.Type == ThoughtType.Unhappy)
+			//	SendEmployeeMessageToUserInterface(employee, String.Format("{0} is unhappy!", employee.FullName), SimulationMessageType.EmployeeIsUnhappy);
+			//else if (e.Type == ThoughtType.Unhealthy)
+			//	SendEmployeeMessageToUserInterface(employee, String.Format("{0} is unhealthy!", employee.FullName), SimulationMessageType.EmployeeIsUnhealthy);
 		}
 
 		#endregion
@@ -427,6 +430,11 @@ namespace MyThirdSDL.Screens
 				Vector projected3 = CoordinateHelper.WorldSpaceToScreenSpace(employee.CollisionBox.X, employee.CollisionBox.Bottom, CoordinateHelper.ScreenOffset, CoordinateHelper.ScreenProjectionType.Orthogonal);
 				Vector projected4 = CoordinateHelper.WorldSpaceToScreenSpace(employee.CollisionBox.Right, employee.CollisionBox.Bottom, CoordinateHelper.ScreenOffset, CoordinateHelper.ScreenProjectionType.Orthogonal);
 
+				projected1 -= Camera.Position;
+				projected2 -= Camera.Position;
+				projected3 -= Camera.Position;
+				projected4 -= Camera.Position;
+
 				renderer.SetDrawColor(8, 255, 8, 255);
 
 				Primitive.DrawLine(renderer, (int)projected1.X, (int)projected1.Y, (int)projected2.X, (int)projected2.Y); // top left to top right
@@ -434,10 +442,10 @@ namespace MyThirdSDL.Screens
 				Primitive.DrawLine(renderer, (int)projected2.X, (int)projected2.Y, (int)projected4.X, (int)projected4.Y); // top right to bottom right
 				Primitive.DrawLine(renderer, (int)projected3.X, (int)projected3.Y, (int)projected4.X, (int)projected4.Y); // bottom left to bottom right
 
-				//				Primitive.DrawLine(renderer, employee.CollisionBox.X, employee.CollisionBox.Y, employee.CollisionBox.Right, employee.CollisionBox.Y);
-				//				Primitive.DrawLine(renderer, employee.CollisionBox.X, employee.CollisionBox.Y, employee.CollisionBox.X, employee.CollisionBox.Bottom);
-				//				Primitive.DrawLine(renderer, employee.CollisionBox.Right, employee.CollisionBox.Y, employee.CollisionBox.Right, employee.CollisionBox.Bottom);
-				//				Primitive.DrawLine(renderer, employee.CollisionBox.X, employee.CollisionBox.Bottom, employee.CollisionBox.Right, employee.CollisionBox.Bottom);
+				//Primitive.DrawLine(renderer, employee.CollisionBox.X, employee.CollisionBox.Y, employee.CollisionBox.Right, employee.CollisionBox.Y);
+				//Primitive.DrawLine(renderer, employee.CollisionBox.X, employee.CollisionBox.Y, employee.CollisionBox.X, employee.CollisionBox.Bottom);
+				//Primitive.DrawLine(renderer, employee.CollisionBox.Right, employee.CollisionBox.Y, employee.CollisionBox.Right, employee.CollisionBox.Bottom);
+				//Primitive.DrawLine(renderer, employee.CollisionBox.X, employee.CollisionBox.Bottom, employee.CollisionBox.Right, employee.CollisionBox.Bottom);
 				renderer.SetDrawColor(0, 0, 0, 255);
 			}
 		}
@@ -456,6 +464,11 @@ namespace MyThirdSDL.Screens
 				Vector projected3 = CoordinateHelper.WorldSpaceToScreenSpace(pathNode.Bounds.X, pathNode.Bounds.Bottom, CoordinateHelper.ScreenOffset, CoordinateHelper.ScreenProjectionType.Orthogonal);
 				Vector projected4 = CoordinateHelper.WorldSpaceToScreenSpace(pathNode.Bounds.Right, pathNode.Bounds.Bottom, CoordinateHelper.ScreenOffset, CoordinateHelper.ScreenProjectionType.Orthogonal);
 
+				projected1 -= Camera.Position;
+				projected2 -= Camera.Position;
+				projected3 -= Camera.Position;
+				projected4 -= Camera.Position;
+
 				renderer.SetDrawColor(255, 8, 8, 255);
 
 				Primitive.DrawLine(renderer, (int)projected1.X, (int)projected1.Y, (int)projected2.X, (int)projected2.Y); // top left to top right
@@ -463,10 +476,10 @@ namespace MyThirdSDL.Screens
 				Primitive.DrawLine(renderer, (int)projected2.X, (int)projected2.Y, (int)projected4.X, (int)projected4.Y); // top right to bottom right
 				Primitive.DrawLine(renderer, (int)projected3.X, (int)projected3.Y, (int)projected4.X, (int)projected4.Y); // bottom left to bottom right
 
-				//				Primitive.DrawLine(renderer, pathNode.Bounds.X, pathNode.Bounds.Y, pathNode.Bounds.Right, pathNode.Bounds.Y);
-				//				Primitive.DrawLine(renderer, pathNode.Bounds.X, pathNode.Bounds.Y, pathNode.Bounds.X, pathNode.Bounds.Bottom);
-				//				Primitive.DrawLine(renderer, pathNode.Bounds.Right, pathNode.Bounds.Y, pathNode.Bounds.Right, pathNode.Bounds.Bottom);
-				//				Primitive.DrawLine(renderer, pathNode.Bounds.X, pathNode.Bounds.Bottom, pathNode.Bounds.Right, pathNode.Bounds.Bottom);
+				//Primitive.DrawLine(renderer, pathNode.Bounds.X, pathNode.Bounds.Y, pathNode.Bounds.Right, pathNode.Bounds.Y);
+				//Primitive.DrawLine(renderer, pathNode.Bounds.X, pathNode.Bounds.Y, pathNode.Bounds.X, pathNode.Bounds.Bottom);
+				//Primitive.DrawLine(renderer, pathNode.Bounds.Right, pathNode.Bounds.Y, pathNode.Bounds.Right, pathNode.Bounds.Bottom);
+				//Primitive.DrawLine(renderer, pathNode.Bounds.X, pathNode.Bounds.Bottom, pathNode.Bounds.Right, pathNode.Bounds.Bottom);
 				renderer.SetDrawColor(0, 0, 0, 255);
 			}
 		}

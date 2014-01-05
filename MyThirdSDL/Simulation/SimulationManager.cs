@@ -125,9 +125,9 @@ namespace MyThirdSDL.Simulation
 							employee.OccupiedMapCell.RemoveDrawable(employee, (int)TileType.Object);
 
 						// get the map cell that the employee occupies and add it as a drawable to that map cell
-						MapCell mapCellToOccupy = GetMapCellOccupiedByEmployee(employee);
-						mapCellToOccupy.AddDrawable(employee, (int)TileType.Object);
-						employee.OccupiedMapCell = mapCellToOccupy;
+						//MapCell mapCellToOccupy = GetMapCellOccupiedByEmployee(employee);
+						//mapCellToOccupy.AddDrawable(employee, (int)TileType.Object);
+						//employee.OccupiedMapCell = mapCellToOccupy;
 
 						// if the agent being updated is an employee and that agent is being clicked on by the user, fire the event telling subscribers of such
 						// we can use this event to react to the user interacting with the employees to do things like display their inspection information

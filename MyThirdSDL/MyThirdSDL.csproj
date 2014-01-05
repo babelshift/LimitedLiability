@@ -97,7 +97,9 @@
     <Compile Include="Camera.cs" />
     <Compile Include="Content\CompanyMetadata.cs" />
     <Compile Include="Content\ContentManager.cs" />
-    <Compile Include="Content\MapCell.cs" />
+    <Compile Include="Content\MapCell.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Content\MapObject.cs" />
     <Compile Include="Content\MapObjectLayer.cs" />
     <Compile Include="Content\MapObjectLayerType.cs" />
@@ -214,19 +216,19 @@
     <Compile Include="UserInterface\UserInterfaceState.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\Images\Equipment\OfficeDesk.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Images\Equipment\SnackMachine.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Images\Equipment\SodaMachine.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Content\Images\MaleEmployee0001.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Images\Rooms\WallBottomLeft.gif">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Content\Images\Rooms\WallBottomLeft.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Content\Images\Rooms\WallBottomRight.gif">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Content\Images\Rooms\WallBottomRight.png">
+    <Content Include="Content\Images\TileHighlight.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\Images\User Interface\ButtonMailAction.png">
@@ -286,24 +288,6 @@
     <Content Include="Content\Images\User Interface\ToolboxTrayButtonMailHover.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Maps\0_Decor_Inside.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Content\Maps\0_Decor_Outside.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Content\Maps\0_Ground_Inside.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Content\Maps\0_Ground_Outside.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Content\Maps\0_Objects.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Content\Maps\Characters.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
     <Content Include="Content\Data\AgentReference.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -311,6 +295,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\Data\PeopleNames.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Maps\TileSet1.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <None Include="App.config" />
@@ -324,46 +311,12 @@
     <Content Include="Content\Data\ThoughtReference.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <None Include="Content\Maps\Map3.tmx">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Content\Maps\Office1.tmx">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      <SubType>Designer</SubType>
-    </None>
-    <None Include="Content\Maps\Office3.tmx">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
     <Content Include="Content\Maps\OfficeOrthogonal1.tmx">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Content\Images\CubeTileSheet.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Content\Images\CubeTileSheet2.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Content\Images\CubeTileSheet3.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Content\Images\Equipment\OfficeDesk.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Content\Images\Equipment\SnackMachine.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Content\Images\Equipment\SodaMachine.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Content\Images\Equipment\TrashBin.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Content\Images\tileHighlight.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
     <Content Include="Content\Images\User Interface\ButtonMenuItem.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -508,6 +461,9 @@
     <Content Include="Content\Images\User Interface\TooltipFrame.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Content\Images\Rooms\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

@@ -16,5 +16,22 @@ namespace MyThirdSDL.Agents
 		{
 			Price = price;
 		}
+
+		public override void Draw(SharpDL.GameTime gameTime, Renderer renderer)
+		{
+			Vector drawPosition = new Vector(ProjectedPosition.X - Camera.Position.X, ProjectedPosition.Y - Camera.Position.Y);
+			Vector offset = Vector.Zero;
+
+			if (ActiveTexture.Height == CoordinateHelper.TileMapTileHeight * 2)
+				offset = new Vector(0, CoordinateHelper.TileMapTileHeight);
+
+			drawPosition -= offset;
+
+			renderer.RenderTexture(
+				ActiveTexture,
+				drawPosition.X,
+				drawPosition.Y
+			);
+		}
 	}
 }

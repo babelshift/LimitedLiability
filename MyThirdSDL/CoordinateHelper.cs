@@ -28,7 +28,7 @@ namespace MyThirdSDL
 		/// <summary>
 		/// The offset used to reposition the screen space at rendering (useful when projecting from orthogonal to isometric where the position will be off centered)
 		/// </summary>
-		public static Vector ScreenOffset = new Vector(MainGame.SCREEN_WIDTH / 2, TileMapTileWidth);
+		public static Vector ScreenOffset = Vector.Zero;
 
 		/// <summary>
 		/// Converts the passed angle in degrees to angle in radians
@@ -98,7 +98,7 @@ namespace MyThirdSDL
 
 		public static Vector ProjectedPositionToDrawPosition(Vector projectedPosition)
 		{
-			float drawPositionX = projectedPosition.X - Camera.Position.X - CoordinateHelper.TileMapTileWidth * 0.5f;
+			float drawPositionX = projectedPosition.X - Camera.Position.X;
 			float drawPositionY = projectedPosition.Y - Camera.Position.Y - CoordinateHelper.TileMapTileHeight;
 
 			return new Vector(drawPositionX, drawPositionY);

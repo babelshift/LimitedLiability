@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <map version="1.0" orientation="orthogonal" width="25" height="25" tilewidth="32" tileheight="32">
  <tileset firstgid="1" name="free_tileset_version_10" tilewidth="32" tileheight="32">
-  <image source="../../../../../../Video Game/Assets/Art/Orthogonal/free_tileset_version_10.png" width="480" height="1216"/>
+  <image source="Content/Maps/TileSet1.png" width="480" height="1216"/>
  </tileset>
  <layer name="Ground" width="25" height="25">
   <data encoding="base64" compression="zlib">

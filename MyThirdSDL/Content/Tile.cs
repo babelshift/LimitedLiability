@@ -104,8 +104,8 @@ namespace MyThirdSDL.Content
 			{
 				renderer.RenderTexture(
 					Texture,
-					ProjectedPosition.X - Camera.Position.X - Width * 0.5f,
-					ProjectedPosition.Y - Camera.Position.Y - Height,
+					ProjectedPosition.X - Camera.Position.X,
+					ProjectedPosition.Y - Camera.Position.Y,
 					SourceTextureBounds
 				);
 			}
