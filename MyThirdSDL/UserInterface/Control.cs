@@ -43,6 +43,7 @@ namespace MyThirdSDL.UserInterface
 		public Control()
 		{
 			ID = Guid.NewGuid();
+			Visible = true;
 		}
 
 		public abstract void Update(GameTime gameTime);

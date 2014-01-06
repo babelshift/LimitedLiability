@@ -24,6 +24,7 @@
 		{ "key": "MenuInspectEmployeeFrame",	"value": "Images/User Interface/MenuInspectEmployeeFrame.png" },
 		{ "key": "MenuMailboxFrame",			"value": "Images/User Interface/MenuMailboxFrame.png" },
 		{ "key": "MenuCompanyFrame",			"value": "Images/User Interface/MenuCompanyFrame.png" },
+		{ "key": "TextboxLongFrame",			"value": "Images/User Interface/TextboxLongFrame.png" },
 		
 		{ "key": "ButtonMenuItem",				"value": "Images/User Interface/ButtonMenuItem.png" },
 		{ "key": "ButtonMenuItemHover",			"value": "Images/User Interface/ButtonMenuItemHover.png" },
@@ -78,6 +79,7 @@
 		{ "key": "IconMailOutbox",				"value": "Images/User Interface/IconMailOutbox.png" },
 		{ "key": "IconMailArchive",				"value": "Images/User Interface/IconMailArchive.png" },
 		{ "key": "IconSeparator",				"value": "Images/User Interface/IconSeparator.png" },
+		{ "key": "IconInputBar",				"value": "Images/User Interface/IconInputBar.png" },
 
 		{ "key": "CursorHandRight",				"value": "Images/User Interface/CursorHandRight.png" },
 		{ "key": "CursorHandUp",				"value": "Images/User Interface/CursorHandUp.png" },
@@ -85,7 +87,6 @@
 		{ "key": "CursorHandDown",				"value": "Images/User Interface/CursorHandDown.png" }
 	],
 	"maps": [
-		{ "key": "Office1",						"value": "Maps/Office1.tmx" },
 		{ "key": "OfficeOrthogonal1",			"value": "Maps/OfficeOrthogonal1.tmx" }
 	] 
 }

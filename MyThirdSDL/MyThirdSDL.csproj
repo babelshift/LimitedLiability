@@ -204,6 +204,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="UserInterface\Styles.cs" />
+    <Compile Include="UserInterface\Textbox.cs" />
     <Compile Include="UserInterface\ToolboxTray.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -273,6 +274,9 @@
     <Content Include="Content\Images\User Interface\IconSeparator.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Content\Images\User Interface\IconInputBar.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Content\Images\User Interface\MenuCompanyFrame.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -280,6 +284,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\Images\User Interface\MenuPurchaseFrame.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Images\User Interface\TextboxLongFrame.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\Images\User Interface\ToolboxTrayButtonMail.png">

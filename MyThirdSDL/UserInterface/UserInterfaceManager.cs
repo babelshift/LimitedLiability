@@ -25,6 +25,8 @@ namespace MyThirdSDL.UserInterface
 		private ContentManager contentManager;
 		private TimeSpan timeOfStatusChange = TimeSpan.Zero;
 
+		private Textbox textbox;
+
 		#endregion
 
 		#region Properties
@@ -173,6 +175,9 @@ namespace MyThirdSDL.UserInterface
 			CreateMenuCompany(employeeCount);
 
 			ChangeState(UserInterfaceState.Default);
+
+			textbox = new Textbox(contentManager);
+			textbox.Position = new Vector(300, 300);
 		}
 
 		/// <summary>
@@ -546,6 +551,8 @@ namespace MyThirdSDL.UserInterface
 			if (isMenuCompanyOpen)
 				menuCompany.Update(gameTime);
 
+			textbox.Update(gameTime);
+
 			if (CurrentState == UserInterfaceState.PlaceEquipmentActive || CurrentState == UserInterfaceState.PlaceRoomActive)
 				if (MouseHelper.CurrentMouseState.ButtonsPressed.Contains(MouseButtonCode.Right))
 					ChangeState(UserInterfaceState.Default);
@@ -592,6 +599,8 @@ namespace MyThirdSDL.UserInterface
 
 			if (isMenuCompanyOpen)
 				menuCompany.Draw(gameTime, renderer);
+
+			textbox.Draw(gameTime, renderer);
 		}
 
 		private void UpdateDisplayedDateAndTime(DateTime dateTime)

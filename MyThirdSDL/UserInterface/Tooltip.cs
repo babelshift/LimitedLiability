@@ -39,10 +39,13 @@ namespace MyThirdSDL.UserInterface
 
 		public override void Draw(GameTime gameTime, Renderer renderer)
 		{
-			if (TextureFrame != null)
-				renderer.RenderTexture(TextureFrame, Position.X, Position.Y);
-			if(Label != null)
-				Label.Draw(gameTime, renderer);
+			if (Visible)
+			{
+				if (TextureFrame != null)
+					renderer.RenderTexture(TextureFrame, Position.X, Position.Y);
+				if (Label != null)
+					Label.Draw(gameTime, renderer);
+			}
 		}
 	}
 }
