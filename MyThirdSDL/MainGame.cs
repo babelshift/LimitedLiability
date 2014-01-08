@@ -58,15 +58,20 @@ namespace MyThirdSDL
 			WindowLeave += (object sender, WindowEventArgs e) => isMouseInsideWindowBounds = false;
 			WindowFocusLost += (object sender, WindowEventArgs e) => isWindowFocused = false;
 			WindowFocusGained += (object sender, WindowEventArgs e) => isWindowFocused = true;
+			TextInputting += HandleTextInputting;
 
 			if (log.IsDebugEnabled)
 				log.Debug("Game class has been constructed.");
 		}
-
 		#endregion
 
 		#region Event Handlers
 
+		private void HandleTextInputting(object sender, TextInputEventArgs e)
+		{
+			screenManager.PassTextInputEventToActiveScreen(sender, e);
+		}
+		
 		private void HandleMouseButtonClicked(object sender, MouseButtonEventArgs e)
 		{
 			screenManager.PassMouseButtonPressedEventToActiveScreen(sender, e);

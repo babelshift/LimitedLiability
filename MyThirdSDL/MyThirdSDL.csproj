@@ -43,11 +43,11 @@
     <Reference Include="Newtonsoft.Json">
       <HintPath>..\Libs\Newtonsoft.Json.dll</HintPath>
     </Reference>
-    <Reference Include="SharpDL, Version=1.0.0.0, Culture=neutral, processorArchitecture=AMD64">
+    <Reference Include="SharpDL, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\Libs\SharpDL.dll</HintPath>
     </Reference>
-    <Reference Include="SharpDL.Events, Version=1.0.0.0, Culture=neutral, processorArchitecture=AMD64">
+    <Reference Include="SharpDL.Events, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\Libs\SharpDL.Events.dll</HintPath>
     </Reference>
@@ -55,7 +55,7 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\Libs\SharpDL.Graphics.dll</HintPath>
     </Reference>
-    <Reference Include="SharpDL.Input, Version=1.0.0.0, Culture=neutral, processorArchitecture=AMD64">
+    <Reference Include="SharpDL.Input, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\Libs\SharpDL.Input.dll</HintPath>
     </Reference>

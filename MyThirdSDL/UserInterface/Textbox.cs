@@ -17,7 +17,7 @@ namespace MyThirdSDL.UserInterface
 		public Icon IconFrame
 		{
 			get { return iconFrame; }
-			set
+			private set
 			{
 				iconFrame = value;
 				Width = iconFrame.Width;
@@ -25,7 +25,9 @@ namespace MyThirdSDL.UserInterface
 			}
 		}
 
-		public Icon IconInputBar { get; set; }
+		public Icon IconInputBar { get; private set; }
+
+		public Label LabelText { get; private set; }
 
 		public override Vector Position
 		{
@@ -39,6 +41,17 @@ namespace MyThirdSDL.UserInterface
 
 				IconFrame.Position = base.Position;
 				IconInputBar.Position = new Vector(base.Position.X + 6, base.Position.X + 6);
+				LabelText.Position = new Vector(base.Position.X + 6, base.Position.X + 8);
+			}
+		}
+
+		private bool HasText
+		{
+			get
+			{
+				if (LabelText.Text == ".")
+					return false;
+				return true;
 			}
 		}
 
@@ -48,19 +61,29 @@ namespace MyThirdSDL.UserInterface
 
 		public Textbox(ContentManager contentManager)
 		{
+			string fontPath = contentManager.GetContentPath("Arcade");
+			Color fontColor = new Color(218, 218, 218);
+			int fontSizeContent = 12;
+
 			IconFrame = new Icon(contentManager.GetTexture("TextboxLongFrame"));
 			IconInputBar = new Icon(contentManager.GetTexture("IconInputBar"));
+			LabelText = new Label();
+			LabelText.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSizeContent, fontColor, ".");
+
 			Blur();
 		}
 
 		public void Focus()
 		{
 			hasFocus = true;
+			Keyboard.StartTextInput();
+			//Renderer.SetTextInputRectangle(Bounds);
 		}
 
 		public void Blur()
 		{
 			hasFocus = false;
+			Keyboard.StopTextInput();
 		}
 
 		public override void Update(SharpDL.GameTime gameTime)
@@ -95,6 +118,7 @@ namespace MyThirdSDL.UserInterface
 					IconInputBar.Visible = false;
 
 				IconInputBar.Update(gameTime);
+				LabelText.Update(gameTime);
 			}
 		}
 
@@ -109,6 +133,9 @@ namespace MyThirdSDL.UserInterface
 
 				if (hasFocus)
 					IconInputBar.Draw(gameTime, renderer);
+
+				if(HasText)
+					LabelText.Draw(gameTime, renderer);
 			}
 		}
 
@@ -124,6 +151,16 @@ namespace MyThirdSDL.UserInterface
 			}
 
 			return false;
+		}
+
+		public void HandleTextInputtingEvent(string text)
+		{
+			if(HasText)
+				LabelText.Text += text;
+			else
+				LabelText.Text = text;
+
+			IconInputBar.Position += new Vector(12, 0);
 		}
 	}
 }

@@ -73,6 +73,13 @@ namespace MyThirdSDL.Screens
 
 		#region User Input
 
+		public override void HandleTextInputtingEvent(object sender, TextInputEventArgs e)
+		{
+			base.HandleTextInputtingEvent(sender, e);
+
+			userInterfaceManager.HandleTextInputtingEvent(sender, e);
+		}
+
 		public override void HandleMouseButtonPressedEvent(object sender, MouseButtonEventArgs e)
 		{
 			base.HandleMouseButtonPressedEvent(sender, e);

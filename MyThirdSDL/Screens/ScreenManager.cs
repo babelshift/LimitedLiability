@@ -169,6 +169,13 @@ namespace MyThirdSDL.Screens
 
 		#region Public Methods
 
+		public void PassTextInputEventToActiveScreen(object sender, TextInputEventArgs e)
+		{
+			foreach (Screen screen in screens)
+				if (screen.ScreenState == ScreenState.Active)
+					screen.HandleTextInputtingEvent(sender, e);
+		}
+
 		public void PassMouseButtonPressedEventToActiveScreen(object sender, MouseButtonEventArgs e)
 		{
 			foreach (Screen screen in screens)

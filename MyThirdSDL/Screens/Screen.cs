@@ -239,15 +239,11 @@ namespace MyThirdSDL.Screens
 			return true;
 		}
 
-		public virtual void HandleMouseButtonPressedEvent(object sender, MouseButtonEventArgs e)
-		{
+		public virtual void HandleTextInputtingEvent(object sender, TextInputEventArgs e) { }
 
-		}
+		public virtual void HandleMouseButtonPressedEvent(object sender, MouseButtonEventArgs e) { }
 
-		public virtual void HandleMouseMovingEvent(object sender, MouseMotionEventArgs e)
-		{
-
-		}
+		public virtual void HandleMouseMovingEvent(object sender, MouseMotionEventArgs e) { }
 
 		/// <summary>
 		/// Allows the screen to handle user input. Unlike Update, this method

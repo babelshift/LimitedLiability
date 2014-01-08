@@ -613,6 +613,11 @@ namespace MyThirdSDL.UserInterface
 
 		#region User Input Events
 
+		public void HandleTextInputtingEvent(object sender, TextInputEventArgs e)
+		{
+			textbox.HandleTextInputtingEvent(e.Text);
+		}
+
 		public void HandleMouseButtonPressedEvent(object sender, MouseButtonEventArgs e)
 		{
 
