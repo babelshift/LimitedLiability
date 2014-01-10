@@ -248,6 +248,14 @@ namespace MyThirdSDL.UserInterface
 
 		#endregion
 
+		public void Focus()
+		{
+		}
+
+		public void Blur()
+		{
+		}
+
 		public virtual void Dispose()
 		{
 			Dispose(true);

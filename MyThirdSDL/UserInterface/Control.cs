@@ -10,6 +10,8 @@ namespace MyThirdSDL.UserInterface
 {
 	public abstract class Control
 	{
+		protected bool HasFocus { get; private set; }
+
 		public Guid ID { get; private set; }
 
 		public bool Visible { get; set; }
@@ -40,6 +42,8 @@ namespace MyThirdSDL.UserInterface
 		/// </summary>
 		public int Height { get; protected set; }
 
+		public event EventHandler GotFocus;
+
 		public Control()
 		{
 			ID = Guid.NewGuid();
@@ -49,5 +53,20 @@ namespace MyThirdSDL.UserInterface
 		public abstract void Update(GameTime gameTime);
 
 		public abstract void Draw(GameTime gameTime, Renderer renderer);
+
+		public virtual void HandleTextInput(string text) { }
+
+		public virtual void Focus()
+		{
+			HasFocus = true;
+
+			if (GotFocus != null)
+				GotFocus(this, EventArgs.Empty);
+		}
+
+		public virtual void Blur()
+		{
+			HasFocus = false;
+		}
 	}
 }

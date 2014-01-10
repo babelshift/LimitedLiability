@@ -25,8 +25,6 @@ namespace MyThirdSDL.UserInterface
 		private ContentManager contentManager;
 		private TimeSpan timeOfStatusChange = TimeSpan.Zero;
 
-		private Textbox textbox;
-
 		#endregion
 
 		#region Properties
@@ -59,6 +57,19 @@ namespace MyThirdSDL.UserInterface
 		#endregion
 
 		#region Controls
+
+		private Control focusedControl;
+
+		private Control FocusedControl
+		{
+			get { return focusedControl; }
+			set
+			{
+				if (focusedControl != null)
+					focusedControl.Blur();
+				focusedControl = value;
+			}
+		}
 
 		private ToolboxTray toolboxTray;
 
@@ -175,9 +186,6 @@ namespace MyThirdSDL.UserInterface
 			CreateMenuCompany(employeeCount);
 
 			ChangeState(UserInterfaceState.Default);
-
-			textbox = new Textbox(contentManager);
-			textbox.Position = new Vector(300, 300);
 		}
 
 		/// <summary>
@@ -551,8 +559,6 @@ namespace MyThirdSDL.UserInterface
 			if (isMenuCompanyOpen)
 				menuCompany.Update(gameTime);
 
-			textbox.Update(gameTime);
-
 			if (CurrentState == UserInterfaceState.PlaceEquipmentActive || CurrentState == UserInterfaceState.PlaceRoomActive)
 				if (MouseHelper.CurrentMouseState.ButtonsPressed.Contains(MouseButtonCode.Right))
 					ChangeState(UserInterfaceState.Default);
@@ -599,8 +605,6 @@ namespace MyThirdSDL.UserInterface
 
 			if (isMenuCompanyOpen)
 				menuCompany.Draw(gameTime, renderer);
-
-			textbox.Draw(gameTime, renderer);
 		}
 
 		private void UpdateDisplayedDateAndTime(DateTime dateTime)
@@ -615,7 +619,7 @@ namespace MyThirdSDL.UserInterface
 
 		public void HandleTextInputtingEvent(object sender, TextInputEventArgs e)
 		{
-			textbox.HandleTextInputtingEvent(e.Text);
+			focusedControl.HandleTextInput(e.Text);
 		}
 
 		public void HandleMouseButtonPressedEvent(object sender, MouseButtonEventArgs e)

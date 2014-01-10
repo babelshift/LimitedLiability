@@ -11,8 +11,10 @@ namespace MyThirdSDL.UserInterface
 {
 	public class Textbox : Control
 	{
+		private TimeSpan timeSinceVisibleTrue = TimeSpan.Zero;
+		private TimeSpan timeSinceLastUpdate = TimeSpan.Zero;
+
 		private Icon iconFrame;
-		private bool hasFocus;
 
 		public Icon IconFrame
 		{
@@ -40,8 +42,8 @@ namespace MyThirdSDL.UserInterface
 				base.Position = value;
 
 				IconFrame.Position = base.Position;
-				IconInputBar.Position = new Vector(base.Position.X + 6, base.Position.X + 6);
-				LabelText.Position = new Vector(base.Position.X + 6, base.Position.X + 8);
+				IconInputBar.Position = new Vector(base.Position.X + 6, base.Position.Y + 6);
+				LabelText.Position = new Vector(base.Position.X + 6, base.Position.Y + 8);
 			}
 		}
 
@@ -52,6 +54,21 @@ namespace MyThirdSDL.UserInterface
 				if (LabelText.Text == ".")
 					return false;
 				return true;
+			}
+		}
+
+		private bool IsTextboxFull
+		{
+			get
+			{
+				int maxCharacterCount = (Width / LabelText.TrueTypeText.Font.PointSize) - 1;
+
+				if (LabelText == null)
+					return false;
+				else if (LabelText.Text.Length < maxCharacterCount)
+					return false;
+				else
+					return true;
 			}
 		}
 
@@ -73,16 +90,15 @@ namespace MyThirdSDL.UserInterface
 			Blur();
 		}
 
-		public void Focus()
+		public override void Focus()
 		{
-			hasFocus = true;
+			base.Focus();
 			Keyboard.StartTextInput();
-			//Renderer.SetTextInputRectangle(Bounds);
 		}
 
-		public void Blur()
+		public override void Blur()
 		{
-			hasFocus = false;
+			base.Blur();
 			Keyboard.StopTextInput();
 		}
 
@@ -100,7 +116,7 @@ namespace MyThirdSDL.UserInterface
 
 			iconFrame.Update(gameTime);
 
-			if (hasFocus)
+			if (HasFocus)
 			{
 				timeSinceLastUpdate += gameTime.ElapsedGameTime;
 				if (timeSinceLastUpdate > TimeSpan.FromSeconds(0.5))
@@ -122,16 +138,13 @@ namespace MyThirdSDL.UserInterface
 			}
 		}
 
-		private TimeSpan timeSinceVisibleTrue = TimeSpan.Zero;
-		private TimeSpan timeSinceLastUpdate = TimeSpan.Zero;
-
 		public override void Draw(SharpDL.GameTime gameTime, Renderer renderer)
 		{
 			if (Visible)
 			{
 				iconFrame.Draw(gameTime, renderer);
 
-				if (hasFocus)
+				if (HasFocus)
 					IconInputBar.Draw(gameTime, renderer);
 
 				if(HasText)
@@ -153,14 +166,19 @@ namespace MyThirdSDL.UserInterface
 			return false;
 		}
 
-		public void HandleTextInputtingEvent(string text)
+		public override void HandleTextInput(string text)
 		{
-			if(HasText)
-				LabelText.Text += text;
-			else
-				LabelText.Text = text;
+			base.HandleTextInput(text);
 
-			IconInputBar.Position += new Vector(12, 0);
+			if(!IsTextboxFull)
+			{
+				if (HasText)
+					LabelText.Text += text;
+				else
+					LabelText.Text = text;
+
+				IconInputBar.Position += new Vector(12, 0);
+			}
 		}
 	}
 }
