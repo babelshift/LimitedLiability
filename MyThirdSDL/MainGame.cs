@@ -50,8 +50,6 @@ namespace MyThirdSDL
 		/// </summary>
 		public MainGame()
 		{
-			//			KeyPressed += HandleKeyPressed;
-			//			KeyReleased += HandleKeyReleased;
 			MouseMoving += HandleMouseMoving;
 			MouseButtonPressed += HandleMouseButtonClicked;
 			WindowEntered += (object sender, WindowEventArgs e) => isMouseInsideWindowBounds = true;
@@ -59,10 +57,13 @@ namespace MyThirdSDL
 			WindowFocusLost += (object sender, WindowEventArgs e) => isWindowFocused = false;
 			WindowFocusGained += (object sender, WindowEventArgs e) => isWindowFocused = true;
 			TextInputting += HandleTextInputting;
+			KeyPressed += HandleKeyPressed;
+			KeyReleased += HandleKeyReleased;
 
 			if (log.IsDebugEnabled)
 				log.Debug("Game class has been constructed.");
 		}
+
 		#endregion
 
 		#region Event Handlers
@@ -82,17 +83,28 @@ namespace MyThirdSDL
 			screenManager.PassMouseMovingEventToActiveScreen(sender, e);
 		}
 
-		//		private void HandleKeyPressed(object sender, KeyboardEventArgs e)
-		//		{
-		//			if (!keysPressed.Contains(e.KeyInformation.VirtualKey))
-		//				keysPressed.Add(e.KeyInformation.VirtualKey);
-		//		}
-		//
-		//		private void HandleKeyReleased(object sender, KeyboardEventArgs e)
-		//		{
-		//			if (keysPressed.Contains(e.KeyInformation.VirtualKey))
-		//				keysPressed.Remove(e.KeyInformation.VirtualKey);
-		//		}
+		private List<KeyInformation> keysPressed = new List<KeyInformation>();
+		private List<KeyInformation> keysReleased = new List<KeyInformation>();
+
+		private void HandleKeyPressed(object sender, KeyboardEventArgs e)
+		{
+			if (!keysPressed.Contains(e.KeyInformation))
+				keysPressed.Add(e.KeyInformation);
+
+			screenManager.PassKeyStatesToActiveScreen(keysPressed, keysReleased);
+
+			keysPressed.Clear();
+		}
+
+		private void HandleKeyReleased(object sender, KeyboardEventArgs e)
+		{
+			if (keysPressed.Contains(e.KeyInformation))
+				keysReleased.Add(e.KeyInformation);
+
+			screenManager.PassKeyStatesToActiveScreen(keysPressed, keysReleased);
+
+			keysReleased.Clear();
+		}
 
 		#endregion
 
@@ -160,7 +172,6 @@ namespace MyThirdSDL
 			// TODO: move the focus logic to sharpdl game class?
 			if (isWindowFocused)
 			{
-				KeyboardHelper.Update();
 				MouseHelper.Update();
 				screenManager.Update(gameTime, !isWindowFocused, isMouseInsideWindowBounds);
 			}

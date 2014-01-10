@@ -147,7 +147,7 @@ namespace MyThirdSDL.UserInterface
 				if (HasFocus)
 					IconInputBar.Draw(gameTime, renderer);
 
-				if(HasText)
+				if (HasText)
 					LabelText.Draw(gameTime, renderer);
 			}
 		}
@@ -170,7 +170,7 @@ namespace MyThirdSDL.UserInterface
 		{
 			base.HandleTextInput(text);
 
-			if(!IsTextboxFull)
+			if (!IsTextboxFull)
 			{
 				if (HasText)
 					LabelText.Text += text;
@@ -178,6 +178,24 @@ namespace MyThirdSDL.UserInterface
 					LabelText.Text = text;
 
 				IconInputBar.Position += new Vector(12, 0);
+			}
+		}
+
+		public override void HandleKeyPressed(KeyInformation key)
+		{
+			base.HandleKeyPressed(key);
+
+			if (key.VirtualKey == VirtualKeyCode.Backspace)
+			{
+				if (HasText)
+				{
+					if (LabelText.Text.Length > 1)
+						LabelText.Text = LabelText.Text.Remove(LabelText.Text.Length - 1);
+					else
+						LabelText.Text = ".";
+
+					IconInputBar.Position -= new Vector(12, 0);
+				}
 			}
 		}
 	}

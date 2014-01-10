@@ -4,6 +4,7 @@ using SharpDL.Graphics;
 using SharpDL;
 using MyThirdSDL.Content;
 using SharpDL.Events;
+using SharpDL.Input;
 
 namespace MyThirdSDL.Screens
 {
@@ -171,24 +172,31 @@ namespace MyThirdSDL.Screens
 
 		public void PassTextInputEventToActiveScreen(object sender, TextInputEventArgs e)
 		{
-			foreach (Screen screen in screens)
-				if (screen.ScreenState == ScreenState.Active)
-					screen.HandleTextInputtingEvent(sender, e);
+			if (IsActiveScreenAvailable)
+				ActiveScreen.HandleTextInputtingEvent(sender, e);
 		}
 
 		public void PassMouseButtonPressedEventToActiveScreen(object sender, MouseButtonEventArgs e)
 		{
-			foreach (Screen screen in screens)
-				if (screen.ScreenState == ScreenState.Active)
-					screen.HandleMouseButtonPressedEvent(sender, e);
+			if (IsActiveScreenAvailable)
+				ActiveScreen.HandleMouseButtonPressedEvent(sender, e);
 		}
 
 		public void PassMouseMovingEventToActiveScreen(object sender, MouseMotionEventArgs e)
 		{
-			foreach (Screen screen in screens)
-				if (screen.ScreenState == ScreenState.Active)
-					screen.HandleMouseMovingEvent(sender, e);
+			if (IsActiveScreenAvailable)
+				ActiveScreen.HandleMouseMovingEvent(sender, e);
 		}
+
+		public void PassKeyStatesToActiveScreen(IEnumerable<KeyInformation> keysPressed, IEnumerable<KeyInformation> keysReleased)
+		{
+			if (IsActiveScreenAvailable)
+				ActiveScreen.HandleKeyStates(keysPressed, keysReleased);
+		}
+
+		private bool IsActiveScreenAvailable { get { if (ActiveScreen != null) return true; else return false; } }
+
+		private Screen ActiveScreen { get { return screens.Find(s => s.ScreenState == ScreenState.Active); } }
 
 		/// <summary>
 		/// Adds a new screen to the screen manager.

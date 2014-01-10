@@ -95,14 +95,14 @@ namespace MyThirdSDL.UserInterface
 		public event EventHandler<ArchiveEventArgs> ArchiveMailButtonClicked;
 		public event EventHandler<PurchasableItemSelectedEventArgs> PurchasableItemSelected;
 
-		public bool IsToolboxTrayHovered 
-		{ 
-			get 
-			{ 
-				if(toolboxTray != null) 
+		public bool IsToolboxTrayHovered
+		{
+			get
+			{
+				if (toolboxTray != null)
 					return toolboxTray.IsHovered;
 				return false;
-			} 
+			}
 		}
 
 		private void ClearMenusOpen()
@@ -126,7 +126,7 @@ namespace MyThirdSDL.UserInterface
 		public UserInterfaceManager(Renderer renderer, ContentManager contentManager, Point bottomRightPointOfWindow,
 			IEnumerable<IPurchasable> purchasableEquipment,
 			IEnumerable<IPurchasable> purchasableRooms,
-			IEnumerable<MailItem> inbox, 
+			IEnumerable<MailItem> inbox,
 			IEnumerable<MailItem> outbox,
 			IEnumerable<MailItem> archive,
 			int unreadMailCount,
@@ -186,6 +186,16 @@ namespace MyThirdSDL.UserInterface
 			CreateMenuCompany(employeeCount);
 
 			ChangeState(UserInterfaceState.Default);
+		}
+
+		void textbox_GotFocus(object sender, EventArgs e)
+		{
+			FocusedControl = (Control)sender;
+		}
+
+		void textbox2_GotFocus(object sender, EventArgs e)
+		{
+			FocusedControl = (Control)sender;
 		}
 
 		/// <summary>
@@ -378,7 +388,7 @@ namespace MyThirdSDL.UserInterface
 
 		private void menuMailbox_ArchiveMailButtonClicked(object sender, ArchiveEventArgs e)
 		{
-			if(ArchiveMailButtonClicked != null)
+			if (ArchiveMailButtonClicked != null)
 				ArchiveMailButtonClicked(sender, e);
 		}
 
@@ -631,10 +641,16 @@ namespace MyThirdSDL.UserInterface
 		{
 			var mousePositionAbsolute = new Vector(e.RelativeToWindowX, e.RelativeToWindowY);
 			var mousePositionIsometric = CoordinateHelper.ScreenSpaceToWorldSpace(e.RelativeToWindowX, e.RelativeToWindowY,
-				                             CoordinateHelper.ScreenOffset, CoordinateHelper.ScreenProjectionType.Orthogonal);
+											 CoordinateHelper.ScreenOffset, CoordinateHelper.ScreenProjectionType.Orthogonal);
 
 			labelMousePositionAbsolute.Text = String.Format("Mouse Position (Absolute): ({0}, {1})", mousePositionAbsolute.X, mousePositionAbsolute.Y);
 			labelMousePositionIsometric.Text = String.Format("Mouse Position (Isometric): ({0}, {1})", mousePositionIsometric.X, mousePositionIsometric.Y);
+		}
+
+		public void HandleKeyStates(IEnumerable<KeyInformation> keysPressed, IEnumerable<KeyInformation> keysReleased)
+		{
+			foreach (var key in keysPressed)
+				FocusedControl.HandleKeyPressed(key);
 		}
 
 		private void ChangeState(UserInterfaceState state)

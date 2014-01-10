@@ -137,7 +137,6 @@
     <Compile Include="ICollidable.cs" />
     <Compile Include="IDrawable.cs" />
     <Compile Include="INode.cs" />
-    <Compile Include="KeyboardHelper.cs" />
     <Compile Include="Mail\MailItem.cs" />
     <Compile Include="Mail\MailAddress.cs" />
     <Compile Include="Mail\Mailbox.cs" />

@@ -3,6 +3,8 @@ using SharpDL;
 using SharpDL.Graphics;
 using MyThirdSDL.Content;
 using SharpDL.Events;
+using System.Collections.Generic;
+using SharpDL.Input;
 
 namespace MyThirdSDL.Screens
 {
@@ -244,6 +246,8 @@ namespace MyThirdSDL.Screens
 		public virtual void HandleMouseButtonPressedEvent(object sender, MouseButtonEventArgs e) { }
 
 		public virtual void HandleMouseMovingEvent(object sender, MouseMotionEventArgs e) { }
+
+		public virtual void HandleKeyStates(IEnumerable<KeyInformation> keysPressed, IEnumerable<KeyInformation> keysReleased) { }
 
 		/// <summary>
 		/// Allows the screen to handle user input. Unlike Update, this method

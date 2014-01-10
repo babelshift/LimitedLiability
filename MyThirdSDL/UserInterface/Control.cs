@@ -1,5 +1,6 @@
 ﻿using SharpDL;
 using SharpDL.Graphics;
+using SharpDL.Input;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -55,6 +56,8 @@ namespace MyThirdSDL.UserInterface
 		public abstract void Draw(GameTime gameTime, Renderer renderer);
 
 		public virtual void HandleTextInput(string text) { }
+
+		public virtual void HandleKeyPressed(KeyInformation key) { }
 
 		public virtual void Focus()
 		{

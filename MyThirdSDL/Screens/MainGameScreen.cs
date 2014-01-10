@@ -94,6 +94,13 @@ namespace MyThirdSDL.Screens
 			userInterfaceManager.HandleMouseMovingEvent(sender, e);
 		}
 
+		public override void HandleKeyStates(IEnumerable<KeyInformation> keysPressed, IEnumerable<KeyInformation> keysReleased)
+		{
+			base.HandleKeyStates(keysPressed, keysReleased);
+
+			userInterfaceManager.HandleKeyStates(keysPressed, keysReleased);
+		}
+
 		public override void HandleInput(GameTime gameTime, bool isMouseInsideWindowBounds)
 		{
 			base.HandleInput(gameTime, isMouseInsideWindowBounds);
