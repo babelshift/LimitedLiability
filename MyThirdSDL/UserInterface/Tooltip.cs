@@ -47,5 +47,19 @@ namespace MyThirdSDL.UserInterface
 					Label.Draw(gameTime, renderer);
 			}
 		}
+
+		public override void Dispose()
+		{
+			Dispose(true);
+			GC.SuppressFinalize(this);
+		}
+
+		private void Dispose(bool disposing)
+		{
+			if (TextureFrame != null)
+				TextureFrame.Dispose();
+			if (Label != null)
+				Label.Dispose();
+		}
 	}
 }

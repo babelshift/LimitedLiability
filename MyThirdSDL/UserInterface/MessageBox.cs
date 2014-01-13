@@ -64,5 +64,21 @@ namespace MyThirdSDL.UserInterface
 		{
 			throw new NotImplementedException();
 		}
+
+		public override void Dispose()
+		{
+			Dispose(true);
+			GC.SuppressFinalize(this);
+		}
+
+		private void Dispose(bool disposing)
+		{
+			if (ButtonOK != null)
+				ButtonOK.Dispose();
+			if (TextureFrame != null)
+				TextureFrame.Dispose();
+			if (TextureIcon != null)
+				TextureIcon.Dispose();
+		}
 	}
 }

@@ -25,6 +25,7 @@
 		{ "key": "MenuMailboxFrame",			"value": "Images/User Interface/MenuMailboxFrame.png" },
 		{ "key": "MenuCompanyFrame",			"value": "Images/User Interface/MenuCompanyFrame.png" },
 		{ "key": "TextboxLongFrame",			"value": "Images/User Interface/TextboxLongFrame.png" },
+		{ "key": "BackgroundStripeTile",		"value": "Images/User Interface/BackgroundStripeTile.png" },
 		
 		{ "key": "ButtonMenuItem",				"value": "Images/User Interface/ButtonMenuItem.png" },
 		{ "key": "ButtonMenuItemHover",			"value": "Images/User Interface/ButtonMenuItemHover.png" },
@@ -37,6 +38,8 @@
 		{ "key": "ButtonMailFolderHover",		"value": "Images/User Interface/ButtonMailFolderHover.png" },
 		{ "key": "ButtonMailAction",			"value": "Images/User Interface/ButtonMailAction.png" },
 		{ "key": "ButtonMailActionHover",		"value": "Images/User Interface/ButtonMailActionHover.png" },
+		{ "key": "ButtonMainMenuItem",			"value": "Images/User Interface/ButtonMainMenuItem.png" },
+		{ "key": "ButtonMainMenuItemHover",		"value": "Images/User Interface/ButtonMainMenuItemHover.png" },
 		
 		{ "key": "IconPenPaper",				"value": "Images/User Interface/IconPenPaper.png" },
 		{ "key": "IconWindow",					"value": "Images/User Interface/IconWindow.png" },

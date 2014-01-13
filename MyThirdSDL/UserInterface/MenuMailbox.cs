@@ -718,6 +718,43 @@ namespace MyThirdSDL.UserInterface
 		}
 
 		#endregion
+
+		public override void Dispose()
+		{
+			Dispose(true);
+			GC.SuppressFinalize(this);
+		}
+
+		private void Dispose(bool disposing)
+		{
+			foreach (var control in controls)
+				if (control != null)
+					control.Dispose();
+
+			if (iconSelectedFolderHeader != null)
+				iconSelectedFolderHeader.Dispose();
+
+			if (labelSelectedFolderHeader != null)
+				labelSelectedFolderHeader.Dispose();
+
+			MailItemPage currentPage = null;
+			bool success = mailItemPages.TryGetValue(CurrentDisplayedPageNumber, out currentPage);
+			if (success)
+			{
+				foreach (var button in currentPage.Buttons)
+					if(button != null)
+						button.Dispose();
+				currentPage.Buttons.Clear();
+
+				foreach (var separator in currentPage.Separators)
+					if(separator != null)
+						separator.Dispose();
+				currentPage.Separators.Clear();
+			}
+
+			controls.Clear();
+			mailItemPages.Clear();
+		}
 	}
 
 	public class ArchiveEventArgs : EventArgs

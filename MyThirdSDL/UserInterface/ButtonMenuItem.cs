@@ -107,11 +107,6 @@ namespace MyThirdSDL.UserInterface
 			GC.SuppressFinalize(this);
 		}
 
-		~ButtonMenuItem()
-		{
-			Dispose(false);
-		}
-
 		private void Dispose(bool disposing)
 		{
 			if(IconMain != null)

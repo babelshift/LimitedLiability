@@ -15,7 +15,7 @@ namespace MyThirdSDL.Screens
 	/// want to quit" message box, and the main game itself are all implemented
 	/// as screens.
 	/// </summary>
-	public abstract class Screen
+	public abstract class Screen : IDisposable
 	{
 		private bool isPopup = false;
 		private TimeSpan transitionOnTime = TimeSpan.Zero;
@@ -283,5 +283,7 @@ namespace MyThirdSDL.Screens
 				IsExiting = true;
 			}
 		}
+
+		public abstract void Dispose();
 	}
 }

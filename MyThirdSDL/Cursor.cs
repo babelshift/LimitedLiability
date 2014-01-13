@@ -6,7 +6,7 @@ using SharpDL.Input;
 
 namespace MyThirdSDL
 {
-	public class Cursor
+	public class Cursor : IDisposable
 	{
 		private Texture cursorHandRight;
 		private Texture cursorHandLeft;
@@ -42,7 +42,7 @@ namespace MyThirdSDL
 		public void Draw(Renderer renderer)
 		{
 			if (cursorActive != null)
-				renderer.RenderTexture(cursorActive, MouseHelper.CurrentMouseState.X - cursorHandRight.Width / 2, MouseHelper.CurrentMouseState.Y - cursorHandRight.Height / 2);
+				renderer.RenderTexture(cursorActive, MouseHelper.CurrentPosition.X - cursorHandRight.Width / 2, MouseHelper.CurrentPosition.Y - cursorHandRight.Height / 2);
 		}
 
 		private void SetMouseOverScreenEdge(MouseOverScreenEdge mouseOverScreenEdge)
@@ -63,6 +63,21 @@ namespace MyThirdSDL
 				Mouse.ShowCursor();
 			else
 				Mouse.HideCursor();
+		}
+
+		public void Dispose()
+		{
+			Dispose(true);
+			GC.SuppressFinalize(this);
+		}
+
+		private void Dispose(bool disposing)
+		{
+			cursorActive.Dispose();
+			cursorHandDown.Dispose();
+			cursorHandLeft.Dispose();
+			cursorHandRight.Dispose();
+			cursorHandUp.Dispose();
 		}
 	}
 }

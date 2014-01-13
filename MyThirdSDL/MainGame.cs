@@ -22,12 +22,15 @@ namespace MyThirdSDL
 
 		#region Constants
 
-		public static readonly int SCREEN_WIDTH = 1440;
-		public static readonly int SCREEN_HEIGHT = 900;
+		public static readonly int SCREEN_WIDTH_LOGICAL = 800;
+		public static readonly int SCREEN_HEIGHT_LOGICAL = 600;
 
 		#endregion
 
-		#region Input Data
+		#region Inputs
+
+		private List<KeyInformation> keysPressed = new List<KeyInformation>();
+		private List<KeyInformation> keysReleased = new List<KeyInformation>();
 
 		#endregion
 
@@ -44,6 +47,25 @@ namespace MyThirdSDL
 		private GameState currentGameState;
 
 		#region Constructors
+
+		private GameState CurrentGameState
+		{
+			get { return currentGameState; }
+			set
+			{
+				currentGameState = value;
+
+				Screen screen = null;
+
+				if (currentGameState == GameState.MainMenu)
+					screen = CreateMainMenuScreen();
+				else if (currentGameState == GameState.InGame)
+					screen = CreateMainGameScreen();
+
+				if (screen != null)
+					LoadingScreen.Load(contentManager, screenManager, false, screen);
+			}
+		}
 
 		/// <summary>
 		/// By default, the constructor does nothing. Something to do is subscribe to various game events.
@@ -80,11 +102,9 @@ namespace MyThirdSDL
 
 		private void HandleMouseMoving(object sender, MouseMotionEventArgs e)
 		{
+			MouseHelper.UpdateMousePosition(new Vector(e.RelativeToWindowX, e.RelativeToWindowY));
 			screenManager.PassMouseMovingEventToActiveScreen(sender, e);
 		}
-
-		private List<KeyInformation> keysPressed = new List<KeyInformation>();
-		private List<KeyInformation> keysReleased = new List<KeyInformation>();
 
 		private void HandleKeyPressed(object sender, KeyboardEventArgs e)
 		{
@@ -116,8 +136,9 @@ namespace MyThirdSDL
 		{
 			base.Initialize();
 
-			CreateWindow("My Third SDL", 100, 100, SCREEN_WIDTH, SCREEN_HEIGHT, WindowFlags.Shown);
-			CreateRenderer(RendererFlags.RendererAccelerated);
+			CreateWindow("My Third SDL", 0, 0, 0, 0, WindowFlags.FullscreenDesktop);
+			CreateRenderer(RendererFlags.RendererAccelerated | RendererFlags.RendererPresentVSync);
+			Renderer.SetRenderLogicalSize(SCREEN_WIDTH_LOGICAL, SCREEN_HEIGHT_LOGICAL);
 
 			contentManager = new ContentManager(Renderer);
 			screenManager = new ScreenManager(Renderer);
@@ -126,9 +147,7 @@ namespace MyThirdSDL
 
 			Camera.Position = Vector.Zero;
 
-			currentGameState = GameState.Title;
-			MainGameScreen mainGameScreen = CreateMainGameScreen();
-			screenManager.AddScreen(mainGameScreen);
+			CurrentGameState = GameState.MainMenu;
 
 			if (log.IsDebugEnabled)
 				log.Debug("Game loop Initialize has been completed.");
@@ -138,12 +157,16 @@ namespace MyThirdSDL
 
 		public MainMenuScreen CreateMainMenuScreen()
 		{
-			return new MainMenuScreen(Renderer, contentManager);
+			MainMenuScreen mainMenuScreen = new MainMenuScreen(Renderer, contentManager);
+			mainMenuScreen.QuitButtonClicked += (sender, e) => Quit();
+			mainMenuScreen.NewGameButtonClicked += (sender, e) => CurrentGameState = GameState.InGame;
+			return mainMenuScreen;
 		}
 
 		public MainGameScreen CreateMainGameScreen()
 		{
-			return new MainGameScreen(Renderer, contentManager);
+			MainGameScreen mainGameScreen = new MainGameScreen(Renderer, contentManager);
+			return mainGameScreen;
 		}
 
 		#endregion
@@ -172,7 +195,7 @@ namespace MyThirdSDL
 			// TODO: move the focus logic to sharpdl game class?
 			if (isWindowFocused)
 			{
-				MouseHelper.Update();
+				MouseHelper.UpdateMouseState();
 				screenManager.Update(gameTime, !isWindowFocused, isMouseInsideWindowBounds);
 			}
 		}

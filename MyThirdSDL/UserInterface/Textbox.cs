@@ -104,12 +104,12 @@ namespace MyThirdSDL.UserInterface
 
 		public override void Update(SharpDL.GameTime gameTime)
 		{
-			if (Bounds.Contains(MouseHelper.ClickedMousePoint))
+			if (Bounds.Contains(MouseHelper.CurrentPosition))
 				IsHovered = true;
 			else
 				IsHovered = false;
 
-			IsClicked = GetClicked(MouseHelper.CurrentMouseState, MouseHelper.PreviousMouseState);
+			IsClicked = GetClicked();
 
 			if (IsClicked)
 				Focus();
@@ -152,14 +152,14 @@ namespace MyThirdSDL.UserInterface
 			}
 		}
 
-		private bool GetClicked(MouseState mouseStateCurrent, MouseState mouseStatePrevious)
+		private bool GetClicked()
 		{
 			if (IsHovered)
 			{
-				if (mouseStateCurrent.ButtonsPressed != null && mouseStatePrevious.ButtonsPressed != null)
+				if (MouseHelper.ButtonsPressed != null && MouseHelper.PreviousButtonsPressed != null)
 					// if the curren state does not have a left click and the previous state does have a left click, then the user released the mouse
-					if (!mouseStateCurrent.ButtonsPressed.Contains(MouseButtonCode.Left)
-						 && mouseStatePrevious.ButtonsPressed.Contains(MouseButtonCode.Left))
+					if (!MouseHelper.ButtonsPressed.Contains(MouseButtonCode.Left)
+						 && MouseHelper.PreviousButtonsPressed.Contains(MouseButtonCode.Left))
 						return true;
 			}
 
@@ -197,6 +197,22 @@ namespace MyThirdSDL.UserInterface
 					IconInputBar.Position -= new Vector(12, 0);
 				}
 			}
+		}
+
+		public override void Dispose()
+		{
+			Dispose(true);
+			GC.SuppressFinalize(this);
+		}
+
+		private void Dispose(bool disposing)
+		{
+			if (IconFrame != null)
+				IconFrame.Dispose();
+			if (IconInputBar != null)
+				IconInputBar.Dispose();
+			if (LabelText != null)
+				LabelText.DisableOutline();
 		}
 	}
 }

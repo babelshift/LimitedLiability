@@ -154,11 +154,11 @@ namespace MyThirdSDL.Simulation
 		/// <param name="employee">Employee.</param>
 		private bool IsEmployeeClicked(Employee employee)
 		{
-			if (MouseHelper.PreviousMouseState.ButtonsPressed != null)
+			if (MouseHelper.ButtonsPressed != null && MouseHelper.PreviousButtonsPressed != null)
 			{
-				return employee.CollisionBox.Contains(new Point((int)MouseHelper.ClickedWorldSpacePoint.X, (int)MouseHelper.ClickedWorldSpacePoint.Y))
-				&& !MouseHelper.CurrentMouseState.ButtonsPressed.Contains(MouseButtonCode.Left)
-				&& MouseHelper.PreviousMouseState.ButtonsPressed.Contains(MouseButtonCode.Left);
+				return employee.CollisionBox.Contains(new Point((int)MouseHelper.CurrentPosition.X, (int)MouseHelper.CurrentPosition.Y))
+				&& !MouseHelper.ButtonsPressed.Contains(MouseButtonCode.Left)
+				&& MouseHelper.PreviousButtonsPressed.Contains(MouseButtonCode.Left);
 			}
 			else
 				return false;

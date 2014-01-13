@@ -16,7 +16,7 @@ using MyThirdSDL.Mail;
 
 namespace MyThirdSDL.UserInterface
 {
-	public class UserInterfaceManager
+	public class UserInterfaceManager : IDisposable
 	{
 		#region Members
 
@@ -570,7 +570,7 @@ namespace MyThirdSDL.UserInterface
 				menuCompany.Update(gameTime);
 
 			if (CurrentState == UserInterfaceState.PlaceEquipmentActive || CurrentState == UserInterfaceState.PlaceRoomActive)
-				if (MouseHelper.CurrentMouseState.ButtonsPressed.Contains(MouseButtonCode.Right))
+				if (MouseHelper.ButtonsPressed.Contains(MouseButtonCode.Right))
 					ChangeState(UserInterfaceState.Default);
 
 			TimeSpentInCurrentState = SimulationManager.SimulationTime.Subtract(timeOfStatusChange);
@@ -659,6 +659,30 @@ namespace MyThirdSDL.UserInterface
 			timeOfStatusChange = SimulationManager.SimulationTime;
 			CurrentState = state;
 			labelState.Text = String.Format("UI State: {0}", state.ToString());
+		}
+
+		#endregion
+
+		#region Dispose
+
+		public void Dispose()
+		{
+			Dispose(true);
+			GC.SuppressFinalize(this);
+		}
+
+		private void Dispose(bool disposing)
+		{
+			labelMousePositionAbsolute.Dispose();
+			labelMousePositionIsometric.Dispose();
+			labelSimulationTime.Dispose();
+			labelState.Dispose();
+
+			menuCompany.Dispose();
+			menuInspectEmployee.Dispose();
+			menuMailbox.Dispose();
+			menuPurchaseEquipment.Dispose();
+			menuPurchaseRooms.Dispose();
 		}
 
 		#endregion

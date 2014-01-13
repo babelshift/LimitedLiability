@@ -40,9 +40,9 @@ namespace MyThirdSDL.Screens
 		{
 			get
 			{
-				if (MouseHelper.CurrentMouseState.ButtonsPressed != null && MouseHelper.PreviousMouseState.ButtonsPressed != null)
+				if (MouseHelper.ButtonsPressed != null && MouseHelper.PreviousButtonsPressed != null)
 				{
-					if (!MouseHelper.CurrentMouseState.ButtonsPressed.Contains(MouseButtonCode.Left) && MouseHelper.PreviousMouseState.ButtonsPressed.Contains(MouseButtonCode.Left))
+					if (!MouseHelper.ButtonsPressed.Contains(MouseButtonCode.Left) && MouseHelper.PreviousButtonsPressed.Contains(MouseButtonCode.Left))
 						return true;
 				}
 
@@ -176,7 +176,7 @@ namespace MyThirdSDL.Screens
 			string tileHighlightTexturePath = ContentManager.GetContentPath("TileHighlight");
 			Surface tileHighlightSurface = new Surface(tileHighlightTexturePath, SurfaceType.PNG);
 			tileHighlightImage = new Image(renderer, tileHighlightSurface, ImageFormat.PNG);
-			Point bottomRightPointOfScreen = new Point(MainGame.SCREEN_WIDTH, MainGame.SCREEN_HEIGHT);
+			Point bottomRightPointOfScreen = new Point(MainGame.SCREEN_WIDTH_LOGICAL, MainGame.SCREEN_HEIGHT_LOGICAL);
 			string mapPath = ContentManager.GetContentPath("OfficeOrthogonal1");
 
 			// Map
@@ -316,11 +316,6 @@ namespace MyThirdSDL.Screens
 			cursor.Draw(renderer);
 		}
 
-		public override void Unload()
-		{
-			base.Unload();
-		}
-
 		#region Employee Events
 
 		private Employee GetEmployeeFromEventSender(object sender)
@@ -399,8 +394,8 @@ namespace MyThirdSDL.Screens
 
 		private MapCell GetHoveredMapCell()
 		{
-			int mousePositionX = MouseHelper.CurrentMouseState.X;
-			int mousePositionY = MouseHelper.CurrentMouseState.Y;
+			int mousePositionX = (int)MouseHelper.CurrentPosition.X;
+			int mousePositionY = (int)MouseHelper.CurrentPosition.Y;
 
 			Vector worldPositionAtMousePosition = CoordinateHelper.ScreenSpaceToWorldSpace(
 				mousePositionX, mousePositionY,
@@ -501,13 +496,13 @@ namespace MyThirdSDL.Screens
 		private MouseOverScreenEdge GetMouseOverScreenEdge()
 		{
 			MouseOverScreenEdge mouseOverScreenEdge = MouseOverScreenEdge.Unknown;
-			if (MouseHelper.CurrentMouseState.X < 50 && MouseHelper.CurrentMouseState.X > 0)
+			if (MouseHelper.CurrentPosition.X < 50 && MouseHelper.CurrentPosition.X > 0)
 				mouseOverScreenEdge = MouseOverScreenEdge.Left;
-			else if (MouseHelper.CurrentMouseState.X > MainGame.SCREEN_WIDTH - 50 && MouseHelper.CurrentMouseState.X < MainGame.SCREEN_WIDTH - 1)
+			else if (MouseHelper.CurrentPosition.X > MainGame.SCREEN_WIDTH_LOGICAL - 50 && MouseHelper.CurrentPosition.X < MainGame.SCREEN_WIDTH_LOGICAL - 1)
 				mouseOverScreenEdge = MouseOverScreenEdge.Right;
-			else if (MouseHelper.CurrentMouseState.Y < 50 && MouseHelper.CurrentMouseState.Y > 0)
+			else if (MouseHelper.CurrentPosition.Y < 50 && MouseHelper.CurrentPosition.Y > 0)
 				mouseOverScreenEdge = MouseOverScreenEdge.Top;
-			else if (MouseHelper.CurrentMouseState.Y > MainGame.SCREEN_HEIGHT - 50 && MouseHelper.CurrentMouseState.Y < MainGame.SCREEN_HEIGHT - 1)
+			else if (MouseHelper.CurrentPosition.Y > MainGame.SCREEN_HEIGHT_LOGICAL - 50 && MouseHelper.CurrentPosition.Y < MainGame.SCREEN_HEIGHT_LOGICAL - 1)
 				mouseOverScreenEdge = MouseOverScreenEdge.Bottom;
 			else
 				mouseOverScreenEdge = MouseOverScreenEdge.None;
@@ -519,6 +514,31 @@ namespace MyThirdSDL.Screens
 			if (userInterfaceManager != null)
 				userInterfaceManager.UpdateUnreadMailCount(mailManager.PlayerUnreadMailCount);
 		}
+
+		#region Dispose
+
+		public override void Unload()
+		{
+			base.Unload();
+
+			Dispose();
+		}
+
+		public override void Dispose()
+		{
+			Dispose(true);
+			GC.SuppressFinalize(this);
+		}
+
+		private void Dispose(bool disposing)
+		{
+			userInterfaceManager.Dispose();
+			cursor.Dispose();
+			tiledMap.Dispose();
+			tileHighlightImage.Dispose();
+		}
+
+		#endregion
 	}
 }
 

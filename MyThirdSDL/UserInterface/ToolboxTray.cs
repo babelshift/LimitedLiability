@@ -280,7 +280,7 @@ namespace MyThirdSDL.UserInterface
 				if(control != null)
 					control.Update(gameTime);
 
-			if (Bounds.Contains(new Point(MouseHelper.CurrentMouseState.X, MouseHelper.CurrentMouseState.Y)))
+			if (Bounds.Contains(new Point((int)MouseHelper.CurrentPosition.X, (int)MouseHelper.CurrentPosition.Y)))
 				IsHovered = true;
 			else
 				IsHovered = false;
@@ -390,6 +390,20 @@ namespace MyThirdSDL.UserInterface
 		{
 			if (ButtonMailMenuClicked != null)
 				ButtonMailMenuClicked(sender, e);
+		}
+
+		public override void Dispose()
+		{
+			Dispose(true);
+			GC.SuppressFinalize(this);
+		}
+
+		private void Dispose(bool disposing)
+		{
+			foreach (var control in controls)
+				if (control != null)
+					control.Dispose();
+			controls.Clear();
 		}
 	}
 }

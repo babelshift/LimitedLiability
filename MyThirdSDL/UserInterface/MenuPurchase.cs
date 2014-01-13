@@ -433,6 +433,28 @@ namespace MyThirdSDL.UserInterface
 		}
 
 		#endregion
+
+		public override void Dispose()
+		{
+			Dispose(true);
+			GC.SuppressFinalize(this);
+		}
+
+		private void Dispose(bool disposing)
+		{
+			foreach (var control in controls)
+				if (control != null)
+					control.Dispose();
+
+			List<ButtonMenuItem> buttonMenuItemsOnCurrentPage = new List<ButtonMenuItem>();
+			bool success = buttonMenuItemPages.TryGetValue(currentDisplayedPage, out buttonMenuItemsOnCurrentPage);
+			if (success)
+				foreach (var buttonMenuItem in buttonMenuItemsOnCurrentPage)
+					buttonMenuItem.Dispose();
+
+			buttonMenuItemPages.Clear();
+			controls.Clear();
+		}
 	}
 
 	public class ButtonConfirmWindowClickedEventArgs : EventArgs

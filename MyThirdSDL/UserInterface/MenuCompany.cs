@@ -201,5 +201,19 @@ namespace MyThirdSDL.UserInterface
 		{
 			labelNumberOfEmployeesValue.Text = employeeCount.ToString();
 		}
+
+		public override void Dispose()
+		{
+			Dispose(true);
+			GC.SuppressFinalize(this);
+		}
+
+		private void Dispose(bool disposing)
+		{
+			foreach (var control in controls)
+				if(control != null)
+					control.Dispose();
+			controls.Clear();
+		}
 	}
 }

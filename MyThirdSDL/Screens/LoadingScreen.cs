@@ -150,5 +150,22 @@ namespace MyThirdSDL.Screens
 
 
 		#endregion
+
+		public override void Unload()
+		{
+			base.Unload();
+
+			Dispose();
+		}
+
+		public override void Dispose()
+		{
+			Dispose(true);
+			GC.SuppressFinalize(this);
+		}
+
+		private void Dispose(bool disposing)
+		{
+		}
 	}
 }

@@ -88,15 +88,10 @@ namespace MyThirdSDL.UserInterface
 			isOutlined = false;
 		}
 
-		public void Dispose()
+		public override void Dispose()
 		{
 			Dispose(true);
 			GC.SuppressFinalize(this);
-		}
-
-		~Label()
-		{
-			Dispose(false);
 		}
 
 		private void Dispose(bool disposing)

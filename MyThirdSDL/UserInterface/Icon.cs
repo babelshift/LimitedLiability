@@ -38,15 +38,10 @@ namespace MyThirdSDL.UserInterface
 				renderer.RenderTexture(textureFrame, Position.X, Position.Y);
 		}
 
-		public virtual void Dispose()
+		public override void Dispose()
 		{
 			Dispose(true);
 			GC.SuppressFinalize(this);
-		}
-
-		~Icon()
-		{
-			Dispose(false);
 		}
 
 		private void Dispose(bool disposing)

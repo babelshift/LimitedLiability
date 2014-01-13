@@ -153,7 +153,7 @@ namespace MyThirdSDL.UserInterface
 			if (Tooltip != null)
 				Tooltip.Update(gameTime);
 
-			if (Bounds.Contains(MouseHelper.ClickedMousePoint))
+			if (Bounds.Contains(new Vector(MouseHelper.CurrentPosition.X, MouseHelper.CurrentPosition.Y)))
 				IsHovered = true;
 			else
 				IsHovered = false;
@@ -161,7 +161,7 @@ namespace MyThirdSDL.UserInterface
 			if (IsHovered)
 				OnHovered(EventArgs.Empty);
 
-			IsClicked = GetClicked(MouseHelper.CurrentMouseState, MouseHelper.PreviousMouseState);
+			IsClicked = GetClicked();
 
 			if (IsClicked)
 				OnClicked(EventArgs.Empty);
@@ -220,14 +220,14 @@ namespace MyThirdSDL.UserInterface
 			IsPressed = false;
 		}
 
-		private bool GetClicked(MouseState mouseStateCurrent, MouseState mouseStatePrevious)
+		private bool GetClicked()
 		{
 			if (IsHovered)
 			{
-				if (mouseStateCurrent.ButtonsPressed != null && mouseStatePrevious.ButtonsPressed != null)
+				if (MouseHelper.ButtonsPressed != null && MouseHelper.PreviousButtonsPressed != null)
 					// if the curren state does not have a left click and the previous state does have a left click, then the user released the mouse
-					if (!mouseStateCurrent.ButtonsPressed.Contains(MouseButtonCode.Left)
-						 && mouseStatePrevious.ButtonsPressed.Contains(MouseButtonCode.Left))
+					if (!MouseHelper.ButtonsPressed.Contains(MouseButtonCode.Left)
+						 && MouseHelper.PreviousButtonsPressed.Contains(MouseButtonCode.Left))
 						return true;
 			}
 
@@ -248,23 +248,20 @@ namespace MyThirdSDL.UserInterface
 
 		#endregion
 
-		public void Focus()
+		public override void Focus()
 		{
+			base.Focus();
 		}
 
-		public void Blur()
+		public override void Blur()
 		{
+			base.Blur();
 		}
 
-		public virtual void Dispose()
+		public override void Dispose()
 		{
 			Dispose(true);
 			GC.SuppressFinalize(this);
-		}
-
-		~Button()
-		{
-			Dispose(false);
 		}
 
 		private void Dispose(bool disposing)
@@ -279,6 +276,8 @@ namespace MyThirdSDL.UserInterface
 				TextureFrameHovered.Dispose();
 			if (Label != null)
 				Label.Dispose();
+			if (Tooltip != null)
+				Tooltip.Dispose();
 		}
 	}
 }

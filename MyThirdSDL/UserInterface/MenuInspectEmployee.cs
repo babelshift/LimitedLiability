@@ -67,7 +67,6 @@ namespace MyThirdSDL.UserInterface
 		public event EventHandler<EventArgs> ButtonCloseWindowClicked;
 
 		private List<Control> controls = new List<Control>();
-		private List<Label> labelValues = new List<Label>();
 
 		public override Vector Position
 		{
@@ -307,6 +306,24 @@ namespace MyThirdSDL.UserInterface
 					control.Draw(gameTime, renderer);
 
 			iconMoodActive.Draw(gameTime, renderer);
+		}
+
+		public override void Dispose()
+		{
+			Dispose(true);
+			GC.SuppressFinalize(this);
+		}
+
+		private void Dispose(bool disposing)
+		{
+			foreach (var control in controls)
+				if(control != null)
+					control.Dispose();
+
+			if(iconMoodActive != null)
+				iconMoodActive.Dispose();
+
+			controls.Clear();
 		}
 	}
 }

@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace MyThirdSDL.UserInterface
 {
-	public abstract class Control
+	public abstract class Control : IDisposable
 	{
 		protected bool HasFocus { get; private set; }
 
@@ -71,5 +71,7 @@ namespace MyThirdSDL.UserInterface
 		{
 			HasFocus = false;
 		}
+
+		public abstract void Dispose();
 	}
 }

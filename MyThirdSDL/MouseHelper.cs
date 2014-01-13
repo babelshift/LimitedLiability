@@ -1,29 +1,29 @@
 using System;
 using SharpDL.Input;
 using SharpDL.Graphics;
+using System.Collections.Generic;
 
 namespace MyThirdSDL
 {
 	public static class MouseHelper
 	{
-		public static Vector ClickedWorldSpacePoint { get; private set; }
+		public static Vector CurrentPosition { get; private set; }
 
-		public static Point ClickedMousePoint { get; private set; }
+		public static IEnumerable<MouseButtonCode> ButtonsPressed { get; private set; }
 
-		public static MouseState CurrentMouseState { get; private set; }
+		public static IEnumerable<MouseButtonCode> PreviousButtonsPressed { get; private set; }
 
-		public static MouseState PreviousMouseState { get; private set; }
-
-		public static void Update()
+		public static void UpdateMousePosition(Vector currentPosition)
 		{
-			MouseHelper.PreviousMouseState = MouseHelper.CurrentMouseState;
-			MouseHelper.CurrentMouseState = Mouse.GetState();
-			ClickedMousePoint = new Point(MouseHelper.CurrentMouseState.X, MouseHelper.CurrentMouseState.Y);
+			CurrentPosition = currentPosition;
+		}
 
-			ClickedWorldSpacePoint = CoordinateHelper.ScreenSpaceToWorldSpace(
-				ClickedMousePoint.X, ClickedMousePoint.Y,
-				CoordinateHelper.ScreenOffset,
-				CoordinateHelper.ScreenProjectionType.Orthogonal);
+		public static void UpdateMouseState()
+		{
+			PreviousButtonsPressed = ButtonsPressed;
+
+			var currentMouseState = Mouse.GetState();
+			ButtonsPressed = currentMouseState.ButtonsPressed;
 		}
 	}
 }

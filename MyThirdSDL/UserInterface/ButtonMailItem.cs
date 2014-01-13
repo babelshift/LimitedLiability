@@ -93,11 +93,6 @@ namespace MyThirdSDL.UserInterface
 			GC.SuppressFinalize(this);
 		}
 
-		~ButtonMailItem()
-		{
-			Dispose(false);
-		}
-
 		private void Dispose(bool disposing)
 		{
 			if (IconMailUnread != null)
