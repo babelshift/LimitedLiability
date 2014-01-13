@@ -22,8 +22,8 @@ namespace MyThirdSDL
 
 		#region Constants
 
-		public static readonly int SCREEN_WIDTH_LOGICAL = 800;
-		public static readonly int SCREEN_HEIGHT_LOGICAL = 600;
+		public static readonly int SCREEN_WIDTH_LOGICAL = 1920;
+		public static readonly int SCREEN_HEIGHT_LOGICAL = 1080;
 
 		#endregion
 
@@ -102,7 +102,6 @@ namespace MyThirdSDL
 
 		private void HandleMouseMoving(object sender, MouseMotionEventArgs e)
 		{
-			MouseHelper.UpdateMousePosition(new Vector(e.RelativeToWindowX, e.RelativeToWindowY));
 			screenManager.PassMouseMovingEventToActiveScreen(sender, e);
 		}
 
@@ -195,7 +194,6 @@ namespace MyThirdSDL
 			// TODO: move the focus logic to sharpdl game class?
 			if (isWindowFocused)
 			{
-				MouseHelper.UpdateMouseState();
 				screenManager.Update(gameTime, !isWindowFocused, isMouseInsideWindowBounds);
 			}
 		}

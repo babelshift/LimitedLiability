@@ -42,7 +42,7 @@ namespace MyThirdSDL
 		public void Draw(Renderer renderer)
 		{
 			if (cursorActive != null)
-				renderer.RenderTexture(cursorActive, MouseHelper.CurrentPosition.X - cursorHandRight.Width / 2, MouseHelper.CurrentPosition.Y - cursorHandRight.Height / 2);
+				renderer.RenderTexture(cursorActive, Mouse.X - cursorHandRight.Width / 2, Mouse.Y - cursorHandRight.Height / 2);
 		}
 
 		private void SetMouseOverScreenEdge(MouseOverScreenEdge mouseOverScreenEdge)

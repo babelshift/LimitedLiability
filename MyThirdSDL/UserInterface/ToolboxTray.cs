@@ -1,6 +1,7 @@
 ﻿using MyThirdSDL.Content;
 using SharpDL;
 using SharpDL.Graphics;
+using SharpDL.Input;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -280,7 +281,7 @@ namespace MyThirdSDL.UserInterface
 				if(control != null)
 					control.Update(gameTime);
 
-			if (Bounds.Contains(new Point((int)MouseHelper.CurrentPosition.X, (int)MouseHelper.CurrentPosition.Y)))
+			if (Bounds.Contains(new Point(Mouse.X, Mouse.Y)))
 				IsHovered = true;
 			else
 				IsHovered = false;

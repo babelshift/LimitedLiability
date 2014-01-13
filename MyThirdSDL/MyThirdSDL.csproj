@@ -144,7 +144,6 @@
     <Compile Include="Mail\MailState.cs" />
     <Compile Include="Mail\MailAddressType.cs" />
     <Compile Include="MainGame.cs" />
-    <Compile Include="MouseHelper.cs" />
     <Compile Include="Simulation\Path.cs" />
     <Compile Include="PriorityQueue.cs" />
     <Compile Include="Program.cs" />

@@ -153,7 +153,7 @@ namespace MyThirdSDL.UserInterface
 			if (Tooltip != null)
 				Tooltip.Update(gameTime);
 
-			if (Bounds.Contains(new Vector(MouseHelper.CurrentPosition.X, MouseHelper.CurrentPosition.Y)))
+			if (Bounds.Contains(new Vector(Mouse.X, Mouse.Y)))
 				IsHovered = true;
 			else
 				IsHovered = false;
@@ -224,10 +224,10 @@ namespace MyThirdSDL.UserInterface
 		{
 			if (IsHovered)
 			{
-				if (MouseHelper.ButtonsPressed != null && MouseHelper.PreviousButtonsPressed != null)
+				if (Mouse.ButtonsPressed != null && Mouse.PreviousButtonsPressed != null)
 					// if the curren state does not have a left click and the previous state does have a left click, then the user released the mouse
-					if (!MouseHelper.ButtonsPressed.Contains(MouseButtonCode.Left)
-						 && MouseHelper.PreviousButtonsPressed.Contains(MouseButtonCode.Left))
+					if (!Mouse.ButtonsPressed.Contains(MouseButtonCode.Left)
+						 && Mouse.PreviousButtonsPressed.Contains(MouseButtonCode.Left))
 						return true;
 			}
 

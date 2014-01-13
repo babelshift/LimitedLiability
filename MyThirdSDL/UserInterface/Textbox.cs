@@ -104,7 +104,7 @@ namespace MyThirdSDL.UserInterface
 
 		public override void Update(SharpDL.GameTime gameTime)
 		{
-			if (Bounds.Contains(MouseHelper.CurrentPosition))
+			if (Bounds.Contains(new Point(Mouse.X, Mouse.Y)))
 				IsHovered = true;
 			else
 				IsHovered = false;
@@ -156,10 +156,10 @@ namespace MyThirdSDL.UserInterface
 		{
 			if (IsHovered)
 			{
-				if (MouseHelper.ButtonsPressed != null && MouseHelper.PreviousButtonsPressed != null)
+				if (Mouse.ButtonsPressed != null && Mouse.PreviousButtonsPressed != null)
 					// if the curren state does not have a left click and the previous state does have a left click, then the user released the mouse
-					if (!MouseHelper.ButtonsPressed.Contains(MouseButtonCode.Left)
-						 && MouseHelper.PreviousButtonsPressed.Contains(MouseButtonCode.Left))
+					if (!Mouse.ButtonsPressed.Contains(MouseButtonCode.Left)
+						 && Mouse.PreviousButtonsPressed.Contains(MouseButtonCode.Left))
 						return true;
 			}
 

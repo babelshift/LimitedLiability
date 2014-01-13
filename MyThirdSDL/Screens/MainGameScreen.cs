@@ -40,9 +40,9 @@ namespace MyThirdSDL.Screens
 		{
 			get
 			{
-				if (MouseHelper.ButtonsPressed != null && MouseHelper.PreviousButtonsPressed != null)
+				if (Mouse.ButtonsPressed != null && Mouse.PreviousButtonsPressed != null)
 				{
-					if (!MouseHelper.ButtonsPressed.Contains(MouseButtonCode.Left) && MouseHelper.PreviousButtonsPressed.Contains(MouseButtonCode.Left))
+					if (!Mouse.ButtonsPressed.Contains(MouseButtonCode.Left) && Mouse.PreviousButtonsPressed.Contains(MouseButtonCode.Left))
 						return true;
 				}
 
@@ -394,8 +394,8 @@ namespace MyThirdSDL.Screens
 
 		private MapCell GetHoveredMapCell()
 		{
-			int mousePositionX = (int)MouseHelper.CurrentPosition.X;
-			int mousePositionY = (int)MouseHelper.CurrentPosition.Y;
+			int mousePositionX = (int)Mouse.X;
+			int mousePositionY = (int)Mouse.Y;
 
 			Vector worldPositionAtMousePosition = CoordinateHelper.ScreenSpaceToWorldSpace(
 				mousePositionX, mousePositionY,
@@ -496,13 +496,13 @@ namespace MyThirdSDL.Screens
 		private MouseOverScreenEdge GetMouseOverScreenEdge()
 		{
 			MouseOverScreenEdge mouseOverScreenEdge = MouseOverScreenEdge.Unknown;
-			if (MouseHelper.CurrentPosition.X < 50 && MouseHelper.CurrentPosition.X > 0)
+			if (Mouse.X < 50 && Mouse.X > 0)
 				mouseOverScreenEdge = MouseOverScreenEdge.Left;
-			else if (MouseHelper.CurrentPosition.X > MainGame.SCREEN_WIDTH_LOGICAL - 50 && MouseHelper.CurrentPosition.X < MainGame.SCREEN_WIDTH_LOGICAL - 1)
+			else if (Mouse.X > MainGame.SCREEN_WIDTH_LOGICAL - 50 && Mouse.X < MainGame.SCREEN_WIDTH_LOGICAL - 1)
 				mouseOverScreenEdge = MouseOverScreenEdge.Right;
-			else if (MouseHelper.CurrentPosition.Y < 50 && MouseHelper.CurrentPosition.Y > 0)
+			else if (Mouse.Y < 50 && Mouse.Y > 0)
 				mouseOverScreenEdge = MouseOverScreenEdge.Top;
-			else if (MouseHelper.CurrentPosition.Y > MainGame.SCREEN_HEIGHT_LOGICAL - 50 && MouseHelper.CurrentPosition.Y < MainGame.SCREEN_HEIGHT_LOGICAL - 1)
+			else if (Mouse.Y > MainGame.SCREEN_HEIGHT_LOGICAL - 50 && Mouse.Y < MainGame.SCREEN_HEIGHT_LOGICAL - 1)
 				mouseOverScreenEdge = MouseOverScreenEdge.Bottom;
 			else
 				mouseOverScreenEdge = MouseOverScreenEdge.None;

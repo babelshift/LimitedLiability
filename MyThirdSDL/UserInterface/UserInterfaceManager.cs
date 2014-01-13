@@ -570,7 +570,7 @@ namespace MyThirdSDL.UserInterface
 				menuCompany.Update(gameTime);
 
 			if (CurrentState == UserInterfaceState.PlaceEquipmentActive || CurrentState == UserInterfaceState.PlaceRoomActive)
-				if (MouseHelper.ButtonsPressed.Contains(MouseButtonCode.Right))
+				if (Mouse.ButtonsPressed.Contains(MouseButtonCode.Right))
 					ChangeState(UserInterfaceState.Default);
 
 			TimeSpentInCurrentState = SimulationManager.SimulationTime.Subtract(timeOfStatusChange);
