@@ -54,6 +54,8 @@ namespace MyThirdSDL.Screens
 
 		#endregion
 
+		public event EventHandler ReturnToMainMenu;
+
 		#region Constructor
 
 		public MainGameScreen(Renderer renderer, ContentManager contentManager)
@@ -98,7 +100,24 @@ namespace MyThirdSDL.Screens
 		{
 			base.HandleKeyStates(keysPressed, keysReleased);
 
+			foreach (var keyPressed in keysPressed)
+				if (keyPressed.VirtualKey == VirtualKeyCode.Escape)
+					ScreenManager.AddScreen(CreatePauseMenuScreen());
+
 			userInterfaceManager.HandleKeyStates(keysPressed, keysReleased);
+		}
+
+		private PauseMenuScreen CreatePauseMenuScreen()
+		{
+			var pauseMenuScreen = new PauseMenuScreen(ContentManager);
+			pauseMenuScreen.QuitButtonClicked += pauseMenuScreen_QuitButtonClicked;
+			return pauseMenuScreen;
+		}
+
+		private void pauseMenuScreen_QuitButtonClicked(object sender, EventArgs e)
+		{
+			if (ReturnToMainMenu != null)
+				ReturnToMainMenu(sender, e);
 		}
 
 		public override void HandleInput(GameTime gameTime, bool isMouseInsideWindowBounds)

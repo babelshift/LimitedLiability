@@ -23,6 +23,10 @@ namespace MyThirdSDL.Screens
 		List<Screen> screens = new List<Screen>();
 		List<Screen> tempScreensList = new List<Screen>();
 
+		private Screen ActiveScreen { get { return screens.Find(s => s.ScreenState == ScreenState.Active); } }
+
+		private bool IsActiveScreenAvailable { get { if (ActiveScreen != null) return true; else return false; } }
+
 		public Texture BlankTexture { get; private set; }
 
 		public bool IsInitialized { get; private set; }
@@ -193,10 +197,6 @@ namespace MyThirdSDL.Screens
 			if (IsActiveScreenAvailable)
 				ActiveScreen.HandleKeyStates(keysPressed, keysReleased);
 		}
-
-		private bool IsActiveScreenAvailable { get { if (ActiveScreen != null) return true; else return false; } }
-
-		private Screen ActiveScreen { get { return screens.Find(s => s.ScreenState == ScreenState.Active); } }
 
 		/// <summary>
 		/// Adds a new screen to the screen manager.

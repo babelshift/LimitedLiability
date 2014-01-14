@@ -22,8 +22,8 @@ namespace MyThirdSDL
 
 		#region Constants
 
-		public static readonly int SCREEN_WIDTH_LOGICAL = 1920;
-		public static readonly int SCREEN_HEIGHT_LOGICAL = 1080;
+		public static readonly int SCREEN_WIDTH_LOGICAL = 1152;
+		public static readonly int SCREEN_HEIGHT_LOGICAL = 720;
 
 		#endregion
 
@@ -135,7 +135,7 @@ namespace MyThirdSDL
 		{
 			base.Initialize();
 
-			CreateWindow("My Third SDL", 0, 0, 0, 0, WindowFlags.FullscreenDesktop);
+			CreateWindow("My Third SDL", 100, 100, 1152, 720, WindowFlags.Shown);
 			CreateRenderer(RendererFlags.RendererAccelerated | RendererFlags.RendererPresentVSync);
 			Renderer.SetRenderLogicalSize(SCREEN_WIDTH_LOGICAL, SCREEN_HEIGHT_LOGICAL);
 
@@ -165,6 +165,7 @@ namespace MyThirdSDL
 		public MainGameScreen CreateMainGameScreen()
 		{
 			MainGameScreen mainGameScreen = new MainGameScreen(Renderer, contentManager);
+			mainGameScreen.ReturnToMainMenu += (sender, e) => CurrentGameState = GameState.MainMenu;
 			return mainGameScreen;
 		}
 
@@ -194,6 +195,7 @@ namespace MyThirdSDL
 			// TODO: move the focus logic to sharpdl game class?
 			if (isWindowFocused)
 			{
+				base.Update(gameTime);
 				screenManager.Update(gameTime, !isWindowFocused, isMouseInsideWindowBounds);
 			}
 		}
@@ -211,6 +213,7 @@ namespace MyThirdSDL
 			// TODO: move the focus logic to sharpdl game class?
 			if (isWindowFocused)
 			{
+				base.Draw(gameTime);
 				screenManager.Draw(gameTime, Renderer);
 				Renderer.RenderPresent();
 			}

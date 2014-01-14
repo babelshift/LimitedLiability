@@ -73,7 +73,8 @@ namespace MyThirdSDL
 
 		private void Dispose(bool disposing)
 		{
-			cursorActive.Dispose();
+			if(cursorActive != null)
+				cursorActive.Dispose();
 			cursorHandDown.Dispose();
 			cursorHandLeft.Dispose();
 			cursorHandRight.Dispose();

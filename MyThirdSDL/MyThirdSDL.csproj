@@ -144,6 +144,7 @@
     <Compile Include="Mail\MailState.cs" />
     <Compile Include="Mail\MailAddressType.cs" />
     <Compile Include="MainGame.cs" />
+    <Compile Include="Screens\PauseMenuScreen.cs" />
     <Compile Include="Simulation\Path.cs" />
     <Compile Include="PriorityQueue.cs" />
     <Compile Include="Program.cs" />
@@ -288,6 +289,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\Images\User Interface\ButtonMainMenuItem.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Images\User Interface\MenuPauseFrame.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\Images\User Interface\MenuPurchaseFrame.png">

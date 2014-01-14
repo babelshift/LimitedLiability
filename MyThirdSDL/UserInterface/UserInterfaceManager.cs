@@ -650,7 +650,8 @@ namespace MyThirdSDL.UserInterface
 		public void HandleKeyStates(IEnumerable<KeyInformation> keysPressed, IEnumerable<KeyInformation> keysReleased)
 		{
 			foreach (var key in keysPressed)
-				FocusedControl.HandleKeyPressed(key);
+				if(FocusedControl != null)
+					FocusedControl.HandleKeyPressed(key);
 		}
 
 		private void ChangeState(UserInterfaceState state)
