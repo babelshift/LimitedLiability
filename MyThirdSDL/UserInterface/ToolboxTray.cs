@@ -112,7 +112,7 @@ namespace MyThirdSDL.UserInterface
 			string tooltipTexturePathKey = "TooltipFrame";
 
 			string fontPath = contentManager.GetContentPath("Arcade");
-			Color fontColor = new Color(218, 218, 218);
+			Color fontColor = Styles.Colors.ButtonMainMenuItemText;
 			int fontSizeContent = 12;
 			int fontSizeTooltipText = 8;
 

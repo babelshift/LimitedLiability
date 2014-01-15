@@ -206,7 +206,7 @@ namespace MyThirdSDL.UserInterface
 			Height = iconFrame.Height;
 
 			string fontPath = contentManager.GetContentPath("Arcade");
-			Color fontColor = new Color(218, 218, 218);
+			Color fontColor = Styles.Colors.MainMenuTitleText;
 			int fontSizeTitle = 14;
 			int fontSizeContent = 12;
 
@@ -328,7 +328,7 @@ namespace MyThirdSDL.UserInterface
 		public void AddButtonMailItems(ContentManager contentManager, IEnumerable<MailItem> inbox, IEnumerable<MailItem> outbox, IEnumerable<MailItem> archive)
 		{
 			string fontPath = contentManager.GetContentPath(Styles.FontPaths.Arcade);
-			Color fontColorTitle = Styles.Colors.White;
+			Color fontColorTitle = Styles.Colors.MainMenuTitleText;
 			int fontSizeTitle = Styles.FontSizes.Title;
 			int fontSizeContent = Styles.FontSizes.Content;
 

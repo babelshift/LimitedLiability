@@ -24,6 +24,7 @@ namespace MyThirdSDL.UserInterface
 		private Icon iconInfoMenuHeader;
 		private Icon iconSkillsMenuHeader;
 		private Label labelMainMenuHeader;
+		private Label labelMainMenuHeaderShadow;
 		private Label labelInfoMenuHeader;
 		private Label labelSkillsMenuHeader;
 
@@ -59,7 +60,6 @@ namespace MyThirdSDL.UserInterface
 		private Button buttonArrowCircleLeft;
 		private Button buttonArrowCircleRight;
 		private Button buttonCloseWindow;
-		private Button buttonConfirmWindow;
 		private Dictionary<int, List<ButtonMenuItem>> buttonMenuItemPages = new Dictionary<int, List<ButtonMenuItem>>();
 
 		#endregion
@@ -88,6 +88,7 @@ namespace MyThirdSDL.UserInterface
 				iconInfoMenuHeader.Position = new Vector(base.Position.X + 365, base.Position.Y + 5);
 				iconSkillsMenuHeader.Position = new Vector(base.Position.X + 505, base.Position.Y + 5);
 				labelMainMenuHeader.Position = new Vector(base.Position.X + 38, base.Position.Y + 15);
+				labelMainMenuHeaderShadow.Position = new Vector(base.Position.X + 40, base.Position.Y + 17);
 				labelInfoMenuHeader.Position = new Vector(base.Position.X + 400, base.Position.Y + 15);
 				labelSkillsMenuHeader.Position = new Vector(base.Position.X + 535, base.Position.Y + 15);
 				iconMoney.Position = new Vector(base.Position.X + 365, base.Position.Y + 50);
@@ -111,7 +112,6 @@ namespace MyThirdSDL.UserInterface
 				labelCreativity.Position = new Vector(base.Position.X + 540, base.Position.Y + 120);
 				labelIntelligence.Position = new Vector(base.Position.X + 540, base.Position.Y + 150);
 				buttonCloseWindow.Position = new Vector(base.Position.X + 600, base.Position.Y - 47);
-				buttonConfirmWindow.Position = new Vector(base.Position.X + 600, base.Position.Y + 303);
 				buttonArrowCircleLeft.Position = new Vector(base.Position.X + 9, base.Position.Y + 248);
 				buttonArrowCircleRight.Position = new Vector(base.Position.X + 296, base.Position.Y + 248);
 				SetMenuItemButtonPositions();
@@ -128,8 +128,9 @@ namespace MyThirdSDL.UserInterface
 			Height = iconFrame.Height;
 
 			string fontPath = contentManager.GetContentPath(Styles.FontPaths.Arcade);
-			Color fontColorTitle = Styles.Colors.White;
-			Color fontColorLabelValue = Styles.Colors.Yellow;
+			Color fontColorTitle = Styles.Colors.MainMenuTitleText;
+			Color fontColorTitleShadow = Styles.Colors.MainMenuTitleTextShadow;
+			Color fontColorLabelValue = Styles.Colors.ButtonMainMenuItemText;
 			int fontSizeTitle = Styles.FontSizes.Title;
 			int fontSizeContent = Styles.FontSizes.Content;
 
@@ -139,6 +140,8 @@ namespace MyThirdSDL.UserInterface
 
 			labelMainMenuHeader = new Label();
 			labelMainMenuHeader.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSizeTitle, fontColorTitle, menuTitle);
+			labelMainMenuHeaderShadow = new Label();
+			labelMainMenuHeaderShadow.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSizeTitle, fontColorTitleShadow, menuTitle);
 			labelInfoMenuHeader = new Label();
 			labelInfoMenuHeader.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSizeTitle, fontColorTitle, "Needs");
 			labelSkillsMenuHeader = new Label();
@@ -186,13 +189,6 @@ namespace MyThirdSDL.UserInterface
 			buttonCloseWindow.IconHovered = new Icon(contentManager.GetTexture("IconWindowClose"));
 			buttonCloseWindow.ButtonType = ButtonType.IconOnly;
 
-			buttonConfirmWindow = new Button();
-			buttonConfirmWindow.TextureFrame = contentManager.GetTexture("ButtonSquare");
-			buttonConfirmWindow.TextureFrameHovered = contentManager.GetTexture("ButtonSquareHover");
-			buttonConfirmWindow.Icon = new Icon(contentManager.GetTexture("IconWindowConfirm"));
-			buttonConfirmWindow.IconHovered = new Icon(contentManager.GetTexture("IconWindowConfirm"));
-			buttonConfirmWindow.ButtonType = ButtonType.IconOnly;
-
 			buttonArrowCircleLeft = new Button();
 			buttonArrowCircleLeft.TextureFrame = contentManager.GetTexture("ButtonSquare");
 			buttonArrowCircleLeft.TextureFrameHovered = contentManager.GetTexture("ButtonSquareHover");
@@ -225,6 +221,7 @@ namespace MyThirdSDL.UserInterface
 			controls.Add(iconMainMenuHeader);
 			controls.Add(iconInfoMenuHeader);
 			controls.Add(iconSkillsMenuHeader);
+			controls.Add(labelMainMenuHeaderShadow);
 			controls.Add(labelMainMenuHeader);
 			controls.Add(labelInfoMenuHeader);
 			controls.Add(labelSkillsMenuHeader);
@@ -251,12 +248,10 @@ namespace MyThirdSDL.UserInterface
 			controls.Add(buttonArrowCircleLeft);
 			controls.Add(buttonArrowCircleRight);
 			controls.Add(buttonCloseWindow);
-			controls.Add(buttonConfirmWindow);
 
 			this.buttonArrowCircleLeft.Clicked += buttonArrowCircleLeft_Clicked;
 			this.buttonArrowCircleRight.Clicked += buttonArrowCircleRight_Clicked;
 			this.buttonCloseWindow.Clicked += buttonCloseWindow_Clicked;
-			this.buttonConfirmWindow.Clicked += buttonConfirmWindow_Clicked;
 		}
 
 		#endregion
@@ -367,15 +362,7 @@ namespace MyThirdSDL.UserInterface
 
 		private void buttonMenuItem_Clicked(object sender, PurchasableItemSelectedEventArgs e)
 		{
-			selectedPurchasableItem = e.PurchasableItem;
-			ButtonMenuItem clickedButtonMenuItem = sender as ButtonMenuItem;
-			if (clickedButtonMenuItem != null)
-			{
-				foreach (var buttonMenuItemPage in buttonMenuItemPages.Values)
-					foreach (var buttonMenuItem in buttonMenuItemPage)
-						buttonMenuItem.ToggleOff();
-				clickedButtonMenuItem.ToggleOn();
-			}
+			OnButtonConfirmWindowClicked(sender, new ButtonConfirmWindowClickedEventArgs(e.PurchasableItem));
 		}
 
 		private void buttonMenuItem_Hovered(object sender, PurchasableItemSelectedEventArgs e)

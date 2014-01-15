@@ -82,9 +82,9 @@ namespace MyThirdSDL.UserInterface
 			Height = iconFrame.Height;
 
 			string fontPath = contentManager.GetContentPath(Styles.FontPaths.Arcade);
-			Color fontColorTitle = Styles.Colors.White;
+			Color fontColorTitle = Styles.Colors.MainMenuTitleText;
 			Color fontColorLabel = Styles.Colors.White;
-			Color fontColorLabelValue = Styles.Colors.Yellow;
+			Color fontColorLabelValue = Styles.Colors.MainMenuTitleText;
 			int fontSizeTitle = Styles.FontSizes.Title;
 			int fontSizeContent = Styles.FontSizes.Content;
 

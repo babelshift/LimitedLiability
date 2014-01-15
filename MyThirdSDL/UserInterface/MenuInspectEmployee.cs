@@ -130,7 +130,7 @@ namespace MyThirdSDL.UserInterface
 			Height = iconFrame.Height;
 
 			string fontPath = contentManager.GetContentPath("Arcade");
-			Color fontColor = new Color(218, 218, 218);
+			Color fontColor = Styles.Colors.MainMenuTitleText;
 			int fontSizeTitle = 14;
 			int fontSizeContent = 12;
 
