@@ -74,6 +74,7 @@ namespace MyThirdSDL
 		{
 			MouseMoving += HandleMouseMoving;
 			MouseButtonPressed += HandleMouseButtonClicked;
+			MouseButtonReleased += HandleMouseButtonReleased;
 			WindowEntered += (object sender, WindowEventArgs e) => isMouseInsideWindowBounds = true;
 			WindowLeave += (object sender, WindowEventArgs e) => isMouseInsideWindowBounds = false;
 			WindowFocusLost += (object sender, WindowEventArgs e) => isWindowFocused = false;
@@ -86,9 +87,14 @@ namespace MyThirdSDL
 				log.Debug("Game class has been constructed.");
 		}
 
+
 		#endregion
 
 		#region Event Handlers
+
+		private void HandleMouseButtonReleased(object sender, MouseButtonEventArgs e)
+		{
+		}
 
 		private void HandleTextInputting(object sender, TextInputEventArgs e)
 		{

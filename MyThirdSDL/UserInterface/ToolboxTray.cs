@@ -59,7 +59,7 @@ namespace MyThirdSDL.UserInterface
 				int toolboxTrayOuterEdgeWidth = 4;
 				int toolboxTrayButtonImageOffsetX = 0;
 				int toolboxTrayButtonImageOffsetY = 4;
-				
+
 				Vector buttonOnePosition = base.Position + new Vector(toolboxTrayOuterEdgeWidth + toolboxTrayButtonImageOffsetX, toolboxTrayButtonImageOffsetY);
 				Vector buttonTwoPosition = base.Position + new Vector(toolboxTrayOuterEdgeWidth + toolboxTrayButtonImageOffsetX + toolboxTraySpaceBetweenButtons, toolboxTrayButtonImageOffsetY);
 				Vector buttonThreePosition = base.Position + new Vector(toolboxTrayOuterEdgeWidth + toolboxTrayButtonImageOffsetX + toolboxTraySpaceBetweenButtons * 2, toolboxTrayButtonImageOffsetY);
@@ -203,7 +203,7 @@ namespace MyThirdSDL.UserInterface
 			ButtonMainMenu.Tooltip.Label = new Label();
 			ButtonMainMenu.Tooltip.Label.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSizeTooltipText, fontColor, "View the main menu");
 			ButtonMainMenu.ButtonType = ButtonType.IconOnly;
-			
+
 			ButtonMailMenu = new Button();
 			ButtonMailMenu.TextureFrame = contentManager.GetTexture("ToolboxTrayButtonMail");
 			ButtonMailMenu.TextureFrameHovered = contentManager.GetTexture("ToolboxTrayButtonMailHover");
@@ -278,13 +278,8 @@ namespace MyThirdSDL.UserInterface
 		public override void Update(GameTime gameTime)
 		{
 			foreach (var control in controls)
-				if(control != null)
+				if (control != null)
 					control.Update(gameTime);
-
-			if (Bounds.Contains(new Point(Mouse.X, Mouse.Y)))
-				IsHovered = true;
-			else
-				IsHovered = false;
 		}
 
 		public override void Draw(GameTime gameTime, Renderer renderer)
@@ -292,6 +287,37 @@ namespace MyThirdSDL.UserInterface
 			foreach (var control in controls)
 				if (control != null)
 					control.Draw(gameTime, renderer);
+		}
+
+		public override void HandleMouseMovingEvent(object sender, SharpDL.Events.MouseMotionEventArgs e)
+		{
+			if (Bounds.Contains(new Point(e.RelativeToWindowX, e.RelativeToWindowY)))
+				IsHovered = true;
+			else
+				IsHovered = false;
+
+			ButtonSelectGeneral.HandleMouseMovingEvent(sender, e);
+			ButtonSelectEquipment.HandleMouseMovingEvent(sender, e);
+			ButtonSelectRoom.HandleMouseMovingEvent(sender, e);
+			ButtonFinances.HandleMouseMovingEvent(sender, e);
+			ButtonCompany.HandleMouseMovingEvent(sender, e);
+			ButtonEmployees.HandleMouseMovingEvent(sender, e);
+			ButtonProducts.HandleMouseMovingEvent(sender, e);
+			ButtonMainMenu.HandleMouseMovingEvent(sender, e);
+			ButtonMailMenu.HandleMouseMovingEvent(sender, e);
+		}
+
+		public override void HandleMouseButtonPressedEvent(object sender, SharpDL.Events.MouseButtonEventArgs e)
+		{
+			ButtonSelectGeneral.HandleMouseButtonPressedEvent(sender, e);
+			ButtonSelectEquipment.HandleMouseButtonPressedEvent(sender, e);
+			ButtonSelectRoom.HandleMouseButtonPressedEvent(sender, e);
+			ButtonFinances.HandleMouseButtonPressedEvent(sender, e);
+			ButtonCompany.HandleMouseButtonPressedEvent(sender, e);
+			ButtonEmployees.HandleMouseButtonPressedEvent(sender, e);
+			ButtonProducts.HandleMouseButtonPressedEvent(sender, e);
+			ButtonMainMenu.HandleMouseButtonPressedEvent(sender, e);
+			ButtonMailMenu.HandleMouseButtonPressedEvent(sender, e);
 		}
 
 		private void ButtonMailMenu_Clicked(object sender, EventArgs e)

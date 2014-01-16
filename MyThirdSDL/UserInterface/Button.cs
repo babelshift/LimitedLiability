@@ -153,15 +153,8 @@ namespace MyThirdSDL.UserInterface
 			if (Tooltip != null)
 				Tooltip.Update(gameTime);
 
-			if (Bounds.Contains(new Vector(Mouse.X, Mouse.Y)))
-				IsHovered = true;
-			else
-				IsHovered = false;
-
 			if (IsHovered)
 				OnHovered(EventArgs.Empty);
-
-			IsClicked = GetClicked();
 
 			if (IsClicked)
 				OnClicked(EventArgs.Empty);
@@ -206,6 +199,19 @@ namespace MyThirdSDL.UserInterface
 			}
 		}
 
+		public override void HandleMouseButtonPressedEvent(object sender, SharpDL.Events.MouseButtonEventArgs e)
+		{
+			IsClicked = GetClicked(e);
+		}
+
+		public override void HandleMouseMovingEvent(object sender, SharpDL.Events.MouseMotionEventArgs e)
+		{
+			if (Bounds.Contains(new Vector(e.RelativeToWindowX, e.RelativeToWindowY)))
+				IsHovered = true;
+			else
+				IsHovered = false;
+		}
+
 		#endregion
 
 		#region Behaviors
@@ -220,14 +226,15 @@ namespace MyThirdSDL.UserInterface
 			IsPressed = false;
 		}
 
-		private bool GetClicked()
+		private bool GetClicked(SharpDL.Events.MouseButtonEventArgs e)
 		{
 			if (IsHovered)
 			{
-				if (Mouse.ButtonsPressed != null && Mouse.PreviousButtonsPressed != null)
-					// if the curren state does not have a left click and the previous state does have a left click, then the user released the mouse
-					if (!Mouse.ButtonsPressed.Contains(MouseButtonCode.Left)
-						 && Mouse.PreviousButtonsPressed.Contains(MouseButtonCode.Left))
+				if(e.MouseButton == MouseButtonCode.Left)
+				//if (e.MouseButton != null && Mouse.PreviousButtonsPressed != null)
+				//	// if the curren state does not have a left click and the previous state does have a left click, then the user released the mouse
+				//	if (!Mouse.ButtonsPressed.Contains(MouseButtonCode.Left)
+				//		 && Mouse.PreviousButtonsPressed.Contains(MouseButtonCode.Left))
 						return true;
 			}
 
@@ -238,6 +245,9 @@ namespace MyThirdSDL.UserInterface
 		{
 			if (Clicked != null)
 				Clicked(this, e);
+
+			// ok great, we got clicked, stopped notifying people now
+			IsClicked = false;
 		}
 
 		private void OnHovered(EventArgs e)

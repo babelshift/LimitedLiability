@@ -634,7 +634,22 @@ namespace MyThirdSDL.UserInterface
 
 		public void HandleMouseButtonPressedEvent(object sender, MouseButtonEventArgs e)
 		{
+			toolboxTray.HandleMouseButtonPressedEvent(sender, e);
 
+			if (isMenuEquipmentOpen)
+				menuPurchaseEquipment.HandleMouseButtonPressedEvent(sender, e);
+
+			if (isMenuInspectEmployeeOpen)
+				menuInspectEmployee.HandleMouseButtonPressedEvent(sender, e);
+
+			if (isMenuMailboxOpen)
+				menuMailbox.HandleMouseButtonPressedEvent(sender, e);
+
+			if (isMenuRoomsOpen)
+				menuPurchaseRooms.HandleMouseButtonPressedEvent(sender, e);
+
+			if (isMenuCompanyOpen)
+				menuCompany.HandleMouseButtonPressedEvent(sender, e);
 		}
 
 		public void HandleMouseMovingEvent(object sender, MouseMotionEventArgs e)
@@ -645,6 +660,23 @@ namespace MyThirdSDL.UserInterface
 
 			labelMousePositionAbsolute.Text = String.Format("Mouse Position (Absolute): ({0}, {1})", mousePositionAbsolute.X, mousePositionAbsolute.Y);
 			labelMousePositionIsometric.Text = String.Format("Mouse Position (Isometric): ({0}, {1})", mousePositionIsometric.X, mousePositionIsometric.Y);
+
+			toolboxTray.HandleMouseMovingEvent(sender, e);
+
+			if (isMenuEquipmentOpen)
+				menuPurchaseEquipment.HandleMouseMovingEvent(sender, e);
+
+			if (isMenuInspectEmployeeOpen)
+				menuInspectEmployee.HandleMouseMovingEvent(sender, e);
+
+			if (isMenuMailboxOpen)
+				menuMailbox.HandleMouseMovingEvent(sender, e);
+
+			if (isMenuRoomsOpen)
+				menuPurchaseRooms.HandleMouseMovingEvent(sender, e);
+
+			if (isMenuCompanyOpen)
+				menuCompany.HandleMouseMovingEvent(sender, e);
 		}
 
 		public void HandleKeyStates(IEnumerable<KeyInformation> keysPressed, IEnumerable<KeyInformation> keysReleased)

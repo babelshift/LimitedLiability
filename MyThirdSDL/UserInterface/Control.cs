@@ -1,4 +1,5 @@
 ﻿using SharpDL;
+using SharpDL.Events;
 using SharpDL.Graphics;
 using SharpDL.Input;
 using System;
@@ -54,6 +55,10 @@ namespace MyThirdSDL.UserInterface
 		public abstract void Update(GameTime gameTime);
 
 		public abstract void Draw(GameTime gameTime, Renderer renderer);
+
+		public abstract void HandleMouseMovingEvent(object sender, MouseMotionEventArgs e);
+
+		public abstract void HandleMouseButtonPressedEvent(object sender, MouseButtonEventArgs e);
 
 		public virtual void HandleTextInput(string text) { }
 

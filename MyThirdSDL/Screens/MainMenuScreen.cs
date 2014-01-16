@@ -153,6 +153,24 @@ namespace MyThirdSDL.Screens
 
 		}
 
+		public override void HandleMouseButtonPressedEvent(object sender, SharpDL.Events.MouseButtonEventArgs e)
+		{
+			buttonNewGame.HandleMouseButtonPressedEvent(sender, e);
+			buttonLoadGame.HandleMouseButtonPressedEvent(sender, e);
+			buttonQuit.HandleMouseButtonPressedEvent(sender, e);
+			buttonCredits.HandleMouseButtonPressedEvent(sender, e);
+			buttonOptions.HandleMouseButtonPressedEvent(sender, e);
+		}
+
+		public override void HandleMouseMovingEvent(object sender, SharpDL.Events.MouseMotionEventArgs e)
+		{
+			buttonNewGame.HandleMouseMovingEvent(sender, e);
+			buttonLoadGame.HandleMouseMovingEvent(sender, e);
+			buttonQuit.HandleMouseMovingEvent(sender, e);
+			buttonCredits.HandleMouseMovingEvent(sender, e);
+			buttonOptions.HandleMouseMovingEvent(sender, e);
+		}
+
 		public override void Unload()
 		{
 			base.Unload();

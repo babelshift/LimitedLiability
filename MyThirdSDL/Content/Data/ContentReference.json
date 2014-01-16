@@ -26,6 +26,7 @@
 		{ "key": "MenuCompanyFrame",			"value": "Images/User Interface/MenuCompanyFrame.png" },
 		{ "key": "TextboxLongFrame",			"value": "Images/User Interface/TextboxLongFrame.png" },
 		{ "key": "BackgroundStripeTile",		"value": "Images/User Interface/BackgroundStripeTile.png" },
+		{ "key": "BackgroundStripeTileFaded",	"value": "Images/User Interface/BackgroundStripeTileFaded.png" },
 		{ "key": "MenuPauseFrame",				"value": "Images/User Interface/MenuPauseFrame.png" },
 		
 		{ "key": "ButtonMenuItem",				"value": "Images/User Interface/ButtonMenuItem.png" },

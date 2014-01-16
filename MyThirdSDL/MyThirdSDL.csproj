@@ -234,6 +234,9 @@
     <Content Include="Content\Images\User Interface\BackgroundStripeTile.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Content\Images\User Interface\BackgroundStripeTileFaded.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Content\Images\User Interface\ButtonMailAction.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

@@ -15,6 +15,7 @@ namespace MyThirdSDL.UserInterface
 		private List<Control> controls = new List<Control>();
 
 		private const int itemsPerPage = 4;
+		private int currentDisplayedPage = 1;
 
 		private Icon iconFrame;
 
@@ -258,8 +259,6 @@ namespace MyThirdSDL.UserInterface
 
 		#region Game Loop
 
-		private int currentDisplayedPage = 1;
-
 		public override void Update(GameTime gameTime)
 		{
 			List<ButtonMenuItem> buttonMenuItemsOnCurrentPage = new List<ButtonMenuItem>();
@@ -284,6 +283,32 @@ namespace MyThirdSDL.UserInterface
 			if (success)
 				foreach (var buttonMenuItem in buttonMenuItemsOnCurrentPage)
 					buttonMenuItem.Draw(gameTime, renderer);
+		}
+
+		public override void HandleMouseButtonPressedEvent(object sender, SharpDL.Events.MouseButtonEventArgs e)
+		{
+			foreach (var control in controls)
+				if (control != null)
+					control.HandleMouseButtonPressedEvent(sender, e);
+
+			List<ButtonMenuItem> buttonMenuItemsOnCurrentPage = new List<ButtonMenuItem>();
+			bool success = buttonMenuItemPages.TryGetValue(currentDisplayedPage, out buttonMenuItemsOnCurrentPage);
+			if (success)
+				foreach (var buttonMenuItem in buttonMenuItemsOnCurrentPage)
+					buttonMenuItem.HandleMouseButtonPressedEvent(sender, e);
+		}
+
+		public override void HandleMouseMovingEvent(object sender, SharpDL.Events.MouseMotionEventArgs e)
+		{
+			foreach (var control in controls)
+				if (control != null)
+					control.HandleMouseMovingEvent(sender, e);
+
+			List<ButtonMenuItem> buttonMenuItemsOnCurrentPage = new List<ButtonMenuItem>();
+			bool success = buttonMenuItemPages.TryGetValue(currentDisplayedPage, out buttonMenuItemsOnCurrentPage);
+			if (success)
+				foreach (var buttonMenuItem in buttonMenuItemsOnCurrentPage)
+					buttonMenuItem.HandleMouseMovingEvent(sender, e);
 		}
 
 		#endregion

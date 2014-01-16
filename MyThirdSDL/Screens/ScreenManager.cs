@@ -25,7 +25,11 @@ namespace MyThirdSDL.Screens
 
 		private Screen ActiveScreen { get { return screens.Find(s => s.ScreenState == ScreenState.Active); } }
 
+		private Screen ActivePopup { get { return screens.Find(s => s.IsPopup == true); } }
+
 		private bool IsActiveScreenAvailable { get { if (ActiveScreen != null) return true; else return false; } }
+
+		private bool IsActivePopupAvailable { get { if (ActivePopup != null) return true; else return false; } }
 
 		public Texture BlankTexture { get; private set; }
 
@@ -176,25 +180,33 @@ namespace MyThirdSDL.Screens
 
 		public void PassTextInputEventToActiveScreen(object sender, TextInputEventArgs e)
 		{
-			if (IsActiveScreenAvailable)
+			if(IsActivePopupAvailable)
+				ActivePopup.HandleTextInputtingEvent(sender, e);
+			else if (IsActiveScreenAvailable)
 				ActiveScreen.HandleTextInputtingEvent(sender, e);
 		}
 
 		public void PassMouseButtonPressedEventToActiveScreen(object sender, MouseButtonEventArgs e)
 		{
-			if (IsActiveScreenAvailable)
+			if (IsActivePopupAvailable)
+				ActivePopup.HandleMouseButtonPressedEvent(sender, e);
+			else if (IsActiveScreenAvailable)
 				ActiveScreen.HandleMouseButtonPressedEvent(sender, e);
 		}
 
 		public void PassMouseMovingEventToActiveScreen(object sender, MouseMotionEventArgs e)
 		{
-			if (IsActiveScreenAvailable)
+			if (IsActivePopupAvailable)
+				ActivePopup.HandleMouseMovingEvent(sender, e);
+			else if (IsActiveScreenAvailable)
 				ActiveScreen.HandleMouseMovingEvent(sender, e);
 		}
 
 		public void PassKeyStatesToActiveScreen(IEnumerable<KeyInformation> keysPressed, IEnumerable<KeyInformation> keysReleased)
 		{
-			if (IsActiveScreenAvailable)
+			if (IsActivePopupAvailable)
+				ActivePopup.HandleKeyStates(keysPressed, keysReleased);
+			else if (IsActiveScreenAvailable)
 				ActiveScreen.HandleKeyStates(keysPressed, keysReleased);
 		}
 

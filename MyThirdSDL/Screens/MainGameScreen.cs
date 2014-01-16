@@ -84,15 +84,11 @@ namespace MyThirdSDL.Screens
 
 		public override void HandleMouseButtonPressedEvent(object sender, MouseButtonEventArgs e)
 		{
-			base.HandleMouseButtonPressedEvent(sender, e);
-
 			userInterfaceManager.HandleMouseButtonPressedEvent(sender, e);
 		}
 
 		public override void HandleMouseMovingEvent(object sender, MouseMotionEventArgs e)
 		{
-			base.HandleMouseMovingEvent(sender, e);
-
 			userInterfaceManager.HandleMouseMovingEvent(sender, e);
 		}
 

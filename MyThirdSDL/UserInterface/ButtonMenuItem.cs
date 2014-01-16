@@ -52,8 +52,6 @@ namespace MyThirdSDL.UserInterface
 
 		public override void Update(GameTime gameTime)
 		{
-			base.Update(gameTime);
-
 			if (IconMain != null)
 				IconMain.Update(gameTime);
 			if (LabelMain != null)
@@ -68,6 +66,9 @@ namespace MyThirdSDL.UserInterface
 
 			if (IsClicked)
 				OnClicked();
+
+			// always update ourself first because our base will clear the Clicked flag once it has processed
+			base.Update(gameTime);
 		}
 
 		public override void Draw(GameTime gameTime, Renderer renderer)

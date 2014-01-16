@@ -71,7 +71,6 @@ namespace MyThirdSDL.Screens
 
 		#region Update and Draw
 
-
 		/// <summary>
 		/// Updates the loading screen.
 		/// </summary>
@@ -100,7 +99,6 @@ namespace MyThirdSDL.Screens
 				//ScreenManager.Game.ResetElapsedTime();
 			}
 		}
-
 
 		/// <summary>
 		/// Draws the loading screen.
@@ -148,6 +146,13 @@ namespace MyThirdSDL.Screens
 			//spriteBatch.End();
 		}
 
+		public override void HandleMouseButtonPressedEvent(object sender, SharpDL.Events.MouseButtonEventArgs e)
+		{
+		}
+
+		public override void HandleMouseMovingEvent(object sender, SharpDL.Events.MouseMotionEventArgs e)
+		{
+		}
 
 		#endregion
 

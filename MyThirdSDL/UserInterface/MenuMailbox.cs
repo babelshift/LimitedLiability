@@ -496,6 +496,36 @@ namespace MyThirdSDL.UserInterface
 			}
 		}
 
+		public override void HandleMouseButtonPressedEvent(object sender, SharpDL.Events.MouseButtonEventArgs e)
+		{
+			foreach (var control in controls)
+				if (control != null)
+					control.HandleMouseButtonPressedEvent(sender, e);
+
+			MailItemPage currentPage = null;
+			bool success = mailItemPages.TryGetValue(CurrentDisplayedPageNumber, out currentPage);
+			if (success)
+			{
+				foreach (var button in currentPage.Buttons)
+					button.HandleMouseButtonPressedEvent(sender, e);
+			}
+		}
+
+		public override void HandleMouseMovingEvent(object sender, SharpDL.Events.MouseMotionEventArgs e)
+		{
+			foreach (var control in controls)
+				if (control != null)
+					control.HandleMouseMovingEvent(sender, e);
+
+			MailItemPage currentPage = null;
+			bool success = mailItemPages.TryGetValue(CurrentDisplayedPageNumber, out currentPage);
+			if (success)
+			{
+				foreach (var button in currentPage.Buttons)
+					button.HandleMouseMovingEvent(sender, e);
+			}
+		}
+
 		#endregion
 
 		#region Methods
@@ -742,12 +772,12 @@ namespace MyThirdSDL.UserInterface
 			if (success)
 			{
 				foreach (var button in currentPage.Buttons)
-					if(button != null)
+					if (button != null)
 						button.Dispose();
 				currentPage.Buttons.Clear();
 
 				foreach (var separator in currentPage.Separators)
-					if(separator != null)
+					if (separator != null)
 						separator.Dispose();
 				currentPage.Separators.Clear();
 			}

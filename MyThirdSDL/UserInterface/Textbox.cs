@@ -104,13 +104,6 @@ namespace MyThirdSDL.UserInterface
 
 		public override void Update(SharpDL.GameTime gameTime)
 		{
-			if (Bounds.Contains(new Point(Mouse.X, Mouse.Y)))
-				IsHovered = true;
-			else
-				IsHovered = false;
-
-			IsClicked = GetClicked();
-
 			if (IsClicked)
 				Focus();
 
@@ -152,15 +145,29 @@ namespace MyThirdSDL.UserInterface
 			}
 		}
 
-		private bool GetClicked()
+		public override void HandleMouseButtonPressedEvent(object sender, SharpDL.Events.MouseButtonEventArgs e)
+		{
+			IsClicked = GetClicked(e);
+		}
+
+		public override void HandleMouseMovingEvent(object sender, SharpDL.Events.MouseMotionEventArgs e)
+		{
+			if (Bounds.Contains(new Point(e.RelativeToWindowX, e.RelativeToWindowY)))
+				IsHovered = true;
+			else
+				IsHovered = false;
+		}
+
+		private bool GetClicked(SharpDL.Events.MouseButtonEventArgs e)
 		{
 			if (IsHovered)
 			{
-				if (Mouse.ButtonsPressed != null && Mouse.PreviousButtonsPressed != null)
-					// if the curren state does not have a left click and the previous state does have a left click, then the user released the mouse
-					if (!Mouse.ButtonsPressed.Contains(MouseButtonCode.Left)
-						 && Mouse.PreviousButtonsPressed.Contains(MouseButtonCode.Left))
-						return true;
+				if (e.MouseButton == MouseButtonCode.Left)
+					//if (e.MouseButton != null && Mouse.PreviousButtonsPressed != null)
+					//	// if the curren state does not have a left click and the previous state does have a left click, then the user released the mouse
+					//	if (!Mouse.ButtonsPressed.Contains(MouseButtonCode.Left)
+					//		 && Mouse.PreviousButtonsPressed.Contains(MouseButtonCode.Left))
+					return true;
 			}
 
 			return false;

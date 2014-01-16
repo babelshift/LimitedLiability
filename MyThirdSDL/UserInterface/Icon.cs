@@ -38,6 +38,14 @@ namespace MyThirdSDL.UserInterface
 				renderer.RenderTexture(textureFrame, Position.X, Position.Y);
 		}
 
+		public override void HandleMouseButtonPressedEvent(object sender, SharpDL.Events.MouseButtonEventArgs e)
+		{
+		}
+
+		public override void HandleMouseMovingEvent(object sender, SharpDL.Events.MouseMotionEventArgs e)
+		{
+		}
+
 		public override void Dispose()
 		{
 			Dispose(true);

@@ -243,9 +243,9 @@ namespace MyThirdSDL.Screens
 
 		public virtual void HandleTextInputtingEvent(object sender, TextInputEventArgs e) { }
 
-		public virtual void HandleMouseButtonPressedEvent(object sender, MouseButtonEventArgs e) { }
+		public abstract void HandleMouseButtonPressedEvent(object sender, MouseButtonEventArgs e);
 
-		public virtual void HandleMouseMovingEvent(object sender, MouseMotionEventArgs e) { }
+		public abstract void HandleMouseMovingEvent(object sender, MouseMotionEventArgs e);
 
 		public virtual void HandleKeyStates(IEnumerable<KeyInformation> keysPressed, IEnumerable<KeyInformation> keysReleased) { }
 

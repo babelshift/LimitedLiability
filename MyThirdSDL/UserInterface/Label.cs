@@ -78,6 +78,14 @@ namespace MyThirdSDL.UserInterface
 			}
 		}
 
+		public override void HandleMouseButtonPressedEvent(object sender, SharpDL.Events.MouseButtonEventArgs e)
+		{
+		}
+
+		public override void HandleMouseMovingEvent(object sender, SharpDL.Events.MouseMotionEventArgs e)
+		{
+		}
+
 		public void EnableOutline()
 		{
 			isOutlined = true;

@@ -48,6 +48,14 @@ namespace MyThirdSDL.UserInterface
 			}
 		}
 
+		public override void HandleMouseButtonPressedEvent(object sender, SharpDL.Events.MouseButtonEventArgs e)
+		{
+		}
+
+		public override void HandleMouseMovingEvent(object sender, SharpDL.Events.MouseMotionEventArgs e)
+		{
+		}
+
 		public override void Dispose()
 		{
 			Dispose(true);

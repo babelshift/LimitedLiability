@@ -197,6 +197,20 @@ namespace MyThirdSDL.UserInterface
 					control.Draw(gameTime, renderer);
 		}
 
+		public override void HandleMouseButtonPressedEvent(object sender, SharpDL.Events.MouseButtonEventArgs e)
+		{
+			foreach (var control in controls)
+				if (control != null)
+					control.HandleMouseButtonPressedEvent(sender, e);
+		}
+
+		public override void HandleMouseMovingEvent(object sender, SharpDL.Events.MouseMotionEventArgs e)
+		{
+			foreach (var control in controls)
+				if (control != null)
+					control.HandleMouseMovingEvent(sender, e);
+		}
+
 		public void UpdateEmployeeCount(int employeeCount)
 		{
 			labelNumberOfEmployeesValue.Text = employeeCount.ToString();
