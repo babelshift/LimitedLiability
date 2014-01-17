@@ -23,7 +23,7 @@ namespace MyThirdSDL.Screens
 		private SimulationManager simulationManager;
 		private UserInterfaceManager userInterfaceManager;
 		private MailManager mailManager;
-		private Cursor cursor;
+		//private Cursor cursor;
 		private BankAccount bankAccount;
 
 		private TiledMap tiledMap;
@@ -201,7 +201,7 @@ namespace MyThirdSDL.Screens
 			simulationManager.SetCurrentMap(tiledMap);
 
 			// Mouse Cursor
-			cursor = new Cursor(ContentManager, renderer);
+			//cursor = new Cursor(ContentManager, renderer);
 
 			// Finances
 			bankAccount = new BankAccount(1000);
@@ -338,7 +338,7 @@ namespace MyThirdSDL.Screens
 
 			userInterfaceManager.Draw(gameTime, renderer);
 
-			cursor.Draw(renderer);
+			//cursor.Draw(renderer);
 		}
 
 		#region Employee Events
@@ -564,7 +564,7 @@ namespace MyThirdSDL.Screens
 		private void Dispose(bool disposing)
 		{
 			userInterfaceManager.Dispose();
-			cursor.Dispose();
+			//cursor.Dispose();
 			tiledMap.Dispose();
 			tileHighlightImage.Dispose();
 		}
