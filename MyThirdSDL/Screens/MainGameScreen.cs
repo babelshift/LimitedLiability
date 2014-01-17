@@ -245,6 +245,7 @@ namespace MyThirdSDL.Screens
 
 			userInterfaceManager.PurchasableItemSelected += HandleSelectEquipment;
 			userInterfaceManager.ArchiveMailButtonClicked += userInterfaceManager_ArchiveMailButtonClicked;
+			userInterfaceManager.MainMenuButtonClicked += (sender, e) => ScreenManager.AddScreen(CreatePauseMenuScreen());
 		}
 
 		private void bankAccount_AmountWithdrawn(object sender, BankAccountTransactionEventArgs e)

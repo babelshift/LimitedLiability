@@ -92,6 +92,7 @@ namespace MyThirdSDL.UserInterface
 
 		#endregion
 
+		public event EventHandler MainMenuButtonClicked;
 		public event EventHandler<ArchiveEventArgs> ArchiveMailButtonClicked;
 		public event EventHandler<PurchasableItemSelectedEventArgs> PurchasableItemSelected;
 
@@ -291,7 +292,8 @@ namespace MyThirdSDL.UserInterface
 
 		private void ToolboxTray_ButtonMainMenuClicked(object sender, EventArgs e)
 		{
-			// show main menu
+			if (MainMenuButtonClicked != null)
+				MainMenuButtonClicked(sender, e);
 		}
 
 		private void ToolboxTray_ButtonProductsClicked(object sender, EventArgs e)

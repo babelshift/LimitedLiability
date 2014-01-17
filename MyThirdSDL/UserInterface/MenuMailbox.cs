@@ -207,12 +207,14 @@ namespace MyThirdSDL.UserInterface
 
 			string fontPath = contentManager.GetContentPath("Arcade");
 			Color fontColor = Styles.Colors.MainMenuTitleText;
+			Color fontColorShadow = Styles.Colors.MainMenuTitleTextShadow;
 			int fontSizeTitle = 14;
 			int fontSizeContent = 12;
 
 			iconFolderHeader = new Icon(contentManager.GetTexture("IconFolderOpen"));
 			labelFolderHeader = new Label();
 			labelFolderHeader.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSizeTitle, fontColor, "Folder");
+			labelFolderHeader.EnableShadow(contentManager);
 			labelPageNumber = new Label();
 			labelPageNumber.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSizeContent, fontColor, "N/A");
 			labelFrom = new Label();
@@ -325,6 +327,8 @@ namespace MyThirdSDL.UserInterface
 			SetActiveTab(ActiveTab.Inbox);
 		}
 
+		#endregion
+
 		public void AddButtonMailItems(ContentManager contentManager, IEnumerable<MailItem> inbox, IEnumerable<MailItem> outbox, IEnumerable<MailItem> archive)
 		{
 			string fontPath = contentManager.GetContentPath(Styles.FontPaths.Arcade);
@@ -383,8 +387,6 @@ namespace MyThirdSDL.UserInterface
 			buttonView.Visible = false;
 			buttonArchive.Visible = false;
 		}
-
-		#endregion
 
 		#region Button Events
 

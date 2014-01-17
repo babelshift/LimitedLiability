@@ -219,7 +219,7 @@ namespace MyThirdSDL.UserInterface
 			if (IconInputBar != null)
 				IconInputBar.Dispose();
 			if (LabelText != null)
-				LabelText.DisableOutline();
+				LabelText.Dispose();
 		}
 	}
 }

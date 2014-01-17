@@ -1,4 +1,5 @@
-﻿using SharpDL;
+﻿using MyThirdSDL.Content;
+using SharpDL;
 using SharpDL.Graphics;
 using System;
 using System.Collections.Generic;
@@ -11,10 +12,7 @@ namespace MyThirdSDL.UserInterface
 	public class Label : Control, IDisposable
 	{
 		private TrueTypeText trueTypeText;
-		private bool isOutlined;
-
-		public Color OutlineColor { get; set; }
-		public int OutlineSize { get; set; }
+		private TrueTypeText trueTypeTextShadow;
 
 		public TrueTypeText TrueTypeText
 		{
@@ -38,6 +36,11 @@ namespace MyThirdSDL.UserInterface
 			}
 		}
 
+		public void EnableShadow(ContentManager contentManager)
+		{
+			trueTypeTextShadow = contentManager.GetTrueTypeText(TrueTypeText.Font.FilePath, TrueTypeText.Font.PointSize, Styles.Colors.MainMenuTitleTextShadow, Text);
+		}
+
 		public Label()
 		{
 		}
@@ -52,28 +55,10 @@ namespace MyThirdSDL.UserInterface
 			{
 				if (TrueTypeText != null)
 				{
+					if (trueTypeTextShadow != null)
+						renderer.RenderTexture(trueTypeTextShadow.Texture, Position.X + 2, Position.Y + 2);
+
 					renderer.RenderTexture(TrueTypeText.Texture, Position.X, Position.Y);
-
-					if (isOutlined)
-					{
-						Vector left = new Vector(Position.X - OutlineSize, Position.Y);
-						Vector upLeft = new Vector(Position.X - OutlineSize, Position.Y - OutlineSize);
-						Vector up = new Vector(Position.X, Position.Y - OutlineSize);
-						Vector upRight = new Vector(Position.X + OutlineSize, Position.Y - OutlineSize);
-						Vector right = new Vector(Position.X + OutlineSize, Position.Y);
-						Vector downRight = new Vector(Position.X + OutlineSize, Position.Y + OutlineSize);
-						Vector down = new Vector(Position.X, Position.Y + OutlineSize);
-						Vector downLeft = new Vector(Position.X - OutlineSize, Position.Y + OutlineSize);
-
-						renderer.RenderTexture(TrueTypeText.Texture, left.X, left.Y);
-						renderer.RenderTexture(TrueTypeText.Texture, upLeft.X, upLeft.Y);
-						renderer.RenderTexture(TrueTypeText.Texture, up.X, up.Y);
-						renderer.RenderTexture(TrueTypeText.Texture, upRight.X, upRight.Y);
-						renderer.RenderTexture(TrueTypeText.Texture, right.X, right.Y);
-						renderer.RenderTexture(TrueTypeText.Texture, downRight.X, downRight.Y);
-						renderer.RenderTexture(TrueTypeText.Texture, down.X, down.Y);
-						renderer.RenderTexture(TrueTypeText.Texture, downLeft.X, downLeft.Y);
-					}
 				}
 			}
 		}
@@ -84,16 +69,6 @@ namespace MyThirdSDL.UserInterface
 
 		public override void HandleMouseMovingEvent(object sender, SharpDL.Events.MouseMotionEventArgs e)
 		{
-		}
-
-		public void EnableOutline()
-		{
-			isOutlined = true;
-		}
-
-		public void DisableOutline()
-		{
-			isOutlined = false;
 		}
 
 		public override void Dispose()
