@@ -3,6 +3,7 @@ using SharpDL.Graphics;
 using MyThirdSDL.Content;
 using MyThirdSDL.UserInterface;
 using SharpDL.Input;
+using System.Collections.Generic;
 
 namespace MyThirdSDL
 {
@@ -33,10 +34,10 @@ namespace MyThirdSDL
 			cursorHandDown = new Texture(renderer, surface4);
 		}
 
-		public void Update(bool isMouseInsideWindowBounds, MouseOverScreenEdge mouseOverScreenEdge)
+		public void Update(bool isMouseInsideWindowBounds, IEnumerable<MouseOverScreenEdge> mouseOverScreenEdges)
 		{
-			if (isMouseInsideWindowBounds)
-				SetMouseOverScreenEdge(mouseOverScreenEdge);
+			//if (isMouseInsideWindowBounds)
+			//	SetMouseOverScreenEdge(mouseOverScreenEdge);
 		}
 
 		public void Draw(Renderer renderer)

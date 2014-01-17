@@ -12,6 +12,13 @@ using SharpDL.Input;
 
 namespace MyThirdSDL.Simulation
 {
+	public enum SimulationState
+	{
+		NotStarted,
+		Unpaused,
+		Paused
+	}
+
 	public class SimulationManager
 	{
 		#region Members
@@ -23,10 +30,35 @@ namespace MyThirdSDL.Simulation
 		private DateTime startingWorldDateTime;
 		private Random random = new Random();
 		private TiledMap currentMap;
+		private SimulationState state;
 
 		#endregion
 
 		#region Properties
+
+		/// <summary>
+		/// Gets and sets the simulation state. This will only change the state if the new value is not equal to the current value.
+		/// </summary>
+		public SimulationState State
+		{
+			get { return state; }
+			set
+			{
+				if (state != value)
+				{
+					state = value;
+					if (state == SimulationState.Paused)
+						SimulationTimeAtPause = SimulationTime;
+					else if (state == SimulationState.Unpaused)
+						SimulationTime = SimulationTimeAtPause;
+				}
+			}
+		}
+
+		/// <summary>
+		/// The time at which the last pause occurred. This is the time that will be used when the unpause occurs.
+		/// </summary>
+		private TimeSpan SimulationTimeAtPause { get; set; }
 
 		public DateTime WorldDateTime { get { return startingWorldDateTime.Add(WorldTimePassed); } }
 
@@ -100,39 +132,43 @@ namespace MyThirdSDL.Simulation
 		/// <param name="gameTime">Game time.</param>
 		public void Update(GameTime gameTime)
 		{
-			SimulationTime = gameTime.TotalGameTime;
-
-			foreach (var agentList in trackedAgents.Values)
+			// only update if the simulation isn't paused
+			if (state != SimulationState.Paused)
 			{
-				foreach (var agent in agentList)
+				SimulationTime += gameTime.ElapsedGameTime;
+
+				foreach (var agentList in trackedAgents.Values)
 				{
-					agent.Update(gameTime);
-
-					// handle employee specific update logic
-					if (agent is Employee)
+					foreach (var agent in agentList)
 					{
-						var employee = agent as Employee;
+						agent.Update(gameTime);
 
-						// TODO: delay updating this until 1-2 seconds has passed? we don't really need to update this often
-						foreach (var unsatisfiedThought in employee.UnsatisfiedThoughts)
-							TakeActionBasedOnThought(employee, unsatisfiedThought.Type);
+						// handle employee specific update logic
+						if (agent is Employee)
+						{
+							var employee = agent as Employee;
 
-						// update the employee's age based on the updated world date time
-						employee.UpdateAge(WorldDateTime);
+							// TODO: delay updating this until 1-2 seconds has passed? we don't really need to update this often
+							foreach (var unsatisfiedThought in employee.UnsatisfiedThoughts)
+								TakeActionBasedOnThought(employee, unsatisfiedThought.Type);
 
-						// remove ourselves from the employee's currently occupied map cell
-						if(employee.OccupiedMapCell != null)
-							employee.OccupiedMapCell.RemoveDrawable(employee, (int)TileType.Object);
+							// update the employee's age based on the updated world date time
+							employee.UpdateAge(WorldDateTime);
 
-						// get the map cell that the employee occupies and add it as a drawable to that map cell
-						//MapCell mapCellToOccupy = GetMapCellOccupiedByEmployee(employee);
-						//mapCellToOccupy.AddDrawable(employee, (int)TileType.Object);
-						//employee.OccupiedMapCell = mapCellToOccupy;
+							// remove ourselves from the employee's currently occupied map cell
+							if (employee.OccupiedMapCell != null)
+								employee.OccupiedMapCell.RemoveDrawable(employee, (int)TileType.Object);
 
-						// if the agent being updated is an employee and that agent is being clicked on by the user, fire the event telling subscribers of such
-						// we can use this event to react to the user interacting with the employees to do things like display their inspection information
-						if (IsEmployeeClicked(employee))
-							EventHelper.FireEvent<EmployeeClickedEventArgs>(EmployeeClicked, this, new EmployeeClickedEventArgs(employee));
+							// get the map cell that the employee occupies and add it as a drawable to that map cell
+							//MapCell mapCellToOccupy = GetMapCellOccupiedByEmployee(employee);
+							//mapCellToOccupy.AddDrawable(employee, (int)TileType.Object);
+							//employee.OccupiedMapCell = mapCellToOccupy;
+
+							// if the agent being updated is an employee and that agent is being clicked on by the user, fire the event telling subscribers of such
+							// we can use this event to react to the user interacting with the employees to do things like display their inspection information
+							if (IsEmployeeClicked(employee))
+								EventHelper.FireEvent<EmployeeClickedEventArgs>(EmployeeClicked, this, new EmployeeClickedEventArgs(employee));
+						}
 					}
 				}
 			}
@@ -246,7 +282,7 @@ namespace MyThirdSDL.Simulation
 
 		private void HandleThoughtSatisfied(object sender, ThoughtEventArgs e)
 		{
-			if(e.Type == ThoughtType.Hungry)
+			if (e.Type == ThoughtType.Hungry)
 				EventHelper.FireEvent(EmployeeHungerSatisfied, sender, e);
 			else if (e.Type == ThoughtType.Thirsty)
 				EventHelper.FireEvent(EmployeeThirstSatisfied, sender, e);
@@ -573,7 +609,7 @@ namespace MyThirdSDL.Simulation
 		{
 			// find the best path from the mobile agent's center to the target agent's center
 			Queue<PathNode> bestPath = FindBestPath(
-				new Vector(mobileAgent.CollisionBox.Center.X, mobileAgent.CollisionBox.Center.Y), 
+				new Vector(mobileAgent.CollisionBox.Center.X, mobileAgent.CollisionBox.Center.Y),
 				new Vector(agent.CollisionBox.Center.X, agent.CollisionBox.Center.Y));
 
 			return bestPath;

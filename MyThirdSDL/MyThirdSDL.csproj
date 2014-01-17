@@ -112,7 +112,6 @@
     <Compile Include="Content\TileLayerType.cs" />
     <Compile Include="Content\TileType.cs" />
     <Compile Include="CoordinateHelper.cs" />
-    <Compile Include="Cursor.cs" />
     <Compile Include="DateTimeHelper.cs" />
     <Compile Include="Descriptors\IAffectsNecessities.cs">
       <SubType>Code</SubType>

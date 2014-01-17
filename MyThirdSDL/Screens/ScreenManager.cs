@@ -136,7 +136,7 @@ namespace MyThirdSDL.Screens
 					// screens that they are covered by it.
 					// If it is a popup, the screens under it should not transition off.
 					// In this case, the under screens will still have a screen state of "Active".
-					if (!screen.IsPopup)
+					//if (!screen.IsPopup)
 						coveredByOtherScreen = true;
 				}
 			}

@@ -123,9 +123,9 @@ namespace MyThirdSDL.Screens
 			// we only want to scroll the screen when the user isn't hovering the toolbox tray
 			if (!userInterfaceManager.IsToolboxTrayHovered)
 			{
-				var mouseOverScreenEdge = GetMouseOverScreenEdge();
-				cursor.Update(isMouseInsideWindowBounds, mouseOverScreenEdge);
-				Camera.Update(mouseOverScreenEdge);
+				var mouseOverScreenEdges = GetMouseOverScreenEdges();
+				//cursor.Update(isMouseInsideWindowBounds, mouseOverScreenEdges);
+				Camera.Update(mouseOverScreenEdges);
 			}
 
 			if (userInterfaceManager.CurrentState == UserInterfaceState.Default)
@@ -289,12 +289,22 @@ namespace MyThirdSDL.Screens
 
 		public override void Update(GameTime gameTime, bool otherWindowHasFocus, bool coveredByOtherScreen)
 		{
-			base.Update(gameTime, otherWindowHasFocus, coveredByOtherScreen);
+			// if we are covered by another screen, attempt to pause it, otherwise attempt to unpause it
+			if (coveredByOtherScreen)
+				simulationManager.State = SimulationState.Paused;
+			else
+				simulationManager.State = SimulationState.Unpaused;
 
-			simulationManager.Update(gameTime);
+			// only update our states if we are not covered by another screen (such as a pause menu)
+			if (!coveredByOtherScreen)
+			{
+				base.Update(gameTime, otherWindowHasFocus, coveredByOtherScreen);
 
-			userInterfaceManager.Update(gameTime, simulationManager.WorldDateTime);
-			userInterfaceManager.UpdateTrackedEmployeeCount(simulationManager.TrackedEmployees.Count());
+				simulationManager.Update(gameTime);
+
+				userInterfaceManager.Update(gameTime, simulationManager.WorldDateTime);
+				userInterfaceManager.UpdateTrackedEmployeeCount(simulationManager.TrackedEmployees.Count());
+			}
 		}
 
 		public override void Draw(GameTime gameTime, Renderer renderer)
@@ -508,20 +518,26 @@ namespace MyThirdSDL.Screens
 			}
 		}
 
-		private MouseOverScreenEdge GetMouseOverScreenEdge()
+		private IEnumerable<MouseOverScreenEdge> GetMouseOverScreenEdges()
 		{
-			MouseOverScreenEdge mouseOverScreenEdge = MouseOverScreenEdge.Unknown;
-			if (Mouse.X < 50 && Mouse.X > 0)
-				mouseOverScreenEdge = MouseOverScreenEdge.Left;
-			else if (Mouse.X > MainGame.SCREEN_WIDTH_LOGICAL - 50 && Mouse.X < MainGame.SCREEN_WIDTH_LOGICAL - 1)
-				mouseOverScreenEdge = MouseOverScreenEdge.Right;
-			else if (Mouse.Y < 50 && Mouse.Y > 0)
-				mouseOverScreenEdge = MouseOverScreenEdge.Top;
-			else if (Mouse.Y > MainGame.SCREEN_HEIGHT_LOGICAL - 50 && Mouse.Y < MainGame.SCREEN_HEIGHT_LOGICAL - 1)
-				mouseOverScreenEdge = MouseOverScreenEdge.Bottom;
-			else
-				mouseOverScreenEdge = MouseOverScreenEdge.None;
-			return mouseOverScreenEdge;
+			List<MouseOverScreenEdge> mouseOverScreenEdges = new List<MouseOverScreenEdge>();
+
+			if (Mouse.X <= 10 && Mouse.X >= 0)
+				mouseOverScreenEdges.Add(MouseOverScreenEdge.Left);
+
+			if (Mouse.X >= MainGame.SCREEN_WIDTH_LOGICAL - 10 && Mouse.X <= MainGame.SCREEN_WIDTH_LOGICAL)
+				mouseOverScreenEdges.Add(MouseOverScreenEdge.Right);
+
+			if (Mouse.Y <= 10 && Mouse.Y >= 0)
+				mouseOverScreenEdges.Add(MouseOverScreenEdge.Top);
+
+			if (Mouse.Y >= MainGame.SCREEN_HEIGHT_LOGICAL - 10 && Mouse.Y <= MainGame.SCREEN_HEIGHT_LOGICAL)
+				mouseOverScreenEdges.Add(MouseOverScreenEdge.Bottom);
+
+			if (mouseOverScreenEdges.Count == 0)
+				mouseOverScreenEdges.Add(MouseOverScreenEdge.None);
+
+			return mouseOverScreenEdges;
 		}
 
 		private void mailbox_UnreadMailCountChanged(object sender, EventArgs e)

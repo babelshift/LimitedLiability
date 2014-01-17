@@ -10,8 +10,8 @@ namespace MyThirdSDL
 {
 	public static class Camera
 	{
-		private static int MoveSpeedY = 5;
-		private static int MoveSpeedX = 5;
+		private static int MoveSpeedY = 8;
+		private static int MoveSpeedX = 8;
 
 		public static Vector Position { get; set; }
 
@@ -44,15 +44,18 @@ namespace MyThirdSDL
 		/// Update the camera's position based on the passed moused over edge.
 		/// </summary>
 		/// <param name="edge">Edge.</param>
-		public static void Update(MouseOverScreenEdge edge)
+		public static void Update(IEnumerable<MouseOverScreenEdge> mouseOverScreenEdges)
 		{
-			if (edge == MouseOverScreenEdge.Top)
+			if (mouseOverScreenEdges.Any(m => m == MouseOverScreenEdge.Top))
 				MoveUp();
-			else if (edge == MouseOverScreenEdge.Bottom)
+
+			if (mouseOverScreenEdges.Any(m => m == MouseOverScreenEdge.Bottom))
 				MoveDown();
-			else if (edge == MouseOverScreenEdge.Left)
+
+			if (mouseOverScreenEdges.Any(m => m == MouseOverScreenEdge.Left))
 				MoveLeft();
-			else if (edge == MouseOverScreenEdge.Right)
+
+			if (mouseOverScreenEdges.Any(m => m == MouseOverScreenEdge.Right))
 				MoveRight();
 		}
 	}
