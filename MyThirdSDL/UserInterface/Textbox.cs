@@ -79,7 +79,7 @@ namespace MyThirdSDL.UserInterface
 		public Textbox(ContentManager contentManager)
 		{
 			string fontPath = contentManager.GetContentPath("Arcade");
-			Color fontColor = Styles.Colors.MainMenuTitleText;
+			Color fontColor = Styles.Colors.PaleGreen;
 			int fontSizeContent = 12;
 
 			IconFrame = new Icon(contentManager.GetTexture("TextboxLongFrame"));

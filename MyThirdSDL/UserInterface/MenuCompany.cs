@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace MyThirdSDL.UserInterface
 {
-	public class MenuCompany : Control
+	public class MenuCompany : Menu
 	{
 		private Icon iconFrame;
 
@@ -30,14 +30,7 @@ namespace MyThirdSDL.UserInterface
 		private Label labelNumberOfProductsValue;
 		private Label labelGrossIncomeValue;
 
-		private Button buttonViewEmployees;
-		private Button buttonViewCompetitors;
-		private Button buttonViewProducts;
-		private Button buttonViewFinances;
-
 		private Button buttonCloseWindow;
-
-		private List<Control> controls = new List<Control>();
 
 		public event EventHandler<EventArgs> CloseButtonClicked;
 
@@ -67,10 +60,6 @@ namespace MyThirdSDL.UserInterface
 				labelIndustryTypeValue.Position = base.Position + new Vector(220, 170);
 				labelGrossIncomeValue.Position = base.Position + new Vector(220, 200);
 				
-				buttonViewEmployees.Position = base.Position + new Vector(320, 75);
-				buttonViewCompetitors.Position = base.Position + new Vector(320, 105);
-				buttonViewProducts.Position = base.Position + new Vector(320, 135);
-				buttonViewFinances.Position = base.Position + new Vector(320, 195);
 				buttonCloseWindow.Position = base.Position + new Vector(iconFrame.Width, 0) - new Vector(buttonCloseWindow.Width, 0) - new Vector(0, 47);
 			}
 		}
@@ -82,97 +71,50 @@ namespace MyThirdSDL.UserInterface
 			Height = iconFrame.Height;
 
 			string fontPath = contentManager.GetContentPath(Styles.FontPaths.Arcade);
-			Color fontColorTitle = Styles.Colors.MainMenuTitleText;
-			Color fontColorLabel = Styles.Colors.White;
-			Color fontColorLabelValue = Styles.Colors.MainMenuTitleText;
+			Color fontColorWhite = Styles.Colors.White;
+			Color fontColorPaleYellow = Styles.Colors.PaleYellow;
 			int fontSizeTitle = Styles.FontSizes.Title;
 			int fontSizeContent = Styles.FontSizes.Content;
 
-			iconMainHeader = new Icon(contentManager.GetTexture("IconPenPaper"));
-			labelMainHeader = new Label();
-			labelMainHeader.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSizeTitle, fontColorTitle, "Company Statistics");
+			iconMainHeader = ControlFactory.CreateIcon(contentManager, "IconPenPaper");
+			labelMainHeader = ControlFactory.CreateLabel(contentManager, fontPath, fontSizeTitle, fontColorWhite, "Company Statistics");
+			labelMainHeader.EnableShadow(contentManager, 2, 2);
 
-			labelCompanyName = new Label();
-			labelCompanyName.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSizeContent, fontColorLabel, "Company Name:");
-			labelNumberOfEmployees = new Label();
-			labelNumberOfEmployees.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSizeContent, fontColorLabel, "# of Employees:");
-			labelNumberOfCompetitors = new Label();
-			labelNumberOfCompetitors.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSizeContent, fontColorLabel, "# of Competitors:");
-			labelNumberOfProducts = new Label();
-			labelNumberOfProducts.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSizeContent, fontColorLabel, "# of Products:");
-			labelIndustryType = new Label();
-			labelIndustryType.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSizeContent, fontColorLabel, "Industry:");
-			labelGrossIncome = new Label();
-			labelGrossIncome.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSizeContent, fontColorLabel, "Gross Income:");
+			labelCompanyName = ControlFactory.CreateLabel(contentManager, fontPath, fontSizeContent, fontColorWhite, "Company Name:");
+			labelNumberOfEmployees = ControlFactory.CreateLabel(contentManager, fontPath, fontSizeContent, fontColorWhite, "# of Employees:");
+			labelNumberOfCompetitors = ControlFactory.CreateLabel(contentManager, fontPath, fontSizeContent, fontColorWhite, "# of Competitors:");
+			labelNumberOfProducts = ControlFactory.CreateLabel(contentManager, fontPath, fontSizeContent, fontColorWhite, "# of Products:");
+			labelIndustryType = ControlFactory.CreateLabel(contentManager, fontPath, fontSizeContent, fontColorWhite, "Industry:");
+			labelGrossIncome = ControlFactory.CreateLabel(contentManager, fontPath, fontSizeContent, fontColorWhite, "Gross Income:");
 
-			labelCompanyNameValue = new Label();
-			labelCompanyNameValue.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSizeContent, fontColorLabelValue, companyName);
-			labelNumberOfEmployeesValue = new Label();
-			labelNumberOfEmployeesValue.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSizeContent, fontColorLabelValue, numberOfEmployees.ToString());
-			labelNumberOfCompetitorsValue = new Label();
-			labelNumberOfCompetitorsValue.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSizeContent, fontColorLabelValue, numberOfCompetitors.ToString());
-			labelNumberOfProductsValue = new Label();
-			labelNumberOfProductsValue.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSizeContent, fontColorLabelValue, numberOfProducts.ToString());
-			labelIndustryTypeValue = new Label();
-			labelIndustryTypeValue.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSizeContent, fontColorLabelValue, industryTypeName);
-			labelGrossIncomeValue = new Label();
-			labelGrossIncomeValue.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSizeContent, fontColorLabelValue, "$" + yearlyGrossIncome.ToString());
+			labelCompanyNameValue = ControlFactory.CreateLabel(contentManager, fontPath, fontSizeContent, fontColorPaleYellow, companyName);
+			labelNumberOfEmployeesValue = ControlFactory.CreateLabel(contentManager, fontPath, fontSizeContent, fontColorPaleYellow, numberOfEmployees.ToString());
+			labelNumberOfCompetitorsValue = ControlFactory.CreateLabel(contentManager, fontPath, fontSizeContent, fontColorPaleYellow, numberOfCompetitors.ToString());
+			labelNumberOfProductsValue = ControlFactory.CreateLabel(contentManager, fontPath, fontSizeContent, fontColorPaleYellow, numberOfProducts.ToString());
+			labelIndustryTypeValue = ControlFactory.CreateLabel(contentManager, fontPath, fontSizeContent, fontColorPaleYellow, industryTypeName);
+			labelGrossIncomeValue = ControlFactory.CreateLabel(contentManager, fontPath, fontSizeContent, fontColorPaleYellow, "$" + yearlyGrossIncome.ToString());
 
-			buttonViewEmployees = new Button();
-			buttonViewEmployees.TextureFrame = contentManager.GetTexture("ButtonMailAction");
-			buttonViewEmployees.TextureFrameHovered = contentManager.GetTexture("ButtonMailActionHover");
-			buttonViewEmployees.Label = new Label();
-			buttonViewEmployees.Label.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSizeContent, fontColorLabel, "View");
-			buttonViewEmployees.ButtonType = ButtonType.TextOnly;
-
-			buttonViewCompetitors = new Button();
-			buttonViewCompetitors.TextureFrame = contentManager.GetTexture("ButtonMailAction");
-			buttonViewCompetitors.TextureFrameHovered = contentManager.GetTexture("ButtonMailActionHover");
-			buttonViewCompetitors.Label = new Label();
-			buttonViewCompetitors.Label.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSizeContent, fontColorLabel, "View");
-			buttonViewCompetitors.ButtonType = ButtonType.TextOnly;
-
-			buttonViewProducts = new Button();
-			buttonViewProducts.TextureFrame = contentManager.GetTexture("ButtonMailAction");
-			buttonViewProducts.TextureFrameHovered = contentManager.GetTexture("ButtonMailActionHover");
-			buttonViewProducts.Label = new Label();
-			buttonViewProducts.Label.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSizeContent, fontColorLabel, "View");
-			buttonViewProducts.ButtonType = ButtonType.TextOnly;
-
-			buttonViewFinances = new Button();
-			buttonViewFinances.TextureFrame = contentManager.GetTexture("ButtonMailAction");
-			buttonViewFinances.TextureFrameHovered = contentManager.GetTexture("ButtonMailActionHover");
-			buttonViewFinances.Label = new Label();
-			buttonViewFinances.Label.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSizeContent, fontColorLabel, "View");
-			buttonViewFinances.ButtonType = ButtonType.TextOnly;
-
-			buttonCloseWindow = new Button();
-			buttonCloseWindow.TextureFrame = contentManager.GetTexture("ButtonSquare");
-			buttonCloseWindow.TextureFrameHovered = contentManager.GetTexture("ButtonSquareHover");
-			buttonCloseWindow.Icon = new Icon(contentManager.GetTexture("IconWindowClose"));
-			buttonCloseWindow.IconHovered = new Icon(contentManager.GetTexture("IconWindowClose"));
+			buttonCloseWindow = ControlFactory.CreateButton(contentManager, "ButtonSquare", "ButtonSquareHover");
+			buttonCloseWindow.Icon = ControlFactory.CreateIcon(contentManager, "IconWindowClose");
+			buttonCloseWindow.IconHovered = ControlFactory.CreateIcon(contentManager, "IconWindowClose");
 			buttonCloseWindow.ButtonType = ButtonType.IconOnly;
 
-			controls.Add(iconFrame);
-			controls.Add(iconMainHeader);
-			controls.Add(labelMainHeader);
-			controls.Add(labelCompanyName);
-			controls.Add(labelIndustryType);
-			controls.Add(labelNumberOfEmployees);
-			controls.Add(labelNumberOfCompetitors);
-			controls.Add(labelNumberOfProducts);
-			controls.Add(labelGrossIncome);
-			controls.Add(labelCompanyNameValue);
-			controls.Add(labelIndustryTypeValue);
-			controls.Add(labelNumberOfEmployeesValue);
-			controls.Add(labelNumberOfCompetitorsValue);
-			controls.Add(labelNumberOfProductsValue);
-			controls.Add(labelGrossIncomeValue);
-			controls.Add(buttonViewEmployees);
-			controls.Add(buttonViewCompetitors);
-			controls.Add(buttonViewProducts);
-			controls.Add(buttonViewFinances);
-			controls.Add(buttonCloseWindow);
+			Controls.Add(iconFrame);
+			Controls.Add(iconMainHeader);
+			Controls.Add(labelMainHeader);
+			Controls.Add(labelCompanyName);
+			Controls.Add(labelIndustryType);
+			Controls.Add(labelNumberOfEmployees);
+			Controls.Add(labelNumberOfCompetitors);
+			Controls.Add(labelNumberOfProducts);
+			Controls.Add(labelGrossIncome);
+			Controls.Add(labelCompanyNameValue);
+			Controls.Add(labelIndustryTypeValue);
+			Controls.Add(labelNumberOfEmployeesValue);
+			Controls.Add(labelNumberOfCompetitorsValue);
+			Controls.Add(labelNumberOfProductsValue);
+			Controls.Add(labelGrossIncomeValue);
+			Controls.Add(buttonCloseWindow);
 
 			buttonCloseWindow.Clicked += buttonCloseWindow_Clicked;
 		}
@@ -183,51 +125,9 @@ namespace MyThirdSDL.UserInterface
 				CloseButtonClicked(sender, e);
 		}
 
-		public override void Update(GameTime gameTime)
-		{
-			foreach (var control in controls)
-				if (control != null)
-					control.Update(gameTime);
-		}
-
-		public override void Draw(GameTime gameTime, Renderer renderer)
-		{
-			foreach (var control in controls)
-				if (control != null)
-					control.Draw(gameTime, renderer);
-		}
-
-		public override void HandleMouseButtonPressedEvent(object sender, SharpDL.Events.MouseButtonEventArgs e)
-		{
-			foreach (var control in controls)
-				if (control != null)
-					control.HandleMouseButtonPressedEvent(sender, e);
-		}
-
-		public override void HandleMouseMovingEvent(object sender, SharpDL.Events.MouseMotionEventArgs e)
-		{
-			foreach (var control in controls)
-				if (control != null)
-					control.HandleMouseMovingEvent(sender, e);
-		}
-
 		public void UpdateEmployeeCount(int employeeCount)
 		{
 			labelNumberOfEmployeesValue.Text = employeeCount.ToString();
-		}
-
-		public override void Dispose()
-		{
-			Dispose(true);
-			GC.SuppressFinalize(this);
-		}
-
-		private void Dispose(bool disposing)
-		{
-			foreach (var control in controls)
-				if(control != null)
-					control.Dispose();
-			controls.Clear();
 		}
 	}
 }

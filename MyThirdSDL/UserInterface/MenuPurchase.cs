@@ -1,6 +1,7 @@
 ﻿using MyThirdSDL.Content;
 using MyThirdSDL.Descriptors;
 using SharpDL;
+using SharpDL.Events;
 using SharpDL.Graphics;
 using System;
 using System.Collections.Generic;
@@ -10,10 +11,8 @@ using System.Threading.Tasks;
 
 namespace MyThirdSDL.UserInterface
 {
-	public class MenuPurchase : Control
+	public class MenuPurchase : Menu
 	{
-		private List<Control> controls = new List<Control>();
-
 		private const int itemsPerPage = 4;
 		private int currentDisplayedPage = 1;
 		private string defaultInfoAndSkillsText = "N/A";
@@ -128,79 +127,61 @@ namespace MyThirdSDL.UserInterface
 			Height = iconFrame.Height;
 
 			string fontPath = contentManager.GetContentPath(Styles.FontPaths.Arcade);
-			Color fontColorTitle = Styles.Colors.MainMenuTitleText;
-			Color fontColorLabelValue = Styles.Colors.ButtonMainMenuItemText;
+			Color fontColorTitle = Styles.Colors.White;
+			Color fontColorLabelValue = Styles.Colors.PaleYellow;
 			int fontSizeTitle = Styles.FontSizes.Title;
 			int fontSizeContent = Styles.FontSizes.Content;
 
-			iconMainMenuHeader = new Icon(contentManager.GetTexture(iconMainMenuContentPathKey));
-			iconInfoMenuHeader = new Icon(contentManager.GetTexture("IconStatistics"));
-			iconSkillsMenuHeader = new Icon(contentManager.GetTexture("IconPenPaper"));
+			iconMainMenuHeader = ControlFactory.CreateIcon(contentManager, iconMainMenuContentPathKey);
+			iconInfoMenuHeader = ControlFactory.CreateIcon(contentManager, "IconStatistics");
+			iconSkillsMenuHeader = ControlFactory.CreateIcon(contentManager, "IconPenPaper");
 
-			labelMainMenuHeader = new Label();
-			labelMainMenuHeader.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSizeTitle, fontColorTitle, menuTitle);
+			labelMainMenuHeader = ControlFactory.CreateLabel(contentManager, fontPath, fontSizeTitle, fontColorTitle, menuTitle);
 			labelMainMenuHeader.EnableShadow(contentManager, 2, 2);
-			labelInfoMenuHeader = new Label();
-			labelInfoMenuHeader.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSizeTitle, fontColorTitle, "Needs");
+			labelInfoMenuHeader = ControlFactory.CreateLabel(contentManager, fontPath, fontSizeTitle, fontColorTitle, "Needs");
 			labelInfoMenuHeader.EnableShadow(contentManager, 2, 2);
-			labelSkillsMenuHeader = new Label();
-			labelSkillsMenuHeader.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSizeTitle, fontColorTitle, "Skills");
+			labelSkillsMenuHeader = ControlFactory.CreateLabel(contentManager, fontPath, fontSizeTitle, fontColorTitle, "Skills");
 			labelSkillsMenuHeader.EnableShadow(contentManager, 2, 2);
 
-			iconMoney = new Icon(contentManager.GetTexture("IconMoney"));
+			iconMoney = ControlFactory.CreateIcon(contentManager, "IconMoney");
 
-			iconHealth = new Icon(contentManager.GetTexture("IconMedkit"));
-			iconHygiene = new Icon(contentManager.GetTexture("IconToothbrush"));
-			iconSleep = new Icon(contentManager.GetTexture("IconPersonTired"));
-			iconThirst = new Icon(contentManager.GetTexture("IconSoda"));
-			iconHunger = new Icon(contentManager.GetTexture("IconChicken"));
+			iconHealth = ControlFactory.CreateIcon(contentManager, "IconMedkit");
+			iconHygiene = ControlFactory.CreateIcon(contentManager, "IconToothbrush");
+			iconSleep = ControlFactory.CreateIcon(contentManager, "IconPersonTired");
+			iconThirst = ControlFactory.CreateIcon(contentManager, "IconSoda");
+			iconHunger = ControlFactory.CreateIcon(contentManager, "IconChicken");
 
-			labelMoney = new Label();
-			labelMoney.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSizeContent, fontColorLabelValue, "N/A");
-			labelHealth = new Label();
-			labelHealth.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSizeContent, fontColorLabelValue, "N/A");
-			labelHygiene = new Label();
-			labelHygiene.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSizeContent, fontColorLabelValue, "N/A");
-			labelSleep = new Label();
-			labelSleep.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSizeContent, fontColorLabelValue, "N/A");
-			labelThirst = new Label();
-			labelThirst.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSizeContent, fontColorLabelValue, "N/A");
-			labelHunger = new Label();
-			labelHunger.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSizeContent, fontColorLabelValue, "N/A");
+			labelMoney = ControlFactory.CreateLabel(contentManager, fontPath, fontSizeContent, fontColorLabelValue, defaultInfoAndSkillsText);
+			labelHealth = ControlFactory.CreateLabel(contentManager, fontPath, fontSizeContent, fontColorLabelValue, defaultInfoAndSkillsText);
+			labelHygiene = ControlFactory.CreateLabel(contentManager, fontPath, fontSizeContent, fontColorLabelValue, defaultInfoAndSkillsText);
+			labelSleep = ControlFactory.CreateLabel(contentManager, fontPath, fontSizeContent, fontColorLabelValue, defaultInfoAndSkillsText);
+			labelThirst = ControlFactory.CreateLabel(contentManager, fontPath, fontSizeContent, fontColorLabelValue, defaultInfoAndSkillsText);
+			labelHunger = ControlFactory.CreateLabel(contentManager, fontPath, fontSizeContent, fontColorLabelValue, defaultInfoAndSkillsText);
 
-			iconCommunication = new Icon(contentManager.GetTexture("IconCommunication"));
-			iconLeadership = new Icon(contentManager.GetTexture("IconLeadership"));
-			iconCreativity = new Icon(contentManager.GetTexture("IconCreativity"));
-			iconIntelligence = new Icon(contentManager.GetTexture("IconIntelligence"));
+			iconCommunication = ControlFactory.CreateIcon(contentManager, "IconCommunication");
+			iconLeadership = ControlFactory.CreateIcon(contentManager, "IconLeadership");
+			iconCreativity = ControlFactory.CreateIcon(contentManager, "IconCreativity");
+			iconIntelligence = ControlFactory.CreateIcon(contentManager, "IconIntelligence");
 
-			labelCommunication = new Label();
-			labelCommunication.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSizeContent, fontColorLabelValue, "N/A");
-			labelLeadership = new Label();
-			labelLeadership.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSizeContent, fontColorLabelValue, "N/A");
-			labelCreativity = new Label();
-			labelCreativity.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSizeContent, fontColorLabelValue, "N/A");
-			labelIntelligence = new Label();
-			labelIntelligence.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSizeContent, fontColorLabelValue, "N/A");
+			labelCommunication = ControlFactory.CreateLabel(contentManager, fontPath, fontSizeContent, fontColorLabelValue, defaultInfoAndSkillsText);
+			labelLeadership = ControlFactory.CreateLabel(contentManager, fontPath, fontSizeContent, fontColorLabelValue, defaultInfoAndSkillsText);
+			labelCreativity = ControlFactory.CreateLabel(contentManager, fontPath, fontSizeContent, fontColorLabelValue, defaultInfoAndSkillsText);
+			labelIntelligence = ControlFactory.CreateLabel(contentManager, fontPath, fontSizeContent, fontColorLabelValue, defaultInfoAndSkillsText);
 
-			buttonCloseWindow = new Button();
-			buttonCloseWindow.TextureFrame = contentManager.GetTexture("ButtonSquare");
-			buttonCloseWindow.TextureFrameHovered = contentManager.GetTexture("ButtonSquareHover");
-			buttonCloseWindow.Icon = new Icon(contentManager.GetTexture("IconWindowClose"));
-			buttonCloseWindow.IconHovered = new Icon(contentManager.GetTexture("IconWindowClose"));
+			buttonCloseWindow = ControlFactory.CreateButton(contentManager, "ButtonSquare", "ButtonSquareHover");
+			buttonCloseWindow.Icon = ControlFactory.CreateIcon(contentManager, "IconWindowClose");
+			buttonCloseWindow.IconHovered = ControlFactory.CreateIcon(contentManager, "IconWindowClose");
 			buttonCloseWindow.ButtonType = ButtonType.IconOnly;
 
-			buttonArrowCircleLeft = new Button();
-			buttonArrowCircleLeft.TextureFrame = contentManager.GetTexture("ButtonSquare");
-			buttonArrowCircleLeft.TextureFrameHovered = contentManager.GetTexture("ButtonSquareHover");
-			buttonArrowCircleLeft.Icon = new Icon(contentManager.GetTexture("IconArrowCircleLeft"));
-			buttonArrowCircleLeft.IconHovered = new Icon(contentManager.GetTexture("IconArrowCircleLeft"));
+			buttonArrowCircleLeft = ControlFactory.CreateButton(contentManager, "ButtonSquare", "ButtonSquareHover");
+			buttonArrowCircleLeft.Icon = ControlFactory.CreateIcon(contentManager, "IconArrowCircleLeft");
+			buttonArrowCircleLeft.IconHovered = ControlFactory.CreateIcon(contentManager, "IconArrowCircleLeft");
 			buttonArrowCircleLeft.ButtonType = ButtonType.IconOnly;
 
 			buttonArrowCircleRight = new Button();
-			buttonArrowCircleRight.TextureFrame = contentManager.GetTexture("ButtonSquare");
-			buttonArrowCircleRight.TextureFrameHovered = contentManager.GetTexture("ButtonSquareHover");
-			buttonArrowCircleRight.Icon = new Icon(contentManager.GetTexture("IconArrowCircleRight"));
-			buttonArrowCircleRight.IconHovered = new Icon(contentManager.GetTexture("IconArrowCircleRight"));
+			buttonArrowCircleRight = ControlFactory.CreateButton(contentManager, "ButtonSquare", "ButtonSquareHover");
+			buttonArrowCircleRight.Icon = ControlFactory.CreateIcon(contentManager, "IconArrowCircleRight");
+			buttonArrowCircleRight.IconHovered = ControlFactory.CreateIcon(contentManager, "IconArrowCircleRight");
 			buttonArrowCircleRight.ButtonType = ButtonType.IconOnly;
 
 			foreach (var purchasableItem in purchasableItems)
@@ -208,45 +189,43 @@ namespace MyThirdSDL.UserInterface
 				ButtonMenuItem buttonMenuItem = new ButtonMenuItem(purchasableItem);
 				buttonMenuItem.TextureFrame = contentManager.GetTexture("ButtonMenuItem");
 				buttonMenuItem.TextureFrameHovered = contentManager.GetTexture("ButtonMenuItemHover");
-				buttonMenuItem.IconMain = new Icon(contentManager.GetTexture(purchasableItem.IconTextureKey));
-				buttonMenuItem.IconMoney = new Icon(contentManager.GetTexture("IconMoney"));
-				buttonMenuItem.LabelMain = new Label();
-				buttonMenuItem.LabelMain.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSizeContent, fontColorLabelValue, purchasableItem.Name);
-				buttonMenuItem.LabelMoney = new Label();
-				buttonMenuItem.LabelMoney.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSizeContent, fontColorLabelValue, purchasableItem.Price.ToString());
+				buttonMenuItem.IconMain = ControlFactory.CreateIcon(contentManager, purchasableItem.IconTextureKey);
+				buttonMenuItem.IconMoney = ControlFactory.CreateIcon(contentManager, "IconMoney");
+				buttonMenuItem.LabelMain = ControlFactory.CreateLabel(contentManager, fontPath, fontSizeContent, fontColorLabelValue, purchasableItem.Name);
+				buttonMenuItem.LabelMoney = ControlFactory.CreateLabel(contentManager, fontPath, fontSizeContent, fontColorLabelValue, purchasableItem.Price.ToString());
 				AddButtonMenuItem(buttonMenuItem);
 			}
 
-			controls.Add(iconFrame);
-			controls.Add(iconMainMenuHeader);
-			controls.Add(iconInfoMenuHeader);
-			controls.Add(iconSkillsMenuHeader);
-			controls.Add(labelMainMenuHeader);
-			controls.Add(labelInfoMenuHeader);
-			controls.Add(labelSkillsMenuHeader);
-			controls.Add(iconMoney);
-			controls.Add(iconHealth);
-			controls.Add(iconHygiene);
-			controls.Add(iconSleep);
-			controls.Add(iconThirst);
-			controls.Add(iconHunger);
-			controls.Add(labelMoney);
-			controls.Add(labelHealth);
-			controls.Add(labelSleep);
-			controls.Add(labelThirst);
-			controls.Add(labelHunger);
-			controls.Add(labelHygiene);
-			controls.Add(iconCommunication);
-			controls.Add(iconCreativity);
-			controls.Add(iconIntelligence);
-			controls.Add(iconLeadership);
-			controls.Add(labelCommunication);
-			controls.Add(labelCreativity);
-			controls.Add(labelIntelligence);
-			controls.Add(labelLeadership);
-			controls.Add(buttonArrowCircleLeft);
-			controls.Add(buttonArrowCircleRight);
-			controls.Add(buttonCloseWindow);
+			Controls.Add(iconFrame);
+			Controls.Add(iconMainMenuHeader);
+			Controls.Add(iconInfoMenuHeader);
+			Controls.Add(iconSkillsMenuHeader);
+			Controls.Add(labelMainMenuHeader);
+			Controls.Add(labelInfoMenuHeader);
+			Controls.Add(labelSkillsMenuHeader);
+			Controls.Add(iconMoney);
+			Controls.Add(iconHealth);
+			Controls.Add(iconHygiene);
+			Controls.Add(iconSleep);
+			Controls.Add(iconThirst);
+			Controls.Add(iconHunger);
+			Controls.Add(labelMoney);
+			Controls.Add(labelHealth);
+			Controls.Add(labelSleep);
+			Controls.Add(labelThirst);
+			Controls.Add(labelHunger);
+			Controls.Add(labelHygiene);
+			Controls.Add(iconCommunication);
+			Controls.Add(iconCreativity);
+			Controls.Add(iconIntelligence);
+			Controls.Add(iconLeadership);
+			Controls.Add(labelCommunication);
+			Controls.Add(labelCreativity);
+			Controls.Add(labelIntelligence);
+			Controls.Add(labelLeadership);
+			Controls.Add(buttonArrowCircleLeft);
+			Controls.Add(buttonArrowCircleRight);
+			Controls.Add(buttonCloseWindow);
 
 			this.buttonArrowCircleLeft.Clicked += buttonArrowCircleLeft_Clicked;
 			this.buttonArrowCircleRight.Clicked += buttonArrowCircleRight_Clicked;
@@ -275,16 +254,12 @@ namespace MyThirdSDL.UserInterface
 			if (!isAnyButtonMenuItemHovered)
 				ClearInfoAndSkillsText();
 
-			foreach (var control in controls)
-				if (control != null)
-					control.Update(gameTime);
+			base.Update(gameTime);
 		}
 
 		public override void Draw(GameTime gameTime, Renderer renderer)
 		{
-			foreach (var control in controls)
-				if (control != null)
-					control.Draw(gameTime, renderer);
+			base.Draw(gameTime, renderer);
 
 			List<ButtonMenuItem> buttonMenuItemsOnCurrentPage = new List<ButtonMenuItem>();
 			bool success = buttonMenuItemPages.TryGetValue(currentDisplayedPage, out buttonMenuItemsOnCurrentPage);
@@ -293,11 +268,9 @@ namespace MyThirdSDL.UserInterface
 					buttonMenuItem.Draw(gameTime, renderer);
 		}
 
-		public override void HandleMouseButtonPressedEvent(object sender, SharpDL.Events.MouseButtonEventArgs e)
+		public override void HandleMouseButtonPressedEvent(object sender, MouseButtonEventArgs e)
 		{
-			foreach (var control in controls)
-				if (control != null)
-					control.HandleMouseButtonPressedEvent(sender, e);
+			base.HandleMouseButtonPressedEvent(sender, e);
 
 			List<ButtonMenuItem> buttonMenuItemsOnCurrentPage = new List<ButtonMenuItem>();
 			bool success = buttonMenuItemPages.TryGetValue(currentDisplayedPage, out buttonMenuItemsOnCurrentPage);
@@ -306,11 +279,9 @@ namespace MyThirdSDL.UserInterface
 					buttonMenuItem.HandleMouseButtonPressedEvent(sender, e);
 		}
 
-		public override void HandleMouseMovingEvent(object sender, SharpDL.Events.MouseMotionEventArgs e)
+		public override void HandleMouseMovingEvent(object sender, MouseMotionEventArgs e)
 		{
-			foreach (var control in controls)
-				if (control != null)
-					control.HandleMouseMovingEvent(sender, e);
+			base.HandleMouseMovingEvent(sender, e);
 
 			List<ButtonMenuItem> buttonMenuItemsOnCurrentPage = new List<ButtonMenuItem>();
 			bool success = buttonMenuItemPages.TryGetValue(currentDisplayedPage, out buttonMenuItemsOnCurrentPage);
@@ -488,9 +459,7 @@ namespace MyThirdSDL.UserInterface
 
 		private void Dispose(bool disposing)
 		{
-			foreach (var control in controls)
-				if (control != null)
-					control.Dispose();
+			base.Dispose();
 
 			List<ButtonMenuItem> buttonMenuItemsOnCurrentPage = new List<ButtonMenuItem>();
 			bool success = buttonMenuItemPages.TryGetValue(currentDisplayedPage, out buttonMenuItemsOnCurrentPage);
@@ -499,7 +468,6 @@ namespace MyThirdSDL.UserInterface
 					buttonMenuItem.Dispose();
 
 			buttonMenuItemPages.Clear();
-			controls.Clear();
 		}
 	}
 

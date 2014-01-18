@@ -21,7 +21,6 @@ namespace MyThirdSDL.UserInterface
 		#region Members
 
 		private Point bottomRightPointOfWindow;
-		private ControlFactory controlFactory;
 		private ContentManager contentManager;
 		private TimeSpan timeOfStatusChange = TimeSpan.Zero;
 
@@ -140,8 +139,6 @@ namespace MyThirdSDL.UserInterface
 			this.purchasableEquipment = purchasableEquipment;
 			this.purchasableRooms = purchasableRooms;
 
-			controlFactory = new ControlFactory(contentManager);
-
 			Vector toolboxTrayPosition = new Vector(bottomRightPointOfWindow.X / 2 - 350, bottomRightPointOfWindow.Y - 50);
 			toolboxTray = new ToolboxTray(contentManager, unreadMailCount, money);// controlFactory.CreateToolboxTray(toolboxTrayPosition, unreadMailCount, money);
 			toolboxTray.Position = toolboxTrayPosition;
@@ -238,8 +235,8 @@ namespace MyThirdSDL.UserInterface
 				Color fontColor;
 				int fontSizeContent;
 				string fontPath = GetLabelFontDetails(contentManager, out fontColor, out fontSizeContent);
-				SimulationLabel labelMessage = controlFactory.CreateSimulationLabel(Vector.Zero, fontPath, fontSizeContent, fontColor, message);
-				labelMessagesForSingleAgent.Add(message.Type, labelMessage);
+				//SimulationLabel labelMessage = controlFactory.CreateSimulationLabel(Vector.Zero, fontPath, fontSizeContent, fontColor, message);
+				//labelMessagesForSingleAgent.Add(message.Type, labelMessage);
 			}
 		}
 

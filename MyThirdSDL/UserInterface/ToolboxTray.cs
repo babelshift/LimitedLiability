@@ -1,5 +1,6 @@
 ﻿using MyThirdSDL.Content;
 using SharpDL;
+using SharpDL.Events;
 using SharpDL.Graphics;
 using SharpDL.Input;
 using System;
@@ -10,10 +11,8 @@ using System.Threading.Tasks;
 
 namespace MyThirdSDL.UserInterface
 {
-	public class ToolboxTray : Control
+	public class ToolboxTray : Menu
 	{
-		private List<Control> controls = new List<Control>();
-
 		private Icon iconFrame;
 
 		private Button ButtonSelectGeneral { get; set; }
@@ -112,7 +111,7 @@ namespace MyThirdSDL.UserInterface
 			string tooltipTexturePathKey = "TooltipFrame";
 
 			string fontPath = contentManager.GetContentPath("Arcade");
-			Color fontColor = Styles.Colors.ButtonMainMenuItemText;
+			Color fontColor = Styles.Colors.PaleYellow;
 			int fontSizeContent = 12;
 			int fontSizeTooltipText = 8;
 
@@ -232,21 +231,21 @@ namespace MyThirdSDL.UserInterface
 			LabelTime = new Label();
 			LabelTime.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSizeContent, fontColor, DateTime.Now.ToShortTimeString());
 
-			controls.Add(iconFrame);
-			controls.Add(ButtonSelectGeneral);
-			controls.Add(ButtonSelectEquipment);
-			controls.Add(ButtonSelectRoom);
-			controls.Add(ButtonFinances);
-			controls.Add(ButtonCompany);
-			controls.Add(ButtonEmployees);
-			controls.Add(ButtonProducts);
-			controls.Add(ButtonMainMenu);
-			controls.Add(ButtonMailMenu);
-			controls.Add(IconMoney);
-			controls.Add(IconTime);
-			controls.Add(LabelMoney);
-			controls.Add(LabelDate);
-			controls.Add(LabelTime);
+			Controls.Add(iconFrame);
+			Controls.Add(ButtonSelectGeneral);
+			Controls.Add(ButtonSelectEquipment);
+			Controls.Add(ButtonSelectRoom);
+			Controls.Add(ButtonFinances);
+			Controls.Add(ButtonCompany);
+			Controls.Add(ButtonEmployees);
+			Controls.Add(ButtonProducts);
+			Controls.Add(ButtonMainMenu);
+			Controls.Add(ButtonMailMenu);
+			Controls.Add(IconMoney);
+			Controls.Add(IconTime);
+			Controls.Add(LabelMoney);
+			Controls.Add(LabelDate);
+			Controls.Add(LabelTime);
 
 			ButtonSelectGeneral.Clicked += ButtonSelectGeneral_Clicked;
 			ButtonSelectEquipment.Clicked += ButtonSelectEquipment_Clicked;
@@ -275,49 +274,14 @@ namespace MyThirdSDL.UserInterface
 			LabelMoney.Text = money.ToString();
 		}
 
-		public override void Update(GameTime gameTime)
-		{
-			foreach (var control in controls)
-				if (control != null)
-					control.Update(gameTime);
-		}
-
-		public override void Draw(GameTime gameTime, Renderer renderer)
-		{
-			foreach (var control in controls)
-				if (control != null)
-					control.Draw(gameTime, renderer);
-		}
-
-		public override void HandleMouseMovingEvent(object sender, SharpDL.Events.MouseMotionEventArgs e)
+		public override void HandleMouseMovingEvent(object sender, MouseMotionEventArgs e)
 		{
 			if (Bounds.Contains(new Point(e.RelativeToWindowX, e.RelativeToWindowY)))
 				IsHovered = true;
 			else
 				IsHovered = false;
 
-			ButtonSelectGeneral.HandleMouseMovingEvent(sender, e);
-			ButtonSelectEquipment.HandleMouseMovingEvent(sender, e);
-			ButtonSelectRoom.HandleMouseMovingEvent(sender, e);
-			ButtonFinances.HandleMouseMovingEvent(sender, e);
-			ButtonCompany.HandleMouseMovingEvent(sender, e);
-			ButtonEmployees.HandleMouseMovingEvent(sender, e);
-			ButtonProducts.HandleMouseMovingEvent(sender, e);
-			ButtonMainMenu.HandleMouseMovingEvent(sender, e);
-			ButtonMailMenu.HandleMouseMovingEvent(sender, e);
-		}
-
-		public override void HandleMouseButtonPressedEvent(object sender, SharpDL.Events.MouseButtonEventArgs e)
-		{
-			ButtonSelectGeneral.HandleMouseButtonPressedEvent(sender, e);
-			ButtonSelectEquipment.HandleMouseButtonPressedEvent(sender, e);
-			ButtonSelectRoom.HandleMouseButtonPressedEvent(sender, e);
-			ButtonFinances.HandleMouseButtonPressedEvent(sender, e);
-			ButtonCompany.HandleMouseButtonPressedEvent(sender, e);
-			ButtonEmployees.HandleMouseButtonPressedEvent(sender, e);
-			ButtonProducts.HandleMouseButtonPressedEvent(sender, e);
-			ButtonMainMenu.HandleMouseButtonPressedEvent(sender, e);
-			ButtonMailMenu.HandleMouseButtonPressedEvent(sender, e);
+			base.HandleMouseMovingEvent(sender, e);
 		}
 
 		private void ButtonMailMenu_Clicked(object sender, EventArgs e)
@@ -417,20 +381,6 @@ namespace MyThirdSDL.UserInterface
 		{
 			if (ButtonMailMenuClicked != null)
 				ButtonMailMenuClicked(sender, e);
-		}
-
-		public override void Dispose()
-		{
-			Dispose(true);
-			GC.SuppressFinalize(this);
-		}
-
-		private void Dispose(bool disposing)
-		{
-			foreach (var control in controls)
-				if (control != null)
-					control.Dispose();
-			controls.Clear();
 		}
 	}
 }

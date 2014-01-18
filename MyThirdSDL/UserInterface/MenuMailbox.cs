@@ -1,6 +1,7 @@
 ﻿using MyThirdSDL.Content;
 using MyThirdSDL.Mail;
 using SharpDL;
+using SharpDL.Events;
 using SharpDL.Graphics;
 using System;
 using System.Collections.Generic;
@@ -10,11 +11,9 @@ using System.Threading.Tasks;
 
 namespace MyThirdSDL.UserInterface
 {
-	public class MenuMailbox : Control
+	public class MenuMailbox : Menu
 	{
 		#region Members
-
-		private List<Control> controls = new List<Control>();
 
 		private Icon iconFrame;
 
@@ -206,27 +205,28 @@ namespace MyThirdSDL.UserInterface
 			Height = iconFrame.Height;
 
 			string fontPath = contentManager.GetContentPath("Arcade");
-			Color fontColor = Styles.Colors.MainMenuTitleText;
+			Color fontColorWhite = Styles.Colors.White;
+			Color fontColorPaleYellow = Styles.Colors.PaleYellow;
 			int fontSizeTitle = 14;
 			int fontSizeContent = 12;
 
 			iconFolderHeader = new Icon(contentManager.GetTexture("IconFolderOpen"));
 			labelFolderHeader = new Label();
-			labelFolderHeader.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSizeTitle, fontColor, "Folder");
+			labelFolderHeader.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSizeTitle, fontColorWhite, "Folder");
 			labelFolderHeader.EnableShadow(contentManager, 2, 2);
 			labelPageNumber = new Label();
-			labelPageNumber.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSizeContent, fontColor, "N/A");
+			labelPageNumber.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSizeContent, fontColorPaleYellow, "N/A");
 			labelFrom = new Label();
-			labelFrom.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSizeContent, fontColor, "From");
+			labelFrom.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSizeContent, fontColorWhite, "From");
 			labelSubject = new Label();
-			labelSubject.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSizeContent, fontColor, "Subject");
+			labelSubject.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSizeContent, fontColorWhite, "Subject");
 
 			buttonInboxFolder = new Button();
 			buttonInboxFolder.TextureFrame = contentManager.GetTexture("ButtonMailFolder");
 			buttonInboxFolder.TextureFrameHovered = contentManager.GetTexture("ButtonMailFolderHover");
 			buttonInboxFolder.Icon = new Icon(contentManager.GetTexture("IconMailInbox"));
 			buttonInboxFolder.Label = new Label();
-			buttonInboxFolder.Label.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSizeContent, fontColor, "Inbox");
+			buttonInboxFolder.Label.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSizeContent, fontColorPaleYellow, "Inbox");
 			buttonInboxFolder.ButtonType = ButtonType.IconAndText;
 
 			buttonOutboxFolder = new Button();
@@ -234,7 +234,7 @@ namespace MyThirdSDL.UserInterface
 			buttonOutboxFolder.TextureFrameHovered = contentManager.GetTexture("ButtonMailFolderHover");
 			buttonOutboxFolder.Icon = new Icon(contentManager.GetTexture("IconMailOutbox"));
 			buttonOutboxFolder.Label = new Label();
-			buttonOutboxFolder.Label.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSizeContent, fontColor, "Outbox");
+			buttonOutboxFolder.Label.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSizeContent, fontColorPaleYellow, "Outbox");
 			buttonOutboxFolder.ButtonType = ButtonType.IconAndText;
 
 			buttonArchiveFolder = new Button();
@@ -242,7 +242,7 @@ namespace MyThirdSDL.UserInterface
 			buttonArchiveFolder.TextureFrameHovered = contentManager.GetTexture("ButtonMailFolderHover");
 			buttonArchiveFolder.Icon = new Icon(contentManager.GetTexture("IconMailArchive"));
 			buttonArchiveFolder.Label = new Label();
-			buttonArchiveFolder.Label.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSizeContent, fontColor, "Archive");
+			buttonArchiveFolder.Label.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSizeContent, fontColorPaleYellow, "Archive");
 			buttonArchiveFolder.ButtonType = ButtonType.IconAndText;
 
 			buttonArrowLeft = new Button();
@@ -260,13 +260,13 @@ namespace MyThirdSDL.UserInterface
 			buttonArrowRight.ButtonType = ButtonType.IconOnly;
 
 			labelInboxFolder = new Label();
-			labelInboxFolder.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSizeTitle, fontColor, "Inbox");
+			labelInboxFolder.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSizeTitle, fontColorWhite, "Inbox");
 			labelInboxFolder.EnableShadow(contentManager, 2, 2);
 			labelOutboxFolder = new Label();
-			labelOutboxFolder.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSizeTitle, fontColor, "Outbox");
+			labelOutboxFolder.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSizeTitle, fontColorWhite, "Outbox");
 			labelOutboxFolder.EnableShadow(contentManager, 2, 2);
 			labelArchiveFolder = new Label();
-			labelArchiveFolder.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSizeTitle, fontColor, "Archive");
+			labelArchiveFolder.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSizeTitle, fontColorWhite, "Archive");
 			labelArchiveFolder.EnableShadow(contentManager, 2, 2);
 
 			iconInboxFolder = new Icon(contentManager.GetTexture("IconMailInbox"));
@@ -277,7 +277,7 @@ namespace MyThirdSDL.UserInterface
 			buttonView.TextureFrame = contentManager.GetTexture("ButtonMailAction");
 			buttonView.TextureFrameHovered = contentManager.GetTexture("ButtonMailActionHover");
 			buttonView.Label = new Label();
-			buttonView.Label.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSizeContent, fontColor, "View");
+			buttonView.Label.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSizeContent, fontColorWhite, "View");
 			buttonView.ButtonType = ButtonType.TextOnly;
 			buttonView.Visible = false;
 
@@ -285,7 +285,7 @@ namespace MyThirdSDL.UserInterface
 			buttonArchive.TextureFrame = contentManager.GetTexture("ButtonMailAction");
 			buttonArchive.TextureFrameHovered = contentManager.GetTexture("ButtonMailActionHover");
 			buttonArchive.Label = new Label();
-			buttonArchive.Label.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSizeContent, fontColor, "Archive");
+			buttonArchive.Label.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSizeContent, fontColorWhite, "Archive");
 			buttonArchive.ButtonType = ButtonType.TextOnly;
 			buttonArchive.Visible = true;
 
@@ -300,21 +300,21 @@ namespace MyThirdSDL.UserInterface
 
 			AddButtonMailItems(contentManager, inbox, outbox, archive);
 
-			controls.Add(iconFrame);
-			controls.Add(iconFolderHeader);
-			controls.Add(labelFolderHeader);
-			controls.Add(labelPageNumber);
-			controls.Add(labelFrom);
-			controls.Add(labelSubject);
-			controls.Add(buttonInboxFolder);
-			controls.Add(buttonOutboxFolder);
-			controls.Add(buttonArchiveFolder);
-			controls.Add(buttonArrowLeft);
-			controls.Add(buttonArrowRight);
-			controls.Add(buttonView);
-			controls.Add(buttonArchive);
-			controls.Add(iconTopSeparator);
-			controls.Add(buttonCloseWindow);
+			Controls.Add(iconFrame);
+			Controls.Add(iconFolderHeader);
+			Controls.Add(labelFolderHeader);
+			Controls.Add(labelPageNumber);
+			Controls.Add(labelFrom);
+			Controls.Add(labelSubject);
+			Controls.Add(buttonInboxFolder);
+			Controls.Add(buttonOutboxFolder);
+			Controls.Add(buttonArchiveFolder);
+			Controls.Add(buttonArrowLeft);
+			Controls.Add(buttonArrowRight);
+			Controls.Add(buttonView);
+			Controls.Add(buttonArchive);
+			Controls.Add(iconTopSeparator);
+			Controls.Add(buttonCloseWindow);
 
 			this.buttonInboxFolder.Clicked += buttonInboxFolder_Clicked;
 			this.buttonOutboxFolder.Clicked += buttonOutboxFolder_Clicked;
@@ -334,7 +334,7 @@ namespace MyThirdSDL.UserInterface
 		public void AddButtonMailItems(ContentManager contentManager, IEnumerable<MailItem> inbox, IEnumerable<MailItem> outbox, IEnumerable<MailItem> archive)
 		{
 			string fontPath = contentManager.GetContentPath(Styles.FontPaths.Arcade);
-			Color fontColorTitle = Styles.Colors.MainMenuTitleText;
+			Color fontColorTitle = Styles.Colors.PaleGreen;
 			int fontSizeTitle = Styles.FontSizes.Title;
 			int fontSizeContent = Styles.FontSizes.Content;
 
@@ -456,9 +456,7 @@ namespace MyThirdSDL.UserInterface
 
 		public override void Update(GameTime gameTime)
 		{
-			foreach (var control in controls)
-				if (control != null)
-					control.Update(gameTime);
+			base.Update(gameTime);
 
 			if (iconSelectedFolderHeader != null)
 				iconSelectedFolderHeader.Update(gameTime);
@@ -479,9 +477,7 @@ namespace MyThirdSDL.UserInterface
 
 		public override void Draw(GameTime gameTime, Renderer renderer)
 		{
-			foreach (var control in controls)
-				if (control != null)
-					control.Draw(gameTime, renderer);
+			base.Draw(gameTime, renderer);
 
 			if (iconSelectedFolderHeader != null)
 				iconSelectedFolderHeader.Draw(gameTime, renderer);
@@ -500,34 +496,26 @@ namespace MyThirdSDL.UserInterface
 			}
 		}
 
-		public override void HandleMouseButtonPressedEvent(object sender, SharpDL.Events.MouseButtonEventArgs e)
+		public override void HandleMouseButtonPressedEvent(object sender, MouseButtonEventArgs e)
 		{
-			foreach (var control in controls)
-				if (control != null)
-					control.HandleMouseButtonPressedEvent(sender, e);
+			base.HandleMouseButtonPressedEvent(sender, e);
 
 			MailItemPage currentPage = null;
 			bool success = mailItemPages.TryGetValue(CurrentDisplayedPageNumber, out currentPage);
 			if (success)
-			{
 				foreach (var button in currentPage.Buttons)
 					button.HandleMouseButtonPressedEvent(sender, e);
-			}
 		}
 
-		public override void HandleMouseMovingEvent(object sender, SharpDL.Events.MouseMotionEventArgs e)
+		public override void HandleMouseMovingEvent(object sender, MouseMotionEventArgs e)
 		{
-			foreach (var control in controls)
-				if (control != null)
-					control.HandleMouseMovingEvent(sender, e);
+			base.HandleMouseMovingEvent(sender, e);
 
 			MailItemPage currentPage = null;
 			bool success = mailItemPages.TryGetValue(CurrentDisplayedPageNumber, out currentPage);
 			if (success)
-			{
 				foreach (var button in currentPage.Buttons)
 					button.HandleMouseMovingEvent(sender, e);
-			}
 		}
 
 		#endregion
@@ -753,17 +741,9 @@ namespace MyThirdSDL.UserInterface
 
 		#endregion
 
-		public override void Dispose()
-		{
-			Dispose(true);
-			GC.SuppressFinalize(this);
-		}
-
 		private void Dispose(bool disposing)
 		{
-			foreach (var control in controls)
-				if (control != null)
-					control.Dispose();
+			base.Dispose();
 
 			if (iconSelectedFolderHeader != null)
 				iconSelectedFolderHeader.Dispose();
@@ -786,7 +766,6 @@ namespace MyThirdSDL.UserInterface
 				currentPage.Separators.Clear();
 			}
 
-			controls.Clear();
 			mailItemPages.Clear();
 		}
 	}

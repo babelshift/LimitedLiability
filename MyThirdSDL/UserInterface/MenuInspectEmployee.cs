@@ -12,8 +12,10 @@ using MyThirdSDL.Content;
 
 namespace MyThirdSDL.UserInterface
 {
-	public class MenuInspectEmployee : Control
+	public class MenuInspectEmployee : Menu
 	{
+		private string defaultText = "N/A";
+
 		private Icon iconFrame;
 
 		private Label labelHealthValue;
@@ -65,8 +67,6 @@ namespace MyThirdSDL.UserInterface
 		private Button buttonCloseWindow;
 
 		public event EventHandler<EventArgs> ButtonCloseWindowClicked;
-
-		private List<Control> controls = new List<Control>();
 
 		public override Vector Position
 		{
@@ -130,130 +130,107 @@ namespace MyThirdSDL.UserInterface
 			Height = iconFrame.Height;
 
 			string fontPath = contentManager.GetContentPath("Arcade");
-			Color fontColor = Styles.Colors.MainMenuTitleText;
+			Color fontColor = Styles.Colors.White;
+			Color fontColorValue = Styles.Colors.PaleYellow;
 			int fontSizeTitle = 14;
 			int fontSizeContent = 12;
 
-			this.buttonCloseWindow = new Button();
-			this.buttonCloseWindow.TextureFrame = contentManager.GetTexture("ButtonSquare");
-			this.buttonCloseWindow.TextureFrameHovered = contentManager.GetTexture("ButtonSquareHover");
-			this.buttonCloseWindow.Icon = new Icon(contentManager.GetTexture("IconWindowClose"));
-			this.buttonCloseWindow.IconHovered = new Icon(contentManager.GetTexture("IconWindowClose"));
+			buttonCloseWindow = ControlFactory.CreateButton(contentManager, "ButtonSquare", "ButtonSquareHover");
+			buttonCloseWindow.Icon = ControlFactory.CreateIcon(contentManager, "IconWindowClose");
+			buttonCloseWindow.IconHovered = ControlFactory.CreateIcon(contentManager, "IconWindowClose");
 			buttonCloseWindow.ButtonType = ButtonType.IconOnly;
-			this.buttonCloseWindow.Clicked += (object sender, EventArgs e) => EventHelper.FireEvent(ButtonCloseWindowClicked, this, EventArgs.Empty);
+			buttonCloseWindow.Clicked += (object sender, EventArgs e) => EventHelper.FireEvent(ButtonCloseWindowClicked, this, EventArgs.Empty);
 
-			this.iconMainMenu = new Icon(contentManager.GetTexture("IconPersonPlain"));
-			this.iconNeedsMenu = new Icon(contentManager.GetTexture("IconStatistics"));
-			this.iconSkillsMenu = new Icon(contentManager.GetTexture("IconPenPaper"));
+			iconMainMenu = ControlFactory.CreateIcon(contentManager, "IconPersonPlain");
+			iconNeedsMenu = ControlFactory.CreateIcon(contentManager, "IconStatistics");
+			iconSkillsMenu = ControlFactory.CreateIcon(contentManager, "IconPenPaper");
 
-			this.labelMainMenu = new Label();
-			this.labelMainMenu.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSizeTitle, fontColor, "Inspect Employee");
-			this.labelNeedsMenu = new Label();
-			this.labelNeedsMenu.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSizeTitle, fontColor, "Needs");
-			this.labelSkillsMenu = new Label();
-			this.labelSkillsMenu.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSizeTitle, fontColor, "Skills");
+			labelMainMenu = ControlFactory.CreateLabel(contentManager, fontPath, fontSizeTitle, fontColor, "Inspect Employee");
+			labelMainMenu.EnableShadow(contentManager, 2, 2);
+			labelNeedsMenu = ControlFactory.CreateLabel(contentManager, fontPath, fontSizeTitle, fontColor, "Needs");
+			labelNeedsMenu.EnableShadow(contentManager, 2, 2);
+			labelSkillsMenu = ControlFactory.CreateLabel(contentManager, fontPath, fontSizeTitle, fontColor, "Skills");
+			labelSkillsMenu.EnableShadow(contentManager, 2, 2);
 
-			this.iconHealth = new Icon(contentManager.GetTexture("IconMedkit"));
-			this.iconHygiene = new Icon(contentManager.GetTexture("IconToothbrush"));
-			this.iconSleep = new Icon(contentManager.GetTexture("IconPersonTired"));
-			this.iconThirst = new Icon(contentManager.GetTexture("IconSoda"));
-			this.iconHunger = new Icon(contentManager.GetTexture("IconChicken"));
+			iconHealth = ControlFactory.CreateIcon(contentManager, "IconMedkit");
+			iconHygiene = ControlFactory.CreateIcon(contentManager, "IconToothbrush");
+			iconSleep = ControlFactory.CreateIcon(contentManager, "IconPersonTired");
+			iconThirst = ControlFactory.CreateIcon(contentManager, "IconSoda");
+			iconHunger = ControlFactory.CreateIcon(contentManager, "IconChicken");
 
-			this.labelHealthValue = new Label();
-			this.labelHealthValue.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSizeContent, fontColor, "N/A");
-			this.labelHygieneValue = new Label();
-			this.labelHygieneValue.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSizeContent, fontColor, "N/A");
-			this.labelSleepValue = new Label();
-			this.labelSleepValue.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSizeContent, fontColor, "N/A");
-			this.labelThirstValue = new Label();
-			this.labelThirstValue.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSizeContent, fontColor, "N/A");
-			this.labelHungerValue = new Label();
-			this.labelHungerValue.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSizeContent, fontColor, "N/A");
+			labelHealthValue = ControlFactory.CreateLabel(contentManager, fontPath, fontSizeContent, fontColorValue, defaultText);
+			labelHygieneValue = ControlFactory.CreateLabel(contentManager, fontPath, fontSizeContent, fontColorValue, defaultText);
+			labelSleepValue = ControlFactory.CreateLabel(contentManager, fontPath, fontSizeContent, fontColorValue, defaultText);
+			labelThirstValue = ControlFactory.CreateLabel(contentManager, fontPath, fontSizeContent, fontColorValue, defaultText);
+			labelHungerValue = ControlFactory.CreateLabel(contentManager, fontPath, fontSizeContent, fontColorValue, defaultText);
 
-			this.iconCommunication = new Icon(contentManager.GetTexture("IconCommunication"));
-			this.iconLeadership = new Icon(contentManager.GetTexture("IconLeadership"));
-			this.iconCreativity = new Icon(contentManager.GetTexture("IconCreativity"));
-			this.iconIntelligence = new Icon(contentManager.GetTexture("IconIntelligence"));
+			iconCommunication = ControlFactory.CreateIcon(contentManager, "IconCommunication");
+			iconLeadership = ControlFactory.CreateIcon(contentManager, "IconLeadership");
+			iconCreativity = ControlFactory.CreateIcon(contentManager, "IconCreativity");
+			iconIntelligence = ControlFactory.CreateIcon(contentManager, "IconIntelligence");
 
-			this.labelCommunicationValue = new Label();
-			this.labelCommunicationValue.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSizeContent, fontColor, "N/A");
-			this.labelLeadershipValue = new Label();
-			this.labelLeadershipValue.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSizeContent, fontColor, "N/A");
-			this.labelCreativityValue = new Label();
-			this.labelCreativityValue.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSizeContent, fontColor, "N/A");
-			this.labelIntelligenceValue = new Label();
-			this.labelIntelligenceValue.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSizeContent, fontColor, "N/A");
+			labelCommunicationValue = ControlFactory.CreateLabel(contentManager, fontPath, fontSizeContent, fontColorValue, defaultText);
+			labelLeadershipValue = ControlFactory.CreateLabel(contentManager, fontPath, fontSizeContent, fontColorValue, defaultText);
+			labelCreativityValue = ControlFactory.CreateLabel(contentManager, fontPath, fontSizeContent, fontColorValue, defaultText);
+			labelIntelligenceValue = ControlFactory.CreateLabel(contentManager, fontPath, fontSizeContent, fontColorValue, defaultText);
 
-			this.labelName = new Label();
-			this.labelName.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSizeContent, fontColor, "Name:");
-			this.labelAge = new Label();
-			this.labelAge.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSizeContent, fontColor, "Age:");
-			this.labelJob = new Label();
-			this.labelJob.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSizeContent, fontColor, "Job:");
-			this.labelSalary = new Label();
-			this.labelSalary.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSizeContent, fontColor, "Salary:");
-			this.labelStatus = new Label();
-			this.labelStatus.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSizeContent, fontColor, "Status:");
-			this.labelBirth = new Label();
-			this.labelBirth.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSizeContent, fontColor, "Birth:");
-			this.labelMood = new Label();
-			this.labelMood.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSizeContent, fontColor, "Mood:");
+			labelName = ControlFactory.CreateLabel(contentManager, fontPath, fontSizeContent, fontColor, "Name:");
+			labelAge = ControlFactory.CreateLabel(contentManager, fontPath, fontSizeContent, fontColor, "Age:");
+			labelJob = ControlFactory.CreateLabel(contentManager, fontPath, fontSizeContent, fontColor, "Job:");
+			labelSalary = ControlFactory.CreateLabel(contentManager, fontPath, fontSizeContent, fontColor, "Salary:");
+			labelStatus = ControlFactory.CreateLabel(contentManager, fontPath, fontSizeContent, fontColor, "Status:");
+			labelBirth = ControlFactory.CreateLabel(contentManager, fontPath, fontSizeContent, fontColor, "Birth:");
+			labelMood = ControlFactory.CreateLabel(contentManager, fontPath, fontSizeContent, fontColor, "Mood:");
 
-			this.labelNameValue = new Label();
-			this.labelNameValue.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSizeContent, fontColor, "N/A");
-			this.labelAgeValue = new Label();
-			this.labelAgeValue.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSizeContent, fontColor, "N/A");
-			this.labelJobValue = new Label();
-			this.labelJobValue.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSizeContent, fontColor, "N/A");
-			this.labelSalaryValue = new Label();
-			this.labelSalaryValue.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSizeContent, fontColor, "N/A");
-			this.labelStatusValue = new Label();
-			this.labelStatusValue.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSizeContent, fontColor, "N/A");
-			this.labelBirthValue = new Label();
-			this.labelBirthValue.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSizeContent, fontColor, "N/A");
+			labelNameValue = ControlFactory.CreateLabel(contentManager, fontPath, fontSizeContent, fontColorValue, defaultText);
+			labelAgeValue = ControlFactory.CreateLabel(contentManager, fontPath, fontSizeContent, fontColorValue, defaultText);
+			labelJobValue = ControlFactory.CreateLabel(contentManager, fontPath, fontSizeContent, fontColorValue, defaultText);
+			labelSalaryValue = ControlFactory.CreateLabel(contentManager, fontPath, fontSizeContent, fontColorValue, defaultText);
+			labelStatusValue = ControlFactory.CreateLabel(contentManager, fontPath, fontSizeContent, fontColorValue, defaultText);
+			labelBirthValue = ControlFactory.CreateLabel(contentManager, fontPath, fontSizeContent, fontColorValue, defaultText);
 
-			this.iconMoodHappy = new Icon(contentManager.GetTexture("IconPersonHappy"));
-			this.iconMoodAngry = new Icon(contentManager.GetTexture("IconPersonAngry"));
+			iconMoodHappy = ControlFactory.CreateIcon(contentManager, "IconPersonHappy");
+			iconMoodAngry = ControlFactory.CreateIcon(contentManager, "IconPersonAngry");
 			
-			controls.Add(iconFrame);
-			controls.Add(buttonCloseWindow);
-			controls.Add(iconMainMenu);
-			controls.Add(iconNeedsMenu);
-			controls.Add(iconSkillsMenu);
-			controls.Add(labelMainMenu);
-			controls.Add(labelNeedsMenu);
-			controls.Add(labelSkillsMenu);
-			controls.Add(iconHealth);
-			controls.Add(iconHygiene);
-			controls.Add(iconSleep);
-			controls.Add(iconThirst);
-			controls.Add(iconHunger);
-			controls.Add(labelHealthValue);
-			controls.Add(labelHygieneValue);
-			controls.Add(labelSleepValue);
-			controls.Add(labelThirstValue);
-			controls.Add(labelHungerValue);
-			controls.Add(iconCommunication);
-			controls.Add(iconLeadership);
-			controls.Add(iconCreativity);
-			controls.Add(iconIntelligence);
-			controls.Add(labelCommunicationValue);
-			controls.Add(labelLeadershipValue);
-			controls.Add(labelCreativityValue);
-			controls.Add(labelIntelligenceValue);
-			controls.Add(labelName);
-			controls.Add(labelAge);
-			controls.Add(labelJob);
-			controls.Add(labelSalary);
-			controls.Add(labelStatus);
-			controls.Add(labelBirth);
-			controls.Add(labelMood);
-			controls.Add(labelNameValue);
-			controls.Add(labelAgeValue);
-			controls.Add(labelJobValue);
-			controls.Add(labelSalaryValue);
-			controls.Add(labelStatusValue);
-			controls.Add(labelBirthValue);
+			Controls.Add(iconFrame);
+			Controls.Add(buttonCloseWindow);
+			Controls.Add(iconMainMenu);
+			Controls.Add(iconNeedsMenu);
+			Controls.Add(iconSkillsMenu);
+			Controls.Add(labelMainMenu);
+			Controls.Add(labelNeedsMenu);
+			Controls.Add(labelSkillsMenu);
+			Controls.Add(iconHealth);
+			Controls.Add(iconHygiene);
+			Controls.Add(iconSleep);
+			Controls.Add(iconThirst);
+			Controls.Add(iconHunger);
+			Controls.Add(labelHealthValue);
+			Controls.Add(labelHygieneValue);
+			Controls.Add(labelSleepValue);
+			Controls.Add(labelThirstValue);
+			Controls.Add(labelHungerValue);
+			Controls.Add(iconCommunication);
+			Controls.Add(iconLeadership);
+			Controls.Add(iconCreativity);
+			Controls.Add(iconIntelligence);
+			Controls.Add(labelCommunicationValue);
+			Controls.Add(labelLeadershipValue);
+			Controls.Add(labelCreativityValue);
+			Controls.Add(labelIntelligenceValue);
+			Controls.Add(labelName);
+			Controls.Add(labelAge);
+			Controls.Add(labelJob);
+			Controls.Add(labelSalary);
+			Controls.Add(labelStatus);
+			Controls.Add(labelBirth);
+			Controls.Add(labelMood);
+			Controls.Add(labelNameValue);
+			Controls.Add(labelAgeValue);
+			Controls.Add(labelJobValue);
+			Controls.Add(labelSalaryValue);
+			Controls.Add(labelStatusValue);
+			Controls.Add(labelBirthValue);
 		}
 
 		public void SetInfoValues(Employee employee)
@@ -292,34 +269,16 @@ namespace MyThirdSDL.UserInterface
 
 		public override void Update(GameTime gameTime)
 		{
-			foreach (var control in controls)
-				if(control != null)
-					control.Update(gameTime);
+			base.Update(gameTime);
 
 			iconMoodActive.Update(gameTime);
 		}
 
 		public override void Draw(GameTime gameTime, Renderer renderer)
 		{
-			foreach (var control in controls)
-				if (control != null)
-					control.Draw(gameTime, renderer);
+			base.Draw(gameTime, renderer);
 
 			iconMoodActive.Draw(gameTime, renderer);
-		}
-
-		public override void HandleMouseButtonPressedEvent(object sender, SharpDL.Events.MouseButtonEventArgs e)
-		{
-			foreach (var control in controls)
-				if (control != null)
-					control.HandleMouseButtonPressedEvent(sender, e);
-		}
-
-		public override void HandleMouseMovingEvent(object sender, SharpDL.Events.MouseMotionEventArgs e)
-		{
-			foreach (var control in controls)
-				if (control != null)
-					control.HandleMouseMovingEvent(sender, e);
 		}
 
 		public override void Dispose()
@@ -330,14 +289,10 @@ namespace MyThirdSDL.UserInterface
 
 		private void Dispose(bool disposing)
 		{
-			foreach (var control in controls)
-				if(control != null)
-					control.Dispose();
+			base.Dispose();
 
 			if(iconMoodActive != null)
 				iconMoodActive.Dispose();
-
-			controls.Clear();
 		}
 	}
 }

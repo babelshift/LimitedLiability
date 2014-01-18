@@ -32,8 +32,8 @@ namespace MyThirdSDL.Screens
 			base.Activate(renderer);
 
 			string fontPath = ContentManager.GetContentPath(Styles.FontPaths.Arcade);
-			Color fontColorTitle = Styles.Colors.MainMenuTitleText;
-			Color fontColorLabelValue = Styles.Colors.ButtonMainMenuItemText;
+			Color fontColorTitle = Styles.Colors.PaleGreen;
+			Color fontColorLabelValue = Styles.Colors.PaleYellow;
 			int fontSizeTitle = Styles.FontSizes.MainMenuTitle;
 			int fontSizeContent = Styles.FontSizes.Content;
 
