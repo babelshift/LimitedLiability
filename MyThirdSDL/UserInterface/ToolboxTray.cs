@@ -15,22 +15,22 @@ namespace MyThirdSDL.UserInterface
 	{
 		private Icon iconFrame;
 
-		private Button ButtonSelectGeneral { get; set; }
-		private Button ButtonSelectEquipment { get; set; }
-		private Button ButtonSelectRoom { get; set; }
-		private Button ButtonFinances { get; set; }
-		private Button ButtonCompany { get; set; }
-		private Button ButtonEmployees { get; set; }
-		private Button ButtonProducts { get; set; }
-		private Button ButtonMainMenu { get; set; }
-		private Button ButtonMailMenu { get; set; }
+		private Button buttonSelectGeneral;
+		private Button buttonSelectEquipment;
+		private Button buttonSelectRoom;
+		private Button buttonFinances;
+		private Button buttonCompany;
+		private Button buttonEmployees;
+		private Button buttonProducts;
+		private Button buttonMainMenu;
+		private Button buttonMailMenu;
 
-		private Icon IconMoney { get; set; }
-		private Icon IconTime { get; set; }
+		private Icon iconMoney;
+		private Icon iconTime;
 
-		private Label LabelMoney { get; set; }
-		private Label LabelDate { get; set; }
-		private Label LabelTime { get; set; }
+		private Label labelMoney;
+		private Label labelDate;
+		private Label labelTime;
 
 		public bool IsHovered { get; private set; }
 
@@ -72,30 +72,30 @@ namespace MyThirdSDL.UserInterface
 				Vector iconTwoPosition = base.Position + new Vector(toolboxTrayOuterEdgeWidth + toolboxTrayButtonImageOffsetX + toolboxTraySpaceBetweenButtons * 9 + 165, toolboxTrayButtonImageOffsetY + 2);
 
 				iconFrame.Position = base.Position;
-				ButtonSelectGeneral.Position = buttonOnePosition;
-				ButtonSelectEquipment.Position = buttonTwoPosition;
-				ButtonSelectRoom.Position = buttonThreePosition;
-				ButtonFinances.Position = buttonFourPosition;
-				ButtonCompany.Position = buttonFivePosition;
-				ButtonEmployees.Position = buttonSixPosition;
-				ButtonProducts.Position = buttonSevenPosition;
-				ButtonMainMenu.Position = buttonEightPosition;
-				ButtonMailMenu.Position = buttonNinePosition;
-				IconMoney.Position = iconOnePosition;
-				IconTime.Position = iconTwoPosition;
-				LabelMoney.Position = iconOnePosition + new Vector(35, 10);
-				LabelDate.Position = iconTwoPosition + new Vector(32, 3);
-				LabelTime.Position = iconTwoPosition + new Vector(55, 18);
+				buttonSelectGeneral.Position = buttonOnePosition;
+				buttonSelectEquipment.Position = buttonTwoPosition;
+				buttonSelectRoom.Position = buttonThreePosition;
+				buttonFinances.Position = buttonFourPosition;
+				buttonCompany.Position = buttonFivePosition;
+				buttonEmployees.Position = buttonSixPosition;
+				buttonProducts.Position = buttonSevenPosition;
+				buttonMainMenu.Position = buttonEightPosition;
+				buttonMailMenu.Position = buttonNinePosition;
+				iconMoney.Position = iconOnePosition;
+				iconTime.Position = iconTwoPosition;
+				labelMoney.Position = iconOnePosition + new Vector(35, 10);
+				labelDate.Position = iconTwoPosition + new Vector(32, 3);
+				labelTime.Position = iconTwoPosition + new Vector(55, 18);
 
-				ButtonSelectGeneral.Tooltip.Position = new Vector(base.Position.X, base.Position.Y - 25);
-				ButtonSelectEquipment.Tooltip.Position = new Vector(base.Position.X, base.Position.Y - 25);
-				ButtonSelectRoom.Tooltip.Position = new Vector(base.Position.X, base.Position.Y - 25);
-				ButtonFinances.Tooltip.Position = new Vector(base.Position.X, base.Position.Y - 25);
-				ButtonCompany.Tooltip.Position = new Vector(base.Position.X, base.Position.Y - 25);
-				ButtonEmployees.Tooltip.Position = new Vector(base.Position.X, base.Position.Y - 25);
-				ButtonProducts.Tooltip.Position = new Vector(base.Position.X, base.Position.Y - 25);
-				ButtonMainMenu.Tooltip.Position = new Vector(base.Position.X, base.Position.Y - 25);
-				ButtonMailMenu.Tooltip.Position = new Vector(base.Position.X, base.Position.Y - 25);
+				buttonSelectGeneral.Tooltip.Position = new Vector(base.Position.X, base.Position.Y - 25);
+				buttonSelectEquipment.Tooltip.Position = new Vector(base.Position.X, base.Position.Y - 25);
+				buttonSelectRoom.Tooltip.Position = new Vector(base.Position.X, base.Position.Y - 25);
+				buttonFinances.Tooltip.Position = new Vector(base.Position.X, base.Position.Y - 25);
+				buttonCompany.Tooltip.Position = new Vector(base.Position.X, base.Position.Y - 25);
+				buttonEmployees.Tooltip.Position = new Vector(base.Position.X, base.Position.Y - 25);
+				buttonProducts.Tooltip.Position = new Vector(base.Position.X, base.Position.Y - 25);
+				buttonMainMenu.Tooltip.Position = new Vector(base.Position.X, base.Position.Y - 25);
+				buttonMailMenu.Tooltip.Position = new Vector(base.Position.X, base.Position.Y - 25);
 			}
 		}
 
@@ -115,163 +115,112 @@ namespace MyThirdSDL.UserInterface
 			int fontSizeContent = 12;
 			int fontSizeTooltipText = 8;
 
-			ButtonSelectGeneral = new Button();
-			ButtonSelectGeneral.TextureFrame = contentManager.GetTexture(buttonTexturePathKey);
-			ButtonSelectGeneral.TextureFrameHovered = contentManager.GetTexture(buttonHoverTexturePathKey);
-			ButtonSelectGeneral.Icon = new Icon(contentManager.GetTexture("IconArrowsInward"));
-			ButtonSelectGeneral.IconHovered = new Icon(contentManager.GetTexture("IconArrowsInward"));
-			ButtonSelectGeneral.Tooltip = new Tooltip();
-			ButtonSelectGeneral.Tooltip.TextureFrame = contentManager.GetTexture(tooltipTexturePathKey);
-			ButtonSelectGeneral.Tooltip.Label = new Label();
-			ButtonSelectGeneral.Tooltip.Label.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSizeTooltipText, fontColor, "Select objects to inspect them");
-			ButtonSelectGeneral.ButtonType = ButtonType.IconOnly;
+			buttonSelectGeneral = ControlFactory.CreateButton(contentManager, buttonTexturePathKey, buttonHoverTexturePathKey);
+			buttonSelectGeneral.Icon = ControlFactory.CreateIcon(contentManager, "IconArrowsInward");
+			buttonSelectGeneral.IconHovered =ControlFactory.CreateIcon(contentManager, "IconArrowsInward");
+			buttonSelectGeneral.Tooltip = ControlFactory.CreateTooltip(contentManager, tooltipTexturePathKey, fontPath, fontSizeTooltipText, fontColor, "Select objects to inspect them");
+			buttonSelectGeneral.ButtonType = ButtonType.IconOnly;
 
-			ButtonSelectEquipment = new Button();
-			ButtonSelectEquipment.TextureFrame = contentManager.GetTexture(buttonTexturePathKey);
-			ButtonSelectEquipment.TextureFrameHovered = contentManager.GetTexture(buttonHoverTexturePathKey);
-			ButtonSelectEquipment.Icon = new Icon(contentManager.GetTexture("IconHandTruck"));
-			ButtonSelectEquipment.IconHovered = new Icon(contentManager.GetTexture("IconHandTruck"));
-			ButtonSelectEquipment.Tooltip = new Tooltip();
-			ButtonSelectEquipment.Tooltip.TextureFrame = contentManager.GetTexture(tooltipTexturePathKey);
-			ButtonSelectEquipment.Tooltip.Label = new Label();
-			ButtonSelectEquipment.Tooltip.Label.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSizeTooltipText, fontColor, "View equipment to purchase");
-			ButtonSelectEquipment.ButtonType = ButtonType.IconOnly;
+			buttonSelectEquipment = ControlFactory.CreateButton(contentManager, buttonTexturePathKey, buttonHoverTexturePathKey);
+			buttonSelectEquipment.Icon = ControlFactory.CreateIcon(contentManager, "IconHandTruck");
+			buttonSelectEquipment.IconHovered = ControlFactory.CreateIcon(contentManager, "IconHandTruck");
+			buttonSelectEquipment.Tooltip = ControlFactory.CreateTooltip(contentManager, tooltipTexturePathKey, fontPath, fontSizeTooltipText, fontColor, "View equipment to purchase");
+			buttonSelectEquipment.ButtonType = ButtonType.IconOnly;
 
-			ButtonSelectRoom = new Button();
-			ButtonSelectRoom.TextureFrame = contentManager.GetTexture(buttonTexturePathKey);
-			ButtonSelectRoom.TextureFrameHovered = contentManager.GetTexture(buttonHoverTexturePathKey);
-			ButtonSelectRoom.Icon = new Icon(contentManager.GetTexture("IconForklift"));
-			ButtonSelectRoom.IconHovered = new Icon(contentManager.GetTexture("IconForklift"));
-			ButtonSelectRoom.Tooltip = new Tooltip();
-			ButtonSelectRoom.Tooltip.TextureFrame = contentManager.GetTexture(tooltipTexturePathKey);
-			ButtonSelectRoom.Tooltip.Label = new Label();
-			ButtonSelectRoom.Tooltip.Label.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSizeTooltipText, fontColor, "View rooms to purchase");
-			ButtonSelectRoom.ButtonType = ButtonType.IconOnly;
+			buttonSelectRoom = ControlFactory.CreateButton(contentManager, buttonTexturePathKey, buttonHoverTexturePathKey);
+			buttonSelectRoom.Icon = ControlFactory.CreateIcon(contentManager, "IconForklift");
+			buttonSelectRoom.IconHovered = ControlFactory.CreateIcon(contentManager, "IconForklift");
+			buttonSelectRoom.Tooltip = ControlFactory.CreateTooltip(contentManager, tooltipTexturePathKey,fontPath, fontSizeTooltipText, fontColor, "View rooms to purchase");
+			buttonSelectRoom.ButtonType = ButtonType.IconOnly;
 
-			ButtonFinances = new Button();
-			ButtonFinances.TextureFrame = contentManager.GetTexture(buttonTexturePathKey);
-			ButtonFinances.TextureFrameHovered = contentManager.GetTexture(buttonHoverTexturePathKey);
-			ButtonFinances.Icon = new Icon(contentManager.GetTexture("IconBarChartUp"));
-			ButtonFinances.IconHovered = new Icon(contentManager.GetTexture("IconBarChartUp"));
-			ButtonFinances.Tooltip = new Tooltip();
-			ButtonFinances.Tooltip.TextureFrame = contentManager.GetTexture(tooltipTexturePathKey);
-			ButtonFinances.Tooltip.Label = new Label();
-			ButtonFinances.Tooltip.Label.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSizeTooltipText, fontColor, "View your company's finances");
-			ButtonFinances.ButtonType = ButtonType.IconOnly;
+			buttonFinances = ControlFactory.CreateButton(contentManager, buttonTexturePathKey, buttonHoverTexturePathKey);
+			buttonFinances.Icon = ControlFactory.CreateIcon(contentManager, "IconBarChartUp");
+			buttonFinances.IconHovered = ControlFactory.CreateIcon(contentManager, "IconBarChartUp");
+			buttonFinances.Tooltip = ControlFactory.CreateTooltip(contentManager, tooltipTexturePathKey, fontPath, fontSizeTooltipText, fontColor, "View your company's finances");
+			buttonFinances.ButtonType = ButtonType.IconOnly;
 
-			ButtonCompany = new Button();
-			ButtonCompany.TextureFrame = contentManager.GetTexture(buttonTexturePathKey);
-			ButtonCompany.TextureFrameHovered = contentManager.GetTexture(buttonHoverTexturePathKey);
-			ButtonCompany.Icon = new Icon(contentManager.GetTexture("IconPenPaper"));
-			ButtonCompany.IconHovered = new Icon(contentManager.GetTexture("IconPenPaper"));
-			ButtonCompany.Tooltip = new Tooltip();
-			ButtonCompany.Tooltip.TextureFrame = contentManager.GetTexture(tooltipTexturePathKey);
-			ButtonCompany.Tooltip.Label = new Label();
-			ButtonCompany.Tooltip.Label.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSizeTooltipText, fontColor, "View your company's health and statistics");
-			ButtonCompany.ButtonType = ButtonType.IconOnly;
+			buttonCompany = ControlFactory.CreateButton(contentManager, buttonTexturePathKey, buttonHoverTexturePathKey);
+			buttonCompany.Icon = ControlFactory.CreateIcon(contentManager, "IconPenPaper");
+			buttonCompany.IconHovered = ControlFactory.CreateIcon(contentManager, "IconPenPaper");
+			buttonCompany.Tooltip = ControlFactory.CreateTooltip(contentManager, tooltipTexturePathKey, fontPath, fontSizeTooltipText, fontColor, "View your company's health and statistics");
+			buttonCompany.ButtonType = ButtonType.IconOnly;
 
-			ButtonEmployees = new Button();
-			ButtonEmployees.TextureFrame = contentManager.GetTexture(buttonTexturePathKey);
-			ButtonEmployees.TextureFrameHovered = contentManager.GetTexture(buttonHoverTexturePathKey);
-			ButtonEmployees.Icon = new Icon(contentManager.GetTexture("IconPersonPlain"));
-			ButtonEmployees.IconHovered = new Icon(contentManager.GetTexture("IconPersonPlain"));
-			ButtonEmployees.Tooltip = new Tooltip();
-			ButtonEmployees.Tooltip.TextureFrame = contentManager.GetTexture(tooltipTexturePathKey);
-			ButtonEmployees.Tooltip.Label = new Label();
-			ButtonEmployees.Tooltip.Label.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSizeTooltipText, fontColor, "View your employee information");
-			ButtonEmployees.ButtonType = ButtonType.IconOnly;
+			buttonEmployees = ControlFactory.CreateButton(contentManager, buttonTexturePathKey, buttonHoverTexturePathKey);
+			buttonEmployees.Icon = ControlFactory.CreateIcon(contentManager, "IconPersonPlain");
+			buttonEmployees.IconHovered = ControlFactory.CreateIcon(contentManager, "IconPersonPlain");
+			buttonEmployees.Tooltip = ControlFactory.CreateTooltip(contentManager, tooltipTexturePathKey, fontPath, fontSizeTooltipText, fontColor, "View your employee information");
+			buttonEmployees.ButtonType = ButtonType.IconOnly;
 
-			ButtonProducts = new Button();
-			ButtonProducts.TextureFrame = contentManager.GetTexture(buttonTexturePathKey);
-			ButtonProducts.TextureFrameHovered = contentManager.GetTexture(buttonHoverTexturePathKey);
-			ButtonProducts.Icon = new Icon(contentManager.GetTexture("IconOpenBox"));
-			ButtonProducts.IconHovered = new Icon(contentManager.GetTexture("IconOpenBox"));
-			ButtonProducts.Tooltip = new Tooltip();
-			ButtonProducts.Tooltip.TextureFrame = contentManager.GetTexture(tooltipTexturePathKey);
-			ButtonProducts.Tooltip.Label = new Label();
-			ButtonProducts.Tooltip.Label.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSizeTooltipText, fontColor, "View your products and services");
-			ButtonProducts.ButtonType = ButtonType.IconOnly;
+			buttonProducts = ControlFactory.CreateButton(contentManager, buttonTexturePathKey, buttonHoverTexturePathKey);
+			buttonProducts.Icon = ControlFactory.CreateIcon(contentManager, "IconOpenBox");
+			buttonProducts.IconHovered = ControlFactory.CreateIcon(contentManager, "IconOpenBox");
+			buttonProducts.Tooltip = ControlFactory.CreateTooltip(contentManager, tooltipTexturePathKey, fontPath, fontSizeTooltipText, fontColor, "View your products and services");
+			buttonProducts.ButtonType = ButtonType.IconOnly;
 
-			ButtonMainMenu = new Button();
-			ButtonMainMenu.TextureFrame = contentManager.GetTexture(buttonTexturePathKey);
-			ButtonMainMenu.TextureFrameHovered = contentManager.GetTexture(buttonHoverTexturePathKey);
-			ButtonMainMenu.Icon = new Icon(contentManager.GetTexture("IconWindow"));
-			ButtonMainMenu.IconHovered = new Icon(contentManager.GetTexture("IconWindow"));
-			ButtonMainMenu.Tooltip = new Tooltip();
-			ButtonMainMenu.Tooltip.TextureFrame = contentManager.GetTexture(tooltipTexturePathKey);
-			ButtonMainMenu.Tooltip.Label = new Label();
-			ButtonMainMenu.Tooltip.Label.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSizeTooltipText, fontColor, "View the main menu");
-			ButtonMainMenu.ButtonType = ButtonType.IconOnly;
+			buttonMainMenu = ControlFactory.CreateButton(contentManager, buttonTexturePathKey, buttonHoverTexturePathKey);
+			buttonMainMenu.Icon = ControlFactory.CreateIcon(contentManager, "IconWindow");
+			buttonMainMenu.IconHovered = ControlFactory.CreateIcon(contentManager, "IconWindow");
+			buttonMainMenu.Tooltip = ControlFactory.CreateTooltip(contentManager, tooltipTexturePathKey, fontPath, fontSizeTooltipText, fontColor, "View the main menu");
+			buttonMainMenu.ButtonType = ButtonType.IconOnly;
 
-			ButtonMailMenu = new Button();
-			ButtonMailMenu.TextureFrame = contentManager.GetTexture("ToolboxTrayButtonMail");
-			ButtonMailMenu.TextureFrameHovered = contentManager.GetTexture("ToolboxTrayButtonMailHover");
-			ButtonMailMenu.Icon = new Icon(contentManager.GetTexture("IconMailUnread"));
-			ButtonMailMenu.IconHovered = new Icon(contentManager.GetTexture("IconMailUnread"));
-			ButtonMailMenu.Tooltip = new Tooltip();
-			ButtonMailMenu.Tooltip.TextureFrame = contentManager.GetTexture(tooltipTexturePathKey);
-			ButtonMailMenu.Tooltip.Label = new Label();
-			ButtonMailMenu.Tooltip.Label.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSizeTooltipText, fontColor, "View your e-mail messages");
-			ButtonMailMenu.Label = new Label();
-			ButtonMailMenu.Label.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSizeContent, fontColor, unreadMailCount.ToString());
-			ButtonMailMenu.ButtonType = ButtonType.IconAndText;
+			buttonMailMenu = ControlFactory.CreateButton(contentManager, "ToolboxTrayButtonMail", "ToolboxTrayButtonMailHover");
+			buttonMailMenu.Icon = ControlFactory.CreateIcon(contentManager, "IconMailUnread");
+			buttonMailMenu.IconHovered = ControlFactory.CreateIcon(contentManager, "IconMailUnread");
+			buttonMailMenu.Tooltip = ControlFactory.CreateTooltip(contentManager, tooltipTexturePathKey, fontPath, fontSizeTooltipText, fontColor, "View your e-mail messages");
+			buttonMailMenu.Label = ControlFactory.CreateLabel(contentManager, fontPath, fontSizeContent, fontColor, unreadMailCount.ToString());
+			buttonMailMenu.ButtonType = ButtonType.IconAndText;
 
-			Texture textureIconMoney = contentManager.GetTexture("IconMoney");
-			IconMoney = new Icon(textureIconMoney);
+			iconMoney = ControlFactory.CreateIcon(contentManager, "IconMoney");
+			
+			iconTime = ControlFactory.CreateIcon(contentManager, "IconTime");
 
-			Texture textureIconTime = contentManager.GetTexture("IconTime");
-			IconTime = new Icon(textureIconTime);
+			labelMoney = ControlFactory.CreateLabel(contentManager, fontPath, fontSizeContent, fontColor, money.ToString());
 
-			LabelMoney = new Label();
-			LabelMoney.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSizeContent, fontColor, money.ToString());
+			labelDate = ControlFactory.CreateLabel(contentManager, fontPath, fontSizeContent, fontColor, DateTime.Now.ToShortDateString());
 
-			LabelDate = new Label();
-			LabelDate.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSizeContent, fontColor, DateTime.Now.ToShortDateString());
-
-			LabelTime = new Label();
-			LabelTime.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSizeContent, fontColor, DateTime.Now.ToShortTimeString());
+			labelTime = ControlFactory.CreateLabel(contentManager, fontPath, fontSizeContent, fontColor, DateTime.Now.ToShortTimeString());
 
 			Controls.Add(iconFrame);
-			Controls.Add(ButtonSelectGeneral);
-			Controls.Add(ButtonSelectEquipment);
-			Controls.Add(ButtonSelectRoom);
-			Controls.Add(ButtonFinances);
-			Controls.Add(ButtonCompany);
-			Controls.Add(ButtonEmployees);
-			Controls.Add(ButtonProducts);
-			Controls.Add(ButtonMainMenu);
-			Controls.Add(ButtonMailMenu);
-			Controls.Add(IconMoney);
-			Controls.Add(IconTime);
-			Controls.Add(LabelMoney);
-			Controls.Add(LabelDate);
-			Controls.Add(LabelTime);
+			Controls.Add(buttonSelectGeneral);
+			Controls.Add(buttonSelectEquipment);
+			Controls.Add(buttonSelectRoom);
+			Controls.Add(buttonFinances);
+			Controls.Add(buttonCompany);
+			Controls.Add(buttonEmployees);
+			Controls.Add(buttonProducts);
+			Controls.Add(buttonMainMenu);
+			Controls.Add(buttonMailMenu);
+			Controls.Add(iconMoney);
+			Controls.Add(iconTime);
+			Controls.Add(labelMoney);
+			Controls.Add(labelDate);
+			Controls.Add(labelTime);
 
-			ButtonSelectGeneral.Clicked += ButtonSelectGeneral_Clicked;
-			ButtonSelectEquipment.Clicked += ButtonSelectEquipment_Clicked;
-			ButtonSelectRoom.Clicked += ButtonSelectRoom_Clicked;
-			ButtonFinances.Clicked += ButtonFinances_Clicked;
-			ButtonCompany.Clicked += ButtonCompany_Clicked;
-			ButtonEmployees.Clicked += ButtonEmployees_Clicked;
-			ButtonProducts.Clicked += ButtonProducts_Clicked;
-			ButtonMainMenu.Clicked += ButtonMainMenu_Clicked;
-			ButtonMailMenu.Clicked += ButtonMailMenu_Clicked;
+			buttonSelectGeneral.Clicked += ButtonSelectGeneral_Clicked;
+			buttonSelectEquipment.Clicked += ButtonSelectEquipment_Clicked;
+			buttonSelectRoom.Clicked += ButtonSelectRoom_Clicked;
+			buttonFinances.Clicked += ButtonFinances_Clicked;
+			buttonCompany.Clicked += ButtonCompany_Clicked;
+			buttonEmployees.Clicked += ButtonEmployees_Clicked;
+			buttonProducts.Clicked += ButtonProducts_Clicked;
+			buttonMainMenu.Clicked += ButtonMainMenu_Clicked;
+			buttonMailMenu.Clicked += ButtonMailMenu_Clicked;
 		}
 
 		public void UpdateDisplayedDateAndTime(DateTime dateTime)
 		{
-			LabelTime.Text = dateTime.ToShortTimeString();
-			LabelDate.Text = dateTime.ToShortDateString();
+			labelTime.Text = dateTime.ToShortTimeString();
+			labelDate.Text = dateTime.ToShortDateString();
 		}
 
 		public void UpdateDisplayedUnreadMailCount(int unreadMailCount)
 		{
-			ButtonMailMenu.Text = unreadMailCount.ToString();
+			buttonMailMenu.Text = unreadMailCount.ToString();
 		}
 
 		public void UpdateDisplayedBankAccountBalance(int money)
 		{
-			LabelMoney.Text = money.ToString();
+			labelMoney.Text = money.ToString();
 		}
 
 		public override void HandleMouseMovingEvent(object sender, MouseMotionEventArgs e)

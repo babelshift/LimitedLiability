@@ -210,92 +210,64 @@ namespace MyThirdSDL.UserInterface
 			int fontSizeTitle = 14;
 			int fontSizeContent = 12;
 
-			iconFolderHeader = new Icon(contentManager.GetTexture("IconFolderOpen"));
-			labelFolderHeader = new Label();
-			labelFolderHeader.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSizeTitle, fontColorWhite, "Folder");
+			iconFolderHeader = ControlFactory.CreateIcon(contentManager, "IconFolderOpen");
+			labelFolderHeader = ControlFactory.CreateLabel(contentManager, fontPath, fontSizeTitle, fontColorWhite, "Folder");
 			labelFolderHeader.EnableShadow(contentManager, 2, 2);
-			labelPageNumber = new Label();
-			labelPageNumber.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSizeContent, fontColorPaleYellow, "N/A");
-			labelFrom = new Label();
-			labelFrom.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSizeContent, fontColorWhite, "From");
-			labelSubject = new Label();
-			labelSubject.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSizeContent, fontColorWhite, "Subject");
+			labelPageNumber = ControlFactory.CreateLabel(contentManager, fontPath, fontSizeContent, fontColorPaleYellow, "N/A");
+			labelFrom = ControlFactory.CreateLabel(contentManager, fontPath, fontSizeContent, fontColorWhite, "From");
+			labelSubject = ControlFactory.CreateLabel(contentManager, fontPath, fontSizeContent, fontColorWhite, "Subject");
 
-			buttonInboxFolder = new Button();
-			buttonInboxFolder.TextureFrame = contentManager.GetTexture("ButtonMailFolder");
-			buttonInboxFolder.TextureFrameHovered = contentManager.GetTexture("ButtonMailFolderHover");
-			buttonInboxFolder.Icon = new Icon(contentManager.GetTexture("IconMailInbox"));
-			buttonInboxFolder.Label = new Label();
-			buttonInboxFolder.Label.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSizeContent, fontColorPaleYellow, "Inbox");
+			buttonInboxFolder = ControlFactory.CreateButton(contentManager, "ButtonMailFolder", "ButtonMailFolderHover");
+			buttonInboxFolder.Icon = ControlFactory.CreateIcon(contentManager, "IconMailInbox");
+			buttonInboxFolder.Label = ControlFactory.CreateLabel(contentManager, fontPath, fontSizeContent, fontColorPaleYellow, "Inbox");
 			buttonInboxFolder.ButtonType = ButtonType.IconAndText;
 
-			buttonOutboxFolder = new Button();
-			buttonOutboxFolder.TextureFrame = contentManager.GetTexture("ButtonMailFolder");
-			buttonOutboxFolder.TextureFrameHovered = contentManager.GetTexture("ButtonMailFolderHover");
-			buttonOutboxFolder.Icon = new Icon(contentManager.GetTexture("IconMailOutbox"));
-			buttonOutboxFolder.Label = new Label();
-			buttonOutboxFolder.Label.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSizeContent, fontColorPaleYellow, "Outbox");
+			buttonOutboxFolder = ControlFactory.CreateButton(contentManager, "ButtonMailFolder", "ButtonMailFolderHover");
+			buttonOutboxFolder.Icon = ControlFactory.CreateIcon(contentManager, "IconMailOutbox");
+			buttonOutboxFolder.Label = ControlFactory.CreateLabel(contentManager, fontPath, fontSizeContent, fontColorPaleYellow, "Outbox");
 			buttonOutboxFolder.ButtonType = ButtonType.IconAndText;
 
-			buttonArchiveFolder = new Button();
-			buttonArchiveFolder.TextureFrame = contentManager.GetTexture("ButtonMailFolder");
-			buttonArchiveFolder.TextureFrameHovered = contentManager.GetTexture("ButtonMailFolderHover");
-			buttonArchiveFolder.Icon = new Icon(contentManager.GetTexture("IconMailArchive"));
-			buttonArchiveFolder.Label = new Label();
-			buttonArchiveFolder.Label.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSizeContent, fontColorPaleYellow, "Archive");
+			buttonArchiveFolder = ControlFactory.CreateButton(contentManager, "ButtonMailFolder", "ButtonMailFolderHover");
+			buttonArchiveFolder.Icon = ControlFactory.CreateIcon(contentManager, "IconMailArchive");
+			buttonArchiveFolder.Label = ControlFactory.CreateLabel(contentManager, fontPath, fontSizeContent, fontColorPaleYellow, "Archive");
 			buttonArchiveFolder.ButtonType = ButtonType.IconAndText;
 
-			buttonArrowLeft = new Button();
-			buttonArrowLeft.TextureFrame = contentManager.GetTexture("ButtonSquare");
-			buttonArrowLeft.TextureFrameHovered = contentManager.GetTexture("ButtonSquareHover");
-			buttonArrowLeft.Icon = new Icon(contentManager.GetTexture("IconArrowCircleLeft"));
-			buttonArrowLeft.IconHovered = new Icon(contentManager.GetTexture("IconArrowCircleLeft"));
+			buttonArrowLeft = ControlFactory.CreateButton(contentManager, "ButtonSquare", "ButtonSquareHover");
+			buttonArrowLeft.Icon = ControlFactory.CreateIcon(contentManager, "IconArrowCircleLeft");
+			buttonArrowLeft.IconHovered = ControlFactory.CreateIcon(contentManager, "IconArrowCircleLeft");
 			buttonArrowLeft.ButtonType = ButtonType.IconOnly;
 
-			buttonArrowRight = new Button();
-			buttonArrowRight.TextureFrame = contentManager.GetTexture("ButtonSquare");
-			buttonArrowRight.TextureFrameHovered = contentManager.GetTexture("ButtonSquareHover");
-			buttonArrowRight.Icon = new Icon(contentManager.GetTexture("IconArrowCircleRight"));
-			buttonArrowRight.IconHovered = new Icon(contentManager.GetTexture("IconArrowCircleRight"));
+			buttonArrowRight = ControlFactory.CreateButton(contentManager, "ButtonSquare", "ButtonSquareHover");
+			buttonArrowRight.Icon = ControlFactory.CreateIcon(contentManager, "IconArrowCircleRight");
+			buttonArrowRight.IconHovered = ControlFactory.CreateIcon(contentManager, "IconArrowCircleRight");
 			buttonArrowRight.ButtonType = ButtonType.IconOnly;
 
-			labelInboxFolder = new Label();
-			labelInboxFolder.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSizeTitle, fontColorWhite, "Inbox");
+			labelInboxFolder = ControlFactory.CreateLabel(contentManager, fontPath, fontSizeTitle, fontColorWhite, "Inbox");
 			labelInboxFolder.EnableShadow(contentManager, 2, 2);
-			labelOutboxFolder = new Label();
-			labelOutboxFolder.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSizeTitle, fontColorWhite, "Outbox");
+			labelOutboxFolder = ControlFactory.CreateLabel(contentManager, fontPath, fontSizeTitle, fontColorWhite, "Outbox");
 			labelOutboxFolder.EnableShadow(contentManager, 2, 2);
-			labelArchiveFolder = new Label();
-			labelArchiveFolder.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSizeTitle, fontColorWhite, "Archive");
+			labelArchiveFolder = ControlFactory.CreateLabel(contentManager, fontPath, fontSizeTitle, fontColorWhite, "Archive");
 			labelArchiveFolder.EnableShadow(contentManager, 2, 2);
 
-			iconInboxFolder = new Icon(contentManager.GetTexture("IconMailInbox"));
-			iconOutboxFolder = new Icon(contentManager.GetTexture("IconMailOutbox"));
-			iconArchiveFolder = new Icon(contentManager.GetTexture("IconMailArchive"));
+			iconInboxFolder = ControlFactory.CreateIcon(contentManager, "IconMailInbox");
+			iconOutboxFolder = ControlFactory.CreateIcon(contentManager, "IconMailOutbox");
+			iconArchiveFolder = ControlFactory.CreateIcon(contentManager, "IconMailArchive");
 
-			buttonView = new Button();
-			buttonView.TextureFrame = contentManager.GetTexture("ButtonMailAction");
-			buttonView.TextureFrameHovered = contentManager.GetTexture("ButtonMailActionHover");
-			buttonView.Label = new Label();
-			buttonView.Label.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSizeContent, fontColorWhite, "View");
+			buttonView = ControlFactory.CreateButton(contentManager, "ButtonMailAction", "ButtonMailActionHover");
+			buttonView.Label = ControlFactory.CreateLabel(contentManager, fontPath, fontSizeContent, fontColorWhite, "View");
 			buttonView.ButtonType = ButtonType.TextOnly;
 			buttonView.Visible = false;
 
-			buttonArchive = new Button();
-			buttonArchive.TextureFrame = contentManager.GetTexture("ButtonMailAction");
-			buttonArchive.TextureFrameHovered = contentManager.GetTexture("ButtonMailActionHover");
-			buttonArchive.Label = new Label();
-			buttonArchive.Label.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSizeContent, fontColorWhite, "Archive");
+			buttonArchive = ControlFactory.CreateButton(contentManager, "ButtonMailAction", "ButtonMailActionHover");
+			buttonArchive.Label = ControlFactory.CreateLabel(contentManager, fontPath, fontSizeContent, fontColorWhite, "Archive");
 			buttonArchive.ButtonType = ButtonType.TextOnly;
 			buttonArchive.Visible = true;
 
-			iconTopSeparator = new Icon(contentManager.GetTexture("IconSeparator"));
+			iconTopSeparator = ControlFactory.CreateIcon(contentManager, "IconSeparator");
 
-			buttonCloseWindow = new Button();
-			buttonCloseWindow.TextureFrame = contentManager.GetTexture("ButtonSquare");
-			buttonCloseWindow.TextureFrameHovered = contentManager.GetTexture("ButtonSquareHover");
-			buttonCloseWindow.Icon = new Icon(contentManager.GetTexture("IconWindowClose"));
-			buttonCloseWindow.IconHovered = new Icon(contentManager.GetTexture("IconWindowClose"));
+			buttonCloseWindow = ControlFactory.CreateButton(contentManager, "ButtonSquare", "ButtonSquareHover");
+			buttonCloseWindow.Icon = ControlFactory.CreateIcon(contentManager, "IconWindowClose");
+			buttonCloseWindow.IconHovered = ControlFactory.CreateIcon(contentManager, "IconWindowClose");
 			buttonCloseWindow.ButtonType = ButtonType.IconOnly;
 
 			AddButtonMailItems(contentManager, inbox, outbox, archive);

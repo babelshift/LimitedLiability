@@ -72,5 +72,27 @@ namespace MyThirdSDL.UserInterface
 
 			return label;
 		}
+
+		public static Tooltip CreateTooltip(ContentManager contentManager, string textureFrameKey, string fontPath, int fontSize, Color fontColor, string text)
+		{
+			if (String.IsNullOrEmpty(textureFrameKey))
+				throw new ArgumentNullException("textureFrameKey");
+
+			if (String.IsNullOrEmpty(fontPath))
+				throw new ArgumentNullException("fontPath");
+
+			if (String.IsNullOrEmpty(text))
+				throw new ArgumentNullException("text");
+
+			if (fontSize <= 0)
+				throw new ArgumentOutOfRangeException("fontSize");
+
+			Tooltip tooltip = new Tooltip();
+			tooltip.TextureFrame = contentManager.GetTexture(textureFrameKey);
+			tooltip.Label = new Label();
+			tooltip.Label.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSize, fontColor, text);
+
+			return tooltip;
+		}
 	}
 }
