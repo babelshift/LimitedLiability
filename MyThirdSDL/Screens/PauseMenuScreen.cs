@@ -14,7 +14,6 @@ namespace MyThirdSDL.Screens
 		private Texture textureBackgroundStripeTile;
 		private Icon iconFrame;
 		private Label labelTitle;
-		private Label labelTitleShadow;
 		private Button buttonResumeGame;
 		private Button buttonNewGame;
 		private Button buttonLoadGame;
@@ -42,7 +41,6 @@ namespace MyThirdSDL.Screens
 
 			string fontPath = ContentManager.GetContentPath(Styles.FontPaths.Arcade);
 			Color fontColorTitle = Styles.Colors.MainMenuTitleText;
-			Color fontColorTitleShadow = Styles.Colors.MainMenuTitleTextShadow;
 			Color fontColorLabelValue = Styles.Colors.ButtonMainMenuItemText;
 			int fontSizeTitle = Styles.FontSizes.MainMenuTitle;
 			int fontSizeContent = Styles.FontSizes.Content;
@@ -53,10 +51,7 @@ namespace MyThirdSDL.Screens
 			labelTitle = new Label();
 			labelTitle.TrueTypeText = ContentManager.GetTrueTypeText(fontPath, fontSizeTitle, fontColorTitle, "Paused");
 			labelTitle.Position = iconFrame.Position + new Vector(iconFrame.Width / 2 - labelTitle.Width / 2, 15);
-
-			labelTitleShadow = new Label();
-			labelTitleShadow.TrueTypeText = TrueTypeTextFactory.CreateTrueTypeText(renderer, fontPath, fontSizeTitle, fontColorTitleShadow, "Paused");
-			labelTitleShadow.Position = iconFrame.Position + new Vector((iconFrame.Width / 2 - labelTitle.Width / 2) + 4, 19);
+			labelTitle.EnableShadow(ContentManager, 3, 3);
 
 			buttonResumeGame = new Button();
 			buttonResumeGame.TextureFrame = ContentManager.GetTexture("ButtonMainMenuItem");
@@ -113,7 +108,6 @@ namespace MyThirdSDL.Screens
 					renderer.RenderTexture(textureBackgroundStripeTile, x * textureBackgroundStripeTile.Width, y * textureBackgroundStripeTile.Height);
 
 			iconFrame.Draw(gameTime, renderer);
-			labelTitleShadow.Draw(gameTime, renderer);
 			labelTitle.Draw(gameTime, renderer);
 			buttonResumeGame.Draw(gameTime, renderer);
 			buttonNewGame.Draw(gameTime, renderer);
@@ -127,7 +121,6 @@ namespace MyThirdSDL.Screens
 			base.Update(gameTime, otherWindowHasFocus, coveredByOtherScreen);
 
 			iconFrame.Update(gameTime);
-			labelTitleShadow.Update(gameTime);
 			labelTitle.Update(gameTime);
 			buttonResumeGame.Update(gameTime);
 			buttonNewGame.Update(gameTime);
@@ -199,7 +192,6 @@ namespace MyThirdSDL.Screens
 
 		private void Dispose(bool disposing)
 		{
-			labelTitleShadow.Dispose();
 			labelTitle.Dispose();
 			buttonNewGame.Dispose();
 			buttonLoadGame.Dispose();

@@ -14,6 +14,9 @@ namespace MyThirdSDL.UserInterface
 		private TrueTypeText trueTypeText;
 		private TrueTypeText trueTypeTextShadow;
 
+		private int shadowOffsetX = 2;
+		private int shadowOffsetY = 2;
+
 		public TrueTypeText TrueTypeText
 		{
 			get { return trueTypeText; }
@@ -36,8 +39,10 @@ namespace MyThirdSDL.UserInterface
 			}
 		}
 
-		public void EnableShadow(ContentManager contentManager)
+		public void EnableShadow(ContentManager contentManager, int shadowOffsetX, int shadowOffsetY)
 		{
+			this.shadowOffsetX = shadowOffsetX;
+			this.shadowOffsetY = shadowOffsetY;
 			trueTypeTextShadow = contentManager.GetTrueTypeText(TrueTypeText.Font.FilePath, TrueTypeText.Font.PointSize, Styles.Colors.MainMenuTitleTextShadow, Text);
 		}
 
@@ -56,7 +61,7 @@ namespace MyThirdSDL.UserInterface
 				if (TrueTypeText != null)
 				{
 					if (trueTypeTextShadow != null)
-						renderer.RenderTexture(trueTypeTextShadow.Texture, Position.X + 2, Position.Y + 2);
+						renderer.RenderTexture(trueTypeTextShadow.Texture, Position.X + shadowOffsetX, Position.Y + shadowOffsetY);
 
 					renderer.RenderTexture(TrueTypeText.Texture, Position.X, Position.Y);
 				}

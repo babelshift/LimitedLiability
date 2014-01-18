@@ -25,7 +25,6 @@ namespace MyThirdSDL.UserInterface
 		private Icon iconInfoMenuHeader;
 		private Icon iconSkillsMenuHeader;
 		private Label labelMainMenuHeader;
-		private Label labelMainMenuHeaderShadow;
 		private Label labelInfoMenuHeader;
 		private Label labelSkillsMenuHeader;
 
@@ -89,7 +88,6 @@ namespace MyThirdSDL.UserInterface
 				iconInfoMenuHeader.Position = new Vector(base.Position.X + 365, base.Position.Y + 5);
 				iconSkillsMenuHeader.Position = new Vector(base.Position.X + 505, base.Position.Y + 5);
 				labelMainMenuHeader.Position = new Vector(base.Position.X + 38, base.Position.Y + 15);
-				labelMainMenuHeaderShadow.Position = new Vector(base.Position.X + 40, base.Position.Y + 17);
 				labelInfoMenuHeader.Position = new Vector(base.Position.X + 400, base.Position.Y + 15);
 				labelSkillsMenuHeader.Position = new Vector(base.Position.X + 535, base.Position.Y + 15);
 				iconMoney.Position = new Vector(base.Position.X + 365, base.Position.Y + 50);
@@ -130,7 +128,6 @@ namespace MyThirdSDL.UserInterface
 
 			string fontPath = contentManager.GetContentPath(Styles.FontPaths.Arcade);
 			Color fontColorTitle = Styles.Colors.MainMenuTitleText;
-			Color fontColorTitleShadow = Styles.Colors.MainMenuTitleTextShadow;
 			Color fontColorLabelValue = Styles.Colors.ButtonMainMenuItemText;
 			int fontSizeTitle = Styles.FontSizes.Title;
 			int fontSizeContent = Styles.FontSizes.Content;
@@ -141,8 +138,7 @@ namespace MyThirdSDL.UserInterface
 
 			labelMainMenuHeader = new Label();
 			labelMainMenuHeader.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSizeTitle, fontColorTitle, menuTitle);
-			labelMainMenuHeaderShadow = new Label();
-			labelMainMenuHeaderShadow.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSizeTitle, fontColorTitleShadow, menuTitle);
+			labelMainMenuHeader.EnableShadow(contentManager, 2, 2);
 			labelInfoMenuHeader = new Label();
 			labelInfoMenuHeader.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSizeTitle, fontColorTitle, "Needs");
 			labelSkillsMenuHeader = new Label();
@@ -222,7 +218,6 @@ namespace MyThirdSDL.UserInterface
 			controls.Add(iconMainMenuHeader);
 			controls.Add(iconInfoMenuHeader);
 			controls.Add(iconSkillsMenuHeader);
-			controls.Add(labelMainMenuHeaderShadow);
 			controls.Add(labelMainMenuHeader);
 			controls.Add(labelInfoMenuHeader);
 			controls.Add(labelSkillsMenuHeader);

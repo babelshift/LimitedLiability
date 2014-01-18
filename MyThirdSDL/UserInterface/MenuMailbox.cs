@@ -207,14 +207,13 @@ namespace MyThirdSDL.UserInterface
 
 			string fontPath = contentManager.GetContentPath("Arcade");
 			Color fontColor = Styles.Colors.MainMenuTitleText;
-			Color fontColorShadow = Styles.Colors.MainMenuTitleTextShadow;
 			int fontSizeTitle = 14;
 			int fontSizeContent = 12;
 
 			iconFolderHeader = new Icon(contentManager.GetTexture("IconFolderOpen"));
 			labelFolderHeader = new Label();
 			labelFolderHeader.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSizeTitle, fontColor, "Folder");
-			labelFolderHeader.EnableShadow(contentManager);
+			labelFolderHeader.EnableShadow(contentManager, 2, 2);
 			labelPageNumber = new Label();
 			labelPageNumber.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSizeContent, fontColor, "N/A");
 			labelFrom = new Label();
@@ -262,10 +261,13 @@ namespace MyThirdSDL.UserInterface
 
 			labelInboxFolder = new Label();
 			labelInboxFolder.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSizeTitle, fontColor, "Inbox");
+			labelInboxFolder.EnableShadow(contentManager, 2, 2);
 			labelOutboxFolder = new Label();
 			labelOutboxFolder.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSizeTitle, fontColor, "Outbox");
+			labelOutboxFolder.EnableShadow(contentManager, 2, 2);
 			labelArchiveFolder = new Label();
 			labelArchiveFolder.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSizeTitle, fontColor, "Archive");
+			labelArchiveFolder.EnableShadow(contentManager, 2, 2);
 
 			iconInboxFolder = new Icon(contentManager.GetTexture("IconMailInbox"));
 			iconOutboxFolder = new Icon(contentManager.GetTexture("IconMailOutbox"));
