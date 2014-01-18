@@ -16,6 +16,7 @@ namespace MyThirdSDL.UserInterface
 
 		private const int itemsPerPage = 4;
 		private int currentDisplayedPage = 1;
+		private string defaultInfoAndSkillsText = "N/A";
 
 		private Icon iconFrame;
 
@@ -63,7 +64,7 @@ namespace MyThirdSDL.UserInterface
 		private Dictionary<int, List<ButtonMenuItem>> buttonMenuItemPages = new Dictionary<int, List<ButtonMenuItem>>();
 
 		#endregion
-		
+
 		private IPurchasable selectedPurchasableItem;
 
 		#region Events
@@ -141,8 +142,10 @@ namespace MyThirdSDL.UserInterface
 			labelMainMenuHeader.EnableShadow(contentManager, 2, 2);
 			labelInfoMenuHeader = new Label();
 			labelInfoMenuHeader.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSizeTitle, fontColorTitle, "Needs");
+			labelInfoMenuHeader.EnableShadow(contentManager, 2, 2);
 			labelSkillsMenuHeader = new Label();
 			labelSkillsMenuHeader.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSizeTitle, fontColorTitle, "Skills");
+			labelSkillsMenuHeader.EnableShadow(contentManager, 2, 2);
 
 			iconMoney = new Icon(contentManager.GetTexture("IconMoney"));
 
@@ -256,14 +259,24 @@ namespace MyThirdSDL.UserInterface
 
 		public override void Update(GameTime gameTime)
 		{
+			bool isAnyButtonMenuItemHovered = false;
 			List<ButtonMenuItem> buttonMenuItemsOnCurrentPage = new List<ButtonMenuItem>();
 			bool success = buttonMenuItemPages.TryGetValue(currentDisplayedPage, out buttonMenuItemsOnCurrentPage);
 			if (success)
+			{
 				foreach (var buttonMenuItem in buttonMenuItemsOnCurrentPage)
+				{
 					buttonMenuItem.Update(gameTime);
+					if (buttonMenuItem.IsHovered)
+						isAnyButtonMenuItemHovered = true;
+				}
+			}
+
+			if (!isAnyButtonMenuItemHovered)
+				ClearInfoAndSkillsText();
 
 			foreach (var control in controls)
-				if(control != null)
+				if (control != null)
 					control.Update(gameTime);
 		}
 
@@ -399,6 +412,32 @@ namespace MyThirdSDL.UserInterface
 			labelLeadership.Text = e.PurchasableItem.SkillEffect.LeadershipEffectiveness.ToString();
 		}
 
+		/// <summary>
+		/// When the user is not hovering any button item, we should display default text for the info/skills labels.
+		/// </summary>
+		private void ClearInfoAndSkillsText()
+		{
+			if (labelMoney.Text != defaultInfoAndSkillsText)
+				labelMoney.Text = defaultInfoAndSkillsText;
+			if (labelHealth.Text != defaultInfoAndSkillsText)
+				labelHealth.Text = defaultInfoAndSkillsText;
+			if (labelHunger.Text != defaultInfoAndSkillsText)
+				labelHunger.Text = defaultInfoAndSkillsText;
+			if (labelHygiene.Text != defaultInfoAndSkillsText)
+				labelHygiene.Text = defaultInfoAndSkillsText;
+			if (labelSleep.Text != defaultInfoAndSkillsText)
+				labelSleep.Text = defaultInfoAndSkillsText;
+			if (labelThirst.Text != defaultInfoAndSkillsText)
+				labelThirst.Text = defaultInfoAndSkillsText;
+			if (labelCommunication.Text != defaultInfoAndSkillsText)
+				labelCommunication.Text = defaultInfoAndSkillsText;
+			if (labelCreativity.Text != defaultInfoAndSkillsText)
+				labelCreativity.Text = defaultInfoAndSkillsText;
+			if (labelIntelligence.Text != defaultInfoAndSkillsText)
+				labelIntelligence.Text = defaultInfoAndSkillsText;
+			if (labelLeadership.Text != defaultInfoAndSkillsText)
+				labelLeadership.Text = defaultInfoAndSkillsText;
+		}
 
 		#endregion
 

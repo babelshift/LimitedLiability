@@ -1,4 +1,5 @@
-﻿using SharpDL;
+﻿using MyThirdSDL.Content;
+using SharpDL;
 using SharpDL.Graphics;
 using SharpDL.Input;
 using System;
@@ -78,7 +79,7 @@ namespace MyThirdSDL.UserInterface
 			}
 		}
 
-		protected bool IsHovered { get; private set; }
+		public bool IsHovered { get; private set; }
 
 		protected bool IsClicked { get; private set; }
 
@@ -117,6 +118,12 @@ namespace MyThirdSDL.UserInterface
 						Label.Position = new Vector(Icon.Position.X + Icon.Width + 3, base.Position.Y + (TextureFrame.Height / 2 - Label.Height / 2));
 				}
 			}
+		}
+
+		public void EnableLabelShadow(ContentManager contentManager, int shadowOffsetX, int shadowOffsetY)
+		{
+			if(Label != null)
+				Label.EnableShadow(contentManager, shadowOffsetX, shadowOffsetY);
 		}
 
 		#endregion

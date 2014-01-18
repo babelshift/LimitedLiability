@@ -61,6 +61,7 @@ namespace MyThirdSDL.Screens
 			buttonResumeGame.ButtonType = ButtonType.TextOnly;
 			buttonResumeGame.Position = iconFrame.Position + new Vector(iconFrame.Width / 2 - buttonResumeGame.Width / 2, 75);
 			buttonResumeGame.Clicked += (sender, e) => ExitScreen();
+			buttonResumeGame.EnableLabelShadow(ContentManager, 2, 2);
 
 			buttonNewGame = new Button();
 			buttonNewGame.TextureFrame = ContentManager.GetTexture("ButtonMainMenuItem");
@@ -70,6 +71,7 @@ namespace MyThirdSDL.Screens
 			buttonNewGame.ButtonType = ButtonType.TextOnly;
 			buttonNewGame.Position = iconFrame.Position + new Vector(iconFrame.Width / 2 - buttonNewGame.Width / 2, 110);
 			buttonNewGame.Clicked += buttonNewGame_Clicked;
+			buttonNewGame.EnableLabelShadow(ContentManager, 2, 2);
 
 			buttonLoadGame = new Button();
 			buttonLoadGame.TextureFrame = ContentManager.GetTexture("ButtonMainMenuItem");
@@ -79,6 +81,7 @@ namespace MyThirdSDL.Screens
 			buttonLoadGame.ButtonType = ButtonType.TextOnly;
 			buttonLoadGame.Position = iconFrame.Position + new Vector(iconFrame.Width / 2 - buttonLoadGame.Width / 2, 145);
 			buttonLoadGame.Clicked += buttonLoadGame_Clicked;
+			buttonLoadGame.EnableLabelShadow(ContentManager, 2, 2);
 
 			buttonOptions = new Button();
 			buttonOptions.TextureFrame = ContentManager.GetTexture("ButtonMainMenuItem");
@@ -88,6 +91,7 @@ namespace MyThirdSDL.Screens
 			buttonOptions.ButtonType = ButtonType.TextOnly;
 			buttonOptions.Position = iconFrame.Position + new Vector(iconFrame.Width / 2 - buttonOptions.Width / 2, 180);
 			buttonOptions.Clicked += buttonOptions_Clicked;
+			buttonOptions.EnableLabelShadow(ContentManager, 2, 2);
 
 			buttonQuit = new Button();
 			buttonQuit.TextureFrame = ContentManager.GetTexture("ButtonMainMenuItem");
@@ -97,6 +101,7 @@ namespace MyThirdSDL.Screens
 			buttonQuit.ButtonType = ButtonType.TextOnly;
 			buttonQuit.Position = iconFrame.Position + new Vector(iconFrame.Width / 2 - buttonQuit.Width / 2, 215);
 			buttonQuit.Clicked += buttonQuit_Clicked;
+			buttonQuit.EnableLabelShadow(ContentManager, 2, 2);
 		}
 
 		public override void Draw(SharpDL.GameTime gameTime, SharpDL.Graphics.Renderer renderer)

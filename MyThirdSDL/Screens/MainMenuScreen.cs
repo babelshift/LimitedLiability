@@ -50,6 +50,7 @@ namespace MyThirdSDL.Screens
 			buttonNewGame.ButtonType = ButtonType.TextOnly;
 			buttonNewGame.Position = new Vector(MainGame.SCREEN_WIDTH_LOGICAL / 2 - buttonNewGame.Width / 2, 400);
 			buttonNewGame.Clicked += buttonNewGame_Clicked;
+			buttonNewGame.EnableLabelShadow(ContentManager, 2, 2);
 
 			buttonLoadGame = new Button();
 			buttonLoadGame.TextureFrame = ContentManager.GetTexture("ButtonMainMenuItem");
@@ -59,6 +60,7 @@ namespace MyThirdSDL.Screens
 			buttonLoadGame.ButtonType = ButtonType.TextOnly;
 			buttonLoadGame.Position = new Vector(MainGame.SCREEN_WIDTH_LOGICAL / 2 - buttonNewGame.Width / 2, 435);
 			buttonLoadGame.Clicked += buttonLoadGame_Clicked;
+			buttonLoadGame.EnableLabelShadow(ContentManager, 2, 2);
 
 			buttonOptions = new Button();
 			buttonOptions.TextureFrame = ContentManager.GetTexture("ButtonMainMenuItem");
@@ -68,6 +70,7 @@ namespace MyThirdSDL.Screens
 			buttonOptions.ButtonType = ButtonType.TextOnly;
 			buttonOptions.Position = new Vector(MainGame.SCREEN_WIDTH_LOGICAL / 2 - buttonNewGame.Width / 2, 470);
 			buttonOptions.Clicked += buttonOptions_Clicked;
+			buttonOptions.EnableLabelShadow(ContentManager, 2, 2);
 
 			buttonCredits = new Button();
 			buttonCredits.TextureFrame = ContentManager.GetTexture("ButtonMainMenuItem");
@@ -77,6 +80,7 @@ namespace MyThirdSDL.Screens
 			buttonCredits.ButtonType = ButtonType.TextOnly;
 			buttonCredits.Position = new Vector(MainGame.SCREEN_WIDTH_LOGICAL / 2 - buttonNewGame.Width / 2, 505);
 			buttonCredits.Clicked += buttonCredits_Clicked;
+			buttonCredits.EnableLabelShadow(ContentManager, 2, 2);
 
 			buttonQuit = new Button();
 			buttonQuit.TextureFrame = ContentManager.GetTexture("ButtonMainMenuItem");
@@ -86,6 +90,7 @@ namespace MyThirdSDL.Screens
 			buttonQuit.ButtonType = ButtonType.TextOnly;
 			buttonQuit.Position = new Vector(MainGame.SCREEN_WIDTH_LOGICAL / 2 - buttonNewGame.Width / 2, 540);
 			buttonQuit.Clicked += buttonQuit_Clicked;
+			buttonQuit.EnableLabelShadow(ContentManager, 2, 2);
 
 			textureBackgroundStripeTile = ContentManager.GetTexture("BackgroundStripeTile");
 		}
@@ -144,6 +149,15 @@ namespace MyThirdSDL.Screens
 			buttonCredits.Draw(gameTime, renderer);
 			buttonOptions.Draw(gameTime, renderer);
 
+		}
+
+		public override void HandleKeyStates(System.Collections.Generic.IEnumerable<SharpDL.Input.KeyInformation> keysPressed, System.Collections.Generic.IEnumerable<SharpDL.Input.KeyInformation> keysReleased)
+		{
+			base.HandleKeyStates(keysPressed, keysReleased);
+
+			foreach (var key in keysPressed)
+				if (key.VirtualKey == SharpDL.Input.VirtualKeyCode.Escape)
+					QuitButtonClicked(this, EventArgs.Empty);
 		}
 
 		public override void HandleMouseButtonPressedEvent(object sender, SharpDL.Events.MouseButtonEventArgs e)
