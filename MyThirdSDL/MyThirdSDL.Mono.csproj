@@ -93,7 +93,6 @@
     <Compile Include="UserInterface\ControlFactory.cs" />
     <Compile Include="UserInterface\Icon.cs" />
     <Compile Include="UserInterface\Label.cs" />
-    <Compile Include="UserInterface\MenuEquipment.cs" />
     <Compile Include="UserInterface\MessageBox.cs" />
     <Compile Include="UserInterface\ToolboxTray.cs" />
     <Compile Include="UserInterface\Tooltip.cs" />
@@ -131,7 +130,6 @@
     <Compile Include="Agents\AgentState.cs" />
     <Compile Include="Simulation\EmployeeClickedEventArgs.cs" />
     <Compile Include="UserInterface\MenuInspectEmployee.cs" />
-    <Compile Include="Agents\AgentManager.cs" />
     <Compile Include="Agents\AgentMetaData.cs" />
     <Compile Include="Descriptors\NecessityEffect.cs" />
     <Compile Include="Descriptors\SkillEffect.cs" />
@@ -145,8 +143,6 @@
     <Compile Include="Screens\ScreenFactory.cs" />
     <Compile Include="GameState.cs" />
     <Compile Include="Screens\LoadingScreen.cs" />
-    <Compile Include="MouseHelper.cs" />
-    <Compile Include="KeyboardHelper.cs" />
     <Compile Include="Cursor.cs" />
     <Compile Include="Simulation\PathNode.cs" />
     <Compile Include="Content\TileLayerType.cs" />
@@ -161,21 +157,45 @@
     <Compile Include="Simulation\Path.cs" />
     <Compile Include="UserInterface\UserInterfaceState.cs" />
     <Compile Include="DateTimeHelper.cs" />
+    <Compile Include="Content\CompanyMetadata.cs" />
+    <Compile Include="Content\ThoughtMetadata.cs" />
+    <Compile Include="Screens\LoadGameScreen.cs" />
+    <Compile Include="Screens\OptionsScreen.cs" />
+    <Compile Include="Screens\PauseMenuScreen.cs" />
+    <Compile Include="Screens\SaveGameScreen.cs" />
+    <Compile Include="Screens\ScenarioScreen.cs" />
+    <Compile Include="UserInterface\ButtonMailItem.cs" />
+    <Compile Include="UserInterface\MailItemPage.cs" />
+    <Compile Include="UserInterface\Menu.cs" />
+    <Compile Include="UserInterface\MenuCompany.cs" />
+    <Compile Include="UserInterface\MenuMailbox.cs" />
+    <Compile Include="UserInterface\MenuPurchase.cs" />
+    <Compile Include="UserInterface\ScenarioItem.cs" />
+    <Compile Include="UserInterface\Styles.cs" />
+    <Compile Include="UserInterface\Textbox.cs" />
+    <Compile Include="BankAccount.cs" />
+    <Compile Include="TextureBook.cs" />
+    <Compile Include="Agents\Thought.cs" />
+    <Compile Include="Agents\ThoughtEventArgs.cs" />
+    <Compile Include="Agents\ThoughtType.cs" />
+    <Compile Include="Agents\Wall.cs" />
+    <Compile Include="Mail\MailAddress.cs" />
+    <Compile Include="Mail\MailAddressType.cs" />
+    <Compile Include="Mail\MailItem.cs" />
+    <Compile Include="Mail\MailManager.cs" />
+    <Compile Include="Mail\MailState.cs" />
+    <Compile Include="Mail\Mailbox.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
-    <None Include="Content\ContentReference.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
     <None Include="Content\Fonts\Arcade N.ttf">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <Compile Include="IHasNeighbors.cs" />
+    <None Include="Content\Maps\OfficeOrthogonal1.tmx" />
+    <None Include="Content\Maps\TileSet1.png" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Content\Images\CubeTileSheet.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
     <Content Include="Content\Images\Equipment\SodaMachine.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -308,9 +328,6 @@
     <Content Include="Content\Images\User Interface\IconPersonHappy.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Agents\AgentReference.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
     <Content Include="Content\Images\User Interface\IconBin.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -326,27 +343,6 @@
     <Content Include="Content\Images\User Interface\CursorHandDown.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Maps\0_Decor_Inside.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Content\Maps\0_Decor_Outside.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Content\Maps\0_Ground_Inside.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Content\Maps\0_Ground_Outside.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Content\Maps\0_Objects.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Content\Maps\Characters.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Content\Maps\Office1.tmx">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
     <Content Include="Content\Images\Equipment\SnackMachine.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -357,6 +353,108 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\Images\MaleEmployee0001.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Images\User Interface\BackgroundScenarioTile.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Images\User Interface\BackgroundStripeTile.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Images\User Interface\BackgroundStripeTileFaded.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Images\User Interface\ButtonMailAction.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Images\User Interface\ButtonMailActionHover.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Images\User Interface\ButtonMailFolder.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Images\User Interface\ButtonMailFolderHover.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Images\User Interface\ButtonMailItem.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Images\User Interface\ButtonMailItemHover.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Images\User Interface\ButtonMailItemSelected.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Images\User Interface\ButtonMainMenuItem.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Images\User Interface\ButtonMainMenuItemHover.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Images\User Interface\IconFolderOpen.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Images\User Interface\IconInputBar.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Images\User Interface\IconMailArchive.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Images\User Interface\IconMailInbox.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Images\User Interface\IconMailOutbox.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Images\User Interface\IconMailRead.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Images\User Interface\IconMailUnread.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Images\User Interface\IconSeparator.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Images\User Interface\MenuCompanyFrame.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Images\User Interface\MenuInspectEmployeePrototype.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Images\User Interface\MenuMailboxFrame.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Images\User Interface\MenuPauseFrame.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Images\User Interface\MenuPurchaseFrame.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Images\User Interface\MenuScenarioFrame.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Images\User Interface\TextboxLongFrame.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Images\User Interface\ToolboxTrayButtonMail.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Images\User Interface\ToolboxTrayButtonMailHover.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Data\AgentReference.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Data\CompanyData.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Data\ContentReference.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Data\PeopleNames.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Data\ThoughtReference.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
@@ -372,5 +470,8 @@
     <Folder Include="Agents\" />
     <Folder Include="Simulation\" />
     <Folder Include="Screens\" />
+    <Folder Include="Content\Maps\" />
+    <Folder Include="Content\Data\" />
+    <Folder Include="Mail\" />
   </ItemGroup>
 </Project>
