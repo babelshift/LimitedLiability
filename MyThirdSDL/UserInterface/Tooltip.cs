@@ -27,12 +27,10 @@ namespace MyThirdSDL.UserInterface
 			}
 		}
 
-		public Tooltip()
-		{
-		}
-
 		public override void Update(GameTime gameTime)
 		{
+			base.Update(gameTime);
+
 			if (Label != null)
 				Label.Update(gameTime);
 		}
@@ -46,14 +44,6 @@ namespace MyThirdSDL.UserInterface
 				if (Label != null)
 					Label.Draw(gameTime, renderer);
 			}
-		}
-
-		public override void HandleMouseButtonPressedEvent(object sender, SharpDL.Events.MouseButtonEventArgs e)
-		{
-		}
-
-		public override void HandleMouseMovingEvent(object sender, SharpDL.Events.MouseMotionEventArgs e)
-		{
 		}
 
 		public override void Dispose()

@@ -15,7 +15,7 @@ namespace MyThirdSDL.Screens
 		private Button buttonOptions;
 		private Texture textureBackgroundStripeTile;
 
-		public MainMenuScreen(Renderer renderer, ContentManager contentManager)
+		public MainMenuScreen(ContentManager contentManager)
 			: base(contentManager)
 		{
 
@@ -118,8 +118,7 @@ namespace MyThirdSDL.Screens
 
 		private void buttonQuit_Clicked(object sender, EventArgs e)
 		{
-			if(QuitButtonClicked != null) 
-				QuitButtonClicked(this, EventArgs.Empty);
+			OnQuitButtonClicked(sender, e);
 		}
 
 		public override void Update(SharpDL.GameTime gameTime, bool otherWindowHasFocus, bool coveredByOtherScreen)
@@ -148,7 +147,6 @@ namespace MyThirdSDL.Screens
 			buttonQuit.Draw(gameTime, renderer);
 			buttonCredits.Draw(gameTime, renderer);
 			buttonOptions.Draw(gameTime, renderer);
-
 		}
 
 		public override void HandleKeyStates(System.Collections.Generic.IEnumerable<SharpDL.Input.KeyInformation> keysPressed, System.Collections.Generic.IEnumerable<SharpDL.Input.KeyInformation> keysReleased)
@@ -157,7 +155,7 @@ namespace MyThirdSDL.Screens
 
 			foreach (var key in keysPressed)
 				if (key.VirtualKey == SharpDL.Input.VirtualKeyCode.Escape)
-					QuitButtonClicked(this, EventArgs.Empty);
+					OnQuitButtonClicked(this, EventArgs.Empty);
 		}
 
 		public override void HandleMouseButtonPressedEvent(object sender, SharpDL.Events.MouseButtonEventArgs e)
@@ -178,11 +176,10 @@ namespace MyThirdSDL.Screens
 			buttonOptions.HandleMouseMovingEvent(sender, e);
 		}
 
-		public override void Unload()
+		private void OnQuitButtonClicked(object sender, EventArgs e)
 		{
-			base.Unload();
-
-			Dispose();
+			if (QuitButtonClicked != null)
+				QuitButtonClicked(sender, e);
 		}
 
 		public override void Dispose()

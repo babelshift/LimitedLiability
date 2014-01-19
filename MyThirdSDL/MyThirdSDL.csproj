@@ -143,7 +143,11 @@
     <Compile Include="Mail\MailState.cs" />
     <Compile Include="Mail\MailAddressType.cs" />
     <Compile Include="MainGame.cs" />
+    <Compile Include="Screens\LoadGameScreen.cs" />
+    <Compile Include="Screens\OptionsScreen.cs" />
     <Compile Include="Screens\PauseMenuScreen.cs" />
+    <Compile Include="Screens\SaveGameScreen.cs" />
+    <Compile Include="Screens\ScenarioScreen.cs" />
     <Compile Include="Simulation\Path.cs" />
     <Compile Include="PriorityQueue.cs" />
     <Compile Include="Program.cs" />
@@ -199,6 +203,7 @@
     </Compile>
     <Compile Include="UserInterface\MouseOverScreenEdge.cs" />
     <Compile Include="UserInterface\PurchasableItemSelectedEventArgs.cs" />
+    <Compile Include="UserInterface\ScenarioItem.cs" />
     <Compile Include="UserInterface\SimulationLabel.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -229,6 +234,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\Images\TileHighlight.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Images\User Interface\BackgroundScenarioTile.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\Images\User Interface\BackgroundStripeTile.png">
@@ -298,6 +306,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\Images\User Interface\MenuPurchaseFrame.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Images\User Interface\MenuScenarioFrame.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\Images\User Interface\TextboxLongFrame.png">

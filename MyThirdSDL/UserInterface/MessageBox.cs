@@ -43,6 +43,8 @@ namespace MyThirdSDL.UserInterface
 
 		public override void Update(GameTime gameTime)
 		{
+			base.Update(gameTime);
+
 			if(ButtonOK != null)
 				ButtonOK.Update(gameTime);
 		}

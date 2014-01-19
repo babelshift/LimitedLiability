@@ -17,7 +17,7 @@ namespace MyThirdSDL.UserInterface
 		IconAndText
 	}
 
-	public class Button : Control, IDisposable
+	public class Button : Control
 	{
 		#region Members
 
@@ -79,10 +79,6 @@ namespace MyThirdSDL.UserInterface
 			}
 		}
 
-		public bool IsHovered { get; private set; }
-
-		protected bool IsClicked { get; private set; }
-
 		public override Vector Position
 		{
 			get
@@ -128,13 +124,6 @@ namespace MyThirdSDL.UserInterface
 
 		#endregion
 
-		#region Events
-
-		public event EventHandler Clicked;
-		public event EventHandler Hovered;
-
-		#endregion
-
 		#region Constructors
 
 		public Button()
@@ -148,6 +137,8 @@ namespace MyThirdSDL.UserInterface
 
 		public override void Update(GameTime gameTime)
 		{
+			base.Update(gameTime);
+
 			if (Icon != null)
 				Icon.Update(gameTime);
 
@@ -159,12 +150,6 @@ namespace MyThirdSDL.UserInterface
 
 			if (Tooltip != null)
 				Tooltip.Update(gameTime);
-
-			if (IsHovered)
-				OnHovered(EventArgs.Empty);
-
-			if (IsClicked)
-				OnClicked(EventArgs.Empty);
 		}
 
 		public override void Draw(GameTime gameTime, Renderer renderer)
@@ -206,19 +191,6 @@ namespace MyThirdSDL.UserInterface
 			}
 		}
 
-		public override void HandleMouseButtonPressedEvent(object sender, SharpDL.Events.MouseButtonEventArgs e)
-		{
-			IsClicked = GetClicked(e);
-		}
-
-		public override void HandleMouseMovingEvent(object sender, SharpDL.Events.MouseMotionEventArgs e)
-		{
-			if (Bounds.Contains(new Vector(e.RelativeToWindowX, e.RelativeToWindowY)))
-				IsHovered = true;
-			else
-				IsHovered = false;
-		}
-
 		#endregion
 
 		#region Behaviors
@@ -233,47 +205,7 @@ namespace MyThirdSDL.UserInterface
 			IsPressed = false;
 		}
 
-		private bool GetClicked(SharpDL.Events.MouseButtonEventArgs e)
-		{
-			if (IsHovered)
-			{
-				if(e.MouseButton == MouseButtonCode.Left)
-				//if (e.MouseButton != null && Mouse.PreviousButtonsPressed != null)
-				//	// if the curren state does not have a left click and the previous state does have a left click, then the user released the mouse
-				//	if (!Mouse.ButtonsPressed.Contains(MouseButtonCode.Left)
-				//		 && Mouse.PreviousButtonsPressed.Contains(MouseButtonCode.Left))
-						return true;
-			}
-
-			return false;
-		}
-
-		private void OnClicked(EventArgs e)
-		{
-			if (Clicked != null)
-				Clicked(this, e);
-
-			// ok great, we got clicked, stopped notifying people now
-			IsClicked = false;
-		}
-
-		private void OnHovered(EventArgs e)
-		{
-			if (Hovered != null)
-				Hovered(this, e);
-		}
-
 		#endregion
-
-		public override void Focus()
-		{
-			base.Focus();
-		}
-
-		public override void Blur()
-		{
-			base.Blur();
-		}
 
 		public override void Dispose()
 		{

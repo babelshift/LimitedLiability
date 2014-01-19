@@ -16,6 +16,8 @@ namespace MyThirdSDL.UserInterface
 
 		public override void Update(GameTime gameTime)
 		{
+			base.Update(gameTime);
+
 			foreach (var control in controls)
 				if (control != null)
 					control.Update(gameTime);
@@ -26,11 +28,6 @@ namespace MyThirdSDL.UserInterface
 			foreach (var control in controls)
 				if (control != null)
 					control.Draw(gameTime, renderer);
-		}
-
-		public override void HandleKeyPressed(SharpDL.Input.KeyInformation key)
-		{
-			base.HandleKeyPressed(key);
 		}
 
 		public override void HandleMouseButtonPressedEvent(object sender, SharpDL.Events.MouseButtonEventArgs e)

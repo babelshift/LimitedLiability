@@ -29,6 +29,7 @@ namespace MyThirdSDL.UserInterface
 			public static Color PaleYellow = new Color(238, 230, 171);
 			public static Color White = new Color(218, 218, 218);
 			public static Color Yellow = new Color(255, 190, 50);
+			public static Color DuskBlue = new Color(66, 75, 92);
 		}
 	}
 }

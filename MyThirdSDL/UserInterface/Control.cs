@@ -18,7 +18,7 @@ namespace MyThirdSDL.UserInterface
 
 		public bool Visible { get; set; }
 
-		protected Rectangle Bounds
+		public Rectangle Bounds
 		{
 			get
 			{
@@ -44,6 +44,12 @@ namespace MyThirdSDL.UserInterface
 		/// </summary>
 		public int Height { get; protected set; }
 
+		public bool IsHovered { get; private set; }
+
+		protected bool IsClicked { get; private set; }
+
+		public event EventHandler Hovered;
+		public event EventHandler Clicked;
 		public event EventHandler GotFocus;
 
 		public Control()
@@ -52,13 +58,29 @@ namespace MyThirdSDL.UserInterface
 			Visible = true;
 		}
 
-		public abstract void Update(GameTime gameTime);
+		public virtual void Update(GameTime gameTime)
+		{
+			if (IsHovered)
+				OnHovered(EventArgs.Empty);
+
+			if (IsClicked)
+				OnClicked(EventArgs.Empty);
+		}
 
 		public abstract void Draw(GameTime gameTime, Renderer renderer);
 
-		public abstract void HandleMouseMovingEvent(object sender, MouseMotionEventArgs e);
+		public virtual void HandleMouseMovingEvent(object sender, MouseMotionEventArgs e)
+		{
+			if (Bounds.Contains(new Vector(e.RelativeToWindowX, e.RelativeToWindowY)))
+				IsHovered = true;
+			else
+				IsHovered = false;
+		}
 
-		public abstract void HandleMouseButtonPressedEvent(object sender, MouseButtonEventArgs e);
+		public virtual void HandleMouseButtonPressedEvent(object sender, MouseButtonEventArgs e)
+		{
+			IsClicked = GetClicked(e);
+		}
 
 		public virtual void HandleTextInput(string text) { }
 
@@ -75,6 +97,32 @@ namespace MyThirdSDL.UserInterface
 		public virtual void Blur()
 		{
 			HasFocus = false;
+		}
+
+		private bool GetClicked(SharpDL.Events.MouseButtonEventArgs e)
+		{
+			if (IsHovered)
+			{
+				if (e.MouseButton == MouseButtonCode.Left)
+					return true;
+			}
+
+			return false;
+		}
+
+		private void OnClicked(EventArgs e)
+		{
+			if (Clicked != null)
+				Clicked(this, e);
+
+			// ok great, we got clicked, stop notifying people now
+			IsClicked = false;
+		}
+
+		private void OnHovered(EventArgs e)
+		{
+			if (Hovered != null)
+				Hovered(this, e);
 		}
 
 		public abstract void Dispose();

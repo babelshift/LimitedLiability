@@ -28,22 +28,10 @@ namespace MyThirdSDL.UserInterface
 			TextureFrame = textureFrame;
 		}
 
-		public override void Update(GameTime gameTime)
-		{
-		}
-
 		public override void Draw(GameTime gameTime, Renderer renderer)
 		{
 			if(Visible)
 				renderer.RenderTexture(textureFrame, Position.X, Position.Y);
-		}
-
-		public override void HandleMouseButtonPressedEvent(object sender, SharpDL.Events.MouseButtonEventArgs e)
-		{
-		}
-
-		public override void HandleMouseMovingEvent(object sender, SharpDL.Events.MouseMotionEventArgs e)
-		{
 		}
 
 		public override void Dispose()

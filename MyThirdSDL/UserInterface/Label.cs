@@ -46,14 +46,6 @@ namespace MyThirdSDL.UserInterface
 			trueTypeTextShadow = contentManager.GetTrueTypeText(TrueTypeText.Font.FilePath, TrueTypeText.Font.PointSize, Styles.Colors.Black, Text);
 		}
 
-		public Label()
-		{
-		}
-
-		public override void Update(GameTime gameTime)
-		{
-		}
-
 		public override void Draw(GameTime gameTime, Renderer renderer)
 		{
 			if (Visible)
@@ -66,14 +58,6 @@ namespace MyThirdSDL.UserInterface
 					renderer.RenderTexture(TrueTypeText.Texture, Position.X, Position.Y);
 				}
 			}
-		}
-
-		public override void HandleMouseButtonPressedEvent(object sender, SharpDL.Events.MouseButtonEventArgs e)
-		{
-		}
-
-		public override void HandleMouseMovingEvent(object sender, SharpDL.Events.MouseMotionEventArgs e)
-		{
 		}
 
 		public override void Dispose()

@@ -114,6 +114,7 @@ namespace MyThirdSDL.Screens
 				(ScreenManager.GetScreens().Length == 1))
 			{
 				otherScreensAreGone = true;
+				renderer.ClearScreen();
 			}
 
 			//SpriteBatch spriteBatch = ScreenManager.SpriteBatch;
@@ -155,13 +156,6 @@ namespace MyThirdSDL.Screens
 		}
 
 		#endregion
-
-		public override void Unload()
-		{
-			base.Unload();
-
-			Dispose();
-		}
 
 		public override void Dispose()
 		{

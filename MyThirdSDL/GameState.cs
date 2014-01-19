@@ -6,8 +6,9 @@ namespace MyThirdSDL
 	{
 		Unknown,
 		Title,
-		Options,
 		MainMenu,
+		Options,
+		Scenarios,
 		InGame,
 		Paused
 	}

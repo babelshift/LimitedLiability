@@ -32,8 +32,6 @@ namespace MyThirdSDL.UserInterface
 		private Label labelDate;
 		private Label labelTime;
 
-		public bool IsHovered { get; private set; }
-
 		public event EventHandler ButtonSelectGeneralClicked;
 		public event EventHandler ButtonSelectEquipmentClicked;
 		public event EventHandler ButtonSelectRoomClicked;
@@ -221,16 +219,6 @@ namespace MyThirdSDL.UserInterface
 		public void UpdateDisplayedBankAccountBalance(int money)
 		{
 			labelMoney.Text = money.ToString();
-		}
-
-		public override void HandleMouseMovingEvent(object sender, MouseMotionEventArgs e)
-		{
-			if (Bounds.Contains(new Point(e.RelativeToWindowX, e.RelativeToWindowY)))
-				IsHovered = true;
-			else
-				IsHovered = false;
-
-			base.HandleMouseMovingEvent(sender, e);
 		}
 
 		private void ButtonMailMenu_Clicked(object sender, EventArgs e)

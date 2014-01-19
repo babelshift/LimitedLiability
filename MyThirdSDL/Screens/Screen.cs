@@ -1,10 +1,11 @@
-using System;
-using SharpDL;
-using SharpDL.Graphics;
 using MyThirdSDL.Content;
+using MyThirdSDL.UserInterface;
+using SharpDL;
 using SharpDL.Events;
-using System.Collections.Generic;
+using SharpDL.Graphics;
 using SharpDL.Input;
+using System;
+using System.Collections.Generic;
 
 namespace MyThirdSDL.Screens
 {
@@ -23,6 +24,10 @@ namespace MyThirdSDL.Screens
 		private float transitionPosition = 1;
 		private ScreenState screenState = ScreenState.TransitionOn;
 		private bool otherWindowHasFocus;
+
+		private List<Control> controls = new List<Control>();
+
+		protected IList<Control> Controls { get { return controls; } }
 
 		protected ContentManager ContentManager { get; private set; }
 
@@ -159,6 +164,7 @@ namespace MyThirdSDL.Screens
 		/// </summary>
 		public virtual void Unload()
 		{
+			Dispose();
 		}
 
 		/// <summary>

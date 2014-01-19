@@ -59,6 +59,8 @@ namespace MyThirdSDL
 
 				if (currentGameState == GameState.MainMenu)
 					screen = CreateMainMenuScreen();
+				else if (currentGameState == GameState.Scenarios)
+					screen = CreateScenarioScreen();
 				else if (currentGameState == GameState.InGame)
 					screen = CreateMainGameScreen();
 
@@ -162,9 +164,9 @@ namespace MyThirdSDL
 
 		public MainMenuScreen CreateMainMenuScreen()
 		{
-			MainMenuScreen mainMenuScreen = new MainMenuScreen(Renderer, contentManager);
+			MainMenuScreen mainMenuScreen = new MainMenuScreen(contentManager);
 			mainMenuScreen.QuitButtonClicked += (sender, e) => Quit();
-			mainMenuScreen.NewGameButtonClicked += (sender, e) => CurrentGameState = GameState.InGame;
+			mainMenuScreen.NewGameButtonClicked += (sender, e) => CurrentGameState = GameState.Scenarios;
 			return mainMenuScreen;
 		}
 
@@ -173,6 +175,13 @@ namespace MyThirdSDL
 			MainGameScreen mainGameScreen = new MainGameScreen(Renderer, contentManager);
 			mainGameScreen.ReturnToMainMenu += (sender, e) => CurrentGameState = GameState.MainMenu;
 			return mainGameScreen;
+		}
+
+		public ScenarioScreen CreateScenarioScreen()
+		{
+			ScenarioScreen scenarioScreen = new ScenarioScreen(contentManager);
+			scenarioScreen.ReturnToMainMenu += (sender, e) => CurrentGameState = GameState.MainMenu;
+			return scenarioScreen;
 		}
 
 		#endregion

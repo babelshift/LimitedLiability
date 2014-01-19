@@ -161,12 +161,6 @@ namespace MyThirdSDL.Screens
 					ExitScreen();
 		}
 
-		public override void Unload()
-		{
-			base.Unload();
-			Dispose();
-		}
-
 		private void buttonOptions_Clicked(object sender, EventArgs e)
 		{
 			throw new NotImplementedException();

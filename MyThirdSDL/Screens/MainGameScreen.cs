@@ -549,13 +549,6 @@ namespace MyThirdSDL.Screens
 
 		#region Dispose
 
-		public override void Unload()
-		{
-			base.Unload();
-
-			Dispose();
-		}
-
 		public override void Dispose()
 		{
 			Dispose(true);
