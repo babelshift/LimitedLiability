@@ -316,13 +316,11 @@ namespace MyThirdSDL.UserInterface
 				buttonMailItem.TextureFrame = contentManager.GetTexture("ButtonMailItem");
 				buttonMailItem.TextureFrameHovered = contentManager.GetTexture("ButtonMailItemHover");
 				buttonMailItem.TextureFrameSelected = contentManager.GetTexture("ButtonMailItemSelected");
-				buttonMailItem.IconMailUnread = new Icon(contentManager.GetTexture("IconMailUnread"));
-				buttonMailItem.IconMailRead = new Icon(contentManager.GetTexture("IconMailRead"));
-				buttonMailItem.LabelFrom = new Label();
-				buttonMailItem.LabelFrom.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSizeContent, fontColorTitle, mailItem.From);
-				buttonMailItem.LabelSubject = new Label();
-				buttonMailItem.LabelSubject.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSizeContent, fontColorTitle, mailItem.Subject);
-				Icon iconSeparator = new Icon(contentManager.GetTexture("IconSeparator"));
+				buttonMailItem.IconMailUnread = ControlFactory.CreateIcon(contentManager, "IconMailUnread");
+				buttonMailItem.IconMailRead = ControlFactory.CreateIcon(contentManager, "IconMailRead");
+				buttonMailItem.LabelFrom = ControlFactory.CreateLabel(contentManager, fontPath, fontSizeContent, fontColorTitle, mailItem.From);
+				buttonMailItem.LabelSubject = ControlFactory.CreateLabel(contentManager, fontPath, fontSizeContent, fontColorTitle, mailItem.Subject);
+				Icon iconSeparator = ControlFactory.CreateIcon(contentManager, "IconSeparator");
 				AddButtonMailItemInbox(buttonMailItem, iconSeparator);
 			}
 
@@ -332,13 +330,11 @@ namespace MyThirdSDL.UserInterface
 				buttonMailItem.TextureFrame = contentManager.GetTexture("ButtonMailItem");
 				buttonMailItem.TextureFrameHovered = contentManager.GetTexture("ButtonMailItemHover");
 				buttonMailItem.TextureFrameSelected = contentManager.GetTexture("ButtonMailItemSelected");
-				buttonMailItem.IconMailUnread = new Icon(contentManager.GetTexture("IconMailUnread"));
-				buttonMailItem.IconMailRead = new Icon(contentManager.GetTexture("IconMailRead"));
-				buttonMailItem.LabelFrom = new Label();
-				buttonMailItem.LabelFrom.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSizeContent, fontColorTitle, mailItem.From);
-				buttonMailItem.LabelSubject = new Label();
-				buttonMailItem.LabelSubject.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSizeContent, fontColorTitle, mailItem.Subject);
-				Icon iconSeparator = new Icon(contentManager.GetTexture("IconSeparator"));
+				buttonMailItem.IconMailUnread = ControlFactory.CreateIcon(contentManager, "IconMailUnread");
+				buttonMailItem.IconMailRead = ControlFactory.CreateIcon(contentManager, "IconMailRead");
+				buttonMailItem.LabelFrom = ControlFactory.CreateLabel(contentManager, fontPath, fontSizeContent, fontColorTitle, mailItem.From);
+				buttonMailItem.LabelSubject = ControlFactory.CreateLabel(contentManager, fontPath, fontSizeContent, fontColorTitle, mailItem.Subject);
+				Icon iconSeparator = ControlFactory.CreateIcon(contentManager, "IconSeparator");
 				AddButtonMailItemOutbox(buttonMailItem, iconSeparator);
 			}
 
@@ -348,13 +344,11 @@ namespace MyThirdSDL.UserInterface
 				buttonMailItem.TextureFrame = contentManager.GetTexture("ButtonMailItem");
 				buttonMailItem.TextureFrameHovered = contentManager.GetTexture("ButtonMailItemHover");
 				buttonMailItem.TextureFrameSelected = contentManager.GetTexture("ButtonMailItemSelected");
-				buttonMailItem.IconMailUnread = new Icon(contentManager.GetTexture("IconMailUnread"));
-				buttonMailItem.IconMailRead = new Icon(contentManager.GetTexture("IconMailRead"));
-				buttonMailItem.LabelFrom = new Label();
-				buttonMailItem.LabelFrom.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSizeContent, fontColorTitle, mailItem.From);
-				buttonMailItem.LabelSubject = new Label();
-				buttonMailItem.LabelSubject.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSizeContent, fontColorTitle, mailItem.Subject);
-				Icon iconSeparator = new Icon(contentManager.GetTexture("IconSeparator"));
+				buttonMailItem.IconMailUnread = ControlFactory.CreateIcon(contentManager, "IconMailUnread");
+				buttonMailItem.IconMailRead = ControlFactory.CreateIcon(contentManager, "IconMailRead");
+				buttonMailItem.LabelFrom = ControlFactory.CreateLabel(contentManager, fontPath, fontSizeContent, fontColorTitle, mailItem.From);
+				buttonMailItem.LabelSubject = ControlFactory.CreateLabel(contentManager, fontPath, fontSizeContent, fontColorTitle, mailItem.Subject);
+				Icon iconSeparator = ControlFactory.CreateIcon(contentManager, "IconSeparator");
 				AddButtonMailItemArchive(buttonMailItem, iconSeparator);
 			}
 
@@ -723,19 +717,19 @@ namespace MyThirdSDL.UserInterface
 			if (labelSelectedFolderHeader != null)
 				labelSelectedFolderHeader.Dispose();
 
-			MailItemPage currentPage = null;
-			bool success = mailItemPages.TryGetValue(CurrentDisplayedPageNumber, out currentPage);
-			if (success)
+			foreach (var key in mailItemPages.Keys)
 			{
-				foreach (var button in currentPage.Buttons)
+				foreach (var button in mailItemPages[key].Buttons)
 					if (button != null)
 						button.Dispose();
-				currentPage.Buttons.Clear();
 
-				foreach (var separator in currentPage.Separators)
+				mailItemPages[key].Buttons.Clear();
+
+				foreach (var separator in mailItemPages[key].Separators)
 					if (separator != null)
 						separator.Dispose();
-				currentPage.Separators.Clear();
+
+				mailItemPages[key].Separators.Clear();
 			}
 
 			mailItemPages.Clear();

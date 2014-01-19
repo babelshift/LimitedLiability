@@ -78,10 +78,9 @@ namespace MyThirdSDL.UserInterface
 			Color fontColor = Styles.Colors.PaleGreen;
 			int fontSizeContent = 12;
 
-			IconFrame = new Icon(contentManager.GetTexture("TextboxLongFrame"));
-			IconInputBar = new Icon(contentManager.GetTexture("IconInputBar"));
-			LabelText = new Label();
-			LabelText.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSizeContent, fontColor, ".");
+			IconFrame = ControlFactory.CreateIcon(contentManager, "TextboxLongFrame");
+			IconInputBar = ControlFactory.CreateIcon(contentManager, "IconInputBar");
+			LabelText = ControlFactory.CreateLabel(contentManager, fontPath, fontSizeContent, fontColor, ".");
 
 			Blur();
 		}

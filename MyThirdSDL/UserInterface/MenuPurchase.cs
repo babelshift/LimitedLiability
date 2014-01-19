@@ -298,7 +298,6 @@ namespace MyThirdSDL.UserInterface
 		{
 			// the last page number will indicate the key in which we check for the next items to add
 			int lastPageNumber = buttonMenuItemPages.Keys.Count();
-			int itemsOnLastPageCount = 0;
 			List<ButtonMenuItem> buttonMenuItemsOnLastPage = new List<ButtonMenuItem>();
 			bool success = buttonMenuItemPages.TryGetValue(lastPageNumber, out buttonMenuItemsOnLastPage);
 			if (success)
@@ -322,7 +321,7 @@ namespace MyThirdSDL.UserInterface
 				buttonMenuItemPages.Add(1, buttonMenuItemsOnLastPage);
 			}
 
-			itemsOnLastPageCount = buttonMenuItemsOnLastPage.Count;
+			int itemsOnLastPageCount = buttonMenuItemsOnLastPage.Count;
 			Vector buttonMenuItemPosition = Vector.Zero;
 
 			if (itemsOnLastPageCount == 1)
@@ -461,10 +460,8 @@ namespace MyThirdSDL.UserInterface
 		{
 			base.Dispose();
 
-			List<ButtonMenuItem> buttonMenuItemsOnCurrentPage = new List<ButtonMenuItem>();
-			bool success = buttonMenuItemPages.TryGetValue(currentDisplayedPage, out buttonMenuItemsOnCurrentPage);
-			if (success)
-				foreach (var buttonMenuItem in buttonMenuItemsOnCurrentPage)
+			foreach (var key in buttonMenuItemPages.Keys)
+				foreach (var buttonMenuItem in buttonMenuItemPages[key])
 					buttonMenuItem.Dispose();
 
 			buttonMenuItemPages.Clear();

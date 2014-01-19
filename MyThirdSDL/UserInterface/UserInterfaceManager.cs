@@ -156,20 +156,16 @@ namespace MyThirdSDL.UserInterface
 			int fontSizeContent;
 			string fontPath = GetLabelFontDetails(contentManager, out fontColor, out fontSizeContent);
 
-			labelMousePositionAbsolute = new Label();// controlFactory.CreateLabel(Vector.Zero, fontPath, fontSizeContent, fontColor, ".");
-			labelMousePositionAbsolute.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSizeContent, fontColor, ".");
+			labelMousePositionAbsolute = ControlFactory.CreateLabel(contentManager, fontPath, fontSizeContent, fontColor, ".");
 			labelMousePositionAbsolute.Position = Vector.Zero;
 
-			labelMousePositionIsometric = new Label(); // controlFactory.CreateLabel(Vector.Zero, fontPath, fontSizeContent, fontColor, ".");
-			labelMousePositionIsometric.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSizeContent, fontColor, ".");
+			labelMousePositionIsometric = ControlFactory.CreateLabel(contentManager, fontPath, fontSizeContent, fontColor, ".");
 			labelMousePositionIsometric.Position = Vector.Zero;
 
-			labelSimulationTime = new Label(); // controlFactory.CreateLabel(Vector.Zero, fontPath, fontSizeContent, fontColor, ".");
-			labelSimulationTime.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSizeContent, fontColor, ".");
+			labelSimulationTime = ControlFactory.CreateLabel(contentManager, fontPath, fontSizeContent, fontColor, ".");
 			labelSimulationTime.Position = Vector.Zero;
 
-			labelState = new Label(); // controlFactory.CreateLabel(Vector.Zero, fontPath, fontSizeContent, fontColor, ".");
-			labelState.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSizeContent, fontColor, ".");
+			labelState = ControlFactory.CreateLabel(contentManager, fontPath, fontSizeContent, fontColor, ".");
 			labelState.Position = Vector.Zero;
 
 			labels.Add(labelMousePositionAbsolute);

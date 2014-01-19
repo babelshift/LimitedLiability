@@ -24,7 +24,7 @@ namespace MyThirdSDL.UserInterface
 				base.Position = value;
 
 				iconThumbnail.Position = base.Position + new Vector(8, 8);
-				labelName.Position = new Vector(iconThumbnail.Position.X + iconThumbnail.Width + 15, iconThumbnail.Position.Y + 8);
+				labelName.Position = new Vector(iconThumbnail.Position.X + iconThumbnail.Width + 15, iconThumbnail.Position.Y + (iconThumbnail.Height / 2 - labelName.Height / 2));
 			}
 		}
 
@@ -36,7 +36,7 @@ namespace MyThirdSDL.UserInterface
 			int fontSizeName = 14;
 			int fontSizeOverview = 10;
 
-			labelName = ControlFactory.CreateLabel(contentManager, fontPath, fontSizeName, fontColorPaleYellow, textItemName);
+			labelName = ControlFactory.CreateLabel(contentManager, fontPath, fontSizeName, fontColorPaleYellow, textItemName, 225);
 			labelName.EnableShadow(contentManager, 2, 2);
 
 			iconThumbnail = new Icon(contentManager.GetTexture(iconThumbnailKey));

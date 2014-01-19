@@ -42,51 +42,36 @@ namespace MyThirdSDL.Screens
 			labelTitle.Position = new Vector(MainGame.SCREEN_WIDTH_LOGICAL / 2 - labelTitle.Width / 2, 300);
 			labelTitle.EnableShadow(ContentManager, 3, 3);
 
-			buttonNewGame = new Button();
-			buttonNewGame.TextureFrame = ContentManager.GetTexture("ButtonMainMenuItem");
-			buttonNewGame.TextureFrameHovered = ContentManager.GetTexture("ButtonMainMenuItemHover");
-			buttonNewGame.Label = new Label();
-			buttonNewGame.Label.TrueTypeText = ContentManager.GetTrueTypeText(fontPath, fontSizeContent, fontColorLabelValue, "New Game");
+			buttonNewGame = ControlFactory.CreateButton(ContentManager, "ButtonMainMenuItem", "ButtonMainMenuItemHover");
+			buttonNewGame.Label = ControlFactory.CreateLabel(ContentManager, fontPath, fontSizeContent, fontColorLabelValue, "New Game");
 			buttonNewGame.ButtonType = ButtonType.TextOnly;
 			buttonNewGame.Position = new Vector(MainGame.SCREEN_WIDTH_LOGICAL / 2 - buttonNewGame.Width / 2, 400);
 			buttonNewGame.Clicked += buttonNewGame_Clicked;
 			buttonNewGame.EnableLabelShadow(ContentManager, 2, 2);
 
-			buttonLoadGame = new Button();
-			buttonLoadGame.TextureFrame = ContentManager.GetTexture("ButtonMainMenuItem");
-			buttonLoadGame.TextureFrameHovered = ContentManager.GetTexture("ButtonMainMenuItemHover");
-			buttonLoadGame.Label = new Label();
-			buttonLoadGame.Label.TrueTypeText = ContentManager.GetTrueTypeText(fontPath, fontSizeContent, fontColorLabelValue, "Load Game");
+			buttonLoadGame = ControlFactory.CreateButton(ContentManager, "ButtonMainMenuItem", "ButtonMainMenuItemHover");
+			buttonLoadGame.Label = ControlFactory.CreateLabel(ContentManager, fontPath, fontSizeContent, fontColorLabelValue, "Load Game");
 			buttonLoadGame.ButtonType = ButtonType.TextOnly;
 			buttonLoadGame.Position = new Vector(MainGame.SCREEN_WIDTH_LOGICAL / 2 - buttonNewGame.Width / 2, 435);
 			buttonLoadGame.Clicked += buttonLoadGame_Clicked;
 			buttonLoadGame.EnableLabelShadow(ContentManager, 2, 2);
 
-			buttonOptions = new Button();
-			buttonOptions.TextureFrame = ContentManager.GetTexture("ButtonMainMenuItem");
-			buttonOptions.TextureFrameHovered = ContentManager.GetTexture("ButtonMainMenuItemHover");
-			buttonOptions.Label = new Label();
-			buttonOptions.Label.TrueTypeText = ContentManager.GetTrueTypeText(fontPath, fontSizeContent, fontColorLabelValue, "Options");
+			buttonOptions = ControlFactory.CreateButton(ContentManager, "ButtonMainMenuItem", "ButtonMainMenuItemHover");
+			buttonOptions.Label = ControlFactory.CreateLabel(ContentManager, fontPath, fontSizeContent, fontColorLabelValue, "Options");
 			buttonOptions.ButtonType = ButtonType.TextOnly;
 			buttonOptions.Position = new Vector(MainGame.SCREEN_WIDTH_LOGICAL / 2 - buttonNewGame.Width / 2, 470);
 			buttonOptions.Clicked += buttonOptions_Clicked;
 			buttonOptions.EnableLabelShadow(ContentManager, 2, 2);
 
-			buttonCredits = new Button();
-			buttonCredits.TextureFrame = ContentManager.GetTexture("ButtonMainMenuItem");
-			buttonCredits.TextureFrameHovered = ContentManager.GetTexture("ButtonMainMenuItemHover");
-			buttonCredits.Label = new Label();
-			buttonCredits.Label.TrueTypeText = ContentManager.GetTrueTypeText(fontPath, fontSizeContent, fontColorLabelValue, "Credits");
+			buttonCredits = ControlFactory.CreateButton(ContentManager, "ButtonMainMenuItem", "ButtonMainMenuItemHover");
+			buttonCredits.Label = ControlFactory.CreateLabel(ContentManager, fontPath, fontSizeContent, fontColorLabelValue, "Credits");
 			buttonCredits.ButtonType = ButtonType.TextOnly;
 			buttonCredits.Position = new Vector(MainGame.SCREEN_WIDTH_LOGICAL / 2 - buttonNewGame.Width / 2, 505);
 			buttonCredits.Clicked += buttonCredits_Clicked;
 			buttonCredits.EnableLabelShadow(ContentManager, 2, 2);
 
-			buttonQuit = new Button();
-			buttonQuit.TextureFrame = ContentManager.GetTexture("ButtonMainMenuItem");
-			buttonQuit.TextureFrameHovered = ContentManager.GetTexture("ButtonMainMenuItemHover");
-			buttonQuit.Label = new Label();
-			buttonQuit.Label.TrueTypeText = ContentManager.GetTrueTypeText(fontPath, fontSizeContent, fontColorLabelValue, "Quit");
+			buttonQuit = ControlFactory.CreateButton(ContentManager, "ButtonMainMenuItem", "ButtonMainMenuItemHover");
+			buttonQuit.Label = ControlFactory.CreateLabel(ContentManager, fontPath, fontSizeContent, fontColorLabelValue, "Quit");
 			buttonQuit.ButtonType = ButtonType.TextOnly;
 			buttonQuit.Position = new Vector(MainGame.SCREEN_WIDTH_LOGICAL / 2 - buttonNewGame.Width / 2, 540);
 			buttonQuit.Clicked += buttonQuit_Clicked;

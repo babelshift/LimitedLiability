@@ -56,7 +56,7 @@ namespace MyThirdSDL.UserInterface
 			return icon;
 		}
 
-		public static Label CreateLabel(ContentManager contentManager, string fontPath, int fontSize, Color fontColor, string text)
+		public static Label CreateLabel(ContentManager contentManager, string fontPath, int fontSize, Color fontColor, string text, uint wrapLength = 0)
 		{
 			if (String.IsNullOrEmpty(fontPath))
 				throw new ArgumentNullException("fontPath");
@@ -68,7 +68,7 @@ namespace MyThirdSDL.UserInterface
 				throw new ArgumentOutOfRangeException("fontSize");
 
 			Label label = new Label();
-			label.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSize, fontColor, text);
+			label.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSize, fontColor, text, wrapLength);
 
 			return label;
 		}
@@ -87,10 +87,7 @@ namespace MyThirdSDL.UserInterface
 			if (fontSize <= 0)
 				throw new ArgumentOutOfRangeException("fontSize");
 
-			Tooltip tooltip = new Tooltip();
-			tooltip.TextureFrame = contentManager.GetTexture(textureFrameKey);
-			tooltip.Label = new Label();
-			tooltip.Label.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSize, fontColor, text);
+			Tooltip tooltip = ControlFactory.CreateTooltip(contentManager, textureFrameKey, fontPath, fontSize, fontColor, text);
 
 			return tooltip;
 		}

@@ -15,7 +15,9 @@ namespace MyThirdSDL.Screens
 		private Texture textureBackgroundTile;
 		private Icon iconFrame;
 
-		private List<ScenarioItem> scenarioItems = new List<ScenarioItem>();
+		private int scenarioItemsPerPage = 5;
+		private int currentPageNumber = 1;
+		private Dictionary<int, List<ScenarioItem>> scenarioItemPages = new Dictionary<int, List<ScenarioItem>>();
 
 		public event EventHandler ReturnToMainMenu;
 
@@ -27,7 +29,7 @@ namespace MyThirdSDL.Screens
 		public override void Activate(Renderer renderer)
 		{
 			base.Activate(renderer);
-			
+
 			string fontPath = ContentManager.GetContentPath("Arcade");
 			Color fontColorWhite = Styles.Colors.White;
 			int fontSizeTitle = 18;
@@ -42,7 +44,21 @@ namespace MyThirdSDL.Screens
 
 			labelTitle.Position = iconFrame.Position + new Vector(9, 13);
 
-			AddScenarioItem("IconPizza", "IconPizza", "A Fresh Start...", "In this scenario...");
+			AddScenarioItem("ScenarioThumbnail1", "ScenarioThumbnail1", "A Fresh Start (Plain)", "In this scenario...");
+			AddScenarioItem("ScenarioThumbnail1", "ScenarioThumbnail1", "Broke as a Joke (Mild)", "In this scenario...");
+			AddScenarioItem("ScenarioThumbnail1", "ScenarioThumbnail1", "Mutiny! (Spicy)", "In this scenario...");
+			AddScenarioItem("ScenarioThumbnail1", "ScenarioThumbnail1", "Monopoly City (Spicy)", "In this scenario...");
+			AddScenarioItem("ScenarioThumbnail1", "ScenarioThumbnail1", "Sandbox Mode", "In this scenario...");
+		}
+
+		private List<ScenarioItem> GetScenarioItemsOnPage(int pageNumber)
+		{
+			List<ScenarioItem> scenarioItemsOnCurrentPage = new List<ScenarioItem>();
+			bool success = scenarioItemPages.TryGetValue(pageNumber, out scenarioItemsOnCurrentPage);
+			if (success)
+				return scenarioItemsOnCurrentPage;
+			else
+				return new List<ScenarioItem>();
 		}
 
 		public override void Update(SharpDL.GameTime gameTime, bool otherWindowHasFocus, bool coveredByOtherScreen)
@@ -52,7 +68,7 @@ namespace MyThirdSDL.Screens
 			iconFrame.Update(gameTime);
 			labelTitle.Update(gameTime);
 
-			foreach (var scenarioItem in scenarioItems)
+			foreach (var scenarioItem in GetScenarioItemsOnPage(currentPageNumber))
 				scenarioItem.Update(gameTime);
 		}
 
@@ -67,7 +83,7 @@ namespace MyThirdSDL.Screens
 			iconFrame.Draw(gameTime, renderer);
 			labelTitle.Draw(gameTime, renderer);
 
-			foreach (var scenarioItem in scenarioItems)
+			foreach (var scenarioItem in GetScenarioItemsOnPage(currentPageNumber))
 				scenarioItem.Draw(gameTime, renderer);
 		}
 
@@ -77,7 +93,7 @@ namespace MyThirdSDL.Screens
 
 			foreach (var key in keysPressed)
 				if (key.VirtualKey == SharpDL.Input.VirtualKeyCode.Escape)
-					if(ReturnToMainMenu != null)
+					if (ReturnToMainMenu != null)
 						ReturnToMainMenu(this, EventArgs.Empty);
 		}
 
@@ -85,7 +101,7 @@ namespace MyThirdSDL.Screens
 		{
 			labelTitle.HandleMouseButtonPressedEvent(sender, e);
 
-			foreach (var scenarioItem in scenarioItems)
+			foreach (var scenarioItem in GetScenarioItemsOnPage(currentPageNumber))
 				scenarioItem.HandleMouseButtonPressedEvent(sender, e);
 		}
 
@@ -93,15 +109,52 @@ namespace MyThirdSDL.Screens
 		{
 			labelTitle.HandleMouseMovingEvent(sender, e);
 
-			foreach (var scenarioItem in scenarioItems)
+			foreach (var scenarioItem in GetScenarioItemsOnPage(currentPageNumber))
 				scenarioItem.HandleMouseMovingEvent(sender, e);
 		}
 
 		private void AddScenarioItem(string iconThumbnailKey, string iconOverviewKey, string textItemName, string textOverview)
 		{
 			ScenarioItem scenarioItem = new ScenarioItem(ContentManager, iconThumbnailKey, iconOverviewKey, textItemName, textOverview);
-			scenarioItem.Position = iconFrame.Position + new Vector(9, 45);
-			scenarioItems.Add(scenarioItem);
+
+			int lastPageNumber = scenarioItemPages.Keys.Count();
+
+			List<ScenarioItem> scenarioItemsOnLastPage = new List<ScenarioItem>();
+			if (scenarioItemPages.Keys.Count > 0)
+			{
+				scenarioItemsOnLastPage = GetScenarioItemsOnPage(lastPageNumber);
+
+				if (scenarioItemsOnLastPage.Count < scenarioItemsPerPage)
+					scenarioItemsOnLastPage.Add(scenarioItem);
+				else
+				{
+					scenarioItemsOnLastPage = new List<ScenarioItem>();
+					scenarioItemsOnLastPage.Add(scenarioItem);
+					scenarioItemPages.Add(lastPageNumber + 1, scenarioItemsOnLastPage);
+				}
+			}
+			else
+			{
+				scenarioItemsOnLastPage = new List<ScenarioItem>();
+				scenarioItemsOnLastPage.Add(scenarioItem);
+				scenarioItemPages.Add(1, scenarioItemsOnLastPage);
+			}
+
+			int itemsOnLastPageCount = scenarioItemsOnLastPage.Count;
+
+			switch(itemsOnLastPageCount)
+			{
+				case 1:
+					scenarioItem.Position = iconFrame.Position + new Vector(4, 45); break;
+				case 2:
+					scenarioItem.Position = iconFrame.Position + new Vector(4, 115); break;
+				case 3:
+					scenarioItem.Position = iconFrame.Position + new Vector(4, 185); break;
+				case 4:
+					scenarioItem.Position = iconFrame.Position + new Vector(4, 255); break;
+				case 5:
+					scenarioItem.Position = iconFrame.Position + new Vector(4, 325); break;
+			}
 		}
 
 		public override void Unload()
@@ -119,12 +172,16 @@ namespace MyThirdSDL.Screens
 
 		private void Dispose(bool disposing)
 		{
-			if(labelTitle != null)
+			if (labelTitle != null)
 				labelTitle.Dispose();
-			foreach (var scenarioItem in scenarioItems)
-				if(scenarioItem != null)
-					scenarioItem.Dispose();
-			scenarioItems.Clear();
+			foreach (var key in scenarioItemPages.Keys)
+			{
+				foreach (var scenarioItem in scenarioItemPages[key])
+					if (scenarioItem != null)
+						scenarioItem.Dispose();
+				scenarioItemPages[key].Clear();
+			}
+			scenarioItemPages.Clear();
 		}
 	}
 }

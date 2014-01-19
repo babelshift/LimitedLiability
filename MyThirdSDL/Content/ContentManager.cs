@@ -63,9 +63,9 @@ namespace MyThirdSDL.Content
 			return texture;
 		}
 
-		public TrueTypeText GetTrueTypeText(string fontPath, int fontSize, Color color, string text)
+		public TrueTypeText GetTrueTypeText(string fontPath, int fontSize, Color color, string text, uint wrapLength)
 		{
-			return TrueTypeTextFactory.CreateTrueTypeText(renderer, fontPath, fontSize, color, text);
+			return TrueTypeTextFactory.CreateTrueTypeText(renderer, fontPath, fontSize, color, text, wrapLength);
 		}
 
 		private void LoadCompanyData(string json)

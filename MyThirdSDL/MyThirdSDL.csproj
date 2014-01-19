@@ -311,6 +311,9 @@
     <Content Include="Content\Images\User Interface\MenuScenarioFrame.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Content\Images\User Interface\ScenarioThumbnail1.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Content\Images\User Interface\TextboxLongFrame.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

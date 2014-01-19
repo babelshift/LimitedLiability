@@ -43,7 +43,7 @@ namespace MyThirdSDL.UserInterface
 		{
 			this.shadowOffsetX = shadowOffsetX;
 			this.shadowOffsetY = shadowOffsetY;
-			trueTypeTextShadow = contentManager.GetTrueTypeText(TrueTypeText.Font.FilePath, TrueTypeText.Font.PointSize, Styles.Colors.Black, Text);
+			trueTypeTextShadow = contentManager.GetTrueTypeText(TrueTypeText.Font.FilePath, TrueTypeText.Font.PointSize, Styles.Colors.Black, Text, TrueTypeText.WrapLength);
 		}
 
 		public override void Draw(GameTime gameTime, Renderer renderer)
