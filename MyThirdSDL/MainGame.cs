@@ -45,29 +45,14 @@ namespace MyThirdSDL
 		private bool isMouseInsideWindowBounds = true;
 		private bool isWindowFocused = true;
 		private GameState currentGameState;
-
-		#region Constructors
-
+		
 		private GameState CurrentGameState
 		{
 			get { return currentGameState; }
-			set
-			{
-				currentGameState = value;
-
-				Screen screen = null;
-
-				if (currentGameState == GameState.MainMenu)
-					screen = CreateMainMenuScreen();
-				else if (currentGameState == GameState.Scenarios)
-					screen = CreateScenarioScreen();
-				else if (currentGameState == GameState.InGame)
-					screen = CreateMainGameScreen();
-
-				if (screen != null)
-					LoadingScreen.Load(contentManager, screenManager, false, screen);
-			}
+			set { currentGameState = value; }
 		}
+		
+		#region Constructors
 
 		/// <summary>
 		/// By default, the constructor does nothing. Something to do is subscribe to various game events.
@@ -154,7 +139,7 @@ namespace MyThirdSDL
 
 			Camera.Position = Vector.Zero;
 
-			CurrentGameState = GameState.MainMenu;
+			LoadMainMenuScreen();
 
 			if (log.IsDebugEnabled)
 				log.Debug("Game loop Initialize has been completed.");
@@ -166,22 +151,50 @@ namespace MyThirdSDL
 		{
 			MainMenuScreen mainMenuScreen = new MainMenuScreen(contentManager);
 			mainMenuScreen.QuitButtonClicked += (sender, e) => Quit();
-			mainMenuScreen.NewGameButtonClicked += (sender, e) => CurrentGameState = GameState.Scenarios;
+			mainMenuScreen.NewGameButtonClicked += (sender, e) => LoadScenariosScreen();
 			return mainMenuScreen;
 		}
 
-		public MainGameScreen CreateMainGameScreen()
+		public MainGameScreen CreateMainGameScreen(string mapPathToLoad)
 		{
-			MainGameScreen mainGameScreen = new MainGameScreen(Renderer, contentManager);
-			mainGameScreen.ReturnToMainMenu += (sender, e) => CurrentGameState = GameState.MainMenu;
+			MainGameScreen mainGameScreen = new MainGameScreen(Renderer, contentManager, mapPathToLoad);
+			mainGameScreen.ReturnToMainMenu += (sender, e) => LoadMainMenuScreen();
 			return mainGameScreen;
 		}
 
 		public ScenarioScreen CreateScenarioScreen()
 		{
 			ScenarioScreen scenarioScreen = new ScenarioScreen(contentManager);
-			scenarioScreen.ReturnToMainMenu += (sender, e) => CurrentGameState = GameState.MainMenu;
+			scenarioScreen.ReturnToMainMenu += (sender, e) => LoadMainMenuScreen();
+			scenarioScreen.ScenarioSelected += (sender, e) => LoadMainGameScreen(e.MapPathToLoad);
 			return scenarioScreen;
+		}
+
+		private void LoadScreen(Screen screen)
+		{
+			if (screen != null)
+				LoadingScreen.Load(contentManager, screenManager, false, screen);
+		}
+
+		private void LoadMainMenuScreen()
+		{
+			CurrentGameState = GameState.MainMenu;
+			Screen screen = CreateMainMenuScreen();
+			LoadScreen(screen);
+		}
+
+		private void LoadScenariosScreen()
+		{
+			CurrentGameState = GameState.Scenarios;
+			Screen screen = CreateScenarioScreen();
+			LoadScreen(screen);
+		}
+
+		private void LoadMainGameScreen(string mapPathToLoad)
+		{
+			CurrentGameState = GameState.Scenarios;
+			Screen screen = CreateMainGameScreen(mapPathToLoad);
+			LoadScreen(screen);
 		}
 
 		#endregion

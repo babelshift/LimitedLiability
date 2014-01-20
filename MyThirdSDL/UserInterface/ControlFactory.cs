@@ -87,7 +87,9 @@ namespace MyThirdSDL.UserInterface
 			if (fontSize <= 0)
 				throw new ArgumentOutOfRangeException("fontSize");
 
-			Tooltip tooltip = ControlFactory.CreateTooltip(contentManager, textureFrameKey, fontPath, fontSize, fontColor, text);
+			Tooltip tooltip = new Tooltip();
+			tooltip.TextureFrame = contentManager.GetTexture(textureFrameKey);
+			tooltip.Label = ControlFactory.CreateLabel(contentManager, fontPath, fontSize, fontColor, text);
 
 			return tooltip;
 		}

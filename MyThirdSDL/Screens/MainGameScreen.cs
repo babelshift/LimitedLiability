@@ -26,6 +26,7 @@ namespace MyThirdSDL.Screens
 		//private Cursor cursor;
 		private BankAccount bankAccount;
 
+		private string mapPathToLoad;
 		private TiledMap tiledMap;
 		private Image tileHighlightImage;
 		private MapCell hoveredMapCell;
@@ -58,7 +59,7 @@ namespace MyThirdSDL.Screens
 
 		#region Constructor
 
-		public MainGameScreen(Renderer renderer, ContentManager contentManager)
+		public MainGameScreen(Renderer renderer, ContentManager contentManager, string mapPathToLoad)
 			: base(contentManager)
 		{
 			simulationManager = new SimulationManager(DateTime.Now, contentManager.ThoughtPool);
@@ -69,6 +70,8 @@ namespace MyThirdSDL.Screens
 			simulationManager.EmployeeThirstSatisfied += HandleEmployeeThirstSatisfied;
 			simulationManager.EmployeeHungerSatisfied += HandleEmployeeHungerSatisfied;
 			simulationManager.EmployeeClicked += HandleEmployeeClicked;
+
+			this.mapPathToLoad = mapPathToLoad;
 		}
 
 		#endregion
@@ -192,7 +195,7 @@ namespace MyThirdSDL.Screens
 			Surface tileHighlightSurface = new Surface(tileHighlightTexturePath, SurfaceType.PNG);
 			tileHighlightImage = new Image(renderer, tileHighlightSurface, ImageFormat.PNG);
 			Point bottomRightPointOfScreen = new Point(MainGame.SCREEN_WIDTH_LOGICAL, MainGame.SCREEN_HEIGHT_LOGICAL);
-			string mapPath = ContentManager.GetContentPath("OfficeOrthogonal1");
+			string mapPath = ContentManager.GetContentPath(mapPathToLoad);
 
 			// Map
 			tiledMap = new TiledMap(mapPath, renderer);

@@ -11,10 +11,21 @@ namespace MyThirdSDL.UserInterface
 	public class ScenarioItem : Control
 	{
 		private Label labelName;
+		private Label labelNameSelected;
+		private Label labelActive;
 		private Label labelOverview;
 		private Icon iconThumbnail;
+		private Icon iconThumbnailSelected;
 		private Icon iconOverview;
-		private Button buttonSelect;
+		private Icon iconActive;
+
+		private Vector originalPosition = Vector.Zero;
+		private bool isSelected = false;
+
+		public Label LabelOverview { get { return labelOverview; } }
+		public Icon IconOverview { get { return iconOverview; } }
+
+		public string MapPathToLoad { get { return "OfficeOrthogonal1"; } }
 
 		public override Vector Position
 		{
@@ -23,12 +34,17 @@ namespace MyThirdSDL.UserInterface
 			{
 				base.Position = value;
 
+				if (originalPosition == Vector.Zero)
+					originalPosition = base.Position;
+
 				iconThumbnail.Position = base.Position + new Vector(8, 8);
+				iconThumbnailSelected.Position = base.Position + new Vector(8, 8);
 				labelName.Position = new Vector(iconThumbnail.Position.X + iconThumbnail.Width + 15, iconThumbnail.Position.Y + (iconThumbnail.Height / 2 - labelName.Height / 2));
+				labelNameSelected.Position = new Vector(iconThumbnail.Position.X + iconThumbnail.Width + 15, iconThumbnail.Position.Y + (iconThumbnail.Height / 2 - labelName.Height / 2));
 			}
 		}
 
-		public ScenarioItem(ContentManager contentManager, string iconThumbnailKey, string iconOverviewKey, string textItemName, string textOverview)
+		public ScenarioItem(ContentManager contentManager, string iconThumbnailKey, string iconThumbnailSelectedKey, string iconOverviewKey, string textItemName, string textOverview)
 		{
 			string fontPath = contentManager.GetContentPath("Arcade");
 			Color fontColorWhite = Styles.Colors.White;
@@ -36,18 +52,20 @@ namespace MyThirdSDL.UserInterface
 			int fontSizeName = 14;
 			int fontSizeOverview = 10;
 
-			labelName = ControlFactory.CreateLabel(contentManager, fontPath, fontSizeName, fontColorPaleYellow, textItemName, 225);
+			labelName = ControlFactory.CreateLabel(contentManager, fontPath, fontSizeName, fontColorWhite, textItemName, 225);
 			labelName.EnableShadow(contentManager, 2, 2);
+			labelNameSelected = ControlFactory.CreateLabel(contentManager, fontPath, fontSizeName, fontColorPaleYellow, textItemName, 225);
+			labelNameSelected.EnableShadow(contentManager, 2, 2);
+
+			labelOverview = ControlFactory.CreateLabel(contentManager, fontPath, fontSizeName, fontColorWhite, textOverview, 445);
+			labelOverview.EnableShadow(contentManager, 2, 2);
 
 			iconThumbnail = new Icon(contentManager.GetTexture(iconThumbnailKey));
+			iconThumbnailSelected = new Icon(contentManager.GetTexture(iconThumbnailSelectedKey));
+			iconActive = iconThumbnail;
 			iconOverview = new Icon(contentManager.GetTexture(iconOverviewKey));
 
-			buttonSelect = ControlFactory.CreateButton(contentManager, "ButtonSquare", "ButtonSquareHover");
-			buttonSelect.Icon = ControlFactory.CreateIcon(contentManager, "IconWindowConfirm");
-			buttonSelect.IconHovered = ControlFactory.CreateIcon(contentManager, "IconWindowConfirm");
-			buttonSelect.ButtonType = ButtonType.IconOnly;
-
-			Width = labelName.Bounds.Right - iconThumbnail.Bounds.Left;
+			Width = iconThumbnail.Width + labelName.Width;
 			Height = iconThumbnail.Height;
 		}
 
@@ -55,42 +73,95 @@ namespace MyThirdSDL.UserInterface
 		{
 			base.Update(gameTime);
 
-			labelName.Update(gameTime);
-			//labelOverview.Update(gameTime);
-			iconThumbnail.Update(gameTime);
-			iconOverview.Update(gameTime);
-			buttonSelect.Update(gameTime);
+			if (IsHovered || isSelected)
+			{
+				iconActive = iconThumbnailSelected;
+				labelActive = labelNameSelected;
+			}
+			else
+			{
+				iconActive = iconThumbnail;
+				labelActive = labelName;
+			}
+
+			if (labelActive != null)
+				labelActive.Update(gameTime);
+
+			if (iconActive != null)
+				iconActive.Update(gameTime);
+
+			if (isSelected)
+			{
+				labelOverview.Update(gameTime);
+				iconOverview.Update(gameTime);
+			}
 		}
 
 		public override void Draw(SharpDL.GameTime gameTime, Renderer renderer)
 		{
-			labelName.Draw(gameTime, renderer);
-			//labelOverview.Draw(gameTime, renderer);
-			iconThumbnail.Draw(gameTime, renderer);
-			//iconOverview.Draw(gameTime, renderer);
-			//buttonSelect.Draw(gameTime, renderer);
+			if (labelActive != null)
+				labelActive.Draw(gameTime, renderer);
+
+			if (iconActive != null)
+				iconActive.Draw(gameTime, renderer);
+
+			if (isSelected)
+			{
+				labelOverview.Draw(gameTime, renderer);
+				iconOverview.Draw(gameTime, renderer);
+			}
 		}
 
 		public override void HandleMouseMovingEvent(object sender, SharpDL.Events.MouseMotionEventArgs e)
 		{
 			base.HandleMouseMovingEvent(sender, e);
 
-			labelName.HandleMouseMovingEvent(sender, e);
-			//labelOverview.Update(gameTime);
-			iconThumbnail.HandleMouseMovingEvent(sender, e);
-			//iconOverview.HandleMouseMovingEvent(sender, e);
-			//buttonSelect.HandleMouseMovingEvent(sender, e);
+			if (labelActive != null)
+				labelActive.HandleMouseMovingEvent(sender, e);
+
+			if (iconActive != null)
+				iconActive.HandleMouseMovingEvent(sender, e);
+
+			if (isSelected)
+			{
+				labelOverview.HandleMouseMovingEvent(sender, e);
+				iconOverview.HandleMouseMovingEvent(sender, e);
+			}
 		}
 
 		public override void HandleMouseButtonPressedEvent(object sender, SharpDL.Events.MouseButtonEventArgs e)
 		{
 			base.HandleMouseButtonPressedEvent(sender, e);
 
-			labelName.HandleMouseButtonPressedEvent(sender, e);
-			//labelOverview.Update(gameTime);
-			iconThumbnail.HandleMouseButtonPressedEvent(sender, e);
-			iconOverview.HandleMouseButtonPressedEvent(sender, e);
-			//buttonSelect.HandleMouseButtonPressedEvent(sender, e);
+			if (labelActive != null)
+				labelActive.HandleMouseButtonPressedEvent(sender, e);
+
+			if (iconActive != null)
+				iconActive.HandleMouseButtonPressedEvent(sender, e);
+
+			if (IsClicked)
+				ToggleSelectedOn();
+
+			if (isSelected)
+			{
+				labelOverview.HandleMouseButtonPressedEvent(sender, e);
+				iconOverview.HandleMouseButtonPressedEvent(sender, e);
+			}
+		}
+
+		private void ToggleSelectedOn()
+		{
+			if (!isSelected)
+			{
+				isSelected = true;
+				Position += new Vector(10, 0);
+			}
+		}
+
+		public void ResetPosition()
+		{
+			isSelected = false;
+			Position = originalPosition;
 		}
 
 		public override void Dispose()
@@ -103,14 +174,16 @@ namespace MyThirdSDL.UserInterface
 		{
 			if (labelName != null)
 				labelName.Dispose();
+			if (labelNameSelected != null)
+				labelNameSelected.Dispose();
 			if (labelOverview != null)
 				labelOverview.Dispose();
 			if (iconThumbnail != null)
 				iconThumbnail.Dispose();
+			if (iconThumbnailSelected != null)
+				iconThumbnailSelected.Dispose();
 			if (iconOverview != null)
 				iconOverview.Dispose();
-			if (buttonSelect != null)
-				buttonSelect.Dispose();
 		}
 	}
 }
