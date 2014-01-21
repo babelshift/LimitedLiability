@@ -25,6 +25,7 @@
 		{ "key": "MenuMailboxFrame",			"value": "Images/User Interface/MenuMailboxFrame.png" },
 		{ "key": "MenuCompanyFrame",			"value": "Images/User Interface/MenuCompanyFrame.png" },
 		{ "key": "MenuScenarioFrame",			"value": "Images/User Interface/MenuScenarioFrame.png" },
+		{ "key": "MenuScenarioFrame2",			"value": "Images/User Interface/MenuScenarioFrame2.png" },
 		{ "key": "TextboxLongFrame",			"value": "Images/User Interface/TextboxLongFrame.png" },
 		{ "key": "BackgroundStripeTile",		"value": "Images/User Interface/BackgroundStripeTile.png" },
 		{ "key": "BackgroundStripeTileFaded",	"value": "Images/User Interface/BackgroundStripeTileFaded.png" },

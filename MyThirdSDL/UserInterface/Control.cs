@@ -12,7 +12,7 @@ namespace MyThirdSDL.UserInterface
 {
 	public abstract class Control : IDisposable
 	{
-		protected bool HasFocus { get; private set; }
+		public bool IsFocused { get; private set; }
 
 		public Guid ID { get; private set; }
 
@@ -50,7 +50,10 @@ namespace MyThirdSDL.UserInterface
 
 		public event EventHandler Hovered;
 		public event EventHandler Clicked;
-		public event EventHandler GotFocus;
+		public event EventHandler Focused;
+		public event EventHandler Focusing;
+		public event EventHandler Blurring;
+		public event EventHandler Blurred;
 
 		public Control()
 		{
@@ -88,15 +91,27 @@ namespace MyThirdSDL.UserInterface
 
 		public virtual void Focus()
 		{
-			HasFocus = true;
+			if (!IsFocused)
+			{
+				if (Focusing != null)
+					Focusing(this, EventArgs.Empty);
 
-			if (GotFocus != null)
-				GotFocus(this, EventArgs.Empty);
+				IsFocused = true;
+
+				if (Focused != null)
+					Focused(this, EventArgs.Empty);
+			}
 		}
 
 		public virtual void Blur()
 		{
-			HasFocus = false;
+			if (Blurring != null)
+				Blurring(this, EventArgs.Empty);
+
+			IsFocused = false;
+
+			if (Blurred != null)
+				Blurred(this, EventArgs.Empty);
 		}
 
 		private bool GetClicked(SharpDL.Events.MouseButtonEventArgs e)

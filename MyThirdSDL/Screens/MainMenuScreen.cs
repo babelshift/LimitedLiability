@@ -37,8 +37,7 @@ namespace MyThirdSDL.Screens
 			int fontSizeTitle = Styles.FontSizes.MainMenuTitle;
 			int fontSizeContent = Styles.FontSizes.Content;
 
-			labelTitle = new Label();
-			labelTitle.TrueTypeText = TrueTypeTextFactory.CreateTrueTypeText(renderer, fontPath, fontSizeTitle, fontColorTitle, "Limited Liability");
+			labelTitle = ControlFactory.CreateLabel(ContentManager, fontPath, fontSizeTitle, fontColorTitle, "Limited Liability");
 			labelTitle.Position = new Vector(MainGame.SCREEN_WIDTH_LOGICAL / 2 - labelTitle.Width / 2, 300);
 			labelTitle.EnableShadow(ContentManager, 3, 3);
 

@@ -93,38 +93,41 @@ namespace MyThirdSDL.UserInterface
 
 		public override void Blur()
 		{
-			base.Blur();
 			Keyboard.StopTextInput();
+			base.Blur();
 		}
 
 		public override void Update(SharpDL.GameTime gameTime)
 		{
-			base.Update(gameTime);
-
-			if (IsClicked)
-				Focus();
-
-			iconFrame.Update(gameTime);
-
-			if (HasFocus)
+			if (Visible)
 			{
-				timeSinceLastUpdate += gameTime.ElapsedGameTime;
-				if (timeSinceLastUpdate > TimeSpan.FromSeconds(0.5))
+				if (IsClicked)
+					Focus();
+
+				iconFrame.Update(gameTime);
+
+				if (IsFocused)
 				{
-					IconInputBar.Visible = true;
-
-					timeSinceVisibleTrue += gameTime.ElapsedGameTime;
-					if (timeSinceVisibleTrue > TimeSpan.FromSeconds(0.5))
+					timeSinceLastUpdate += gameTime.ElapsedGameTime;
+					if (timeSinceLastUpdate > TimeSpan.FromSeconds(0.5))
 					{
-						timeSinceLastUpdate = TimeSpan.Zero;
-						timeSinceVisibleTrue = TimeSpan.Zero;
-					}
-				}
-				else
-					IconInputBar.Visible = false;
+						IconInputBar.Visible = true;
 
-				IconInputBar.Update(gameTime);
-				LabelText.Update(gameTime);
+						timeSinceVisibleTrue += gameTime.ElapsedGameTime;
+						if (timeSinceVisibleTrue > TimeSpan.FromSeconds(0.5))
+						{
+							timeSinceLastUpdate = TimeSpan.Zero;
+							timeSinceVisibleTrue = TimeSpan.Zero;
+						}
+					}
+					else
+						IconInputBar.Visible = false;
+
+					IconInputBar.Update(gameTime);
+					LabelText.Update(gameTime);
+				}
+
+				base.Update(gameTime);
 			}
 		}
 
@@ -134,7 +137,7 @@ namespace MyThirdSDL.UserInterface
 			{
 				iconFrame.Draw(gameTime, renderer);
 
-				if (HasFocus)
+				if (IsFocused)
 					IconInputBar.Draw(gameTime, renderer);
 
 				if (HasText)
@@ -145,33 +148,39 @@ namespace MyThirdSDL.UserInterface
 
 		public override void HandleTextInput(string text)
 		{
-			base.HandleTextInput(text);
-
-			if (!IsTextboxFull)
+			if (IsFocused)
 			{
-				if (HasText)
-					LabelText.Text += text;
-				else
-					LabelText.Text = text;
+				base.HandleTextInput(text);
 
-				IconInputBar.Position += new Vector(12, 0);
+				if (!IsTextboxFull)
+				{
+					if (HasText)
+						LabelText.Text += text;
+					else
+						LabelText.Text = text;
+
+					IconInputBar.Position += new Vector(12, 0);
+				}
 			}
 		}
 
 		public override void HandleKeyPressed(KeyInformation key)
 		{
-			base.HandleKeyPressed(key);
-
-			if (key.VirtualKey == VirtualKeyCode.Backspace)
+			if (IsFocused)
 			{
-				if (HasText)
-				{
-					if (LabelText.Text.Length > 1)
-						LabelText.Text = LabelText.Text.Remove(LabelText.Text.Length - 1);
-					else
-						LabelText.Text = ".";
+				base.HandleKeyPressed(key);
 
-					IconInputBar.Position -= new Vector(12, 0);
+				if (key.VirtualKey == VirtualKeyCode.Backspace)
+				{
+					if (HasText)
+					{
+						if (LabelText.Text.Length > 1)
+							LabelText.Text = LabelText.Text.Remove(LabelText.Text.Length - 1);
+						else
+							LabelText.Text = ".";
+
+						IconInputBar.Position -= new Vector(12, 0);
+					}
 				}
 			}
 		}

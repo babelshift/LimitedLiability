@@ -63,7 +63,7 @@ namespace MyThirdSDL.Content
 			return texture;
 		}
 
-		public TrueTypeText GetTrueTypeText(string fontPath, int fontSize, Color color, string text, uint wrapLength)
+		public TrueTypeText GetTrueTypeText(string fontPath, int fontSize, Color color, string text, int wrapLength)
 		{
 			return TrueTypeTextFactory.CreateTrueTypeText(renderer, fontPath, fontSize, color, text, wrapLength);
 		}

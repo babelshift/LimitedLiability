@@ -287,6 +287,9 @@
     <Content Include="Content\Images\User Interface\IconMailUnread.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Content\Images\User Interface\MenuScenarioFrame2.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Content\Images\User Interface\ScenarioOverview1.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

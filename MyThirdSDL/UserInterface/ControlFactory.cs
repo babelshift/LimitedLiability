@@ -8,6 +8,7 @@ using MyThirdSDL.Content;
 using MyThirdSDL.Descriptors;
 using MyThirdSDL.Simulation;
 using MyThirdSDL.Mail;
+using System.Reflection;
 
 namespace MyThirdSDL.UserInterface
 {
@@ -56,7 +57,7 @@ namespace MyThirdSDL.UserInterface
 			return icon;
 		}
 
-		public static Label CreateLabel(ContentManager contentManager, string fontPath, int fontSize, Color fontColor, string text, uint wrapLength = 0)
+		public static Label CreateLabel(ContentManager contentManager, string fontPath, int fontSize, Color fontColor, string text, int wrapLength = 0)
 		{
 			if (String.IsNullOrEmpty(fontPath))
 				throw new ArgumentNullException("fontPath");
