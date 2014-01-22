@@ -1,18 +1,10 @@
-﻿using MyThirdSDL.Descriptors;
-using MyThirdSDL.UserInterface;
+﻿using MyThirdSDL.Content;
+using MyThirdSDL.Screens;
 using SharpDL;
 using SharpDL.Events;
 using SharpDL.Graphics;
 using SharpDL.Input;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using MyThirdSDL.Agents;
-using MyThirdSDL.Content;
-using MyThirdSDL.Simulation;
-using MyThirdSDL.Screens;
 
 namespace MyThirdSDL
 {
@@ -25,14 +17,14 @@ namespace MyThirdSDL
 		public static readonly int SCREEN_WIDTH_LOGICAL = 1152;
 		public static readonly int SCREEN_HEIGHT_LOGICAL = 720;
 
-		#endregion
+		#endregion Constants
 
 		#region Inputs
 
 		private List<KeyInformation> keysPressed = new List<KeyInformation>();
 		private List<KeyInformation> keysReleased = new List<KeyInformation>();
 
-		#endregion
+		#endregion Inputs
 
 		#region Factories and Managers
 
@@ -40,18 +32,18 @@ namespace MyThirdSDL
 		private ScreenManager screenManager;
 		private ScreenFactory screenFactory;
 
-		#endregion
+		#endregion Factories and Managers
 
 		private bool isMouseInsideWindowBounds = true;
 		private bool isWindowFocused = true;
 		private GameState currentGameState;
-		
+
 		private GameState CurrentGameState
 		{
 			get { return currentGameState; }
 			set { currentGameState = value; }
 		}
-		
+
 		#region Constructors
 
 		/// <summary>
@@ -74,8 +66,7 @@ namespace MyThirdSDL
 				log.Debug("Game class has been constructed.");
 		}
 
-
-		#endregion
+		#endregion Constructors
 
 		#region Event Handlers
 
@@ -87,7 +78,7 @@ namespace MyThirdSDL
 		{
 			screenManager.PassTextInputEventToActiveScreen(sender, e);
 		}
-		
+
 		private void HandleMouseButtonClicked(object sender, MouseButtonEventArgs e)
 		{
 			screenManager.PassMouseButtonPressedEventToActiveScreen(sender, e);
@@ -118,10 +109,10 @@ namespace MyThirdSDL
 			keysReleased.Clear();
 		}
 
-		#endregion
+		#endregion Event Handlers
 
 		/// <summary>
-		/// Initialize the SDL Window and SDL Renderer with any required flags. 
+		/// Initialize the SDL Window and SDL Renderer with any required flags.
 		/// Also initialize anything else of interest (SDL_ttf, SDL_image, etc).
 		/// </summary>
 		protected override void Initialize()
@@ -197,7 +188,7 @@ namespace MyThirdSDL
 			LoadScreen(screen);
 		}
 
-		#endregion
+		#endregion Create Screens
 
 		/// <summary>
 		/// Load any content that you will need to use in the update/draw game loop.
@@ -215,7 +206,7 @@ namespace MyThirdSDL
 		/// in the simulation parameters.
 		/// </summary>
 		/// <param name="gameTime"></param>
-		/// <remarks>This method is ideally called 60 times per second. However, based on the nature of the game, it is possible 
+		/// <remarks>This method is ideally called 60 times per second. However, based on the nature of the game, it is possible
 		/// for this method to run faster or slower. If faster, the game will attempt to fix the timestep to 60 FPS. If slower,
 		/// you will experience update/draw lag.</remarks>
 		protected override void Update(GameTime gameTime)
@@ -233,7 +224,7 @@ namespace MyThirdSDL
 		/// anything else that is used in the simulation state.
 		/// </summary>
 		/// <param name="gameTime"></param>
-		/// <remarks>This method is ideally called 60 times per second. However, based on the nature of the game, it is possible 
+		/// <remarks>This method is ideally called 60 times per second. However, based on the nature of the game, it is possible
 		/// for this method to run faster or slower. If faster, the game will attempt to fix the timestep to 60 FPS. If slower,
 		/// you will experience update/draw lag.</remarks>
 		protected override void Draw(GameTime gameTime)

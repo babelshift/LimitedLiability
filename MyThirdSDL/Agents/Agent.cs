@@ -1,11 +1,6 @@
 ﻿using SharpDL;
 using SharpDL.Graphics;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using MyThirdSDL.Simulation;
 
 namespace MyThirdSDL.Agents
 {
@@ -21,11 +16,12 @@ namespace MyThirdSDL.Agents
 	{
 		#region Members
 
-		private TextureBook textureBook;
+		private readonly TextureBook textureBook;
 		private AgentOrientation orientation;
+
 		private TimeSpan SimulationBirthTime { get; set; }
 
-		#endregion
+		#endregion Members
 
 		#region Properties
 
@@ -77,11 +73,11 @@ namespace MyThirdSDL.Agents
 			}
 		}
 
-		#endregion
+		#endregion Properties
 
 		#region Constructors
 
-		public Agent(TimeSpan birthTime, string name, TextureBook textureBook, Vector startingPosition, AgentOrientation orientation)
+		protected Agent(TimeSpan birthTime, string name, TextureBook textureBook, Vector startingPosition, AgentOrientation orientation)
 		{
 			ID = Guid.NewGuid();
 			SimulationBirthTime = birthTime;
@@ -92,7 +88,7 @@ namespace MyThirdSDL.Agents
 			Orientation = orientation;
 		}
 
-		#endregion
+		#endregion Constructors
 
 		#region Utilities
 
@@ -113,7 +109,7 @@ namespace MyThirdSDL.Agents
 			SimulationAge = simulationTime.Subtract(SimulationBirthTime);
 		}
 
-		#endregion
+		#endregion Utilities
 
 		#region Status Changes
 
@@ -133,7 +129,7 @@ namespace MyThirdSDL.Agents
 				State = status;
 		}
 
-		#endregion
+		#endregion Status Changes
 
 		#region Game Loop
 
@@ -151,7 +147,6 @@ namespace MyThirdSDL.Agents
 			);
 		}
 
-		#endregion
-
+		#endregion Game Loop
 	}
 }

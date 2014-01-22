@@ -1,14 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Xml;
-using Newtonsoft.Json;
+﻿using MyThirdSDL.Agents;
 using Newtonsoft.Json.Linq;
-using System.IO;
 using SharpDL.Graphics;
-using MyThirdSDL.Agents;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 
 namespace MyThirdSDL.Content
 {
@@ -176,7 +172,7 @@ namespace MyThirdSDL.Content
 
 		public string GetContentPath(string contentKey)
 		{
-			string contentPath = String.Empty;
+			string contentPath;
 			if (contentReference.TryGetValue(contentKey, out contentPath))
 				return contentRoot + contentPath;
 			else

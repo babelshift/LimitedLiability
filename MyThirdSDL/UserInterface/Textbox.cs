@@ -2,14 +2,10 @@
 using SharpDL.Graphics;
 using SharpDL.Input;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MyThirdSDL.UserInterface
 {
-	public class Textbox : Control
+	public sealed class Textbox : Control
 	{
 		private TimeSpan timeSinceVisibleTrue = TimeSpan.Zero;
 		private TimeSpan timeSinceLastUpdate = TimeSpan.Zero;
@@ -65,10 +61,20 @@ namespace MyThirdSDL.UserInterface
 
 				if (LabelText == null)
 					return false;
-				else if (LabelText.Text.Length < maxCharacterCount)
+				if (LabelText.Text.Length < maxCharacterCount)
 					return false;
+				return true;
+			}
+		}
+
+		public string Text
+		{
+			get
+			{
+				if (LabelText.Text == ".")
+					return String.Empty;
 				else
-					return true;
+					return LabelText.Text;
 			}
 		}
 
@@ -76,7 +82,7 @@ namespace MyThirdSDL.UserInterface
 		{
 			string fontPath = contentManager.GetContentPath("Arcade");
 			Color fontColor = Styles.Colors.PaleGreen;
-			int fontSizeContent = 12;
+			const int fontSizeContent = 12;
 
 			IconFrame = ControlFactory.CreateIcon(contentManager, "TextboxLongFrame");
 			IconInputBar = ControlFactory.CreateIcon(contentManager, "IconInputBar");
@@ -145,43 +151,38 @@ namespace MyThirdSDL.UserInterface
 			}
 		}
 
-
 		public override void HandleTextInput(string text)
 		{
-			if (IsFocused)
-			{
-				base.HandleTextInput(text);
+			if (!IsFocused) return;
 
-				if (!IsTextboxFull)
-				{
-					if (HasText)
-						LabelText.Text += text;
-					else
-						LabelText.Text = text;
+			base.HandleTextInput(text);
 
-					IconInputBar.Position += new Vector(12, 0);
-				}
-			}
+			if (IsTextboxFull) return;
+
+			if (HasText)
+				LabelText.Text += text;
+			else
+				LabelText.Text = text;
+
+			IconInputBar.Position += new Vector(12, 0);
 		}
 
 		public override void HandleKeyPressed(KeyInformation key)
 		{
-			if (IsFocused)
+			if (!IsFocused) return;
+
+			base.HandleKeyPressed(key);
+
+			if (key.VirtualKey == VirtualKeyCode.Backspace)
 			{
-				base.HandleKeyPressed(key);
+				if (!HasText) return;
 
-				if (key.VirtualKey == VirtualKeyCode.Backspace)
-				{
-					if (HasText)
-					{
-						if (LabelText.Text.Length > 1)
-							LabelText.Text = LabelText.Text.Remove(LabelText.Text.Length - 1);
-						else
-							LabelText.Text = ".";
+				if (LabelText.Text.Length > 1)
+					LabelText.Text = LabelText.Text.Remove(LabelText.Text.Length - 1);
+				else
+					LabelText.Text = ".";
 
-						IconInputBar.Position -= new Vector(12, 0);
-					}
-				}
+				IconInputBar.Position -= new Vector(12, 0);
 			}
 		}
 

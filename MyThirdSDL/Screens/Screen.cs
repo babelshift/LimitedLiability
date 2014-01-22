@@ -18,14 +18,13 @@ namespace MyThirdSDL.Screens
 	/// </summary>
 	public abstract class Screen : IDisposable
 	{
-		private bool isPopup = false;
 		private TimeSpan transitionOnTime = TimeSpan.Zero;
 		private TimeSpan transitionOffTime = TimeSpan.Zero;
 		private float transitionPosition = 1;
 		private ScreenState screenState = ScreenState.TransitionOn;
 		private bool otherWindowHasFocus;
 
-		private List<Control> controls = new List<Control>();
+		private readonly List<Control> controls = new List<Control>();
 
 		protected IList<Control> Controls { get { return controls; } }
 
@@ -40,11 +39,7 @@ namespace MyThirdSDL.Screens
 		/// popup, in which case screens underneath it do not need to bother
 		/// transitioning off.
 		/// </summary>
-		public bool IsPopup
-		{
-			get { return isPopup; }
-			protected set { isPopup = value; }
-		}
+		public bool IsPopup { get; protected set; }
 
 		/// <summary>
 		/// Indicates how long the screen takes to
@@ -133,10 +128,11 @@ namespace MyThirdSDL.Screens
 		/// </summary>
 		public bool IsSerializable { get; private set; }
 
-		#endregion
+		#endregion Properties
 
 		public Screen(ContentManager contentManager)
 		{
+			IsPopup = false;
 			ContentManager = contentManager;
 		}
 
@@ -144,10 +140,7 @@ namespace MyThirdSDL.Screens
 		/// Activates the screen. Called when the screen is added to the screen manager or if the game resumes
 		/// from being paused or tombstoned.
 		/// </summary>
-		/// <param name="instancePreserved">
-		/// True if the game was preserved during deactivation, false if the screen is just being added or if the game was tombstoned.
-		/// On Xbox and Windows this will always be false.
-		/// </param>
+		/// <param name="renderer"></param>
 		public virtual void Activate(Renderer renderer)
 		{
 		}
@@ -247,13 +240,17 @@ namespace MyThirdSDL.Screens
 			return true;
 		}
 
-		public virtual void HandleTextInputtingEvent(object sender, TextInputEventArgs e) { }
+		public virtual void HandleTextInputtingEvent(object sender, TextInputEventArgs e)
+		{
+		}
 
 		public abstract void HandleMouseButtonPressedEvent(object sender, MouseButtonEventArgs e);
 
 		public abstract void HandleMouseMovingEvent(object sender, MouseMotionEventArgs e);
 
-		public virtual void HandleKeyStates(IEnumerable<KeyInformation> keysPressed, IEnumerable<KeyInformation> keysReleased) { }
+		public virtual void HandleKeyStates(IEnumerable<KeyInformation> keysPressed, IEnumerable<KeyInformation> keysReleased)
+		{
+		}
 
 		/// <summary>
 		/// Allows the screen to handle user input. Unlike Update, this method
