@@ -83,6 +83,7 @@ namespace MyThirdSDL.Content
 		/// <param name="width"></param>
 		/// <param name="height"></param>
 		public Tile(Texture texture, Rectangle source, int width, int height, TileType type)
+			: this()
 		{
 			Type = type;
 			IsEmpty = false;

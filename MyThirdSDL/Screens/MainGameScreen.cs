@@ -333,7 +333,9 @@ namespace MyThirdSDL.Screens
 
 					renderer.RenderTexture(tileHighlightImage.Texture, drawPosition.X, drawPosition.Y);
 
-					renderer.RenderTexture(selectedPurchasableEquipment.ActiveTexture, drawPosition.X, drawPosition.Y);
+					// TODO: should we create a class that is simply a texture and x,y pair?
+					foreach(var activeTexture in selectedPurchasableEquipment.ActiveTextures)
+						renderer.RenderTexture(activeTexture, drawPosition.X, drawPosition.Y);
 				}
 			}
 
@@ -450,7 +452,7 @@ namespace MyThirdSDL.Screens
 			if (agent != null)
 			{
 				simulationManager.AddAgent(agent);
-				hoveredMapCell.AddDrawable(agent, (int)TileType.Object);
+				hoveredMapCell.AddDrawableObject(agent);
 				bankAccount.Withdraw(agent.Price);
 			}
 		}

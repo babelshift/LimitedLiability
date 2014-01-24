@@ -3,7 +3,7 @@
  <tileset firstgid="1" name="free_tileset_version_10" tilewidth="32" tileheight="32">
   <image source="Content/Maps/TileSet1.png" width="480" height="1216"/>
  </tileset>
- <layer name="Ground" width="25" height="25">
+ <layer name="Floor" width="25" height="25">
   <data encoding="base64" compression="zlib">
    eJxjZWRgYB0GWI5h+GB2JEwOnxUPHo52oIcdKXxWNP4oHsXDCbPgwIPBDvT8Top9xKol1w5SML3toKU9tMD9wPp5Aol1NKn1P8j8fhq3MQarHQAHnzlw
   </data>

@@ -24,27 +24,27 @@ namespace MyThirdSDL
 			this.textureTopRight = textureTopRight;
 			this.textureBottomRight = textureBottomRight;
 
-			SetOrientation(AgentOrientation.TopLeft);
+			SetOrientation(AgentOrientation.FacingLeft);
 		}
 
 		public void SetOrientation(AgentOrientation orientation)
 		{
-			if (orientation == AgentOrientation.TopLeft)
+			if (orientation == AgentOrientation.FacingLeft)
 			{
 				if (textureTopLeft != null)
 					ActiveTexture = textureTopLeft;
 			}
-			else if (orientation == AgentOrientation.BottomLeft)
+			else if (orientation == AgentOrientation.FacingDown)
 			{
 				if (textureBottomLeft != null)
 					ActiveTexture = textureBottomLeft;
 			}
-			else if (orientation == AgentOrientation.BottomRight)
+			else if (orientation == AgentOrientation.FacingUp)
 			{
 				if (textureBottomRight != null)
 					ActiveTexture = textureBottomRight;
 			}
-			else if (orientation == AgentOrientation.TopRight)
+			else if (orientation == AgentOrientation.FacingRight)
 			{
 				if (textureTopRight != null)
 					ActiveTexture = textureTopRight;

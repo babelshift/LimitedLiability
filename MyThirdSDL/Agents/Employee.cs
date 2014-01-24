@@ -1,18 +1,15 @@
-﻿using System;
-using System.Collections.Concurrent;
+﻿using MyThirdSDL.Content;
+using MyThirdSDL.Descriptors;
+using MyThirdSDL.Simulation;
+using SharpDL;
+using SharpDL.Graphics;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using SharpDL.Graphics;
-using MyThirdSDL.Simulation;
-using MyThirdSDL.Descriptors;
-using SharpDL;
-using MyThirdSDL.Content;
 
 namespace MyThirdSDL.Agents
 {
-	public class Employee : MobileAgent, ITriggerSubscriber
+	public class Employee : MobileAgent
 	{
 		private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 		private double necessityDecayRate = -0.005;
@@ -21,6 +18,7 @@ namespace MyThirdSDL.Agents
 		private Dictionary<ThoughtType, Thought> unsatisfiedThoughts = new Dictionary<ThoughtType, Thought>();
 
 		public IEnumerable<Thought> UnsatisfiedThoughts { get { return unsatisfiedThoughts.Values; } }
+
 		public IEnumerable<Thought> ThoughtLog { get { return thoughtLog; } }
 
 		public string FullName { get { return FirstName + " " + LastName; } }
@@ -62,6 +60,7 @@ namespace MyThirdSDL.Agents
 		public MapCell OccupiedMapCell { get; set; }
 
 		public event EventHandler<ThoughtEventArgs> HadThought;
+
 		public event EventHandler<ThoughtEventArgs> ThoughtSatisfied;
 
 		public Employee(TimeSpan birthTime, string agentName, TextureBook textureBook, Vector position, AgentOrientation orientation,
@@ -261,8 +260,8 @@ namespace MyThirdSDL.Agents
 		private void OnThought(ThoughtType type)
 		{
 			// only think about this if we are previously satisfied
-			if(!unsatisfiedThoughts.Any(t => t.Key == type))
-				EventHelper.FireEvent<ThoughtEventArgs>(HadThought, this, new ThoughtEventArgs(type));
+			if (!unsatisfiedThoughts.Any(t => t.Key == type))
+				EventHelper.FireEvent(HadThought, this, new ThoughtEventArgs(type));
 		}
 
 		public void AddUnsatisfiedThought(Thought thought)
@@ -273,12 +272,12 @@ namespace MyThirdSDL.Agents
 		private void OnThoughtSatisfied(ThoughtType type)
 		{
 			SatisfyThought(type);
-			EventHelper.FireEvent<ThoughtEventArgs>(ThoughtSatisfied, this, new ThoughtEventArgs(type));
+			EventHelper.FireEvent(ThoughtSatisfied, this, new ThoughtEventArgs(type));
 		}
 
 		private void SatisfyThought(ThoughtType type)
 		{
-			Thought satisfiedThought = null;
+			Thought satisfiedThought;
 			bool success = unsatisfiedThoughts.TryGetValue(type, out satisfiedThought);
 
 			if (success)

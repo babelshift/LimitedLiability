@@ -15,6 +15,21 @@ namespace MyThirdSDL.Agents
 		private Queue<Intention> intentions = new Queue<Intention>();
 		private Queue<PathNode> pathNodes;
 		private PathNode currentDestination;
+		private readonly TextureBook textureBook;
+		private AgentOrientation orientation;
+
+		public AgentOrientation Orientation
+		{
+			get { return orientation; }
+			set
+			{
+				orientation = value;
+
+				textureBook.SetOrientation(orientation);
+
+				ActiveTexture = textureBook.ActiveTexture;
+			}
+		}
 
 		public AgentActivity Activity { get; private set; }
 
@@ -55,10 +70,7 @@ namespace MyThirdSDL.Agents
 
 		public bool IsAlreadyIntention(IntentionType type)
 		{
-			bool isAlreadyIntention = false;
-
-			if (intentions.Any(i => i.Type == type))
-				isAlreadyIntention = true;
+			bool isAlreadyIntention = intentions.Any(i => i.Type == type);
 
 			if (HasCurrentIntention)
 				if (CurrentIntention.Type == type)
@@ -68,10 +80,24 @@ namespace MyThirdSDL.Agents
 		}
 
 		public MobileAgent(TimeSpan birthTime, string name, TextureBook textureBook, Vector startingPosition, Vector startingSpeed, AgentOrientation orientation)
-			: base(birthTime, name, textureBook, startingPosition, orientation)
+			: base(birthTime, name, startingPosition)
 		{
 			Activity = AgentActivity.Unknown;
 			Speed = startingSpeed;
+			this.textureBook = textureBook;
+			Orientation = orientation;
+		}
+
+		public void Rotate()
+		{
+			if (Orientation == AgentOrientation.FacingLeft)
+				Orientation = AgentOrientation.FacingRight;
+			else if (Orientation == AgentOrientation.FacingRight)
+				Orientation = AgentOrientation.FacingUp;
+			else if (Orientation == AgentOrientation.FacingUp)
+				Orientation = AgentOrientation.FacingDown;
+			else if (Orientation == AgentOrientation.FacingDown)
+				Orientation = AgentOrientation.FacingLeft;
 		}
 
 		protected void ChangeActivity(AgentActivity activity)

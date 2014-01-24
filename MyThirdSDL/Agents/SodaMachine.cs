@@ -8,25 +8,18 @@ using MyThirdSDL.Descriptors;
 
 namespace MyThirdSDL.Agents
 {
-	public class SodaMachine : Equipment, IPurchasable
+	public class SodaMachine : Equipment
 	{
-		public string IconTextureKey { get; private set; }
-
-		public NecessityEffect NecessityEffect { get; private set; }
-
-		public SkillEffect SkillEffect { get; private set; }
-
 		public Employee AssignedEmployee { get; private set; }
 
 		public bool IsAssignedToAnEmployee { get { return AssignedEmployee != null; } }
 
-		public SodaMachine(TimeSpan birthTime, TextureBook textureBook, Vector startingPosition, AgentOrientation orientation,
-			string name, int price, string iconTextureKey, NecessityEffect necessityEffect, SkillEffect skillEffect)
-			: base(birthTime, name, textureBook, startingPosition, orientation, price)
+		public SodaMachine(TimeSpan birthTime, Texture texture, Vector startingPosition, string name, int price, string iconTextureKey,
+			NecessityEffect necessityEffect, SkillEffect skillEffect)
+			: base(birthTime, name, texture, startingPosition, price, iconTextureKey)
 		{
 			NecessityEffect = necessityEffect;
 			SkillEffect = skillEffect;
-			IconTextureKey = iconTextureKey;
 		}
 
 		public NecessityEffect DispenseDrink()

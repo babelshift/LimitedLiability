@@ -11,6 +11,7 @@ namespace MyThirdSDL.UserInterface
 		private TimeSpan timeSinceLastUpdate = TimeSpan.Zero;
 
 		private Icon iconFrame;
+		private const string defaultText = ".";
 
 		public Icon IconFrame
 		{
@@ -43,15 +44,7 @@ namespace MyThirdSDL.UserInterface
 			}
 		}
 
-		private bool HasText
-		{
-			get
-			{
-				if (LabelText.Text == ".")
-					return false;
-				return true;
-			}
-		}
+		private bool HasText { get { return !String.IsNullOrEmpty(Text); } }
 
 		private bool IsTextboxFull
 		{
@@ -71,7 +64,7 @@ namespace MyThirdSDL.UserInterface
 		{
 			get
 			{
-				if (LabelText.Text == ".")
+				if (LabelText.Text == defaultText)
 					return String.Empty;
 				else
 					return LabelText.Text;
@@ -91,6 +84,12 @@ namespace MyThirdSDL.UserInterface
 			Blur();
 		}
 
+		public void Clear()
+		{
+			LabelText.Text = defaultText;
+			IconInputBar.Position = new Vector(Position.X + 6, Position.Y + 6);
+		}
+
 		public override void Focus()
 		{
 			base.Focus();
@@ -105,50 +104,48 @@ namespace MyThirdSDL.UserInterface
 
 		public override void Update(SharpDL.GameTime gameTime)
 		{
-			if (Visible)
+			if (!Visible) return;
+			
+			if (IsClicked)
+				Focus();
+
+			iconFrame.Update(gameTime);
+
+			if (IsFocused)
 			{
-				if (IsClicked)
-					Focus();
-
-				iconFrame.Update(gameTime);
-
-				if (IsFocused)
+				timeSinceLastUpdate += gameTime.ElapsedGameTime;
+				if (timeSinceLastUpdate > TimeSpan.FromSeconds(0.5))
 				{
-					timeSinceLastUpdate += gameTime.ElapsedGameTime;
-					if (timeSinceLastUpdate > TimeSpan.FromSeconds(0.5))
+					IconInputBar.Visible = true;
+
+					timeSinceVisibleTrue += gameTime.ElapsedGameTime;
+					if (timeSinceVisibleTrue > TimeSpan.FromSeconds(0.5))
 					{
-						IconInputBar.Visible = true;
-
-						timeSinceVisibleTrue += gameTime.ElapsedGameTime;
-						if (timeSinceVisibleTrue > TimeSpan.FromSeconds(0.5))
-						{
-							timeSinceLastUpdate = TimeSpan.Zero;
-							timeSinceVisibleTrue = TimeSpan.Zero;
-						}
+						timeSinceLastUpdate = TimeSpan.Zero;
+						timeSinceVisibleTrue = TimeSpan.Zero;
 					}
-					else
-						IconInputBar.Visible = false;
-
-					IconInputBar.Update(gameTime);
-					LabelText.Update(gameTime);
 				}
+				else
+					IconInputBar.Visible = false;
 
-				base.Update(gameTime);
+				IconInputBar.Update(gameTime);
+				LabelText.Update(gameTime);
 			}
+
+			base.Update(gameTime);
 		}
 
 		public override void Draw(SharpDL.GameTime gameTime, Renderer renderer)
 		{
-			if (Visible)
-			{
-				iconFrame.Draw(gameTime, renderer);
+			if (!Visible) return;
+			
+			iconFrame.Draw(gameTime, renderer);
 
-				if (IsFocused)
-					IconInputBar.Draw(gameTime, renderer);
+			if (IsFocused)
+				IconInputBar.Draw(gameTime, renderer);
 
-				if (HasText)
-					LabelText.Draw(gameTime, renderer);
-			}
+			if (HasText)
+				LabelText.Draw(gameTime, renderer);
 		}
 
 		public override void HandleTextInput(string text)

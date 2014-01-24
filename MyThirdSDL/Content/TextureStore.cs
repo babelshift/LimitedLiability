@@ -47,10 +47,10 @@ namespace MyThirdSDL.Content
 		{
 			string fileExtension = Path.GetExtension(contentPath);
 
-			string contentTopLeftPath = contentPath.Replace(String.Format("{0}", fileExtension), String.Format("TopLeft{0}", fileExtension));
-			string contentTopRightPath = contentPath.Replace(String.Format("{0}", fileExtension), String.Format("TopRight{0}", fileExtension));
-			string contentBottomRightPath = contentPath.Replace(String.Format("{0}", fileExtension), String.Format("BottomRight{0}", fileExtension));
-			string contentBottomLeftPath = contentPath.Replace(String.Format("{0}", fileExtension), String.Format("BottomLeft{0}", fileExtension));
+			string contentTopLeftPath = contentPath.Replace(String.Format("{0}", fileExtension), String.Format("FacingLeft{0}", fileExtension));
+			string contentTopRightPath = contentPath.Replace(String.Format("{0}", fileExtension), String.Format("FacingRight{0}", fileExtension));
+			string contentBottomRightPath = contentPath.Replace(String.Format("{0}", fileExtension), String.Format("FacingUp{0}", fileExtension));
+			string contentBottomLeftPath = contentPath.Replace(String.Format("{0}", fileExtension), String.Format("FacingDown{0}", fileExtension));
 
 			Texture textureTopLeft = null;
 			if (File.Exists(contentTopLeftPath))

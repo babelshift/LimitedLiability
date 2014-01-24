@@ -1,13 +1,9 @@
-﻿using SharpDL;
+﻿using MyThirdSDL.Simulation;
 using SharpDL.Graphics;
 using SharpTiles;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using MyThirdSDL.Descriptors;
-using MyThirdSDL.Simulation;
 
 namespace MyThirdSDL.Content
 {
@@ -16,14 +12,13 @@ namespace MyThirdSDL.Content
 	/// </summary>
 	public class TiledMap : IDisposable
 	{
-
 		#region Members
 
 		private List<TileLayer> tileLayers = new List<TileLayer>();
 		private List<MapObjectLayer> mapObjectLayers = new List<MapObjectLayer>();
 		private List<MapCell> mapCells = new List<MapCell>();
 
-		#endregion
+		#endregion Members
 
 		#region Properties
 
@@ -57,7 +52,7 @@ namespace MyThirdSDL.Content
 
 		public IEnumerable<MapObjectLayer> MapObjectLayers { get { return mapObjectLayers; } }
 
-		#endregion
+		#endregion Properties
 
 		#region Constructors
 
@@ -86,7 +81,7 @@ namespace MyThirdSDL.Content
 			BuildMapCells();
 		}
 
-		#endregion
+		#endregion Constructors
 
 		#region Map Population Methods
 
@@ -116,10 +111,8 @@ namespace MyThirdSDL.Content
 			TileLayerContent tileLayerContent = layerContent as TileLayerContent;
 
 			TileLayerType tileLayerType = TileLayerType.None;
-			if (layerContent.Name.Contains("Ground"))
-				tileLayerType = TileLayerType.Ground;
-			else if (layerContent.Name.Contains("Walls"))
-				tileLayerType = TileLayerType.Walls;
+			if (layerContent.Name.Contains("Floor"))
+				tileLayerType = TileLayerType.Floor;
 			else if (layerContent.Name.Contains("Objects"))
 				tileLayerType = TileLayerType.Objects;
 
@@ -165,10 +158,8 @@ namespace MyThirdSDL.Content
 				}
 
 				TileType tileType = TileType.None;
-				if (tileLayerType == TileLayerType.Ground)
-					tileType = TileType.Ground;
-				else if (tileLayerType == TileLayerType.Walls)
-					tileType = TileType.Wall;
+				if (tileLayerType == TileLayerType.Floor)
+					tileType = TileType.Floor;
 				if (tileLayerType == TileLayerType.Objects)
 					tileType = TileType.Object;
 
@@ -260,8 +251,11 @@ namespace MyThirdSDL.Content
 						if (!tile.IsEmpty)
 						{
 							mapCell.WorldPosition = tile.WorldPosition;
-							mapCell.ProjectedPosition = tile.ProjectedPosition;
-							mapCell.AddDrawable(tile, (int)tile.Type);
+
+							if (tile.Type == TileType.Floor)
+								mapCell.BaseTile = tile;
+							else if (tile.Type == TileType.Object)
+								mapCell.AddDrawableObject(tile);
 						}
 					}
 					else
@@ -285,21 +279,24 @@ namespace MyThirdSDL.Content
 				{
 					// get the map cell that contains us (where two of our edges line up with two of the map cell edges)
 					MapCell mapCell = mapCells.FirstOrDefault(
-						                  mc => (mc.Bounds.Left == mapObject.Bounds.Left && mc.Bounds.Top == mapObject.Bounds.Top)
-						                  || (mc.Bounds.Left == mapObject.Bounds.Left && mc.Bounds.Bottom == mapObject.Bounds.Bottom)
-						                  || (mc.Bounds.Right == mapObject.Bounds.Right && mc.Bounds.Top == mapObject.Bounds.Top)
-						                  || (mc.Bounds.Right == mapObject.Bounds.Right && mc.Bounds.Bottom == mapObject.Bounds.Bottom));
+										  mc => (mc.Bounds.Left == mapObject.Bounds.Left && mc.Bounds.Top == mapObject.Bounds.Top)
+										  || (mc.Bounds.Left == mapObject.Bounds.Left && mc.Bounds.Bottom == mapObject.Bounds.Bottom)
+										  || (mc.Bounds.Right == mapObject.Bounds.Right && mc.Bounds.Top == mapObject.Bounds.Top)
+										  || (mc.Bounds.Right == mapObject.Bounds.Right && mc.Bounds.Bottom == mapObject.Bounds.Bottom));
 
 					// if we are in a valid map cell, add the map object appropriately based on type
 					if (mapCell != null)
 					{
 						if (mapObject.Type == MapObjectType.DeadZone)
-							mapCell.AddDeadZone(mapObject);
+							mapCell.Type = MapCellType.DeadZone;
 						else if (mapObject.Type == MapObjectType.PathNode)
-							mapCell.AddPathNode((PathNode)mapObject);
+						{
+							mapCell.Type = MapCellType.PathNode;
+							mapCell.ContainedPathNode = (PathNode)mapObject;
+						}
 					}
 					else
-						throw new Exception("MapObjects must be map cell aligned.");
+						throw new Exception("MapObjects must be map axis aligned.");
 				}
 			}
 		}
@@ -362,7 +359,7 @@ namespace MyThirdSDL.Content
 			}
 		}
 
-		#endregion
+		#endregion Map Population Methods
 
 		#region Finder Methods
 
@@ -391,11 +388,9 @@ namespace MyThirdSDL.Content
 		/// <returns></returns>
 		public IList<PathNode> GetPathNodes()
 		{
-			List<PathNode> pathNodes = new List<PathNode>();
-			foreach (MapCell mapCell in mapCells)
-				pathNodes.AddRange(mapCell.PathNodes);
-
-			return pathNodes;
+			return mapCells
+				.Where(mc => mc.Type == MapCellType.PathNode)
+				.Select(mc => mc.ContainedPathNode).ToList();
 		}
 
 		/// <summary>
@@ -404,7 +399,7 @@ namespace MyThirdSDL.Content
 		/// <returns></returns>
 		public IList<PathNode> GetActivePathNodes()
 		{
-			return GetPathNodes().Where(pn => pn.IsEnabled == true).ToList();
+			return GetPathNodes().Where(pn => pn.IsEnabled).ToList();
 		}
 
 		/// <summary>
@@ -433,7 +428,7 @@ namespace MyThirdSDL.Content
 			return null;
 		}
 
-		#endregion
+		#endregion Finder Methods
 
 		#region Dispose
 
@@ -454,7 +449,6 @@ namespace MyThirdSDL.Content
 				tileLayer.Dispose();
 		}
 
-		#endregion
-
+		#endregion Dispose
 	}
 }

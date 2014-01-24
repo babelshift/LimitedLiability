@@ -43,7 +43,7 @@ namespace MyThirdSDL.Agents
 			Skills skills = Skills.GetRandomSkills();
 			Job job = jobFactory.CreateJob(skills);
 
-			Employee employee = new Employee(simulationBirthTime, "Employee " + employeeNumber, textureBook, position, AgentOrientation.TopLeft, firstName, lastName, birthday, skills, job);
+			Employee employee = new Employee(simulationBirthTime, "Employee " + employeeNumber, textureBook, position, AgentOrientation.FacingLeft, firstName, lastName, birthday, skills, job);
 
 			if (log.IsDebugEnabled)
 				log.Debug(String.Format("Employee has been created with name: {0}", employee.FullName));
@@ -80,7 +80,7 @@ namespace MyThirdSDL.Agents
 		public TrashBin CreateTrashBin(TimeSpan birthTime, Vector position)
 		{
 			AgentMetadata agentMetaData = contentManager.GetAgentMetadata("TrashBin");
-			return CreateAgent<TrashBin>(birthTime, "TrashBin", position, agentMetaData);
+			return CreateEquipment<TrashBin>(birthTime, "TrashBin", position, agentMetaData);
 		}
 
 		public OfficeDesk CreateOfficeDesk(TimeSpan birthTime)
@@ -91,7 +91,7 @@ namespace MyThirdSDL.Agents
 		public OfficeDesk CreateOfficeDesk(TimeSpan birthTime, Vector position)
 		{
 			AgentMetadata agentMetaData = contentManager.GetAgentMetadata("OfficeDesk");
-			return CreateAgent<OfficeDesk>(birthTime, "OfficeDesk", position, agentMetaData);
+			return CreateEquipment<OfficeDesk>(birthTime, "OfficeDesk", position, agentMetaData);
 		}
 
 		public SnackMachine CreateSnackMachine(TimeSpan birthTime)
@@ -102,7 +102,7 @@ namespace MyThirdSDL.Agents
 		public SnackMachine CreateSnackMachine(TimeSpan birthTime, Vector position)
 		{
 			AgentMetadata agentMetaData = contentManager.GetAgentMetadata("SnackMachine");
-			return CreateAgent<SnackMachine>(birthTime, "SnackMachine", position, agentMetaData);
+			return CreateEquipment<SnackMachine>(birthTime, "SnackMachine", position, agentMetaData);
 		}
 
 		public SodaMachine CreateSodaMachine(TimeSpan birthTime)
@@ -113,7 +113,7 @@ namespace MyThirdSDL.Agents
 		public SodaMachine CreateSodaMachine(TimeSpan birthTime, Vector position)
 		{
 			AgentMetadata agentMetaData = contentManager.GetAgentMetadata("SodaMachine");
-			return CreateAgent<SodaMachine>(birthTime, "SodaMachine", position, agentMetaData);
+			return CreateEquipment<SodaMachine>(birthTime, "SodaMachine", position, agentMetaData);
 		}
 
 		public WaterFountain CreateWaterFountain(TimeSpan birthTime)
@@ -123,32 +123,34 @@ namespace MyThirdSDL.Agents
 
 		public WaterFountain CreateWaterFountain(TimeSpan birthTime, Vector position)
 		{
-			return CreateAgent<WaterFountain>("WaterFountain", birthTime, position);
+			return CreateEquipment<WaterFountain>("WaterFountain", birthTime, position);
 		}
 
 		#endregion
 
 		#region Rooms
 
-		public Wall CreateWall(TimeSpan birthTime, Vector position)
-		{
-			return CreateAgent<Wall>("Wall", birthTime, position);
-		}
+		//public Wall CreateWall(TimeSpan birthTime, Vector position)
+		//{
+		//	return CreateEquipment<Wall>("Wall", birthTime, position);
+		//}
 
 		#endregion
 
-		public T CreateAgent<T>(string agentKeyName, TimeSpan birthTime, Vector position)
+		public T CreateEquipment<T>(string agentKeyName, TimeSpan birthTime, Vector position)
+			where T : Equipment
 		{
 			var metaData = contentManager.GetAgentMetadata(agentKeyName);
-			return CreateAgent<T>(birthTime, agentKeyName, position, metaData);
+			return CreateEquipment<T>(birthTime, agentKeyName, position, metaData);
 		}
 
-		private T CreateAgent<T>(TimeSpan birthTime, string texturePathKey, Vector position, AgentMetadata agentMetaData)
+		private T CreateEquipment<T>(TimeSpan birthTime, string texturePathKey, Vector position, AgentMetadata agentMetaData)
+			where T : Equipment
 		{
 			if (log.IsDebugEnabled)
 				log.Debug(String.Format("Creating agent of type {0} at ({1},{2}) with birth time: {3}", typeof(T), position.X, position.Y, birthTime));
-			TextureBook textureBook = GetTextureBookFromStore(texturePathKey);
-			return (T)Activator.CreateInstance(typeof(T), birthTime, textureBook, position, AgentOrientation.TopLeft,
+			Texture texture = GetTextureFromStore(texturePathKey);
+			return (T)Activator.CreateInstance(typeof(T), birthTime, texture, position,
 				agentMetaData.Name, agentMetaData.Price, agentMetaData.IconKey, agentMetaData.NecessityEffect, agentMetaData.SkillEffect);
 		}
 

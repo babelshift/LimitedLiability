@@ -52,7 +52,6 @@ namespace MyThirdSDL.UserInterface
 			Color fontColorWhite = Styles.Colors.White;
 			Color fontColorPaleYellow = Styles.Colors.PaleYellow;
 			int fontSizeName = 14;
-			int fontSizeOverview = 10;
 
 			labelName = ControlFactory.CreateLabel(contentManager, fontPath, fontSizeName, fontColorWhite, textItemName, 225);
 			labelName.EnableShadow(contentManager, 2, 2);

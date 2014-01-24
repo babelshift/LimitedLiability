@@ -1,35 +1,36 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MyThirdSDL.Simulation
 {
-	public class Path<Node> : IEnumerable<Node>
+	public class Path<TNode> : IEnumerable<TNode>
 	{
-		public Node LastStep { get; private set; }
-		public Path<Node> PreviousSteps { get; private set; }
+		public TNode LastStep { get; private set; }
+
+		public Path<TNode> PreviousSteps { get; private set; }
+
 		public double TotalCost { get; private set; }
 
-		private Path(Node lastStep, Path<Node> previousSteps, double totalCost)
+		private Path(TNode lastStep, Path<TNode> previousSteps, double totalCost)
 		{
 			LastStep = lastStep;
 			PreviousSteps = previousSteps;
 			TotalCost = totalCost;
 		}
 
-		public Path(Node start) : this(start, null, 0) { }
-
-		public Path<Node> AddStep(Node step, double stepCost)
+		public Path(TNode start)
+			: this(start, null, 0)
 		{
-			return new Path<Node>(step, this, TotalCost + stepCost);
 		}
 
-		public IEnumerator<Node> GetEnumerator()
+		public Path<TNode> AddStep(TNode step, double stepCost)
 		{
-			for (Path<Node> p = this; p != null; p = p.PreviousSteps)
+			return new Path<TNode>(step, this, TotalCost + stepCost);
+		}
+
+		public IEnumerator<TNode> GetEnumerator()
+		{
+			for (Path<TNode> p = this; p != null; p = p.PreviousSteps)
 				yield return p.LastStep;
 		}
 

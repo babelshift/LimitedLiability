@@ -1,5 +1,3 @@
-using System;
-
 namespace MyThirdSDL
 {
 	public enum AgentState
@@ -9,4 +7,3 @@ namespace MyThirdSDL
 		Inactive
 	}
 }
-

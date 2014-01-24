@@ -4,20 +4,9 @@ using System;
 
 namespace MyThirdSDL.Agents
 {
-	public enum AgentOrientation
-	{
-		TopLeft,
-		TopRight,
-		BottomLeft,
-		BottomRight
-	}
-
-	public abstract class Agent : IDrawable, ICollidable
+	public abstract class Agent : ICollidable, IDrawable
 	{
 		#region Members
-
-		private readonly TextureBook textureBook;
-		private AgentOrientation orientation;
 
 		private TimeSpan SimulationBirthTime { get; set; }
 
@@ -25,26 +14,7 @@ namespace MyThirdSDL.Agents
 
 		#region Properties
 
-		public Texture ActiveTexture { get { return textureBook.ActiveTexture; } }
-
-		public AgentOrientation Orientation
-		{
-			get { return orientation; }
-			set
-			{
-				orientation = value;
-
-				textureBook.SetOrientation(orientation);
-			}
-		}
-
-		public Rectangle CollisionBox
-		{
-			get
-			{
-				return new Rectangle((int)WorldPosition.X, (int)WorldPosition.Y, ActiveTexture.Width, ActiveTexture.Height);
-			}
-		}
+		protected Texture ActiveTexture { get; set; }
 
 		public Guid ID { get; private set; }
 
@@ -73,36 +43,30 @@ namespace MyThirdSDL.Agents
 			}
 		}
 
+		public Rectangle CollisionBox
+		{
+			get
+			{
+				return new Rectangle((int)WorldPosition.X, (int)WorldPosition.Y, ActiveTexture.Width, ActiveTexture.Height);
+			}
+		}
+
 		#endregion Properties
 
 		#region Constructors
 
-		protected Agent(TimeSpan birthTime, string name, TextureBook textureBook, Vector startingPosition, AgentOrientation orientation)
+		protected Agent(TimeSpan birthTime, string name, Vector startingPosition)
 		{
 			ID = Guid.NewGuid();
 			SimulationBirthTime = birthTime;
 			Name = name;
-			this.textureBook = textureBook;
 			State = AgentState.Unknown;
 			WorldPosition = startingPosition;
-			Orientation = orientation;
 		}
 
 		#endregion Constructors
 
 		#region Utilities
-
-		public void Rotate()
-		{
-			if (Orientation == AgentOrientation.TopLeft)
-				Orientation = AgentOrientation.TopRight;
-			else if (Orientation == AgentOrientation.TopRight)
-				Orientation = AgentOrientation.BottomRight;
-			else if (Orientation == AgentOrientation.BottomRight)
-				Orientation = AgentOrientation.BottomLeft;
-			else if (Orientation == AgentOrientation.BottomLeft)
-				Orientation = AgentOrientation.TopLeft;
-		}
 
 		private void SetSimulationAge(TimeSpan simulationTime)
 		{

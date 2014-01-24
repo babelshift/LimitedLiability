@@ -156,8 +156,8 @@ namespace MyThirdSDL.Simulation
 							employee.UpdateAge(WorldDateTime);
 
 							// remove ourselves from the employee's currently occupied map cell
-							if (employee.OccupiedMapCell != null)
-								employee.OccupiedMapCell.RemoveDrawable(employee, (int)TileType.Object);
+							//if (employee.OccupiedMapCell != null)
+							//	employee.OccupiedMapCell.RemoveDrawable(employee, (int)TileType.Object);
 
 							// get the map cell that the employee occupies and add it as a drawable to that map cell
 							//MapCell mapCellToOccupy = GetMapCellOccupiedByEmployee(employee);
@@ -618,12 +618,12 @@ namespace MyThirdSDL.Simulation
 		/// <summary>
 		/// The exact distance between two nodes in this game is a single node (1). By default, node links do not have costs associated with them.
 		/// </summary>
-		/// <typeparam name="Node"></typeparam>
+		/// <typeparam name="TNode"></typeparam>
 		/// <param name="node1"></param>
 		/// <param name="node2"></param>
 		/// <returns></returns>
-		private double ExactDistance<Node>(Node node1, Node node2)
-			where Node : INode
+		private double ExactDistance<TNode>(TNode node1, TNode node2)
+			where TNode : INode
 		{
 			return 1.0;
 		}

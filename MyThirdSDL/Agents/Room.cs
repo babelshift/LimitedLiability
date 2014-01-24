@@ -1,28 +1,64 @@
-﻿using SharpDL.Graphics;
+﻿using System.Collections.Generic;
+using MyThirdSDL.Content;
+using MyThirdSDL.Descriptors;
+using SharpDL.Graphics;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MyThirdSDL.Agents
 {
-
-	public class Room : Agent
+	public class Room : IPurchasable
 	{
-		private List<Texture> tileTextures = new List<Texture>();
+		private readonly MapCell[,] mapCells;
+
+		public NecessityEffect NecessityEffect { get; protected set; }
+
+		public SkillEffect SkillEffect { get; protected set; }
+
+		public IReadOnlyList<Texture> ActiveTextures
+		{
+			get
+			{
+				List<Texture> textures = new List<Texture>();
+				foreach (var mapCell in mapCells)
+					textures.Add(mapCell.BaseTexture);
+				return textures;
+			}
+		}
+
+		public string Name { get; private set; }
 
 		public int Price { get; private set; }
-		public int WidthInTiles { get; private set; }
-		public int HeightInTiles { get; private set; }
 
-		public Room(TimeSpan birthTime, string agentName, TextureBook textureBook, Vector startingPosition, AgentOrientation orientation,
-			int widthInTiles, int heightInTiles, int price)
-			: base(birthTime, agentName, textureBook, startingPosition, orientation)
+		public string IconTextureKey { get; private set; }
+
+		public int Width { get { return mapCells.GetLength(0); } }
+
+		public int Height { get { return mapCells.GetLength(1); } }
+
+		public Room(string name, int price, int width, int height, string iconTextureKey)
 		{
-			WidthInTiles = widthInTiles;
-			HeightInTiles = heightInTiles;
+			Name = name;
 			Price = price;
+			IconTextureKey = iconTextureKey;
+			mapCells = new MapCell[width, height];
+		}
+
+		protected void AddMapCell(MapCell mapCell, int rowIndex, int columnIndex)
+		{
+			if (rowIndex < 0)
+				throw new ArgumentOutOfRangeException("rowIndex", "Row index must be greater than 0.");
+
+			if (columnIndex < 0)
+				throw new ArgumentOutOfRangeException("columnIndex", "Column index must be greater than 0.");
+
+			if (rowIndex >= Width)
+				throw new ArgumentOutOfRangeException("rowIndex", "Row index cannot exceed the width of the array.");
+
+			if (columnIndex >= Height)
+				throw new ArgumentOutOfRangeException("columnIndex", "Column index cannot exceed the height of the array.");
+
+			mapCells[rowIndex, columnIndex] = mapCell;
 		}
 	}
 }

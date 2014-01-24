@@ -60,7 +60,7 @@ namespace MyThirdSDL.Screens
 					iconFrame.Visible = true;
 					buttonSelect.Visible = true;
 					buttonSelect.Position = iconFrame.Position + new Vector(iconFrame.Width - buttonSelect.Width, iconFrame.Height + 3);
-					buttonBack.Visible = false;
+					buttonBack.Position = iconFrame.Position + new Vector(0, iconFrame.Height + 3);
 					labelActiveOverview.Visible = true;
 					iconActiveOverview.Visible = true;
 					foreach (var scenarioItem in GetScenarioItemsOnPage(currentPageNumber))
@@ -74,6 +74,8 @@ namespace MyThirdSDL.Screens
 					textboxInputPlayerName.Visible = false;
 					labelInputCompanyName.Visible = false;
 					labelInputPlayerName.Visible = false;
+
+					ResetScenarioItemSelections();
 				}
 				else if (value == ScenarioSelectState.SecondScreen)
 				{
@@ -95,6 +97,8 @@ namespace MyThirdSDL.Screens
 					labelTitle.Text = "Enter your name and your company's name";
 					labelTitle.EnableShadow(ContentManager, 2, 2);
 					labelTitle.Position = iconFrameInputNames.Position + new Vector(9, 13);
+
+					ResetAllTextboxes();
 				}
 			}
 		}
@@ -154,8 +158,8 @@ namespace MyThirdSDL.Screens
 			buttonBack.Icon = ControlFactory.CreateIcon(ContentManager, "IconArrowCircleLeft");
 			buttonBack.IconHovered = ControlFactory.CreateIcon(ContentManager, "IconArrowCircleLeft");
 			buttonBack.ButtonType = ButtonType.IconOnly;
-			buttonBack.Visible = false;
 			buttonBack.Clicked += ButtonBackOnClicked;
+			buttonBack.Position = iconFrame.Position + new Vector(0, iconFrame.Height + 3);
 
 			AddScenarioItem("OfficeOrthogonal1", "ScenarioThumbnail1", "ScenarioThumbnail1Selected", "ScenarioOverview1", "A Fresh Start (Plain)", "Fresh out of college, you're on top of the world. You're an aspiring manager who has been given a once in a lifetime opportunity to create a successful business. If you can manage to stay in business for 6 months, you might just prove to your parents that you aren't a loser after all.");
 			AddScenarioItem("OfficeOrthogonal1", "ScenarioThumbnail1", "ScenarioThumbnail1Selected", "ScenarioOverview1", "Broke as a Joke (Mild)", "After investing the company's money into a pyramid scheme, you find yourself at the bottom of the barrel. Your credit cards are maxed out, and your spouse is thinking of leaving you. How will you manage to bring the company back to its former glory?");
@@ -183,11 +187,6 @@ namespace MyThirdSDL.Screens
 			labelInputCompanyName.EnableShadow(ContentManager, 2, 2);
 			labelInputCompanyName.Position = new Vector(textboxInputCompanyName.Bounds.Left - labelInputCompanyName.Width - 5, textboxInputCompanyName.Position.Y + textboxInputCompanyName.Height / 2 - labelInputCompanyName.Height / 2);
 			labelInputCompanyName.Visible = false;
-		}
-
-		private void ButtonBackOnClicked(object sender, EventArgs eventArgs)
-		{
-			CurrentSelectState = ScenarioSelectState.FirstScreen;
 		}
 
 		public override void Update(SharpDL.GameTime gameTime, bool otherWindowHasFocus, bool coveredByOtherScreen)
@@ -265,8 +264,7 @@ namespace MyThirdSDL.Screens
 			foreach (var key in keysPressed)
 			{
 				if (key.VirtualKey == SharpDL.Input.VirtualKeyCode.Escape)
-					if (ReturnToMainMenu != null)
-						ReturnToMainMenu(this, EventArgs.Empty);
+					OnReturnToMainMenu();
 
 				iconFrameInputNames.HandleKeyPressed(key);
 				textboxInputCompanyName.HandleKeyPressed(key);
@@ -311,6 +309,20 @@ namespace MyThirdSDL.Screens
 		#endregion Handle Input
 
 		#region Control Events
+
+		private void ButtonBackOnClicked(object sender, EventArgs eventArgs)
+		{
+			if (CurrentSelectState == ScenarioSelectState.SecondScreen)
+				CurrentSelectState = ScenarioSelectState.FirstScreen;
+			else
+				OnReturnToMainMenu();
+		}
+
+		private void OnReturnToMainMenu()
+		{
+			if (ReturnToMainMenu != null)
+				ReturnToMainMenu(this, EventArgs.Empty);
+		}
 
 		/// <summary>
 		/// When a textbox is blurred, we need to check if any other textboxes got focus after our blur. If another textbox has focus, we need to enable text input again.
@@ -369,6 +381,18 @@ namespace MyThirdSDL.Screens
 		#endregion Control Events
 
 		#region General Methods
+
+		private void ResetAllTextboxes()
+		{
+			textboxInputCompanyName.Clear();
+			textboxInputPlayerName.Clear();
+		}
+
+		private void ResetScenarioItemSelections()
+		{
+			foreach (var scenarioItem in GetScenarioItemsOnPage(currentPageNumber))
+				scenarioItem.ResetPosition();
+		}
 
 		private void AddScenarioItem(string mapPathToLoad, string iconThumbnailKey, string iconThumbnailSelectedKey, string iconOverviewKey, string textItemName, string textOverview)
 		{

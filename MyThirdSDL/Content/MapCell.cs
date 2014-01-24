@@ -1,26 +1,40 @@
+using MyThirdSDL.Simulation;
 using SharpDL;
 using SharpDL.Graphics;
-using SharpTiles;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using MyThirdSDL.Descriptors;
-using MyThirdSDL.Simulation;
-using MyThirdSDL.Agents;
 
 namespace MyThirdSDL.Content
 {
 	public class MapCell : IDrawable
 	{
-		private SortedDictionary<int, List<IDrawable>> drawablesByZIndex = new SortedDictionary<int, List<IDrawable>>();
-		private List<MapObject> deadZones = new List<MapObject>();
-		private List<PathNode> pathNodes = new List<PathNode>();
+		private PathNode containedPathNode;
+
+		private List<IDrawable> drawableObjects = new List<IDrawable>();
+
+		/// <summary>
+		/// A MapCell can optionally consist of a single path node. This value
+		/// </summary>
+		public PathNode ContainedPathNode
+		{
+			get { return containedPathNode; }
+			set
+			{
+				if (Type != MapCellType.PathNode)
+					throw new InvalidOperationException("MapCells can only contain a path node if the map cell is of type 'PathNode'.");
+
+				containedPathNode = value;
+			}
+		}
+
+		public Tile BaseTile { get; set; }
+
+		public Texture BaseTexture { get { return BaseTile.Texture; } }
+
+		public MapCellType Type { get; set; }
 
 		public Guid ID { get; private set; }
-
-		public IEnumerable<PathNode> PathNodes { get { return pathNodes; } }
 
 		public Point WorldGridIndex { get; internal set; }
 
@@ -45,50 +59,18 @@ namespace MyThirdSDL.Content
 
 		public void Draw(GameTime gameTime, Renderer renderer)
 		{
-			foreach (int zIndex in drawablesByZIndex.Keys)
-			{
-				List<IDrawable> drawables = new List<IDrawable>();
-				bool success = drawablesByZIndex.TryGetValue(zIndex, out drawables);
-				if (success)
-					foreach (var drawable in drawables)
-						drawable.Draw(gameTime, renderer);
-			}
+			BaseTile.Draw(gameTime, renderer);
+
+			foreach (var drawable in drawableObjects)
+				drawable.Draw(gameTime, renderer);
 		}
 
-		public void AddDeadZone(MapObject deadZone)
+		public void AddDrawableObject(IDrawable drawable)
 		{
-			if (!deadZones.Contains(deadZone))
-				deadZones.Add(deadZone);
-		}
+			if (drawableObjects.Any(d => d.ID == drawable.ID))
+				throw new InvalidOperationException("Cannot add the same object to the same map cell twice.");
 
-		public void AddPathNode(PathNode pathNode)
-		{
-			if (!pathNodes.Contains(pathNode))
-				pathNodes.Add(pathNode);
-		}
-
-		public void AddDrawable(IDrawable drawable, int zIndex)
-		{
-			List<IDrawable> drawables = new List<IDrawable>();
-
-			bool success = drawablesByZIndex.TryGetValue(zIndex, out drawables);
-			if (success)
-				drawables.Add(drawable);
-			else
-			{
-				drawables = new List<IDrawable>();
-				drawables.Add(drawable);
-				drawablesByZIndex.Add(zIndex, drawables);
-			}
-		}
-
-		public void RemoveDrawable(IDrawable drawable, int zIndex)
-		{
-			List<IDrawable> drawables = new List<IDrawable>();
-
-			bool success = drawablesByZIndex.TryGetValue(zIndex, out drawables);
-			if (success)
-				drawables.RemoveAll(d => d.ID == drawable.ID);
+			drawableObjects.Add(drawable);
 		}
 	}
 }

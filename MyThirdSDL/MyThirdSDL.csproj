@@ -76,6 +76,7 @@
     <Compile Include="Agents\AgentActivity.cs" />
     <Compile Include="Agents\AgentFactory.cs" />
     <Compile Include="Agents\AgentMetadata.cs" />
+    <Compile Include="Agents\AgentOrientation.cs" />
     <Compile Include="Agents\AgentState.cs" />
     <Compile Include="Agents\Employee.cs" />
     <Compile Include="Agents\Equipment.cs" />
@@ -100,6 +101,7 @@
     <Compile Include="Content\MapCell.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Content\MapCellType.cs" />
     <Compile Include="Content\MapObject.cs" />
     <Compile Include="Content\MapObjectLayer.cs" />
     <Compile Include="Content\MapObjectLayerType.cs" />
@@ -164,7 +166,9 @@
     <Compile Include="Simulation\Intention.cs" />
     <Compile Include="Simulation\ITriggerable.cs" />
     <Compile Include="Simulation\ITriggerSubscriber.cs" />
-    <Compile Include="Simulation\PathNode.cs" />
+    <Compile Include="Simulation\PathNode.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Simulation\SimulationManager.cs" />
     <Compile Include="Simulation\SimulationMessage.cs" />
     <Compile Include="Simulation\SimulationMessageFactory.cs" />

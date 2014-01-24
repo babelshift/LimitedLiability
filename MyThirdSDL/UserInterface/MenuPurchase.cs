@@ -6,8 +6,6 @@ using SharpDL.Graphics;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MyThirdSDL.UserInterface
 {
@@ -28,7 +26,7 @@ namespace MyThirdSDL.UserInterface
 		private Label labelInfoMenuHeader;
 		private Label labelSkillsMenuHeader;
 
-		#endregion
+		#endregion Header Controls
 
 		#region Info Controls
 
@@ -53,7 +51,7 @@ namespace MyThirdSDL.UserInterface
 		private Label labelIntelligence;
 		private Label labelLeadership;
 
-		#endregion
+		#endregion Info Controls
 
 		#region Buttons
 
@@ -62,16 +60,17 @@ namespace MyThirdSDL.UserInterface
 		private Button buttonCloseWindow;
 		private Dictionary<int, List<ButtonMenuItem>> buttonMenuItemPages = new Dictionary<int, List<ButtonMenuItem>>();
 
-		#endregion
+		#endregion Buttons
 
 		private IPurchasable selectedPurchasableItem;
 
 		#region Events
 
 		public event EventHandler<EventArgs> ButtonCloseWindowClicked;
+
 		public event EventHandler<ButtonConfirmWindowClickedEventArgs> ButtonConfirmWindowClicked;
 
-		#endregion
+		#endregion Events
 
 		public override Vector Position
 		{
@@ -227,19 +226,19 @@ namespace MyThirdSDL.UserInterface
 			Controls.Add(buttonArrowCircleRight);
 			Controls.Add(buttonCloseWindow);
 
-			this.buttonArrowCircleLeft.Clicked += buttonArrowCircleLeft_Clicked;
-			this.buttonArrowCircleRight.Clicked += buttonArrowCircleRight_Clicked;
-			this.buttonCloseWindow.Clicked += buttonCloseWindow_Clicked;
+			buttonArrowCircleLeft.Clicked += buttonArrowCircleLeft_Clicked;
+			buttonArrowCircleRight.Clicked += buttonArrowCircleRight_Clicked;
+			buttonCloseWindow.Clicked += buttonCloseWindow_Clicked;
 		}
 
-		#endregion
+		#endregion Constructor
 
 		#region Game Loop
 
 		public override void Update(GameTime gameTime)
 		{
 			bool isAnyButtonMenuItemHovered = false;
-			List<ButtonMenuItem> buttonMenuItemsOnCurrentPage = new List<ButtonMenuItem>();
+			List<ButtonMenuItem> buttonMenuItemsOnCurrentPage;
 			bool success = buttonMenuItemPages.TryGetValue(currentDisplayedPage, out buttonMenuItemsOnCurrentPage);
 			if (success)
 			{
@@ -290,7 +289,7 @@ namespace MyThirdSDL.UserInterface
 					buttonMenuItem.HandleMouseMovingEvent(sender, e);
 		}
 
-		#endregion
+		#endregion Game Loop
 
 		#region Helper Methods
 
@@ -409,7 +408,7 @@ namespace MyThirdSDL.UserInterface
 				labelLeadership.Text = defaultInfoAndSkillsText;
 		}
 
-		#endregion
+		#endregion Helper Methods
 
 		#region Event Subscriptions
 
@@ -448,7 +447,7 @@ namespace MyThirdSDL.UserInterface
 				currentDisplayedPage--;
 		}
 
-		#endregion
+		#endregion Event Subscriptions
 
 		public override void Dispose()
 		{

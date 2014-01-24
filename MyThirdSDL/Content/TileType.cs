@@ -5,8 +5,7 @@ namespace MyThirdSDL
 	public enum TileType
 	{
 		None,
-		Ground,
-		Wall,
+		Floor,
 		Object
 	}
 }
