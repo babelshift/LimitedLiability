@@ -2,16 +2,11 @@
 using SharpDL.Graphics;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MyThirdSDL.Agents
 {
 	public abstract class Equipment : Agent, IPurchasable
 	{
-		private Texture activeTexture;
-
 		public int Price { get; private set; }
 
 		public NecessityEffect NecessityEffect { get; protected set; }
@@ -20,14 +15,14 @@ namespace MyThirdSDL.Agents
 
 		public string IconTextureKey { get; private set; }
 
-		public IReadOnlyList<Texture> ActiveTextures { get { return new List<Texture>() { activeTexture }; } }
+		public IReadOnlyList<Texture> ActiveTextures { get { return new List<Texture>() { ActiveTexture }; } }
 
 		public Equipment(TimeSpan birthTime, string agentName, Texture activeTexture, Vector startingPosition, int price, string iconTextureKey)
 			: base(birthTime, agentName, startingPosition)
 		{
 			Price = price;
 			IconTextureKey = iconTextureKey;
-			this.activeTexture = activeTexture;
+			ActiveTexture = activeTexture;
 		}
 
 		/// <summary>
@@ -40,13 +35,13 @@ namespace MyThirdSDL.Agents
 			Vector drawPosition = new Vector(ProjectedPosition.X - Camera.Position.X, ProjectedPosition.Y - Camera.Position.Y);
 			Vector offset = Vector.Zero;
 
-			if (activeTexture.Height == CoordinateHelper.TileMapTileHeight * 2)
+			if (ActiveTexture.Height == CoordinateHelper.TileMapTileHeight * 2)
 				offset = new Vector(0, CoordinateHelper.TileMapTileHeight);
 
 			drawPosition -= offset;
 
 			renderer.RenderTexture(
-				activeTexture,
+				ActiveTexture,
 				drawPosition.X,
 				drawPosition.Y
 			);

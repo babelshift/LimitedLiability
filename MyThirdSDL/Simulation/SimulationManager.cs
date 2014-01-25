@@ -1,21 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using SharpDL.Graphics;
-using MyThirdSDL.Agents;
-using MyThirdSDL.Descriptors;
+﻿using MyThirdSDL.Agents;
 using MyThirdSDL.Content;
 using SharpDL;
+using SharpDL.Graphics;
 using SharpDL.Input;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace MyThirdSDL.Simulation
 {
 	public enum SimulationState
 	{
 		NotStarted,
-		Unpaused,
+		Running,
 		Paused
 	}
 
@@ -25,14 +22,14 @@ namespace MyThirdSDL.Simulation
 
 		public static readonly int SimulationTimeToWorldTimeMultiplier = 540;
 
-		private IEnumerable<ThoughtMetadata> thoughtPool;
-		private Dictionary<System.Type, List<Agent>> trackedAgents = new Dictionary<Type, List<Agent>>();
+		private readonly IEnumerable<ThoughtMetadata> thoughtPool;
+		private readonly Dictionary<System.Type, List<Agent>> trackedAgents = new Dictionary<Type, List<Agent>>();
 		private DateTime startingWorldDateTime;
-		private Random random = new Random();
+		private readonly Random random = new Random();
 		private TiledMap currentMap;
 		private SimulationState state;
 
-		#endregion
+		#endregion Members
 
 		#region Properties
 
@@ -49,7 +46,7 @@ namespace MyThirdSDL.Simulation
 					state = value;
 					if (state == SimulationState.Paused)
 						SimulationTimeAtPause = SimulationTime;
-					else if (state == SimulationState.Unpaused)
+					else if (state == SimulationState.Running)
 						SimulationTime = SimulationTimeAtPause;
 				}
 			}
@@ -62,7 +59,7 @@ namespace MyThirdSDL.Simulation
 
 		public DateTime WorldDateTime { get { return startingWorldDateTime.Add(WorldTimePassed); } }
 
-		private TimeSpan WorldTimePassed
+		private static TimeSpan WorldTimePassed
 		{
 			get
 			{
@@ -104,21 +101,23 @@ namespace MyThirdSDL.Simulation
 			}
 		}
 
-		#endregion
+		#endregion Properties
 
 		#region Public Simulation Events
 
 		public event EventHandler<ThoughtEventArgs> HadThought;
+
 		public event EventHandler<EventArgs> EmployeeThirstSatisfied;
+
 		public event EventHandler<EventArgs> EmployeeHungerSatisfied;
 
 		public event EventHandler<EmployeeClickedEventArgs> EmployeeClicked;
 
-		#endregion
+		#endregion Public Simulation Events
 
 		#region Private Simulation Event Handlers
 
-		#endregion
+		#endregion Private Simulation Event Handlers
 
 		public SimulationManager(DateTime startingWorldDateTime, IEnumerable<ThoughtMetadata> thoughtPool)
 		{
@@ -133,42 +132,41 @@ namespace MyThirdSDL.Simulation
 		public void Update(GameTime gameTime)
 		{
 			// only update if the simulation isn't paused
-			if (state != SimulationState.Paused)
+			if (state == SimulationState.Paused) return;
+
+			SimulationTime += gameTime.ElapsedGameTime;
+
+			foreach (var agentList in trackedAgents.Values)
 			{
-				SimulationTime += gameTime.ElapsedGameTime;
-
-				foreach (var agentList in trackedAgents.Values)
+				foreach (var agent in agentList)
 				{
-					foreach (var agent in agentList)
+					agent.Update(gameTime);
+
+					// handle employee specific update logic
+					if (agent is Employee)
 					{
-						agent.Update(gameTime);
+						var employee = agent as Employee;
 
-						// handle employee specific update logic
-						if (agent is Employee)
-						{
-							var employee = agent as Employee;
+						// TODO: delay updating this until 1-2 seconds has passed? we don't really need to update this often
+						foreach (var unsatisfiedThought in employee.UnsatisfiedThoughts)
+							TakeActionBasedOnThought(employee, unsatisfiedThought.Type);
 
-							// TODO: delay updating this until 1-2 seconds has passed? we don't really need to update this often
-							foreach (var unsatisfiedThought in employee.UnsatisfiedThoughts)
-								TakeActionBasedOnThought(employee, unsatisfiedThought.Type);
+						// update the employee's age based on the updated world date time
+						employee.UpdateAge(WorldDateTime);
 
-							// update the employee's age based on the updated world date time
-							employee.UpdateAge(WorldDateTime);
+						// remove ourselves from the employee's currently occupied map cell
+						//if (employee.OccupiedMapCell != null)
+						//	employee.OccupiedMapCell.RemoveDrawable(employee, (int)TileType.Object);
 
-							// remove ourselves from the employee's currently occupied map cell
-							//if (employee.OccupiedMapCell != null)
-							//	employee.OccupiedMapCell.RemoveDrawable(employee, (int)TileType.Object);
+						// get the map cell that the employee occupies and add it as a drawable to that map cell
+						//MapCell mapCellToOccupy = GetMapCellOccupiedByEmployee(employee);
+						//mapCellToOccupy.AddDrawable(employee, (int)TileType.Object);
+						//employee.OccupiedMapCell = mapCellToOccupy;
 
-							// get the map cell that the employee occupies and add it as a drawable to that map cell
-							//MapCell mapCellToOccupy = GetMapCellOccupiedByEmployee(employee);
-							//mapCellToOccupy.AddDrawable(employee, (int)TileType.Object);
-							//employee.OccupiedMapCell = mapCellToOccupy;
-
-							// if the agent being updated is an employee and that agent is being clicked on by the user, fire the event telling subscribers of such
-							// we can use this event to react to the user interacting with the employees to do things like display their inspection information
-							if (IsEmployeeClicked(employee))
-								EventHelper.FireEvent<EmployeeClickedEventArgs>(EmployeeClicked, this, new EmployeeClickedEventArgs(employee));
-						}
+						// if the agent being updated is an employee and that agent is being clicked on by the user, fire the event telling subscribers of such
+						// we can use this event to react to the user interacting with the employees to do things like display their inspection information
+						if (IsEmployeeClicked(employee))
+							EventHelper.FireEvent(EmployeeClicked, this, new EmployeeClickedEventArgs(employee));
 					}
 				}
 			}
@@ -176,11 +174,13 @@ namespace MyThirdSDL.Simulation
 
 		#region Employee Events
 
+		/*
 		private MapCell GetMapCellOccupiedByEmployee(Employee employee)
 		{
 			MapCell mapCell = currentMap.MapCells.FirstOrDefault(mc => mc.Bounds.Contains(employee.CollisionBox.Center));
 			return mapCell;
 		}
+*/
 
 		/// <summary>
 		/// Determines whether this employee is clicked based on the passed mouse state by translating the screen coordinates to world space and checking the agent's collision box.
@@ -192,12 +192,12 @@ namespace MyThirdSDL.Simulation
 		{
 			if (Mouse.ButtonsPressed != null && Mouse.PreviousButtonsPressed != null)
 			{
-				return employee.CollisionBox.Contains(new Point((int)Mouse.X, (int)Mouse.Y))
+				return employee.CollisionBox.Contains(new Point(Mouse.X, Mouse.Y))
 				&& !Mouse.ButtonsPressed.Contains(MouseButtonCode.Left)
 				&& Mouse.PreviousButtonsPressed.Contains(MouseButtonCode.Left);
 			}
-			else
-				return false;
+
+			return false;
 		}
 
 		private void HandleHadThought(object sender, ThoughtEventArgs e)
@@ -215,17 +215,24 @@ namespace MyThirdSDL.Simulation
 
 		private void TakeActionBasedOnThought(Employee employee, ThoughtType thoughtType)
 		{
-			if (thoughtType == ThoughtType.Hungry)
-				WalkMobileAgentToClosest<SnackMachine>(employee);
-			else if (thoughtType == ThoughtType.Thirsty)
-				WalkMobileAgentToClosest<SodaMachine>(employee);
-			else if (thoughtType == ThoughtType.NeedsDeskAssignment)
-				WalkMobileAgentToClosest<OfficeDesk>(employee);
-			else if (thoughtType == ThoughtType.IsIdle)
-				WalkEmployeeToAssignedOfficeDesk(employee);
+			switch (thoughtType)
+			{
+				case ThoughtType.Hungry:
+					WalkMobileAgentToClosest<SnackMachine>(employee);
+					break;
+				case ThoughtType.Thirsty:
+					WalkMobileAgentToClosest<SodaMachine>(employee);
+					break;
+				case ThoughtType.NeedsDeskAssignment:
+					WalkMobileAgentToClosest<OfficeDesk>(employee);
+					break;
+				case ThoughtType.IsIdle:
+					WalkEmployeeToAssignedOfficeDesk(employee);
+					break;
+			}
 		}
 
-		#endregion
+		#endregion Employee Events
 
 		#region Agent Tracking
 
@@ -239,10 +246,7 @@ namespace MyThirdSDL.Simulation
 			where T : Agent
 		{
 			IEnumerable<T> agentsForType = GetTrackedAgentsByType<T>();
-			if (agentsForType.Any(a => a.ID == agent.ID))
-				return true;
-
-			return false;
+			return agentsForType.Any(a => a.ID == agent.ID);
 		}
 
 		/// <summary>
@@ -262,22 +266,21 @@ namespace MyThirdSDL.Simulation
 		public void AddAgent<T>(T agent)
 			where T : Agent
 		{
-			if (!IsAgentAlreadyTracked<T>(agent))
+			if (IsAgentAlreadyTracked(agent)) return;
+
+			agent.Activate();
+
+			if (agent is Employee)
 			{
-				agent.Activate();
+				var employee = agent as Employee;
 
-				if (agent is Employee)
-				{
-					var employee = agent as Employee;
+				employee.HadThought += HandleHadThought;
+				employee.ThoughtSatisfied += HandleThoughtSatisfied;
 
-					employee.HadThought += HandleHadThought;
-					employee.ThoughtSatisfied += HandleThoughtSatisfied;
-
-					StartTrackingAgent<T>(employee);
-				}
-				else
-					StartTrackingAgent<T>(agent);
+				StartTrackingAgent<T>(employee);
 			}
+			else
+				StartTrackingAgent<T>(agent);
 		}
 
 		private void HandleThoughtSatisfied(object sender, ThoughtEventArgs e)
@@ -302,8 +305,7 @@ namespace MyThirdSDL.Simulation
 				agentsForType.Add(agent);
 			else
 			{
-				agentsForType = new List<Agent>();
-				agentsForType.Add(agent);
+				agentsForType = new List<Agent> { agent };
 				trackedAgents.Add(typeof(T), agentsForType);
 			}
 		}
@@ -329,20 +331,19 @@ namespace MyThirdSDL.Simulation
 			where T : Agent
 		{
 			var agent = GetTrackedAgent<T>(agentId);
-			if (agent != null)
+			if (agent == null) return;
+			
+			agent.Deactivate();
+
+			if (agent is Employee)
 			{
-				agent.Deactivate();
+				var employee = agent as Employee;
 
-				if (agent is Employee)
-				{
-					var employee = agent as Employee;
-
-					employee.HadThought -= HandleHadThought;
-					employee.ThoughtSatisfied -= HandleThoughtSatisfied;
-				}
-
-				StopTrackingAgent<T>(agentId);
+				employee.HadThought -= HandleHadThought;
+				employee.ThoughtSatisfied -= HandleThoughtSatisfied;
 			}
+
+			StopTrackingAgent<T>(agentId);
 		}
 
 		/// <summary>
@@ -388,11 +389,11 @@ namespace MyThirdSDL.Simulation
 				//				else
 				return agentsForType.Cast<T>();
 			}
-			else
-				return new List<T>();
+			
+			return new List<T>();
 		}
 
-		#endregion
+		#endregion Agent Tracking
 
 		#region Employee Triggers
 
@@ -415,49 +416,46 @@ namespace MyThirdSDL.Simulation
 		{
 			IntentionType intentionType = IntentionType.Unknown;
 
-			if (typeof(T).Equals(typeof(SodaMachine)))
+			if (typeof(T) == typeof(SodaMachine))
 				intentionType = IntentionType.BuyDrink;
-			else if (typeof(T).Equals(typeof(SnackMachine)))
+			else if (typeof(T) == typeof(SnackMachine))
 				intentionType = IntentionType.BuySnack;
-			else if (typeof(T).Equals(typeof(OfficeDesk)))
+			else if (typeof(T) == typeof(OfficeDesk))
 				intentionType = IntentionType.GoToDesk;
 
 			// if we don't already intend to perform that intention, proceed
-			if (!mobileAgent.IsAlreadyIntention(intentionType))
+			if (mobileAgent.IsAlreadyIntention(intentionType)) return;
+			
+			var agentsToCheck = GetTrackedAgentsByType<T>();
+
+			// if there are agents by that type to head towards, proceed
+			if (agentsToCheck.Count() == 0) return;
+			
+			// find the closest agent by the type T to the employee and set the employee on his way towards that agent if any exists
+			var closestAgent = GetClosestAgentByType(mobileAgent, agentsToCheck);
+
+			// if there is an actual closest agent in the simulation, proceed
+			if (closestAgent == null) return;
+			
+			// if this is a triggerable, subscribe to the trigger now that we intend to go to it
+			//						if (closestAgent is ITriggerable)
+			//						{
+			//							var triggerable = closestAgent as ITriggerable;
+			//							if (closestAgent is SodaMachine)
+			//								triggerable.Trigger.AddSubscriptionToActionByType(mobileAgent, SubscriptionType.Once, ActionType.DispenseDrink);
+			//							if (closestAgent is SnackMachine)
+			//								triggerable.Trigger.AddSubscriptionToActionByType(mobileAgent, SubscriptionType.Once, ActionType.DispenseFood);
+			//						}
+
+			// we only want to add a "go to office desk" intention if the desk is not assigned to someone
+			if (closestAgent is OfficeDesk)
 			{
-				var agentsToCheck = GetTrackedAgentsByType<T>();
-
-				// if there are agents by that type to head towards, proceed
-				if (agentsToCheck.Count() > 0)
-				{
-					// find the closest agent by the type T to the employee and set the employee on his way towards that agent if any exists
-					var closestAgent = GetClosestAgentByType<T>(mobileAgent, agentsToCheck);
-
-					// if there is an actual closest agent in the simulation, proceed
-					if (closestAgent != null)
-					{
-						// if this is a triggerable, subscribe to the trigger now that we intend to go to it
-						//						if (closestAgent is ITriggerable)
-						//						{
-						//							var triggerable = closestAgent as ITriggerable;
-						//							if (closestAgent is SodaMachine)
-						//								triggerable.Trigger.AddSubscriptionToActionByType(mobileAgent, SubscriptionType.Once, ActionType.DispenseDrink);
-						//							if (closestAgent is SnackMachine)
-						//								triggerable.Trigger.AddSubscriptionToActionByType(mobileAgent, SubscriptionType.Once, ActionType.DispenseFood);
-						//						}
-
-						// we only want to add a "go to office desk" intention if the desk is not assigned to someone
-						if (closestAgent is OfficeDesk)
-						{
-							var closestOfficeDesk = closestAgent as OfficeDesk;
-							if (!closestOfficeDesk.IsAssignedToAnEmployee)
-								AddIntentionToAgent(mobileAgent, closestAgent, intentionType);
-						}
-						else
-							AddIntentionToAgent(mobileAgent, closestAgent, intentionType);
-					}
-				}
+				var closestOfficeDesk = closestAgent as OfficeDesk;
+				if (!closestOfficeDesk.IsAssignedToAnEmployee)
+					AddIntentionToAgent(mobileAgent, closestAgent, intentionType);
 			}
+			else
+				AddIntentionToAgent(mobileAgent, closestAgent, intentionType);
 		}
 
 		/// <summary>
@@ -485,7 +483,7 @@ namespace MyThirdSDL.Simulation
 			fromAgent.AddIntention(new Intention(toAgent, bestPathToClosestAgent, intentionType));
 		}
 
-		#endregion
+		#endregion Employee Triggers
 
 		#region Path Finding
 
@@ -493,14 +491,14 @@ namespace MyThirdSDL.Simulation
 		/// Finds the nodes at the passed world grid indices and returns a queue of map objects to travel along in order to get from start
 		/// to end.
 		/// </summary>
-		/// <param name="startWorldGridIndex"></param>
-		/// <param name="endWorldGridIndex"></param>
+		/// <param name="startWorldPosition"></param>
+		/// <param name="endWorldPosition"></param>
 		/// <returns></returns>
 		private Queue<PathNode> FindBestPath(Vector startWorldPosition, Vector endWorldPosition)
 		{
 			PathNode start = currentMap.GetPathNodeAtWorldPosition(startWorldPosition);
 			PathNode end = currentMap.GetPathNodeAtWorldPosition(endWorldPosition);
-			Path<PathNode> bestPath = FindPath<PathNode>(start, end);//, ExactDistance, ManhattanDistance);
+			Path<PathNode> bestPath = FindPath(start, end);//, ExactDistance, ManhattanDistance);
 			IEnumerable<PathNode> bestPathReversed = bestPath.Reverse();
 			Queue<PathNode> result = new Queue<PathNode>();
 			foreach (var bestPathNode in bestPathReversed)
@@ -512,23 +510,21 @@ namespace MyThirdSDL.Simulation
 		/// An implementation of the A* path finding algorithm. Finds the best path betwen the passed start and end nodes while utilizing
 		/// the passed exact distance function and estimated heuristic distance function.
 		/// </summary>
-		/// <typeparam name="Node"></typeparam>
+		/// <typeparam name="TNode"></typeparam>
 		/// <param name="start"></param>
 		/// <param name="destination"></param>
-		/// <param name="distance"></param>
-		/// <param name="estimate"></param>
 		/// <returns></returns>
-		private Path<Node> FindPath<Node>(
-			Node start,							// starting node
-			Node destination)//,					// destination node
+		private Path<TNode> FindPath<TNode>(
+			TNode start,							// starting node
+			TNode destination)//,					// destination node
 			//Func<Node, Node, double> distance,	// takes two nodes and calculates a distance cost between them
 			//Func<Node, Node, double> estimate)		// takes a node and calculates an estimated distance between current node
-			where Node : INode, IHasNeighbors<Node>
+			where TNode : INode, IHasNeighbors<TNode>
 		{
-			var closed = new HashSet<Node>();
-			var queue = new PriorityQueue<double, Path<Node>>();
+			var closed = new HashSet<TNode>();
+			var queue = new PriorityQueue<double, Path<TNode>>();
 
-			queue.Enqueue(0, new Path<Node>(start));
+			queue.Enqueue(0, new Path<TNode>(start));
 
 			while (!queue.IsEmpty)
 			{
@@ -542,7 +538,7 @@ namespace MyThirdSDL.Simulation
 
 				closed.Add(path.LastStep);
 
-				foreach (Node n in path.LastStep.Neighbors)
+				foreach (TNode n in path.LastStep.Neighbors)
 				{
 					double d = ExactDistance(path.LastStep, n);
 					var newPath = path.AddStep(n, d);
@@ -563,7 +559,7 @@ namespace MyThirdSDL.Simulation
 		private T GetClosestAgentByType<T>(MobileAgent mobileAgent, IEnumerable<T> agentsToCheck)
 			where T : Agent
 		{
-			var employeeWorldPosition = mobileAgent.WorldPosition;
+			if (mobileAgent == null) throw new ArgumentNullException("mobileAgent");
 
 			if (agentsToCheck.Count() > 0)
 			{
@@ -593,8 +589,8 @@ namespace MyThirdSDL.Simulation
 
 				return closestAgent;
 			}
-			else
-				return null;
+			
+			return null;
 		}
 
 		/// <summary>
@@ -622,7 +618,7 @@ namespace MyThirdSDL.Simulation
 		/// <param name="node1"></param>
 		/// <param name="node2"></param>
 		/// <returns></returns>
-		private double ExactDistance<TNode>(TNode node1, TNode node2)
+		private static double ExactDistance<TNode>(TNode node1, TNode node2)
 			where TNode : INode
 		{
 			return 1.0;
@@ -631,17 +627,17 @@ namespace MyThirdSDL.Simulation
 		/// <summary>
 		/// The manhattan distance between two nodes is the distance traveled on a taxicab-like grid where diagonal movement is not allowed.
 		/// </summary>
-		/// <typeparam name="Node"></typeparam>
+		/// <typeparam name="TNode"></typeparam>
 		/// <param name="node1"></param>
 		/// <param name="node2"></param>
 		/// <returns></returns>
-		private double ManhattanDistanceEstimate<Node>(Node node1, Node node2)
-			where Node : INode
+		private double ManhattanDistanceEstimate<TNode>(TNode node1, TNode node2)
+			where TNode : INode
 		{
 			return Math.Abs(node1.WorldPosition.X - node2.WorldPosition.X) + Math.Abs(node1.WorldPosition.Y - node2.WorldPosition.Y);
 		}
 
-		#endregion
+		#endregion Path Finding
 
 		private Thought GenerateThought(ThoughtType type)
 		{
@@ -653,6 +649,8 @@ namespace MyThirdSDL.Simulation
 
 		public void SetCurrentMap(TiledMap tiledMap)
 		{
+			var mapEquipmentOccupents = tiledMap.GetEquipmentOccupants();
+			AddAgents(mapEquipmentOccupents);
 			currentMap = tiledMap;
 		}
 	}

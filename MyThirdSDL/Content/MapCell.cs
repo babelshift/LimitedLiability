@@ -64,6 +64,9 @@ namespace MyThirdSDL.Content
 		{
 			FloorTile.Draw(gameTime, renderer);
 
+			if(OccupantEquipment != null)
+				OccupantEquipment.Draw(gameTime, renderer);
+
 			foreach (var drawable in drawableObjects)
 				drawable.Draw(gameTime, renderer);
 		}

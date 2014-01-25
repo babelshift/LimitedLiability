@@ -1,18 +1,15 @@
-﻿using SharpDL;
+﻿using MyThirdSDL.Agents;
+using MyThirdSDL.Content;
+using MyThirdSDL.Descriptors;
+using MyThirdSDL.Mail;
+using MyThirdSDL.Simulation;
+using SharpDL;
+using SharpDL.Events;
 using SharpDL.Graphics;
+using SharpDL.Input;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Collections.Concurrent;
-using MyThirdSDL.Descriptors;
-using SharpDL.Events;
-using SharpDL.Input;
-using MyThirdSDL.Content;
-using MyThirdSDL.Simulation;
-using MyThirdSDL.Agents;
-using MyThirdSDL.Mail;
 
 namespace MyThirdSDL.UserInterface
 {
@@ -23,8 +20,9 @@ namespace MyThirdSDL.UserInterface
 		private Point bottomRightPointOfWindow;
 		private ContentManager contentManager;
 		private TimeSpan timeOfStatusChange = TimeSpan.Zero;
+		private Image tileHighlightImage;
 
-		#endregion
+		#endregion Members
 
 		#region Properties
 
@@ -36,7 +34,7 @@ namespace MyThirdSDL.UserInterface
 
 		public TimeSpan TimeSpentInCurrentState { get; private set; }
 
-		#endregion
+		#endregion Properties
 
 		#region Diagnostic Items
 
@@ -45,15 +43,16 @@ namespace MyThirdSDL.UserInterface
 		private Label labelSimulationTime;
 		private Label labelState;
 
-		#endregion
+		#endregion Diagnostic Items
 
 		#region Message List
 
 		private Dictionary<Guid, Dictionary<SimulationMessageType, SimulationLabel>> labelMessagesForMultipleAgents
 			= new Dictionary<Guid, Dictionary<SimulationMessageType, SimulationLabel>>();
+
 		private List<Label> labels = new List<Label>();
 
-		#endregion
+		#endregion Message List
 
 		#region Controls
 
@@ -89,11 +88,15 @@ namespace MyThirdSDL.UserInterface
 		private MenuCompany menuCompany;
 		private bool isMenuCompanyOpen = false;
 
-		#endregion
+		#endregion Controls
 
 		public event EventHandler MainMenuButtonClicked;
+
 		public event EventHandler<ArchiveEventArgs> ArchiveMailButtonClicked;
-		public event EventHandler<PurchasableItemSelectedEventArgs> PurchasableItemSelected;
+
+		public event EventHandler<PurchasableItemPlacedEventArgs> PurchasableItemPlaced;
+
+		public event EventHandler PurchasableItemSelected;
 
 		public bool IsToolboxTrayHovered
 		{
@@ -114,15 +117,29 @@ namespace MyThirdSDL.UserInterface
 			HideMenuCompany();
 		}
 
+		public void SetHoveredMapCell(MapCell hoveredMapCell)
+		{
+			this.hoveredMapCell = hoveredMapCell;
+		}
+
+		private MapCell hoveredMapCell;
+
 		#region Constructors
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="MyThirdSDL.UserInterface.UserInterfaceManager"/> class.
 		/// </summary>
-		/// <param name="renderer">Renderer.</param>
+		/// <param name="renderer"></param>
 		/// <param name="contentManager">Content manager.</param>
 		/// <param name="bottomRightPointOfWindow">Bottom right point of window.</param>
 		/// <param name="purchasableEquipment">Purchasable items.</param>
+		/// <param name="purchasableRooms"></param>
+		/// <param name="inbox"></param>
+		/// <param name="outbox"></param>
+		/// <param name="archive"></param>
+		/// <param name="unreadMailCount"></param>
+		/// <param name="money"></param>
+		/// <param name="employeeCount"></param>
 		public UserInterfaceManager(Renderer renderer, ContentManager contentManager, Point bottomRightPointOfWindow,
 			IEnumerable<IPurchasable> purchasableEquipment,
 			IEnumerable<IPurchasable> purchasableRooms,
@@ -154,7 +171,7 @@ namespace MyThirdSDL.UserInterface
 
 			Color fontColor;
 			int fontSizeContent;
-			string fontPath = GetLabelFontDetails(contentManager, out fontColor, out fontSizeContent);
+			string fontPath = GetLabelFontDetails(out fontColor, out fontSizeContent);
 
 			labelMousePositionAbsolute = ControlFactory.CreateLabel(contentManager, fontPath, fontSizeContent, fontColor, ".");
 			labelMousePositionAbsolute.Position = Vector.Zero;
@@ -179,17 +196,11 @@ namespace MyThirdSDL.UserInterface
 			CreateMenuMailbox(inbox, outbox, archive);
 			CreateMenuCompany(employeeCount);
 
+			string tileHighlightTexturePath = contentManager.GetContentPath("TileHighlight");
+			Surface tileHighlightSurface = new Surface(tileHighlightTexturePath, SurfaceType.PNG);
+			tileHighlightImage = new Image(renderer, tileHighlightSurface, ImageFormat.PNG);
+
 			ChangeState(UserInterfaceState.Default);
-		}
-
-		void textbox_GotFocus(object sender, EventArgs e)
-		{
-			FocusedControl = (Control)sender;
-		}
-
-		void textbox2_GotFocus(object sender, EventArgs e)
-		{
-			FocusedControl = (Control)sender;
 		}
 
 		/// <summary>
@@ -199,7 +210,7 @@ namespace MyThirdSDL.UserInterface
 		/// <param name="contentManager">Content manager.</param>
 		/// <param name="fontColor">Font color.</param>
 		/// <param name="fontSizeContent">Font size content.</param>
-		private string GetLabelFontDetails(ContentManager contentManager, out Color fontColor, out int fontSizeContent)
+		private string GetLabelFontDetails(out Color fontColor, out int fontSizeContent)
 		{
 			string fontPath = contentManager.GetContentPath("Arcade");
 			fontColor = new Color(255, 165, 0);
@@ -207,7 +218,7 @@ namespace MyThirdSDL.UserInterface
 			return fontPath;
 		}
 
-		#endregion
+		#endregion Constructors
 
 		#region Message Events
 
@@ -230,7 +241,7 @@ namespace MyThirdSDL.UserInterface
 			{
 				Color fontColor;
 				int fontSizeContent;
-				string fontPath = GetLabelFontDetails(contentManager, out fontColor, out fontSizeContent);
+				string fontPath = GetLabelFontDetails(out fontColor, out fontSizeContent);
 				//SimulationLabel labelMessage = controlFactory.CreateSimulationLabel(Vector.Zero, fontPath, fontSizeContent, fontColor, message);
 				//labelMessagesForSingleAgent.Add(message.Type, labelMessage);
 			}
@@ -270,7 +281,7 @@ namespace MyThirdSDL.UserInterface
 				return new Dictionary<SimulationMessageType, SimulationLabel>();
 		}
 
-		#endregion
+		#endregion Message Events
 
 		#region ToolboxTray Events
 
@@ -336,7 +347,7 @@ namespace MyThirdSDL.UserInterface
 			ChangeState(UserInterfaceState.Default);
 		}
 
-		#endregion
+		#endregion ToolboxTray Events
 
 		#region Menu Mailbox Events
 
@@ -387,7 +398,7 @@ namespace MyThirdSDL.UserInterface
 				ArchiveMailButtonClicked(sender, e);
 		}
 
-		#endregion
+		#endregion Menu Mailbox Events
 
 		#region Menu Inspect Employee Events
 
@@ -424,7 +435,7 @@ namespace MyThirdSDL.UserInterface
 			HideMenuInspectEmployee();
 		}
 
-		#endregion
+		#endregion Menu Inspect Employee Events
 
 		#region Menu Rooms Events
 
@@ -451,8 +462,8 @@ namespace MyThirdSDL.UserInterface
 		private void menuPurchaseRooms_ButtonConfirmWindowClicked(object sender, ButtonConfirmWindowClickedEventArgs e)
 		{
 			IPurchasable selectedPurchasableItem = e.PurchasableItem;
-			if (PurchasableItemSelected != null)
-				PurchasableItemSelected(sender, new PurchasableItemSelectedEventArgs(e.PurchasableItem));
+			if (PurchasableItemPlaced != null)
+				PurchasableItemPlaced(sender, new PurchasableItemPlacedEventArgs(e.PurchasableItem, hoveredMapCell));
 
 			HideMenuRooms();
 
@@ -464,7 +475,7 @@ namespace MyThirdSDL.UserInterface
 			HideMenuRooms();
 		}
 
-		#endregion
+		#endregion Menu Rooms Events
 
 		#region Menu Equipment Events
 
@@ -473,7 +484,7 @@ namespace MyThirdSDL.UserInterface
 			menuPurchaseEquipment = new MenuPurchase(contentManager, "IconHandTruck", "Equipment", purchasableEquipment); // controlFactory.CreateMenuPurchase(menuPosition, "IconHandTruck", "Equipment", purchasableEquipment);
 			menuPurchaseEquipment.Position = new Vector(bottomRightPointOfWindow.X / 2 - menuPurchaseEquipment.Width / 2, bottomRightPointOfWindow.Y / 2 - menuPurchaseEquipment.Height / 2);
 			menuPurchaseEquipment.ButtonCloseWindowClicked += menuEquipment_ButtonCloseWindowClicked;
-			menuPurchaseEquipment.ButtonConfirmWindowClicked += menuEquipment_ButtonConfirmWindowClicked;
+			menuPurchaseEquipment.ButtonConfirmWindowClicked += menuEquipment_PurchasableItemSelected;
 		}
 
 		private void ShowMenuEquipment()
@@ -488,15 +499,16 @@ namespace MyThirdSDL.UserInterface
 			ChangeState(UserInterfaceState.Default);
 		}
 
-		private void menuEquipment_ButtonConfirmWindowClicked(object sender, ButtonConfirmWindowClickedEventArgs e)
+		private void menuEquipment_PurchasableItemSelected(object sender, ButtonConfirmWindowClickedEventArgs e)
 		{
-			IPurchasable selectedPurchasableItem = e.PurchasableItem;
-			if (PurchasableItemSelected != null)
-				PurchasableItemSelected(sender, new PurchasableItemSelectedEventArgs(e.PurchasableItem));
+			selectedPurchasableItem = e.PurchasableItem;
 
 			HideMenuEquipment();
 
 			ChangeState(UserInterfaceState.PlaceEquipmentActive);
+
+			if (PurchasableItemSelected != null)
+				PurchasableItemSelected(this, EventArgs.Empty);
 		}
 
 		private void menuEquipment_ButtonCloseWindowClicked(object sender, EventArgs e)
@@ -504,7 +516,7 @@ namespace MyThirdSDL.UserInterface
 			HideMenuEquipment();
 		}
 
-		#endregion
+		#endregion Menu Equipment Events
 
 		#region Menu Company
 
@@ -537,7 +549,7 @@ namespace MyThirdSDL.UserInterface
 			HideMenuCompany();
 		}
 
-		#endregion
+		#endregion Menu Company
 
 		#region Game Loop
 
@@ -575,6 +587,20 @@ namespace MyThirdSDL.UserInterface
 
 		public void Draw(GameTime gameTime, Renderer renderer)
 		{
+			if (CurrentState == UserInterfaceState.PlaceEquipmentActive)
+			{
+				if (hoveredMapCell != null)
+				{
+					Vector drawPosition = CoordinateHelper.ProjectedPositionToDrawPosition(hoveredMapCell.ProjectedPosition);
+
+					renderer.RenderTexture(tileHighlightImage.Texture, drawPosition.X, drawPosition.Y);
+
+					// TODO: should we create a class that is simply a texture and x,y pair?
+					foreach (var activeTexture in selectedPurchasableItem.ActiveTextures)
+						renderer.RenderTexture(activeTexture, drawPosition.X, drawPosition.Y);
+				}
+			}
+
 			int i = 0;
 
 			foreach (var label in labels)
@@ -618,7 +644,7 @@ namespace MyThirdSDL.UserInterface
 				toolboxTray.UpdateDisplayedDateAndTime(dateTime);
 		}
 
-		#endregion
+		#endregion Game Loop
 
 		#region User Input Events
 
@@ -626,6 +652,8 @@ namespace MyThirdSDL.UserInterface
 		{
 			focusedControl.HandleTextInput(e.Text);
 		}
+
+		private IPurchasable selectedPurchasableItem;
 
 		public void HandleMouseButtonPressedEvent(object sender, MouseButtonEventArgs e)
 		{
@@ -645,6 +673,11 @@ namespace MyThirdSDL.UserInterface
 
 			if (isMenuCompanyOpen)
 				menuCompany.HandleMouseButtonPressedEvent(sender, e);
+
+			if(CurrentState == UserInterfaceState.PlaceEquipmentActive)
+				if(e.MouseButton == MouseButtonCode.Left)
+					if (PurchasableItemPlaced != null)
+						PurchasableItemPlaced(this, new PurchasableItemPlacedEventArgs(selectedPurchasableItem, hoveredMapCell));
 		}
 
 		public void HandleMouseMovingEvent(object sender, MouseMotionEventArgs e)
@@ -677,7 +710,7 @@ namespace MyThirdSDL.UserInterface
 		public void HandleKeyStates(IEnumerable<KeyInformation> keysPressed, IEnumerable<KeyInformation> keysReleased)
 		{
 			foreach (var key in keysPressed)
-				if(FocusedControl != null)
+				if (FocusedControl != null)
 					FocusedControl.HandleKeyPressed(key);
 		}
 
@@ -689,7 +722,7 @@ namespace MyThirdSDL.UserInterface
 			labelState.Text = String.Format("UI State: {0}", state.ToString());
 		}
 
-		#endregion
+		#endregion User Input Events
 
 		#region Dispose
 
@@ -711,8 +744,10 @@ namespace MyThirdSDL.UserInterface
 			menuMailbox.Dispose();
 			menuPurchaseEquipment.Dispose();
 			menuPurchaseRooms.Dispose();
+
+			tileHighlightImage.Dispose();
 		}
 
-		#endregion
+		#endregion Dispose
 	}
 }

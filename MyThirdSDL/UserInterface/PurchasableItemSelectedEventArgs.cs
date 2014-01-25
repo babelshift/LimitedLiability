@@ -1,7 +1,7 @@
-using System;
+﻿using System;
 using MyThirdSDL.Descriptors;
 
-namespace MyThirdSDL
+namespace MyThirdSDL.UserInterface
 {
 	public class PurchasableItemSelectedEventArgs : EventArgs
 	{

@@ -1,16 +1,16 @@
-using System;
-using System.Linq;
-using System.Collections.Generic;
-using SharpDL;
-using SharpDL.Graphics;
 using MyThirdSDL.Agents;
 using MyThirdSDL.Content;
+using MyThirdSDL.Descriptors;
+using MyThirdSDL.Mail;
 using MyThirdSDL.Simulation;
 using MyThirdSDL.UserInterface;
-using MyThirdSDL.Descriptors;
-using SharpDL.Input;
+using SharpDL;
 using SharpDL.Events;
-using MyThirdSDL.Mail;
+using SharpDL.Graphics;
+using SharpDL.Input;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace MyThirdSDL.Screens
 {
@@ -23,37 +23,21 @@ namespace MyThirdSDL.Screens
 		private SimulationManager simulationManager;
 		private UserInterfaceManager userInterfaceManager;
 		private MailManager mailManager;
+
 		//private Cursor cursor;
 		private BankAccount bankAccount;
 
 		private string mapPathToLoad;
 		private TiledMap tiledMap;
-		private Image tileHighlightImage;
-		private MapCell hoveredMapCell;
-
-		private IPurchasable selectedPurchasableEquipment;
+		//private MapCell hoveredMapCell;
 
 		private List<IDrawable> allDrawables = new List<IDrawable>();
 
-		private bool IsValidMapCellHovered { get { return hoveredMapCell != null; } }
+		//private bool IsValidMapCellHovered { get { return hoveredMapCell != null; } }
 
-		private bool IsLeftMouseButtonClicked
-		{
-			get
-			{
-				if (Mouse.ButtonsPressed != null && Mouse.PreviousButtonsPressed != null)
-				{
-					if (!Mouse.ButtonsPressed.Contains(MouseButtonCode.Left) && Mouse.PreviousButtonsPressed.Contains(MouseButtonCode.Left))
-						return true;
-				}
+		private bool IsUserInterfaceStateChangeDelayPassed { get { return userInterfaceManager.TimeSpentInCurrentState > TimeSpan.FromSeconds(0.1); } }
 
-				return false;
-			}
-		}
-
-		private bool IsUserInterfaceStateChangeDelayPassed { get { return userInterfaceManager.TimeSpentInCurrentState > TimeSpan.FromSeconds(1.0); } }
-
-		#endregion
+		#endregion Members
 
 		public event EventHandler ReturnToMainMenu;
 
@@ -74,7 +58,7 @@ namespace MyThirdSDL.Screens
 			this.mapPathToLoad = mapPathToLoad;
 		}
 
-		#endregion
+		#endregion Constructor
 
 		#region User Input
 
@@ -92,6 +76,10 @@ namespace MyThirdSDL.Screens
 
 		public override void HandleMouseMovingEvent(object sender, MouseMotionEventArgs e)
 		{
+			// get the map cell that the user's mouse is hovering over
+			if(userInterfaceManager.CurrentState == UserInterfaceState.PlaceEquipmentActive)
+				userInterfaceManager.SetHoveredMapCell(GetHoveredMapCell());
+
 			userInterfaceManager.HandleMouseMovingEvent(sender, e);
 		}
 
@@ -130,70 +118,41 @@ namespace MyThirdSDL.Screens
 				//cursor.Update(isMouseInsideWindowBounds, mouseOverScreenEdges);
 				Camera.Update(mouseOverScreenEdges);
 			}
-
-			if (userInterfaceManager.CurrentState == UserInterfaceState.Default)
-			{
-				// no menu is active
-				ClearHoveredMapCell();
-			}
-			else if (userInterfaceManager.CurrentState == UserInterfaceState.SelectEquipmentMenuActive)
-			{
-				// select equipment menu is active
-				ClearHoveredMapCell();
-			}
-			else if (userInterfaceManager.CurrentState == UserInterfaceState.PlaceEquipmentActive)
-			{
-				HandlePlaceEquipment();
-			}
 		}
 
-		private void HandlePlaceEquipment()
+		private void HandlePlaceEquipment(object sender, PurchasableItemPlacedEventArgs e)
 		{
-			// get the map cell that the user's mouse is hovering over
-			hoveredMapCell = GetHoveredMapCell();
-
 			// if the user is not hovering over a valid map cell, don't take any action (this happens when the mouse is outside the bounds of the world)
-			if (IsValidMapCellHovered)
+			//if (!IsValidMapCellHovered) return;
+
+			// place equipment active only if we have been in this state for more than a second to prevent super fast action being taken
+			if (!IsUserInterfaceStateChangeDelayPassed) return;
+
+			// if the user has clicked or released any mouse buttons while in this mode, try to place the equipment
+			//if (!Mouse.IsLeftMouseButtonClicked) return;
+
+			if (e.PurchasableItem is SodaMachine)
 			{
-				// place equipment active only if we have been in this state for more than a second to prevent super fast action being taken
-				if (IsUserInterfaceStateChangeDelayPassed)
-				{
-					// if the user has clicked or released any mouse buttons while in this mode, try to place the equipment
-					if (IsLeftMouseButtonClicked)
-					{
-						if (selectedPurchasableEquipment is SodaMachine)
-						{
-							var agentToAdd = agentFactory.CreateSodaMachine(SimulationManager.SimulationTime, new Vector(hoveredMapCell.WorldPosition.X, hoveredMapCell.WorldPosition.Y));
-							AddEquipmentToSimulationAndHoveredMapCell(agentToAdd);
-						}
-						else if (selectedPurchasableEquipment is SnackMachine)
-						{
-							var agentToAdd = agentFactory.CreateSnackMachine(SimulationManager.SimulationTime, new Vector(hoveredMapCell.WorldPosition.X, hoveredMapCell.WorldPosition.Y));
-							AddEquipmentToSimulationAndHoveredMapCell(agentToAdd);
-						}
-						else if (selectedPurchasableEquipment is OfficeDesk)
-						{
-							var agentToAdd = agentFactory.CreateOfficeDesk(SimulationManager.SimulationTime, new Vector(hoveredMapCell.WorldPosition.X, hoveredMapCell.WorldPosition.Y));
-							AddEquipmentToSimulationAndHoveredMapCell(agentToAdd);
-						}
-					}
-				}
+				var agentToAdd = agentFactory.CreateSodaMachine(SimulationManager.SimulationTime, new Vector(e.HoveredMapCell.WorldPosition.X, e.HoveredMapCell.WorldPosition.Y));
+				AddEquipmentToSimulationAndHoveredMapCell(agentToAdd, e.HoveredMapCell);
+			}
+			else if (e.PurchasableItem is SnackMachine)
+			{
+				var agentToAdd = agentFactory.CreateSnackMachine(SimulationManager.SimulationTime, new Vector(e.HoveredMapCell.WorldPosition.X, e.HoveredMapCell.WorldPosition.Y));
+				AddEquipmentToSimulationAndHoveredMapCell(agentToAdd, e.HoveredMapCell);
+			}
+			else if (e.PurchasableItem is OfficeDesk)
+			{
+				var agentToAdd = agentFactory.CreateOfficeDesk(SimulationManager.SimulationTime, new Vector(e.HoveredMapCell.WorldPosition.X, e.HoveredMapCell.WorldPosition.Y));
+				AddEquipmentToSimulationAndHoveredMapCell(agentToAdd, e.HoveredMapCell);
 			}
 		}
 
-		private void HandleSelectEquipment(object sender, PurchasableItemSelectedEventArgs e)
-		{
-			selectedPurchasableEquipment = e.PurchasableItem;
-		}
-
-		#endregion
+		#endregion User Input
 
 		public override void Activate(Renderer renderer)
 		{
 			// Help Variables
-			string tileHighlightTexturePath = ContentManager.GetContentPath("TileHighlight");
-			Surface tileHighlightSurface = new Surface(tileHighlightTexturePath, SurfaceType.PNG);
-			tileHighlightImage = new Image(renderer, tileHighlightSurface, ImageFormat.PNG);
 			Point bottomRightPointOfScreen = new Point(MainGame.SCREEN_WIDTH_LOGICAL, MainGame.SCREEN_HEIGHT_LOGICAL);
 			string mapPath = ContentManager.GetContentPath(mapPathToLoad);
 
@@ -246,7 +205,7 @@ namespace MyThirdSDL.Screens
 				bankAccount.Balance,
 				simulationManager.TrackedEmployees.Count());
 
-			userInterfaceManager.PurchasableItemSelected += HandleSelectEquipment;
+			userInterfaceManager.PurchasableItemPlaced += HandlePlaceEquipment;
 			userInterfaceManager.ArchiveMailButtonClicked += userInterfaceManager_ArchiveMailButtonClicked;
 			userInterfaceManager.MainMenuButtonClicked += (sender, e) => ScreenManager.AddScreen(CreatePauseMenuScreen());
 		}
@@ -286,18 +245,13 @@ namespace MyThirdSDL.Screens
 			return purchasableItems;
 		}
 
-		public override void Deactivate()
-		{
-			base.Deactivate();
-		}
-
 		public override void Update(GameTime gameTime, bool otherWindowHasFocus, bool coveredByOtherScreen)
 		{
 			// if we are covered by another screen, attempt to pause it, otherwise attempt to unpause it
 			if (coveredByOtherScreen)
 				simulationManager.State = SimulationState.Paused;
 			else
-				simulationManager.State = SimulationState.Unpaused;
+				simulationManager.State = SimulationState.Running;
 
 			// only update our states if we are not covered by another screen (such as a pause menu)
 			if (!coveredByOtherScreen)
@@ -324,20 +278,6 @@ namespace MyThirdSDL.Screens
 
 			foreach (var agent in simulationManager.TrackedAgents)
 				agent.Draw(gameTime, renderer);
-
-			if (userInterfaceManager.CurrentState == UserInterfaceState.PlaceEquipmentActive)
-			{
-				if (hoveredMapCell != null)
-				{
-					Vector drawPosition = CoordinateHelper.ProjectedPositionToDrawPosition(hoveredMapCell.ProjectedPosition);
-
-					renderer.RenderTexture(tileHighlightImage.Texture, drawPosition.X, drawPosition.Y);
-
-					// TODO: should we create a class that is simply a texture and x,y pair?
-					foreach(var activeTexture in selectedPurchasableEquipment.ActiveTextures)
-						renderer.RenderTexture(activeTexture, drawPosition.X, drawPosition.Y);
-				}
-			}
 
 			DrawActiveNodeCenters(renderer);
 			DrawEmployeCollisionBoxes(renderer);
@@ -401,7 +341,7 @@ namespace MyThirdSDL.Screens
 			//	SendEmployeeMessageToUserInterface(employee, String.Format("{0} is unhealthy!", employee.FullName), SimulationMessageType.EmployeeIsUnhealthy);
 		}
 
-		#endregion
+		#endregion Employee Events
 
 		#region UI Manager Events
 
@@ -411,12 +351,12 @@ namespace MyThirdSDL.Screens
 			userInterfaceManager.UpdateMenuMailBox(mailManager.PlayerInbox, mailManager.PlayerOutbox, mailManager.PlayerArchive);
 		}
 
-		#endregion
+		#endregion UI Manager Events
 
 		/// <summary>
 		/// Selects out the non-empty height tiles from the height layer in the tile map and sorts them by their draw depth.
 		/// </summary>
-		/// 
+		///
 		private void AddAndSortDrawablesByDrawDepth()
 		{
 			allDrawables.AddRange(tiledMap.MapCells);
@@ -425,8 +365,8 @@ namespace MyThirdSDL.Screens
 
 		private MapCell GetHoveredMapCell()
 		{
-			int mousePositionX = (int)Mouse.X;
-			int mousePositionY = (int)Mouse.Y;
+			int mousePositionX = Mouse.X;
+			int mousePositionY = Mouse.Y;
 
 			Vector worldPositionAtMousePosition = CoordinateHelper.ScreenSpaceToWorldSpace(
 				mousePositionX, mousePositionY,
@@ -436,25 +376,21 @@ namespace MyThirdSDL.Screens
 			return tiledMap.GetMapCellAtWorldPosition(worldPositionAtMousePosition);
 		}
 
-		private void ClearHoveredMapCell()
-		{
-			hoveredMapCell = null;
-		}
-
 		/// <summary>
 		/// Adds the passed agent to the simulation by registering it with the simulation manager and adding it as a drawable object on the clicked map cell. Does nothing if
 		/// the passed agent is null.
 		/// </summary>
 		/// <param name="agent">Agent.</param>
-		private void AddEquipmentToSimulationAndHoveredMapCell<T>(T agent)
+		/// <param name="hoveredMapCell"></param>
+		private void AddEquipmentToSimulationAndHoveredMapCell<T>(T agent, MapCell hoveredMapCell)
 			where T : Equipment
 		{
-			if (agent != null)
-			{
-				simulationManager.AddAgent(agent);
-				hoveredMapCell.AddDrawableObject(agent);
-				bankAccount.Withdraw(agent.Price);
-			}
+			if (agent == null) throw new ArgumentNullException("agent");
+			if (hoveredMapCell == null) throw new ArgumentNullException("hoveredMapCell");
+
+			simulationManager.AddAgent(agent);
+			hoveredMapCell.OccupantEquipment = agent;
+			bankAccount.Withdraw(agent.Price);
 		}
 
 		/// <summary>
@@ -565,10 +501,8 @@ namespace MyThirdSDL.Screens
 			userInterfaceManager.Dispose();
 			//cursor.Dispose();
 			tiledMap.Dispose();
-			tileHighlightImage.Dispose();
 		}
 
-		#endregion
+		#endregion Dispose
 	}
 }
-

@@ -55,10 +55,20 @@ namespace MyThirdSDL.Content
 		/// </summary>
 		public int TileHeight { get; private set; }
 
+		/// <summary>
+		/// Map cells contain references to tiles, map objects, and an optional equipment occupant. These map cells are used to draw things in the correct order,
+		/// path agents to the correct location, stop agents from pathing to certain locations, and more.
+		/// </summary>
 		public IEnumerable<MapCell> MapCells { get { return mapCells; } }
 
+		/// <summary>
+		/// Tile layers contain Tiles read from the Tiled map editor.
+		/// </summary>
 		public IEnumerable<TileLayer> TileLayers { get { return tileLayers; } }
 
+		/// <summary>
+		/// Map object layers contain map objects read from the Tiled map editor.
+		/// </summary>
 		public IEnumerable<MapObjectLayer> MapObjectLayers { get { return mapObjectLayers; } }
 
 		#endregion Properties
@@ -102,6 +112,8 @@ namespace MyThirdSDL.Content
 		/// <param name="mapContent">Map content.</param>
 		private void CreateLayers(MapContent mapContent)
 		{
+			if (mapContent == null) throw new ArgumentNullException("mapContent");
+			
 			foreach (LayerContent layerContent in mapContent.Layers)
 			{
 				if (layerContent is TileLayerContent)
@@ -125,6 +137,9 @@ namespace MyThirdSDL.Content
 		/// <returns></returns>
 		private TileLayer CreateTileLayer(LayerContent layerContent, IEnumerable<TileSetContent> tileSets)
 		{
+			if (layerContent == null) throw new ArgumentNullException("layerContent");
+			if (tileSets == null) throw new ArgumentNullException("tileSets");
+
 			TileLayerContent tileLayerContent = layerContent as TileLayerContent;
 
 			TileLayerType tileLayerType = GetTileLayerType(layerContent);
@@ -142,8 +157,15 @@ namespace MyThirdSDL.Content
 			return tileLayer;
 		}
 
-		private TileLayerType GetTileLayerType(LayerContent layerContent)
+		/// <summary>
+		/// Returns the type of the tile layer according to the layer's name as read from the Tiled map editor.
+		/// </summary>
+		/// <param name="layerContent"></param>
+		/// <returns></returns>
+		private static TileLayerType GetTileLayerType(LayerContent layerContent)
 		{
+			if (layerContent == null) throw new ArgumentNullException("layerContent");
+
 			TileLayerType tileLayerType = TileLayerType.None;
 			if (layerContent.Name.Contains("Floor"))
 				tileLayerType = TileLayerType.Floor;
@@ -158,9 +180,12 @@ namespace MyThirdSDL.Content
 		/// </summary>
 		/// <param name="tileIndex">Index of the tile (GID) within the map file</param>
 		/// <param name="tileSets">Enumerable list of tilesets used to find out which tileset a tile belongs to</param>
+		/// <param name="tileLayerType"></param>
 		/// <returns></returns>
 		private Tile CreateTile(int tileIndex, IEnumerable<TileSetContent> tileSets, TileLayerType tileLayerType)
 		{
+			if (tileSets == null) throw new ArgumentNullException("tileSets");
+
 			Tile tile = new Tile();
 
 			// we don't want to look up tiles with ID 0 in tile sets because Tiled Map Editor treats ID 0 as an empty tile
@@ -187,6 +212,11 @@ namespace MyThirdSDL.Content
 			return tile;
 		}
 
+		/// <summary>
+		/// Based on the tile layer type passed, this method returns a tile type for all tiles that would be contained in a layer of that type.
+		/// </summary>
+		/// <param name="tileLayerType"></param>
+		/// <returns></returns>
 		private static TileType GetTileType(TileLayerType tileLayerType)
 		{
 			TileType tileType = TileType.None;
@@ -205,10 +235,12 @@ namespace MyThirdSDL.Content
 		/// <returns></returns>
 		private MapObjectLayer CreateObjectLayer(LayerContent layer, Orientation orientation)
 		{
+			if (layer == null) throw new ArgumentNullException("layer");
+
 			ObjectLayerContent objectLayerContent = layer as ObjectLayerContent;
 
-			MapObjectLayerType mapObjectLayerType = MapObjectLayerType.None;
-			MapObjectType mapObjectType = MapObjectType.None;
+			MapObjectLayerType mapObjectLayerType;
+			MapObjectType mapObjectType;
 
 			if (objectLayerContent.Name == "DeadZones")
 			{
@@ -253,8 +285,15 @@ namespace MyThirdSDL.Content
 			return mapObjectLayer;
 		}
 
+		/// <summary>
+		/// Returns the type of the equipment object contained within the passed object content.
+		/// </summary>
+		/// <param name="objectContent"></param>
+		/// <returns></returns>
 		private static EquipmentObjectType GetEquipmentObjectType(ObjectContent objectContent)
 		{
+			if (objectContent == null) throw new ArgumentNullException("objectContent");
+
 			EquipmentObjectType equipmentObjectType = EquipmentObjectType.Unknown;
 
 			if (objectContent.Type == "SnackMachine")
@@ -268,6 +307,7 @@ namespace MyThirdSDL.Content
 
 			if (equipmentObjectType == EquipmentObjectType.Unknown)
 				throw new Exception("A map object of type \"Equipment\" was found but the type is unknown.");
+
 			return equipmentObjectType;
 		}
 
@@ -278,6 +318,8 @@ namespace MyThirdSDL.Content
 		/// <param name="mapContent">Map content.</param>
 		private void CreateMapCells(MapContent mapContent)
 		{
+			if (mapContent == null) throw new ArgumentNullException("mapContent");
+
 			for (int y = 0; y < mapContent.Height; y++)
 			{
 				for (int x = 0; x < mapContent.Width; x++)
@@ -309,6 +351,7 @@ namespace MyThirdSDL.Content
 						if (tile.IsEmpty) continue;
 
 						mapCell.WorldPosition = tile.WorldPosition;
+						mapCell.ProjectedPosition = tile.ProjectedPosition;
 
 						if (tile.Type == TileType.Floor)
 							mapCell.FloorTile = tile;
@@ -359,8 +402,17 @@ namespace MyThirdSDL.Content
 			}
 		}
 
+		/// <summary>
+		/// Returns a reference to an equipment agent based on the map object passed. Will assign the map cells position to the created agent.
+		/// </summary>
+		/// <param name="mapObject"></param>
+		/// <param name="mapCell"></param>
+		/// <returns></returns>
 		private Equipment CreateEquipmentFromEquipmentObjectSubtype(MapObject mapObject, MapCell mapCell)
 		{
+			if (mapObject == null) throw new ArgumentNullException("mapObject");
+			if (mapCell == null) throw new ArgumentNullException("mapCell");
+			
 			Equipment equipment = null;
 			EquipmentObject equipmentObject = (EquipmentObject)mapObject;
 
@@ -386,8 +438,15 @@ namespace MyThirdSDL.Content
 			return equipment;
 		}
 
+		/// <summary>
+		/// Returns the map cell that is axis aligned with the passed map object (shared 4 borders with).
+		/// </summary>
+		/// <param name="mapObject"></param>
+		/// <returns></returns>
 		private MapCell GetMapCellAlignedWithMapObject(MapObject mapObject)
 		{
+			if (mapObject == null) throw new ArgumentNullException("mapObject");
+
 			MapCell mapCell = mapCells.FirstOrDefault(
 				mc => (mc.Bounds.Left == mapObject.Bounds.Left && mc.Bounds.Top == mapObject.Bounds.Top)
 					  || (mc.Bounds.Left == mapObject.Bounds.Left && mc.Bounds.Bottom == mapObject.Bounds.Bottom)
@@ -439,6 +498,13 @@ namespace MyThirdSDL.Content
 			}
 		}
 
+		/// <summary>
+		/// Returns the tile position (world and project) of the passed coordinates based on the project orientation (isometric, orthogonal).
+		/// </summary>
+		/// <param name="mapOrientation"></param>
+		/// <param name="x"></param>
+		/// <param name="y"></param>
+		/// <returns></returns>
 		private TilePosition GetTilePositionBasedOnOrientation(Orientation mapOrientation, int x, int y)
 		{
 			Vector worldPosition = Vector.Zero;
@@ -481,8 +547,8 @@ namespace MyThirdSDL.Content
 
 			if (pathNode != null)
 				return pathNode;
-			else
-				throw new Exception(String.Format("No path node found at [{0},{1}]", worldPosition.X, worldPosition.Y));
+			
+			throw new Exception(String.Format("No path node found at [{0},{1}]", worldPosition.X, worldPosition.Y));
 		}
 
 		/// <summary>
@@ -504,6 +570,8 @@ namespace MyThirdSDL.Content
 		{
 			return GetPathNodes().Where(pn => pn.IsEnabled).ToList();
 		}
+
+
 
 		/// <summary>
 		/// Returns the map cell located at the passed world position. Coordinates are rounded prior to check because map cells exist in whole number coordinates.
@@ -531,6 +599,15 @@ namespace MyThirdSDL.Content
 			return null;
 		}
 
+		public IReadOnlyCollection<Equipment> GetEquipmentOccupants()
+		{
+			return (from mapCell 
+					in mapCells 
+					where mapCell.OccupantEquipment != null 
+					select mapCell.OccupantEquipment)
+					.ToList();
+		}
+
 		#endregion Finder Methods
 
 		#region Dispose
@@ -539,11 +616,6 @@ namespace MyThirdSDL.Content
 		{
 			Dispose(true);
 			GC.SuppressFinalize(this);
-		}
-
-		~TiledMap()
-		{
-			Dispose(false);
 		}
 
 		private void Dispose(bool isDisposing)

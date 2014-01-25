@@ -209,6 +209,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="UserInterface\MouseOverScreenEdge.cs" />
+    <Compile Include="UserInterface\PurchasableItemPlacedEventArgs.cs" />
     <Compile Include="UserInterface\PurchasableItemSelectedEventArgs.cs" />
     <Compile Include="UserInterface\ScenarioItem.cs" />
     <Compile Include="UserInterface\SimulationLabel.cs">

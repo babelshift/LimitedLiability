@@ -10,7 +10,7 @@
  </layer>
  <layer name="0_Objects" width="25" height="25">
   <data encoding="base64" compression="zlib">
-   eJxjYEAAZUYEmx/IFkDio8uDgCgS/wsQf4WyBYHiQkhyyPqQ9cgB2fJoZuIDzEC1LFD1CkBakRHTTFqDZCAOpoBvAMSGQGwCxL5A7AfEPkCsh2ZPEgV8eyB2AGJnII4B4lggjgZiW3TPAIEVhXxC4C4Qe1LAJwS6qczHBmZRmT8SgCkQmyHxkfPABRLMCcYj5wLErkh8WB54AMT3gfgeFD/AojcMiMOBOIIBMy9RC6QCcRoQp9PIfGJABxoNAp1QGha2yVj0weLPEk08C4izoTQMTEejQWAGlIaFbSgQ70AzCxZ/HmjilUBcBaWxAXx59jgeOVIAtjx7GYivAvE1EswBpfWLVHBPBhBn4pADpfUHZJoLCsseMvUSC0BhOZtCM4TR6ngVMut8bG0FDhztE1IAzAx0d+EzTxmHHnSAbIYSmlqQvQBpZzZH
+   eJxjYEAAZUYEmx/IFkDio8uDgCgS/wsQf4WyBYHiQkhyyPqQ9cgB2fJoZuIDzEC1LFD1CkBakRHTTFqDZCAOpoBvAMSGQGwCxL5A7IfDniQK+PZA7ADEzkAcA8SxOOygB7hLIZ8Q6KYyHxuYRWX+SACmQGyGxEfOAxdIMCcYj5wLELsi8WF54AEQ3wfie1D8AIveMCAOB+IIBsy8RC2QCsRpQJxOI/OJAR1oNAh0QmlY2CZj0QeLP0s08SwgzobSMDAdjQaBGVAaFrahQLwDzSxY/HmgiVcCcRWUxgbw5dnjeORIAdjy7GUgvgrE10gwB5TWL1LBPRlAnIlDDpTWH5BpLigse8jUSywAheVsCs0QRqvjVcis87G1FThwtE9IATAz0N2FzzxlHHrQAbIZSmhqQfYCAI6LMyk=
   </data>
  </layer>
  <layer name="1_Objects" width="25" height="25">
@@ -649,5 +649,10 @@
  </objectgroup>
  <objectgroup color="#0055ff" name="Equipment" width="25" height="25">
   <object name="Equipment1" type="SnackMachine" x="704" y="128" width="32" height="32"/>
+  <object name="Equipment2" type="SodaMachine" x="736" y="128" width="32" height="32"/>
+  <object name="Equipment3" type="OfficeDesk" x="480" y="192" width="32" height="32"/>
+  <object name="Equipment4" type="OfficeDesk" x="352" y="192" width="32" height="32"/>
+  <object name="Equipment5" type="OfficeDesk" x="224" y="192" width="32" height="32"/>
+  <object name="Equipment6" type="OfficeDesk" x="96" y="192" width="32" height="32"/>
  </objectgroup>
 </map>
