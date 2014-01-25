@@ -1,3 +1,4 @@
+using MyThirdSDL.Agents;
 using MyThirdSDL.Simulation;
 using SharpDL;
 using SharpDL.Graphics;
@@ -12,6 +13,8 @@ namespace MyThirdSDL.Content
 		private PathNode containedPathNode;
 
 		private List<IDrawable> drawableObjects = new List<IDrawable>();
+
+		public Equipment OccupantEquipment { get; set; }
 
 		/// <summary>
 		/// A MapCell can optionally consist of a single path node. This value
@@ -28,9 +31,9 @@ namespace MyThirdSDL.Content
 			}
 		}
 
-		public Tile BaseTile { get; set; }
+		public Tile FloorTile { get; set; }
 
-		public Texture BaseTexture { get { return BaseTile.Texture; } }
+		public Texture FloorTexture { get { return FloorTile.Texture; } }
 
 		public MapCellType Type { get; set; }
 
@@ -59,7 +62,7 @@ namespace MyThirdSDL.Content
 
 		public void Draw(GameTime gameTime, Renderer renderer)
 		{
-			BaseTile.Draw(gameTime, renderer);
+			FloorTile.Draw(gameTime, renderer);
 
 			foreach (var drawable in drawableObjects)
 				drawable.Draw(gameTime, renderer);

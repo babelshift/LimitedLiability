@@ -26,14 +26,17 @@ namespace MyThirdSDL.Content
 		/// </summary>
 		public Vector WorldPosition { get { return new Vector(Bounds.X, Bounds.Y); } }
 
-		public Orientation Orientation { get; set; }
+		public Orientation Orientation { get; private set; }
 
-		public MapObject(string name, Rectangle bounds, Orientation orientation, MapObjectType type)
+		public PropertyCollection Properties { get; private set; }
+
+		public MapObject(string name, Rectangle bounds, Orientation orientation, MapObjectType type, PropertyCollection properties)
 		{
 			Name = name;
 			Type = type;
 			Bounds = bounds;
 			Orientation = orientation;
+			Properties = properties;
 		}
 	}
 }

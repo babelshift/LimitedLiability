@@ -21,7 +21,7 @@ namespace MyThirdSDL.Agents
 			{
 				List<Texture> textures = new List<Texture>();
 				foreach (var mapCell in mapCells)
-					textures.Add(mapCell.BaseTexture);
+					textures.Add(mapCell.FloorTexture);
 				return textures;
 			}
 		}

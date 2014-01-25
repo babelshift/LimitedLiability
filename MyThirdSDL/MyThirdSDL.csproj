@@ -98,6 +98,8 @@
     <Compile Include="Camera.cs" />
     <Compile Include="Content\CompanyMetadata.cs" />
     <Compile Include="Content\ContentManager.cs" />
+    <Compile Include="Content\EquipmentObject.cs" />
+    <Compile Include="Content\EquipmentObjectType.cs" />
     <Compile Include="Content\MapCell.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -112,6 +114,7 @@
     <Compile Include="Content\TiledMap.cs" />
     <Compile Include="Content\TileLayer.cs" />
     <Compile Include="Content\TileLayerType.cs" />
+    <Compile Include="Content\TilePosition.cs" />
     <Compile Include="Content\TileType.cs" />
     <Compile Include="CoordinateHelper.cs" />
     <Compile Include="DateTimeHelper.cs" />

@@ -14,8 +14,8 @@ namespace MyThirdSDL.Simulation
 
 		public bool IsEnabled { get; private set; }
 
-		public PathNode(string name, Rectangle bounds, Orientation orientation)
-			: base(name, bounds, orientation, MyThirdSDL.Content.MapObjectType.PathNode)
+		public PathNode(string name, Rectangle bounds, Orientation orientation, PropertyCollection properties)
+			: base(name, bounds, orientation, MyThirdSDL.Content.MapObjectType.PathNode, properties)
 		{
 			Enable();
 		}

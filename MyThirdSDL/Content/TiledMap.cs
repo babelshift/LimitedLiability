@@ -1,4 +1,5 @@
-﻿using MyThirdSDL.Simulation;
+﻿using MyThirdSDL.Agents;
+using MyThirdSDL.Simulation;
 using SharpDL.Graphics;
 using SharpTiles;
 using System;
@@ -18,12 +19,20 @@ namespace MyThirdSDL.Content
 		private List<MapObjectLayer> mapObjectLayers = new List<MapObjectLayer>();
 		private List<MapCell> mapCells = new List<MapCell>();
 
+		private AgentFactory agentFactory;
+
 		#endregion Members
 
 		#region Properties
 
+		/// <summary>
+		/// The number of tiles that make up this map in the horizontal direction (defined in TMX file)
+		/// </summary>
 		public int HorizontalTileCount { get; private set; }
 
+		/// <summary>
+		/// The number of tiles that make up this map in the vertical direction (defined in TMX file)
+		/// </summary>
 		public int VerticalTileCount { get; private set; }
 
 		/// <summary>
@@ -61,8 +70,10 @@ namespace MyThirdSDL.Content
 		/// </summary>
 		/// <param name="filePath">Path to the .tmx file to load</param>
 		/// <param name="renderer">Renderer object used to load tileset textures</param>
-		public TiledMap(string filePath, Renderer renderer, string contentRoot = "")
+		public TiledMap(string filePath, Renderer renderer, AgentFactory agentFactory, string contentRoot = "")
 		{
+			this.agentFactory = agentFactory;
+
 			MapContent mapContent = new MapContent(filePath, renderer, contentRoot);
 
 			TileWidth = mapContent.TileWidth;
@@ -78,7 +89,7 @@ namespace MyThirdSDL.Content
 			CalculateTilePositions(mapContent.Orientation);
 			CalculatePathNodeNeighbors();
 			CreateMapCells(mapContent);
-			BuildMapCells();
+			InitializeMapCells();
 		}
 
 		#endregion Constructors
@@ -106,21 +117,21 @@ namespace MyThirdSDL.Content
 			}
 		}
 
+		/// <summary>
+		/// Creates a tile layer by reading the content we got from the SharpTiles library. This will create our tile layers of type "Floor" and "Objects".
+		/// </summary>
+		/// <param name="layerContent"></param>
+		/// <param name="tileSets"></param>
+		/// <returns></returns>
 		private TileLayer CreateTileLayer(LayerContent layerContent, IEnumerable<TileSetContent> tileSets)
 		{
 			TileLayerContent tileLayerContent = layerContent as TileLayerContent;
 
-			TileLayerType tileLayerType = TileLayerType.None;
-			if (layerContent.Name.Contains("Floor"))
-				tileLayerType = TileLayerType.Floor;
-			else if (layerContent.Name.Contains("Objects"))
-				tileLayerType = TileLayerType.Objects;
+			TileLayerType tileLayerType = GetTileLayerType(layerContent);
 
 			TileLayer tileLayer = new TileLayer(layerContent.Name, tileLayerContent.Width, tileLayerContent.Height, tileLayerType);
-			for (int i = 0; i < tileLayerContent.Data.Length; i++)
+			foreach (uint tileID in tileLayerContent.Data)
 			{
-				// strip out the flipped flags from the map editor to get the real tile index
-				uint tileID = tileLayerContent.Data[i];
 				uint flippedHorizontallyFlag = 0x80000000;
 				uint flippedVerticallyFlag = 0x40000000;
 				int tileIndex = (int)(tileID & ~(flippedVerticallyFlag | flippedHorizontallyFlag));
@@ -129,6 +140,16 @@ namespace MyThirdSDL.Content
 			}
 
 			return tileLayer;
+		}
+
+		private TileLayerType GetTileLayerType(LayerContent layerContent)
+		{
+			TileLayerType tileLayerType = TileLayerType.None;
+			if (layerContent.Name.Contains("Floor"))
+				tileLayerType = TileLayerType.Floor;
+			else if (layerContent.Name.Contains("Objects"))
+				tileLayerType = TileLayerType.Objects;
+			return tileLayerType;
 		}
 
 		/// <summary>
@@ -147,6 +168,7 @@ namespace MyThirdSDL.Content
 			{
 				Texture tileSetTexture = null;
 				Rectangle source = new Rectangle();
+
 				foreach (TileSetContent tileSet in tileSets)
 				{
 					if (tileIndex - tileSet.FirstGID < tileSet.Tiles.Count)
@@ -157,16 +179,22 @@ namespace MyThirdSDL.Content
 					}
 				}
 
-				TileType tileType = TileType.None;
-				if (tileLayerType == TileLayerType.Floor)
-					tileType = TileType.Floor;
-				if (tileLayerType == TileLayerType.Objects)
-					tileType = TileType.Object;
+				TileType tileType = GetTileType(tileLayerType);
 
 				tile = new Tile(tileSetTexture, source, TileWidth, TileHeight, tileType);
 			}
 
 			return tile;
+		}
+
+		private static TileType GetTileType(TileLayerType tileLayerType)
+		{
+			TileType tileType = TileType.None;
+			if (tileLayerType == TileLayerType.Floor)
+				tileType = TileType.Floor;
+			if (tileLayerType == TileLayerType.Objects)
+				tileType = TileType.Object;
+			return tileType;
 		}
 
 		/// <summary>
@@ -190,9 +218,15 @@ namespace MyThirdSDL.Content
 			else if (objectLayerContent.Name == "PathNodes")
 			{
 				mapObjectLayerType = MapObjectLayerType.PathNode;
+				mapObjectType = MapObjectType.PathNode;
+			}
+			else if (objectLayerContent.Name == "Equipment")
+			{
+				mapObjectLayerType = MapObjectLayerType.Equipment;
+				mapObjectType = MapObjectType.Equipment;
 			}
 			else
-				throw new Exception("Unknown map object layer type. Did you name your layer correctly? \"Collidables\" will be picked up as collidable objects. \"PathNodes\" will be picked up as path node objects.");
+				throw new Exception("Unknown map object layer type. Did you name your layer correctly? \"DeadZones\", \"PathNodes\", and \"Equipment\" are valid layers.");
 
 			MapObjectLayer mapObjectLayer = new MapObjectLayer(objectLayerContent.Name, mapObjectLayerType);
 
@@ -200,17 +234,41 @@ namespace MyThirdSDL.Content
 			{
 				if (mapObjectLayer.Type == MapObjectLayerType.PathNode)
 				{
-					PathNode pathNode = new PathNode(objectContent.Name, objectContent.Bounds, orientation);
+					PathNode pathNode = new PathNode(objectContent.Name, objectContent.Bounds, orientation, objectContent.Properties);
 					mapObjectLayer.AddMapObject(pathNode);
+				}
+				else if (mapObjectLayer.Type == MapObjectLayerType.Equipment)
+				{
+					EquipmentObjectType equipmentObjectType = GetEquipmentObjectType(objectContent);
+					EquipmentObject equipmentObject = new EquipmentObject(objectContent.Name, objectContent.Bounds, orientation, objectContent.Properties, equipmentObjectType);
+					mapObjectLayer.AddMapObject(equipmentObject);
 				}
 				else
 				{
-					MapObject mapObject = new MapObject(objectContent.Name, objectContent.Bounds, orientation, mapObjectType);
+					MapObject mapObject = new MapObject(objectContent.Name, objectContent.Bounds, orientation, mapObjectType, objectContent.Properties);
 					mapObjectLayer.AddMapObject(mapObject);
 				}
 			}
 
 			return mapObjectLayer;
+		}
+
+		private static EquipmentObjectType GetEquipmentObjectType(ObjectContent objectContent)
+		{
+			EquipmentObjectType equipmentObjectType = EquipmentObjectType.Unknown;
+
+			if (objectContent.Type == "SnackMachine")
+				equipmentObjectType = EquipmentObjectType.SnackMachine;
+			else if (objectContent.Type == "SodaMachine")
+				equipmentObjectType = EquipmentObjectType.SodaMachine;
+			else if (objectContent.Type == "OfficeDesk")
+				equipmentObjectType = EquipmentObjectType.OfficeDesk;
+			else if (objectContent.Type == "WaterFountain")
+				equipmentObjectType = EquipmentObjectType.WaterFountain;
+
+			if (equipmentObjectType == EquipmentObjectType.Unknown)
+				throw new Exception("A map object of type \"Equipment\" was found but the type is unknown.");
+			return equipmentObjectType;
 		}
 
 		/// <summary>
@@ -235,7 +293,7 @@ namespace MyThirdSDL.Content
 		/// Build map cells based on the layers contained within. Tile layers will be used to determine z-index tiles on each map cell. Object layers
 		/// will be used to determine dead zones and path nodes in the map cells.
 		/// </summary>
-		private void BuildMapCells()
+		private void InitializeMapCells()
 		{
 			foreach (var tileLayer in tileLayers)
 			{
@@ -248,22 +306,21 @@ namespace MyThirdSDL.Content
 					// we have a map cell at this index, so copy our data to it and add the tile with the z-index
 					if (mapCell != null)
 					{
-						if (!tile.IsEmpty)
-						{
-							mapCell.WorldPosition = tile.WorldPosition;
+						if (tile.IsEmpty) continue;
 
-							if (tile.Type == TileType.Floor)
-								mapCell.BaseTile = tile;
-							else if (tile.Type == TileType.Object)
-								mapCell.AddDrawableObject(tile);
-						}
+						mapCell.WorldPosition = tile.WorldPosition;
+
+						if (tile.Type == TileType.Floor)
+							mapCell.FloorTile = tile;
+						else if (tile.Type == TileType.Object)
+							mapCell.AddDrawableObject(tile);
 					}
 					else
 						throw new Exception(String.Format("No map cell found at [{0},{1}].", tile.WorldGridIndex.X, tile.WorldGridIndex.Y));
 				}
 			}
 
-			AddDeadZonesAndPathNodesToMapCells();
+			AddMapObjectsToMapCells();
 		}
 
 		/// <summary>
@@ -271,18 +328,14 @@ namespace MyThirdSDL.Content
 		/// This method will loop through object layers and add the dead zone and path node objects to the map cell's collections if the map cell contains
 		/// that object. Objects must be cell/axis aligned or an exception is thrown.
 		/// </summary>
-		private void AddDeadZonesAndPathNodesToMapCells()
+		private void AddMapObjectsToMapCells()
 		{
 			foreach (var mapObjectLayer in mapObjectLayers)
 			{
 				foreach (MapObject mapObject in mapObjectLayer.MapObjects)
 				{
 					// get the map cell that contains us (where two of our edges line up with two of the map cell edges)
-					MapCell mapCell = mapCells.FirstOrDefault(
-										  mc => (mc.Bounds.Left == mapObject.Bounds.Left && mc.Bounds.Top == mapObject.Bounds.Top)
-										  || (mc.Bounds.Left == mapObject.Bounds.Left && mc.Bounds.Bottom == mapObject.Bounds.Bottom)
-										  || (mc.Bounds.Right == mapObject.Bounds.Right && mc.Bounds.Top == mapObject.Bounds.Top)
-										  || (mc.Bounds.Right == mapObject.Bounds.Right && mc.Bounds.Bottom == mapObject.Bounds.Bottom));
+					MapCell mapCell = GetMapCellAlignedWithMapObject(mapObject);
 
 					// if we are in a valid map cell, add the map object appropriately based on type
 					if (mapCell != null)
@@ -294,11 +347,53 @@ namespace MyThirdSDL.Content
 							mapCell.Type = MapCellType.PathNode;
 							mapCell.ContainedPathNode = (PathNode)mapObject;
 						}
+						else if (mapObject.Type == MapObjectType.Equipment)
+						{
+							Equipment equipment = CreateEquipmentFromEquipmentObjectSubtype(mapObject, mapCell);
+							mapCell.OccupantEquipment = equipment;
+						}
 					}
 					else
 						throw new Exception("MapObjects must be map axis aligned.");
 				}
 			}
+		}
+
+		private Equipment CreateEquipmentFromEquipmentObjectSubtype(MapObject mapObject, MapCell mapCell)
+		{
+			Equipment equipment = null;
+			EquipmentObject equipmentObject = (EquipmentObject)mapObject;
+
+			switch (equipmentObject.Subtype)
+			{
+				case EquipmentObjectType.SnackMachine:
+					equipment = agentFactory.CreateSnackMachine(TimeSpan.Zero, mapCell.WorldPosition);
+					break;
+
+				case EquipmentObjectType.SodaMachine:
+					equipment = agentFactory.CreateSodaMachine(TimeSpan.Zero, mapCell.WorldPosition);
+					break;
+
+				case EquipmentObjectType.OfficeDesk:
+					equipment = agentFactory.CreateOfficeDesk(TimeSpan.Zero, mapCell.WorldPosition);
+					break;
+
+				case EquipmentObjectType.WaterFountain:
+					equipment = agentFactory.CreateWaterFountain(TimeSpan.Zero, mapCell.WorldPosition);
+					break;
+			}
+
+			return equipment;
+		}
+
+		private MapCell GetMapCellAlignedWithMapObject(MapObject mapObject)
+		{
+			MapCell mapCell = mapCells.FirstOrDefault(
+				mc => (mc.Bounds.Left == mapObject.Bounds.Left && mc.Bounds.Top == mapObject.Bounds.Top)
+					  || (mc.Bounds.Left == mapObject.Bounds.Left && mc.Bounds.Bottom == mapObject.Bounds.Bottom)
+					  || (mc.Bounds.Right == mapObject.Bounds.Right && mc.Bounds.Top == mapObject.Bounds.Top)
+					  || (mc.Bounds.Right == mapObject.Bounds.Right && mc.Bounds.Bottom == mapObject.Bounds.Bottom));
+			return mapCell;
 		}
 
 		/// <summary>
@@ -334,29 +429,37 @@ namespace MyThirdSDL.Content
 					{
 						Tile tile = tileLayer.Tiles[y * tileLayer.Width + x];
 
-						Vector projectedPosition = Vector.Zero;
-						Vector worldPosition = Vector.Zero;
-						if (mapOrientation == Orientation.Isometric)
-						{
-							// we divide tile width by 2 here because our world space has half the width as the screen space tiles
-							// for example, a tile map with 80 wide by 40 high tiles in projected screen space will be represented
-							// in world space in a 40 wide by 40 high grid
-							worldPosition = new Vector(x * TileWidth / 2, y * TileHeight);
-							projectedPosition = CoordinateHelper.WorldSpaceToScreenSpace(worldPosition.X, worldPosition.Y,
-								CoordinateHelper.ScreenOffset, CoordinateHelper.ScreenProjectionType.Orthogonal);
-						}
-						else if (mapOrientation == Orientation.Orthogonal)
-						{
-							projectedPosition = new Vector(x * TileWidth, y * TileHeight);
-							worldPosition = new Vector(x * TileWidth, y * TileHeight);
-						}
+						TilePosition tilePosition = GetTilePositionBasedOnOrientation(mapOrientation, x, y);
 
-						tile.ProjectedPosition = projectedPosition;
-						tile.WorldPosition = worldPosition;
+						tile.ProjectedPosition = tilePosition.ProjectedPosition;
+						tile.WorldPosition = tilePosition.WorldPosition;
 						tile.WorldGridIndex = new Point(x, y);
 					}
 				}
 			}
+		}
+
+		private TilePosition GetTilePositionBasedOnOrientation(Orientation mapOrientation, int x, int y)
+		{
+			Vector worldPosition = Vector.Zero;
+			Vector projectedPosition = Vector.Zero;
+
+			if (mapOrientation == Orientation.Isometric)
+			{
+				// we divide tile width by 2 here because our world space has half the width as the screen space tiles
+				// for example, a tile map with 80 wide by 40 high tiles in projected screen space will be represented
+				// in world space in a 40 wide by 40 high grid
+				worldPosition = new Vector(x * TileWidth / 2, y * TileHeight);
+				projectedPosition = CoordinateHelper.WorldSpaceToScreenSpace(worldPosition.X, worldPosition.Y,
+					CoordinateHelper.ScreenOffset, CoordinateHelper.ScreenProjectionType.Orthogonal);
+			}
+			else if (mapOrientation == Orientation.Orthogonal)
+			{
+				projectedPosition = new Vector(x * TileWidth, y * TileHeight);
+				worldPosition = new Vector(x * TileWidth, y * TileHeight);
+			}
+
+			return new TilePosition(worldPosition, projectedPosition);
 		}
 
 		#endregion Map Population Methods

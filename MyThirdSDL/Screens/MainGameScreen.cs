@@ -198,7 +198,7 @@ namespace MyThirdSDL.Screens
 			string mapPath = ContentManager.GetContentPath(mapPathToLoad);
 
 			// Map
-			tiledMap = new TiledMap(mapPath, renderer);
+			tiledMap = new TiledMap(mapPath, renderer, agentFactory);
 
 			// SimulationManager
 			simulationManager.SetCurrentMap(tiledMap);

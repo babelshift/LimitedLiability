@@ -5,12 +5,7 @@
  </tileset>
  <layer name="Floor" width="25" height="25">
   <data encoding="base64" compression="zlib">
-   eJxjZWRgYB0GWI5h+GB2JEwOnxUPHo52oIcdKXxWNP4oHsXDCbPgwIPBDvT8Top9xKol1w5SML3toKU9tMD9wPp5Aol1NKn1P8j8fhq3MQarHQAHnzlw
-  </data>
- </layer>
- <layer name="Walls" width="25" height="25">
-  <data encoding="base64" compression="zlib">
-   eJzlVFsOgyAQHI9Qmzb1S2z6kNPaIxdim0wmgiC2HzrJBHdZHN0HwDZwcTwST4W2snG0jldiqa20HzJKbcUWNQ4Ya9QX2sobaRiMNeoK7ZSar42pXK3FekLDIN7nS6gav8K/NM4I51TvoprO6j3XBPzcu6Fv4Px2kT0b8c9ppO7ZiF9zBXruEYa+6yErx/G/6cy2GRqtrKqxBKnnfNwTefP7xT0x3ufbIG92XxUwVOnx3Is58Bp7xBuv1iG3
+   eJzdlsEKgzAMhiNYPM/hmJe6OnH1ad0jr4MIWWg629IxPHxgQuNvkqZVVQDqAFwB4EzoMm1O71gcIyHX5ixIQ0ixVYAjatyxRzbBVsTmTKihHTfskcm0pZ7rglCNk5BrKq1HQ8o1FePRGH9Qq5L9uARqys+ilsTyc64X/NverQX4WWTg8/v4HpX83zRCNeDzrj0xvlrV5NlGaMzonz3raG7SDO/RGNA/CBqp+6VhSOseEDe/W+zeOAvx8726+/lZxc177P3/fv9a+B/jXzVeDEI5nA==
   </data>
  </layer>
  <layer name="0_Objects" width="25" height="25">
@@ -651,5 +646,8 @@
   <object x="480" y="512" width="32" height="32"/>
   <object x="544" y="512" width="32" height="32"/>
   <object x="512" y="512" width="32" height="32"/>
+ </objectgroup>
+ <objectgroup color="#0055ff" name="Equipment" width="25" height="25">
+  <object name="Equipment1" type="SnackMachine" x="704" y="128" width="32" height="32"/>
  </objectgroup>
 </map>

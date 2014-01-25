@@ -94,11 +94,13 @@ namespace MyThirdSDL.Agents
 			return CreateEquipment<OfficeDesk>(birthTime, "OfficeDesk", position, agentMetaData);
 		}
 
+		// TODO: agent factory should know about simulation time so we don't have to pass this in
 		public SnackMachine CreateSnackMachine(TimeSpan birthTime)
 		{
 			return CreateSnackMachine(birthTime, Vector.Zero);
 		}
 
+		// TODO: agent factory should know about simulation time so we don't have to pass this in
 		public SnackMachine CreateSnackMachine(TimeSpan birthTime, Vector position)
 		{
 			AgentMetadata agentMetaData = contentManager.GetAgentMetadata("SnackMachine");

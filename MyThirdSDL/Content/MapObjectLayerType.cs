@@ -4,6 +4,7 @@ namespace MyThirdSDL.Content
 	{
 		None,
 		PathNode,
-		DeadZone
+		DeadZone,
+		Equipment
 	}
 }
