@@ -253,7 +253,8 @@ namespace MyThirdSDL.Simulation
 		/// Adds the passed collection of agents to the simulation.
 		/// </summary>
 		/// <param name="agents">Agents.</param>
-		public void AddAgents(IEnumerable<Agent> agents)
+		public void AddAgents<T>(IEnumerable<T> agents)
+			where T : Agent
 		{
 			foreach (var agent in agents)
 				AddAgent(agent);
@@ -650,7 +651,19 @@ namespace MyThirdSDL.Simulation
 		public void SetCurrentMap(TiledMap tiledMap)
 		{
 			var mapEquipmentOccupents = tiledMap.GetEquipmentOccupants();
-			AddAgents(mapEquipmentOccupents);
+			
+			foreach (var mapEquipmentOccupent in mapEquipmentOccupents)
+			{
+				if(mapEquipmentOccupent is SnackMachine)
+					AddAgent(mapEquipmentOccupent as SnackMachine);
+				else if (mapEquipmentOccupent is SodaMachine)
+					AddAgent(mapEquipmentOccupent as SodaMachine);
+				else if (mapEquipmentOccupent is WaterFountain)
+					AddAgent(mapEquipmentOccupent as WaterFountain);
+				else if (mapEquipmentOccupent is OfficeDesk)
+					AddAgent(mapEquipmentOccupent as OfficeDesk);
+			}
+
 			currentMap = tiledMap;
 		}
 	}
