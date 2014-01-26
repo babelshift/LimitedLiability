@@ -1,10 +1,6 @@
 ﻿using MyThirdSDL.Content;
 using SharpDL.Graphics;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MyThirdSDL.UserInterface
 {
@@ -23,9 +19,12 @@ namespace MyThirdSDL.UserInterface
 		private bool isSelected = false;
 
 		public Label LabelOverview { get { return labelOverview; } }
+
 		public Icon IconOverview { get { return iconOverview; } }
 
 		public string MapPathToLoad { get; private set; }
+
+		public new event EventHandler Clicked;
 
 		public override Vector Position
 		{
@@ -68,107 +67,108 @@ namespace MyThirdSDL.UserInterface
 
 			Width = iconThumbnail.Width + labelName.Width;
 			Height = iconThumbnail.Height;
+
+			base.Clicked += OnClicked;
+		}
+
+		private void OnClicked(object sender, EventArgs eventArgs)
+		{
+			ToggleSelectedOn();
+			if (Clicked != null)
+				Clicked(sender, eventArgs);
 		}
 
 		public override void Update(SharpDL.GameTime gameTime)
 		{
-			if (Visible)
+			if (!Visible) return;
+
+			base.Update(gameTime);
+
+			if (IsHovered || isSelected)
 			{
-				base.Update(gameTime);
+				iconActive = iconThumbnailSelected;
+				labelActive = labelNameSelected;
+			}
+			else
+			{
+				iconActive = iconThumbnail;
+				labelActive = labelName;
+			}
 
-				if (IsHovered || isSelected)
-				{
-					iconActive = iconThumbnailSelected;
-					labelActive = labelNameSelected;
-				}
-				else
-				{
-					iconActive = iconThumbnail;
-					labelActive = labelName;
-				}
+			if (labelActive != null)
+				labelActive.Update(gameTime);
 
-				if (labelActive != null)
-					labelActive.Update(gameTime);
+			if (iconActive != null)
+				iconActive.Update(gameTime);
 
-				if (iconActive != null)
-					iconActive.Update(gameTime);
-
-				if (isSelected)
-				{
-					labelOverview.Update(gameTime);
-					iconOverview.Update(gameTime);
-				}
+			if (isSelected)
+			{
+				labelOverview.Update(gameTime);
+				iconOverview.Update(gameTime);
 			}
 		}
 
 		public override void Draw(SharpDL.GameTime gameTime, Renderer renderer)
 		{
-			if (Visible)
+			if (!Visible) return;
+
+			if (labelActive != null)
+				labelActive.Draw(gameTime, renderer);
+
+			if (iconActive != null)
+				iconActive.Draw(gameTime, renderer);
+
+			if (isSelected)
 			{
-				if (labelActive != null)
-					labelActive.Draw(gameTime, renderer);
-
-				if (iconActive != null)
-					iconActive.Draw(gameTime, renderer);
-
-				if (isSelected)
-				{
-					labelOverview.Draw(gameTime, renderer);
-					iconOverview.Draw(gameTime, renderer);
-				}
+				labelOverview.Draw(gameTime, renderer);
+				iconOverview.Draw(gameTime, renderer);
 			}
 		}
 
 		public override void HandleMouseMovingEvent(object sender, SharpDL.Events.MouseMotionEventArgs e)
 		{
-			if (Visible)
+			if (!Visible) return;
+
+			base.HandleMouseMovingEvent(sender, e);
+
+			if (labelActive != null)
+				labelActive.HandleMouseMovingEvent(sender, e);
+
+			if (iconActive != null)
+				iconActive.HandleMouseMovingEvent(sender, e);
+
+			if (isSelected)
 			{
-				base.HandleMouseMovingEvent(sender, e);
-
-				if (labelActive != null)
-					labelActive.HandleMouseMovingEvent(sender, e);
-
-				if (iconActive != null)
-					iconActive.HandleMouseMovingEvent(sender, e);
-
-				if (isSelected)
-				{
-					labelOverview.HandleMouseMovingEvent(sender, e);
-					iconOverview.HandleMouseMovingEvent(sender, e);
-				}
+				labelOverview.HandleMouseMovingEvent(sender, e);
+				iconOverview.HandleMouseMovingEvent(sender, e);
 			}
 		}
 
 		public override void HandleMouseButtonPressedEvent(object sender, SharpDL.Events.MouseButtonEventArgs e)
 		{
-			if (Visible)
+			if (!Visible) return;
+
+			base.HandleMouseButtonPressedEvent(sender, e);
+
+			if (labelActive != null)
+				labelActive.HandleMouseButtonPressedEvent(sender, e);
+
+			if (iconActive != null)
+				iconActive.HandleMouseButtonPressedEvent(sender, e);
+
+			if (isSelected)
 			{
-				base.HandleMouseButtonPressedEvent(sender, e);
-
-				if (labelActive != null)
-					labelActive.HandleMouseButtonPressedEvent(sender, e);
-
-				if (iconActive != null)
-					iconActive.HandleMouseButtonPressedEvent(sender, e);
-
-				if (IsClicked)
-					ToggleSelectedOn();
-
-				if (isSelected)
-				{
-					labelOverview.HandleMouseButtonPressedEvent(sender, e);
-					iconOverview.HandleMouseButtonPressedEvent(sender, e);
-				}
+				labelOverview.HandleMouseButtonPressedEvent(sender, e);
+				iconOverview.HandleMouseButtonPressedEvent(sender, e);
 			}
 		}
 
 		private void ToggleSelectedOn()
 		{
-			if (!isSelected)
-			{
-				isSelected = true;
-				Position += new Vector(10, 0);
-			}
+			if (isSelected) return;
+
+			isSelected = true;
+			Position += new Vector(10, 0);
 		}
 
 		public void ResetPosition()

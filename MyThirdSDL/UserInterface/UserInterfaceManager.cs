@@ -18,9 +18,8 @@ namespace MyThirdSDL.UserInterface
 		#region Members
 
 		private Point bottomRightPointOfWindow;
-		private ContentManager contentManager;
+		private readonly ContentManager contentManager;
 		private TimeSpan timeOfStatusChange = TimeSpan.Zero;
-		private Image tileHighlightImage;
 
 		#endregion Members
 
@@ -81,6 +80,12 @@ namespace MyThirdSDL.UserInterface
 
 		private MenuInspectEmployee menuInspectEmployee;
 		private bool isMenuInspectEmployeeOpen = false;
+
+		private bool IsMenuInspectEmployeeOpen
+		{
+			get { return isMenuInspectEmployeeOpen; }
+			set { isMenuInspectEmployeeOpen = value; }
+		}
 
 		private MenuMailbox menuMailbox;
 		private bool isMenuMailboxOpen = false;
@@ -195,10 +200,6 @@ namespace MyThirdSDL.UserInterface
 			CreateMenuInspectEmployee();
 			CreateMenuMailbox(inbox, outbox, archive);
 			CreateMenuCompany(employeeCount);
-
-			string tileHighlightTexturePath = contentManager.GetContentPath("TileHighlight");
-			Surface tileHighlightSurface = new Surface(tileHighlightTexturePath, SurfaceType.PNG);
-			tileHighlightImage = new Image(renderer, tileHighlightSurface, ImageFormat.PNG);
 
 			ChangeState(UserInterfaceState.Default);
 		}
@@ -420,13 +421,13 @@ namespace MyThirdSDL.UserInterface
 
 		private void ShowMenuInspectEmployee()
 		{
-			isMenuInspectEmployeeOpen = true;
+			IsMenuInspectEmployeeOpen = true;
 			ChangeState(UserInterfaceState.InspectEmployeeMenuActive);
 		}
 
 		private void HideMenuInspectEmployee()
 		{
-			isMenuInspectEmployeeOpen = false;
+			IsMenuInspectEmployeeOpen = false;
 			ChangeState(UserInterfaceState.Default);
 		}
 
@@ -461,7 +462,6 @@ namespace MyThirdSDL.UserInterface
 
 		private void menuPurchaseRooms_ButtonConfirmWindowClicked(object sender, ButtonConfirmWindowClickedEventArgs e)
 		{
-			IPurchasable selectedPurchasableItem = e.PurchasableItem;
 			if (PurchasableItemPlaced != null)
 				PurchasableItemPlaced(sender, new PurchasableItemPlacedEventArgs(e.PurchasableItem, hoveredMapCell));
 
@@ -564,7 +564,7 @@ namespace MyThirdSDL.UserInterface
 			if (isMenuEquipmentOpen)
 				menuPurchaseEquipment.Update(gameTime);
 
-			if (isMenuInspectEmployeeOpen)
+			if (IsMenuInspectEmployeeOpen)
 				menuInspectEmployee.Update(gameTime);
 
 			if (isMenuMailboxOpen)
@@ -593,9 +593,6 @@ namespace MyThirdSDL.UserInterface
 				{
 					Vector drawPosition = CoordinateHelper.ProjectedPositionToDrawPosition(hoveredMapCell.ProjectedPosition);
 
-					renderer.RenderTexture(tileHighlightImage.Texture, drawPosition.X, drawPosition.Y);
-
-					// TODO: should we create a class that is simply a texture and x,y pair?
 					foreach (var activeTexture in selectedPurchasableItem.ActiveTextures)
 						renderer.RenderTexture(activeTexture, drawPosition.X, drawPosition.Y);
 				}
@@ -625,7 +622,7 @@ namespace MyThirdSDL.UserInterface
 			if (isMenuEquipmentOpen)
 				menuPurchaseEquipment.Draw(gameTime, renderer);
 
-			if (isMenuInspectEmployeeOpen)
+			if (IsMenuInspectEmployeeOpen)
 				menuInspectEmployee.Draw(gameTime, renderer);
 
 			if (isMenuMailboxOpen)
@@ -657,12 +654,17 @@ namespace MyThirdSDL.UserInterface
 
 		public void HandleMouseButtonPressedEvent(object sender, MouseButtonEventArgs e)
 		{
+			if (CurrentState == UserInterfaceState.PlaceEquipmentActive)
+				if (e.MouseButton == MouseButtonCode.Left)
+					if (PurchasableItemPlaced != null)
+						PurchasableItemPlaced(this, new PurchasableItemPlacedEventArgs(selectedPurchasableItem, hoveredMapCell));
+
 			toolboxTray.HandleMouseButtonPressedEvent(sender, e);
 
 			if (isMenuEquipmentOpen)
 				menuPurchaseEquipment.HandleMouseButtonPressedEvent(sender, e);
 
-			if (isMenuInspectEmployeeOpen)
+			if (IsMenuInspectEmployeeOpen)
 				menuInspectEmployee.HandleMouseButtonPressedEvent(sender, e);
 
 			if (isMenuMailboxOpen)
@@ -673,11 +675,6 @@ namespace MyThirdSDL.UserInterface
 
 			if (isMenuCompanyOpen)
 				menuCompany.HandleMouseButtonPressedEvent(sender, e);
-
-			if(CurrentState == UserInterfaceState.PlaceEquipmentActive)
-				if(e.MouseButton == MouseButtonCode.Left)
-					if (PurchasableItemPlaced != null)
-						PurchasableItemPlaced(this, new PurchasableItemPlacedEventArgs(selectedPurchasableItem, hoveredMapCell));
 		}
 
 		public void HandleMouseMovingEvent(object sender, MouseMotionEventArgs e)
@@ -694,7 +691,7 @@ namespace MyThirdSDL.UserInterface
 			if (isMenuEquipmentOpen)
 				menuPurchaseEquipment.HandleMouseMovingEvent(sender, e);
 
-			if (isMenuInspectEmployeeOpen)
+			if (IsMenuInspectEmployeeOpen)
 				menuInspectEmployee.HandleMouseMovingEvent(sender, e);
 
 			if (isMenuMailboxOpen)
@@ -744,8 +741,6 @@ namespace MyThirdSDL.UserInterface
 			menuMailbox.Dispose();
 			menuPurchaseEquipment.Dispose();
 			menuPurchaseRooms.Dispose();
-
-			tileHighlightImage.Dispose();
 		}
 
 		#endregion Dispose

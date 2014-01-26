@@ -3,10 +3,6 @@ using SharpDL.Events;
 using SharpDL.Graphics;
 using SharpDL.Input;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MyThirdSDL.UserInterface
 {
@@ -46,13 +42,16 @@ namespace MyThirdSDL.UserInterface
 
 		public bool IsHovered { get; private set; }
 
-		protected bool IsClicked { get; private set; }
-
 		public event EventHandler Hovered;
+
 		public event EventHandler Clicked;
+
 		public event EventHandler Focused;
+
 		public event EventHandler Focusing;
+
 		public event EventHandler Blurring;
+
 		public event EventHandler Blurred;
 
 		public Control()
@@ -65,42 +64,49 @@ namespace MyThirdSDL.UserInterface
 		{
 			if (IsHovered)
 				OnHovered(EventArgs.Empty);
-
-			if (IsClicked)
-				OnClicked(EventArgs.Empty);
 		}
 
 		public abstract void Draw(GameTime gameTime, Renderer renderer);
 
 		public virtual void HandleMouseMovingEvent(object sender, MouseMotionEventArgs e)
 		{
-			if (Bounds.Contains(new Vector(e.RelativeToWindowX, e.RelativeToWindowY)))
-				IsHovered = true;
-			else
-				IsHovered = false;
+			IsHovered = GetHovered(e.RelativeToWindowX, e.RelativeToWindowY);
+		}
+
+		private bool GetHovered(int x, int y)
+		{
+			return Bounds.Contains(new Vector(x, y));
 		}
 
 		public virtual void HandleMouseButtonPressedEvent(object sender, MouseButtonEventArgs e)
 		{
-			IsClicked = GetClicked(e);
+			IsHovered = GetHovered(e.RelativeToWindowX, e.RelativeToWindowY);
+
+			bool isClicked = GetClicked(e);
+
+			if (isClicked)
+				OnClicked(EventArgs.Empty);
 		}
 
-		public virtual void HandleTextInput(string text) { }
+		public virtual void HandleTextInput(string text)
+		{
+		}
 
-		public virtual void HandleKeyPressed(KeyInformation key) { }
+		public virtual void HandleKeyPressed(KeyInformation key)
+		{
+		}
 
 		public virtual void Focus()
 		{
-			if (!IsFocused)
-			{
-				if (Focusing != null)
-					Focusing(this, EventArgs.Empty);
+			if (IsFocused) return;
 
-				IsFocused = true;
+			if (Focusing != null)
+				Focusing(this, EventArgs.Empty);
 
-				if (Focused != null)
-					Focused(this, EventArgs.Empty);
-			}
+			IsFocused = true;
+
+			if (Focused != null)
+				Focused(this, EventArgs.Empty);
 		}
 
 		public virtual void Blur()
@@ -116,22 +122,15 @@ namespace MyThirdSDL.UserInterface
 
 		private bool GetClicked(SharpDL.Events.MouseButtonEventArgs e)
 		{
-			if (IsHovered)
-			{
-				if (e.MouseButton == MouseButtonCode.Left)
-					return true;
-			}
+			if (!IsHovered) return false;
 
-			return false;
+			return e.MouseButton == MouseButtonCode.Left;
 		}
 
 		private void OnClicked(EventArgs e)
 		{
 			if (Clicked != null)
 				Clicked(this, e);
-
-			// ok great, we got clicked, stop notifying people now
-			IsClicked = false;
 		}
 
 		private void OnHovered(EventArgs e)

@@ -139,7 +139,7 @@ namespace MyThirdSDL.UserInterface
 			buttonCloseWindow.Icon = ControlFactory.CreateIcon(contentManager, "IconWindowClose");
 			buttonCloseWindow.IconHovered = ControlFactory.CreateIcon(contentManager, "IconWindowClose");
 			buttonCloseWindow.ButtonType = ButtonType.IconOnly;
-			buttonCloseWindow.Clicked += (object sender, EventArgs e) => EventHelper.FireEvent(ButtonCloseWindowClicked, this, EventArgs.Empty);
+			buttonCloseWindow.Clicked += OnButtonCloseWindowOnClicked;
 
 			iconMainMenu = ControlFactory.CreateIcon(contentManager, "IconPersonPlain");
 			iconNeedsMenu = ControlFactory.CreateIcon(contentManager, "IconStatistics");
@@ -231,6 +231,11 @@ namespace MyThirdSDL.UserInterface
 			Controls.Add(labelSalaryValue);
 			Controls.Add(labelStatusValue);
 			Controls.Add(labelBirthValue);
+		}
+
+		private void OnButtonCloseWindowOnClicked(object sender, EventArgs e)
+		{
+			EventHelper.FireEvent(ButtonCloseWindowClicked, this, EventArgs.Empty);
 		}
 
 		public void SetInfoValues(Employee employee)

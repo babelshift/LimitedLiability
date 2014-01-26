@@ -271,7 +271,7 @@ namespace MyThirdSDL.UserInterface
 		{
 			base.HandleMouseButtonPressedEvent(sender, e);
 
-			List<ButtonMenuItem> buttonMenuItemsOnCurrentPage = new List<ButtonMenuItem>();
+			List<ButtonMenuItem> buttonMenuItemsOnCurrentPage;
 			bool success = buttonMenuItemPages.TryGetValue(currentDisplayedPage, out buttonMenuItemsOnCurrentPage);
 			if (success)
 				foreach (var buttonMenuItem in buttonMenuItemsOnCurrentPage)
@@ -282,7 +282,7 @@ namespace MyThirdSDL.UserInterface
 		{
 			base.HandleMouseMovingEvent(sender, e);
 
-			List<ButtonMenuItem> buttonMenuItemsOnCurrentPage = new List<ButtonMenuItem>();
+			List<ButtonMenuItem> buttonMenuItemsOnCurrentPage;
 			bool success = buttonMenuItemPages.TryGetValue(currentDisplayedPage, out buttonMenuItemsOnCurrentPage);
 			if (success)
 				foreach (var buttonMenuItem in buttonMenuItemsOnCurrentPage)
@@ -427,12 +427,6 @@ namespace MyThirdSDL.UserInterface
 		private void buttonCloseWindow_Clicked(object sender, EventArgs e)
 		{
 			OnButtonCloseWindowClicked(sender, e);
-		}
-
-		private void buttonConfirmWindow_Clicked(object sender, EventArgs e)
-		{
-			ButtonConfirmWindowClickedEventArgs e2 = new ButtonConfirmWindowClickedEventArgs(selectedPurchasableItem);
-			OnButtonConfirmWindowClicked(sender, e2);
 		}
 
 		private void buttonArrowCircleRight_Clicked(object sender, EventArgs e)

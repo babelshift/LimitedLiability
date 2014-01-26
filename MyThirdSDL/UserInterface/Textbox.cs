@@ -81,7 +81,14 @@ namespace MyThirdSDL.UserInterface
 			IconInputBar = ControlFactory.CreateIcon(contentManager, "IconInputBar");
 			LabelText = ControlFactory.CreateLabel(contentManager, fontPath, fontSizeContent, fontColor, ".");
 
+			Clicked += OnClicked;
+
 			Blur();
+		}
+
+		private void OnClicked(object sender, EventArgs eventArgs)
+		{
+			Focus();
 		}
 
 		public void Clear()
@@ -106,9 +113,6 @@ namespace MyThirdSDL.UserInterface
 		{
 			if (!Visible) return;
 			
-			if (IsClicked)
-				Focus();
-
 			iconFrame.Update(gameTime);
 
 			if (IsFocused)

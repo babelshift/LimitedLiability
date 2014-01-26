@@ -48,6 +48,18 @@ namespace MyThirdSDL.UserInterface
 		public ButtonMenuItem(IPurchasable purchasableItem)
 		{
 			this.purchasableItem = purchasableItem;
+			base.Clicked += OnClicked;
+			base.Hovered += OnHovered;
+		}
+
+		private void OnHovered(object sender, EventArgs e)
+		{
+			OnHovered();
+		}
+
+		private void OnClicked(object sender, EventArgs e)
+		{
+			OnClicked();
 		}
 
 		public override void Update(GameTime gameTime)
@@ -60,12 +72,6 @@ namespace MyThirdSDL.UserInterface
 				IconMoney.Update(gameTime);
 			if (LabelMoney != null)
 				LabelMoney.Update(gameTime);
-
-			if (IsHovered)
-				OnHovered();
-
-			if (IsClicked)
-				OnClicked();
 
 			// always update ourself first because our base will clear the Clicked flag once it has processed
 			base.Update(gameTime);

@@ -111,8 +111,6 @@ namespace MyThirdSDL.Simulation
 
 		public event EventHandler<EventArgs> EmployeeHungerSatisfied;
 
-		public event EventHandler<EmployeeClickedEventArgs> EmployeeClicked;
-
 		#endregion Public Simulation Events
 
 		#region Private Simulation Event Handlers
@@ -162,43 +160,12 @@ namespace MyThirdSDL.Simulation
 						//MapCell mapCellToOccupy = GetMapCellOccupiedByEmployee(employee);
 						//mapCellToOccupy.AddDrawable(employee, (int)TileType.Object);
 						//employee.OccupiedMapCell = mapCellToOccupy;
-
-						// if the agent being updated is an employee and that agent is being clicked on by the user, fire the event telling subscribers of such
-						// we can use this event to react to the user interacting with the employees to do things like display their inspection information
-						if (IsEmployeeClicked(employee))
-							EventHelper.FireEvent(EmployeeClicked, this, new EmployeeClickedEventArgs(employee));
 					}
 				}
 			}
 		}
 
 		#region Employee Events
-
-		/*
-		private MapCell GetMapCellOccupiedByEmployee(Employee employee)
-		{
-			MapCell mapCell = currentMap.MapCells.FirstOrDefault(mc => mc.Bounds.Contains(employee.CollisionBox.Center));
-			return mapCell;
-		}
-*/
-
-		/// <summary>
-		/// Determines whether this employee is clicked based on the passed mouse state by translating the screen coordinates to world space and checking the agent's collision box.
-		/// </summary>
-		/// <returns><c>true</c> if this the passed employee is clicked based on the passed mouse state; otherwise, <c>false</c>.</returns>
-		/// <param name="mouseState">Mouse state.</param>
-		/// <param name="employee">Employee.</param>
-		private bool IsEmployeeClicked(Employee employee)
-		{
-			if (Mouse.ButtonsPressed != null && Mouse.PreviousButtonsPressed != null)
-			{
-				return employee.CollisionBox.Contains(new Point(Mouse.X, Mouse.Y))
-				&& !Mouse.ButtonsPressed.Contains(MouseButtonCode.Left)
-				&& Mouse.PreviousButtonsPressed.Contains(MouseButtonCode.Left);
-			}
-
-			return false;
-		}
 
 		private void HandleHadThought(object sender, ThoughtEventArgs e)
 		{

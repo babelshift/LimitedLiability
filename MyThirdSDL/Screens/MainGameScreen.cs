@@ -53,7 +53,6 @@ namespace MyThirdSDL.Screens
 			simulationManager.HadThought += HandleEmployeeHadThought;
 			simulationManager.EmployeeThirstSatisfied += HandleEmployeeThirstSatisfied;
 			simulationManager.EmployeeHungerSatisfied += HandleEmployeeHungerSatisfied;
-			simulationManager.EmployeeClicked += HandleEmployeeClicked;
 
 			this.mapPathToLoad = mapPathToLoad;
 		}
@@ -71,14 +70,40 @@ namespace MyThirdSDL.Screens
 
 		public override void HandleMouseButtonPressedEvent(object sender, MouseButtonEventArgs e)
 		{
+			// if the agent being updated is an employee and that agent is being clicked on by the user, fire the event telling subscribers of such
+			// we can use this event to react to the user interacting with the employees to do things like display their inspection information
+			foreach(var employee in simulationManager.TrackedEmployees)
+				if (IsEmployeeClicked(employee, e))
+					if (userInterfaceManager.CurrentState == UserInterfaceState.Default)
+						userInterfaceManager.SetEmployeeBeingInspected(employee);
+
 			userInterfaceManager.HandleMouseButtonPressedEvent(sender, e);
+		}
+
+		/// <summary>
+		/// Determines whether this employee is clicked based on the passed mouse state by translating the screen coordinates to world space and checking the agent's collision box.
+		/// </summary>
+		/// <returns><c>true</c> if this the passed employee is clicked based on the passed mouse state; otherwise, <c>false</c>.</returns>
+		/// <param name="employee">Employee.</param>
+		private bool IsEmployeeClicked(Employee employee, MouseButtonEventArgs e)
+		{
+			if (e.MouseButton == MouseButtonCode.Left)
+			{
+				Vector worldPositionAtMousePosition = CoordinateHelper.ScreenSpaceToWorldSpace(
+				   e.RelativeToWindowX, e.RelativeToWindowY,
+				   CoordinateHelper.ScreenOffset,
+				   CoordinateHelper.ScreenProjectionType.Orthogonal);
+				return employee.CollisionBox.Contains(new Point((int)worldPositionAtMousePosition.X, (int)worldPositionAtMousePosition.Y));
+			}
+
+			return false;
 		}
 
 		public override void HandleMouseMovingEvent(object sender, MouseMotionEventArgs e)
 		{
 			// get the map cell that the user's mouse is hovering over
 			if(userInterfaceManager.CurrentState == UserInterfaceState.PlaceEquipmentActive)
-				userInterfaceManager.SetHoveredMapCell(GetHoveredMapCell());
+				userInterfaceManager.SetHoveredMapCell(GetHoveredMapCell(e.RelativeToWindowX, e.RelativeToWindowY));
 
 			userInterfaceManager.HandleMouseMovingEvent(sender, e);
 		}
@@ -118,6 +143,11 @@ namespace MyThirdSDL.Screens
 				//cursor.Update(isMouseInsideWindowBounds, mouseOverScreenEdges);
 				Camera.Update(mouseOverScreenEdges);
 			}
+		}
+
+		private void UserInterfaceManagerOnPurchasableItemSelected(object sender, EventArgs eventArgs)
+		{
+				//userInterfaceManager.SetHoveredMapCell(GetHoveredMapCell(e.RelativeToWindowX, e.RelativeToWindowY));
 		}
 
 		private void HandlePlaceEquipment(object sender, PurchasableItemPlacedEventArgs e)
@@ -205,6 +235,7 @@ namespace MyThirdSDL.Screens
 				bankAccount.Balance,
 				simulationManager.TrackedEmployees.Count());
 
+			userInterfaceManager.PurchasableItemSelected += UserInterfaceManagerOnPurchasableItemSelected;
 			userInterfaceManager.PurchasableItemPlaced += HandlePlaceEquipment;
 			userInterfaceManager.ArchiveMailButtonClicked += userInterfaceManager_ArchiveMailButtonClicked;
 			userInterfaceManager.MainMenuButtonClicked += (sender, e) => ScreenManager.AddScreen(CreatePauseMenuScreen());
@@ -297,12 +328,6 @@ namespace MyThirdSDL.Screens
 			return employee;
 		}
 
-		private void HandleEmployeeClicked(object sender, EmployeeClickedEventArgs e)
-		{
-			if (userInterfaceManager.CurrentState == UserInterfaceState.Default)
-				userInterfaceManager.SetEmployeeBeingInspected(e.Employee);
-		}
-
 		private void HandleEmployeeHungerSatisfied(object sender, EventArgs e)
 		{
 			var employee = GetEmployeeFromEventSender(sender);
@@ -363,13 +388,10 @@ namespace MyThirdSDL.Screens
 			allDrawables.Sort((d1, d2) => d1.Depth.CompareTo(d2.Depth));
 		}
 
-		private MapCell GetHoveredMapCell()
+		private MapCell GetHoveredMapCell(int x, int y)
 		{
-			int mousePositionX = Mouse.X;
-			int mousePositionY = Mouse.Y;
-
 			Vector worldPositionAtMousePosition = CoordinateHelper.ScreenSpaceToWorldSpace(
-				mousePositionX, mousePositionY,
+				x, y,
 				CoordinateHelper.ScreenOffset,
 				CoordinateHelper.ScreenProjectionType.Orthogonal);
 
