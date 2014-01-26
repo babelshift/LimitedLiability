@@ -288,11 +288,10 @@ namespace MyThirdSDL.UserInterface
 
 		private void ToolboxTray_ButtonMailMenuClicked(object sender, EventArgs e)
 		{
-			if (!isMenuMailboxOpen)
-			{
+			if (isMenuMailboxOpen)
 				ClearMenusOpen();
+			else
 				ShowMenuMailbox();
-			}
 		}
 
 		private void ToolboxTray_ButtonMainMenuClicked(object sender, EventArgs e)
@@ -313,11 +312,10 @@ namespace MyThirdSDL.UserInterface
 
 		private void ToolboxTray_ButtonCompanyClicked(object sender, EventArgs e)
 		{
-			if (!isMenuCompanyOpen)
-			{
+			if (isMenuCompanyOpen)
 				ClearMenusOpen();
+			else
 				ShowMenuCompany();
-			}
 		}
 
 		private void ToolboxTray_ButtonFinancesClicked(object sender, EventArgs e)
@@ -327,20 +325,18 @@ namespace MyThirdSDL.UserInterface
 
 		private void ToolboxTray_ButtonSelectRoomClicked(object sender, EventArgs e)
 		{
-			if (!isMenuRoomsOpen)
-			{
+			if(isMenuRoomsOpen)
 				ClearMenusOpen();
+			else
 				ShowMenuRooms();
-			}
 		}
 
 		private void ToolboxTray_ButtonSelectEquipmentClicked(object sender, EventArgs e)
 		{
-			if (!isMenuEquipmentOpen)
-			{
+			if (isMenuEquipmentOpen)
 				ClearMenusOpen();
+			else
 				ShowMenuEquipment();
-			}
 		}
 
 		private void ToolboxTray_ButtonSelectGeneralClicked(object sender, EventArgs e)
