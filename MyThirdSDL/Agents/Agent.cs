@@ -111,6 +111,14 @@ namespace MyThirdSDL.Agents
 			);
 		}
 
+		public virtual void Draw(GameTime gameTime, Renderer renderer, int x, int y)
+		{
+			renderer.RenderTexture(
+				ActiveTexture,
+				x, y
+			);
+		}
+
 		#endregion Game Loop
 	}
 }

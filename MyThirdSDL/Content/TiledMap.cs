@@ -1,5 +1,6 @@
 ﻿using MyThirdSDL.Agents;
 using MyThirdSDL.Simulation;
+using SharpDL;
 using SharpDL.Graphics;
 using SharpTiles;
 using System;
@@ -571,10 +572,9 @@ namespace MyThirdSDL.Content
 			return GetPathNodes().Where(pn => pn.IsEnabled).ToList();
 		}
 
-
-
 		/// <summary>
-		/// Returns the map cell located at the passed world position. Coordinates are rounded prior to check because map cells exist in whole number coordinates.
+		/// Returns the map cell located at the passed world position. Coordinates are rounded prior
+		/// to check because map cells exist in whole number coordinates.
 		/// </summary>
 		/// <param name="worldPosition"></param>
 		/// <returns></returns>
@@ -609,6 +609,28 @@ namespace MyThirdSDL.Content
 		}
 
 		#endregion Finder Methods
+
+		public void Draw(GameTime gameTime, Renderer renderer)
+		{
+			List<IDrawable> drawableMapCells = new List<IDrawable>();
+			
+			drawableMapCells.AddRange(MapCells);
+			drawableMapCells.Sort((d1, d2) => d1.Depth.CompareTo(d2.Depth));
+
+			foreach (var drawable in drawableMapCells)
+				drawable.Draw(gameTime, renderer);
+		}
+
+		public void Draw(GameTime gameTime, Renderer renderer, int x, int y)
+		{
+			List<MapCell> mapCells = new List<MapCell>();
+
+			mapCells.AddRange(MapCells);
+			mapCells.Sort((d1, d2) => d1.Depth.CompareTo(d2.Depth));
+
+			foreach (var mapCell in mapCells)
+				mapCell.Draw(gameTime, renderer, x, y);
+		}
 
 		#region Dispose
 

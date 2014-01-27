@@ -64,11 +64,25 @@ namespace MyThirdSDL.Content
 		{
 			FloorTile.Draw(gameTime, renderer);
 
-			if(OccupantEquipment != null)
+			if (OccupantEquipment != null)
 				OccupantEquipment.Draw(gameTime, renderer);
 
 			foreach (var drawable in drawableObjects)
 				drawable.Draw(gameTime, renderer);
+		}
+
+		public void Draw(GameTime gameTime, Renderer renderer, int x, int y)
+		{
+			x += (int)ProjectedPosition.X;
+			y += (int)ProjectedPosition.Y;
+
+			FloorTile.Draw(gameTime, renderer, x, y);
+
+			if (OccupantEquipment != null)
+				OccupantEquipment.Draw(gameTime, renderer, x, y);
+
+			foreach (var drawable in drawableObjects)
+				drawable.Draw(gameTime, renderer, x, y);
 		}
 
 		public void AddDrawableObject(IDrawable drawable)

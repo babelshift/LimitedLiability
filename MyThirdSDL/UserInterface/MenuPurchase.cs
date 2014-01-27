@@ -260,7 +260,7 @@ namespace MyThirdSDL.UserInterface
 		{
 			base.Draw(gameTime, renderer);
 
-			List<ButtonMenuItem> buttonMenuItemsOnCurrentPage = new List<ButtonMenuItem>();
+			List<ButtonMenuItem> buttonMenuItemsOnCurrentPage;
 			bool success = buttonMenuItemPages.TryGetValue(currentDisplayedPage, out buttonMenuItemsOnCurrentPage);
 			if (success)
 				foreach (var buttonMenuItem in buttonMenuItemsOnCurrentPage)
@@ -295,9 +295,11 @@ namespace MyThirdSDL.UserInterface
 
 		public void AddButtonMenuItem(ButtonMenuItem buttonMenuItem)
 		{
+			if (buttonMenuItem == null) throw new ArgumentNullException("buttonMenuItem");
+
 			// the last page number will indicate the key in which we check for the next items to add
 			int lastPageNumber = buttonMenuItemPages.Keys.Count();
-			List<ButtonMenuItem> buttonMenuItemsOnLastPage = new List<ButtonMenuItem>();
+			List<ButtonMenuItem> buttonMenuItemsOnLastPage;
 			bool success = buttonMenuItemPages.TryGetValue(lastPageNumber, out buttonMenuItemsOnLastPage);
 			if (success)
 			{
@@ -315,24 +317,32 @@ namespace MyThirdSDL.UserInterface
 			else
 			{
 				// if there are no pages, create an entry and add the first page
-				buttonMenuItemsOnLastPage = new List<ButtonMenuItem>();
-				buttonMenuItemsOnLastPage.Add(buttonMenuItem);
+				buttonMenuItemsOnLastPage = new List<ButtonMenuItem> { buttonMenuItem };
 				buttonMenuItemPages.Add(1, buttonMenuItemsOnLastPage);
 			}
 
 			int itemsOnLastPageCount = buttonMenuItemsOnLastPage.Count;
 			Vector buttonMenuItemPosition = Vector.Zero;
 
-			if (itemsOnLastPageCount == 1)
-				buttonMenuItemPosition = new Vector(Position.X + 10, Position.Y + 50);
-			else if (itemsOnLastPageCount == 2)
-				buttonMenuItemPosition = new Vector(Position.X + 10, Position.Y + 100);
-			else if (itemsOnLastPageCount == 3)
-				buttonMenuItemPosition = new Vector(Position.X + 10, Position.Y + 150);
-			else if (itemsOnLastPageCount == 4)
-				buttonMenuItemPosition = new Vector(Position.X + 10, Position.Y + 200);
-			else if (itemsOnLastPageCount >= itemsPerPage + 1)
-				return;
+			switch (itemsOnLastPageCount)
+			{
+				case 1:
+					buttonMenuItemPosition = new Vector(Position.X + 10, Position.Y + 50);
+					break;
+				case 2:
+					buttonMenuItemPosition = new Vector(Position.X + 10, Position.Y + 100);
+					break;
+				case 3:
+					buttonMenuItemPosition = new Vector(Position.X + 10, Position.Y + 150);
+					break;
+				case 4:
+					buttonMenuItemPosition = new Vector(Position.X + 10, Position.Y + 200);
+					break;
+				default:
+					if (itemsOnLastPageCount >= itemsPerPage + 1)
+						return;
+					break;
+			}
 
 			buttonMenuItem.Position = buttonMenuItemPosition;
 			buttonMenuItem.Clicked += buttonMenuItem_Clicked;
@@ -345,19 +355,19 @@ namespace MyThirdSDL.UserInterface
 			{
 				List<ButtonMenuItem> currentPage = null;
 				bool success = buttonMenuItemPages.TryGetValue(key, out currentPage);
-				if (success)
+				
+				if (!success) continue;
+				
+				foreach (var buttonMenuItem in currentPage)
 				{
-					foreach (var buttonMenuItem in currentPage)
-					{
-						if (currentPage.IndexOf(buttonMenuItem) == 0)
-							buttonMenuItem.Position = new Vector(Position.X + 10, Position.Y + 50);
-						if (currentPage.IndexOf(buttonMenuItem) == 1)
-							buttonMenuItem.Position = new Vector(Position.X + 10, Position.Y + 100);
-						if (currentPage.IndexOf(buttonMenuItem) == 2)
-							buttonMenuItem.Position = new Vector(Position.X + 10, Position.Y + 150);
-						if (currentPage.IndexOf(buttonMenuItem) == 3)
-							buttonMenuItem.Position = new Vector(Position.X + 10, Position.Y + 200);
-					}
+					if (currentPage.IndexOf(buttonMenuItem) == 0)
+						buttonMenuItem.Position = new Vector(Position.X + 10, Position.Y + 50);
+					if (currentPage.IndexOf(buttonMenuItem) == 1)
+						buttonMenuItem.Position = new Vector(Position.X + 10, Position.Y + 100);
+					if (currentPage.IndexOf(buttonMenuItem) == 2)
+						buttonMenuItem.Position = new Vector(Position.X + 10, Position.Y + 150);
+					if (currentPage.IndexOf(buttonMenuItem) == 3)
+						buttonMenuItem.Position = new Vector(Position.X + 10, Position.Y + 200);
 				}
 			}
 		}

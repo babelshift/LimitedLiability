@@ -20,21 +20,15 @@ namespace MyThirdSDL.Screens
 
 		private JobFactory jobFactory;
 		private AgentFactory agentFactory;
+		private RoomFactory roomFactory;
 		private SimulationManager simulationManager;
 		private UserInterfaceManager userInterfaceManager;
 		private MailManager mailManager;
 
-		//private Cursor cursor;
 		private BankAccount bankAccount;
 
 		private string mapPathToLoad;
 		private TiledMap tiledMap;
-		//private MapCell hoveredMapCell;
-
-		private List<IDrawable> allDrawables = new List<IDrawable>();
-
-		//private bool IsValidMapCellHovered { get { return hoveredMapCell != null; } }
-
 		private bool IsUserInterfaceStateChangeDelayPassed { get { return userInterfaceManager.TimeSpentInCurrentState > TimeSpan.FromSeconds(0.1); } }
 
 		#endregion Members
@@ -49,6 +43,7 @@ namespace MyThirdSDL.Screens
 			simulationManager = new SimulationManager(DateTime.Now, contentManager.ThoughtPool);
 			jobFactory = new JobFactory();
 			agentFactory = new AgentFactory(renderer, contentManager, jobFactory);
+			roomFactory = new RoomFactory(contentManager);
 
 			simulationManager.HadThought += HandleEmployeeHadThought;
 			simulationManager.EmployeeThirstSatisfied += HandleEmployeeThirstSatisfied;
@@ -72,7 +67,7 @@ namespace MyThirdSDL.Screens
 		{
 			// if the agent being updated is an employee and that agent is being clicked on by the user, fire the event telling subscribers of such
 			// we can use this event to react to the user interacting with the employees to do things like display their inspection information
-			foreach(var employee in simulationManager.TrackedEmployees)
+			foreach (var employee in simulationManager.TrackedEmployees)
 				if (IsEmployeeClicked(employee, e))
 					if (userInterfaceManager.CurrentState == UserInterfaceState.Default)
 						userInterfaceManager.SetEmployeeBeingInspected(employee);
@@ -102,7 +97,7 @@ namespace MyThirdSDL.Screens
 		public override void HandleMouseMovingEvent(object sender, MouseMotionEventArgs e)
 		{
 			// get the map cell that the user's mouse is hovering over
-			if(userInterfaceManager.CurrentState == UserInterfaceState.PlaceEquipmentActive)
+			if (userInterfaceManager.CurrentState == UserInterfaceState.PlaceEquipmentActive || userInterfaceManager.CurrentState == UserInterfaceState.PlaceRoomActive)
 				userInterfaceManager.SetHoveredMapCell(GetHoveredMapCell(e.RelativeToWindowX, e.RelativeToWindowY));
 
 			userInterfaceManager.HandleMouseMovingEvent(sender, e);
@@ -147,7 +142,7 @@ namespace MyThirdSDL.Screens
 
 		private void UserInterfaceManagerOnPurchasableItemSelected(object sender, EventArgs eventArgs)
 		{
-				//userInterfaceManager.SetHoveredMapCell(GetHoveredMapCell(e.RelativeToWindowX, e.RelativeToWindowY));
+			//userInterfaceManager.SetHoveredMapCell(GetHoveredMapCell(e.RelativeToWindowX, e.RelativeToWindowY));
 		}
 
 		private void HandlePlaceEquipment(object sender, PurchasableItemPlacedEventArgs e)
@@ -184,16 +179,13 @@ namespace MyThirdSDL.Screens
 		{
 			// Help Variables
 			Point bottomRightPointOfScreen = new Point(MainGame.SCREEN_WIDTH_LOGICAL, MainGame.SCREEN_HEIGHT_LOGICAL);
-			string mapPath = ContentManager.GetContentPath(mapPathToLoad);
 
 			// Map
+			string mapPath = ContentManager.GetContentPath(mapPathToLoad);
 			tiledMap = new TiledMap(mapPath, renderer, agentFactory);
 
 			// SimulationManager
 			simulationManager.SetCurrentMap(tiledMap);
-
-			// Mouse Cursor
-			//cursor = new Cursor(ContentManager, renderer);
 
 			// Finances
 			bankAccount = new BankAccount(1000);
@@ -221,8 +213,8 @@ namespace MyThirdSDL.Screens
 			mailManager.SendMail(new MailItem("first.last@recruiters.com", "first.last@company.com", "Test Subject 5", "Test Body 5", MailState.Unread));
 
 			// Purchasable Items
-			List<IPurchasable> purchasableEquipment = GetPurchasableEquipment();
-			List<IPurchasable> purchasableRooms = GetPurchasableRooms();
+			IEnumerable<IPurchasable> purchasableEquipment = GetPurchasableEquipment();
+			IEnumerable<IPurchasable> purchasableRooms = GetPurchasableRooms(renderer);
 
 			// UI Manager
 			userInterfaceManager = new UserInterfaceManager(renderer, ContentManager, bottomRightPointOfScreen,
@@ -251,28 +243,31 @@ namespace MyThirdSDL.Screens
 			userInterfaceManager.UpdateDisplayedBankAccountBalance(e.NewBalance);
 		}
 
-		private List<IPurchasable> GetPurchasableRooms()
+		private IEnumerable<IPurchasable> GetPurchasableRooms(Renderer renderer)
 		{
-			List<IPurchasable> purchasableItems = new List<IPurchasable>();
+			List<IPurchasable> purchasableRooms = new List<IPurchasable> { roomFactory.CreateLibrary(renderer, agentFactory) };
 
-			return purchasableItems;
+			return purchasableRooms;
 		}
 
-		private List<IPurchasable> GetPurchasableEquipment()
+		private IEnumerable<IPurchasable> GetPurchasableEquipment()
 		{
-			List<IPurchasable> purchasableItems = new List<IPurchasable>();
-			purchasableItems.Add(agentFactory.CreateSnackMachine(TimeSpan.Zero));
-			purchasableItems.Add(agentFactory.CreateSodaMachine(TimeSpan.Zero));
-			purchasableItems.Add(agentFactory.CreateWaterFountain(TimeSpan.Zero));
-			purchasableItems.Add(agentFactory.CreateOfficeDesk(TimeSpan.Zero));
-			purchasableItems.Add(agentFactory.CreateTrashBin(TimeSpan.Zero));
-			purchasableItems.Add(agentFactory.CreateSnackMachine(TimeSpan.Zero));
-			purchasableItems.Add(agentFactory.CreateSodaMachine(TimeSpan.Zero));
-			purchasableItems.Add(agentFactory.CreateWaterFountain(TimeSpan.Zero));
-			purchasableItems.Add(agentFactory.CreateOfficeDesk(TimeSpan.Zero));
-			purchasableItems.Add(agentFactory.CreateTrashBin(TimeSpan.Zero));
-			purchasableItems.Add(agentFactory.CreateSodaMachine(TimeSpan.Zero));
-			purchasableItems.Add(agentFactory.CreateWaterFountain(TimeSpan.Zero));
+			List<IPurchasable> purchasableItems = new List<IPurchasable>
+			{
+				agentFactory.CreateSnackMachine(TimeSpan.Zero),
+				agentFactory.CreateSodaMachine(TimeSpan.Zero),
+				agentFactory.CreateWaterFountain(TimeSpan.Zero),
+				agentFactory.CreateOfficeDesk(TimeSpan.Zero),
+				agentFactory.CreateTrashBin(TimeSpan.Zero),
+				agentFactory.CreateSnackMachine(TimeSpan.Zero),
+				agentFactory.CreateSodaMachine(TimeSpan.Zero),
+				agentFactory.CreateWaterFountain(TimeSpan.Zero),
+				agentFactory.CreateOfficeDesk(TimeSpan.Zero),
+				agentFactory.CreateTrashBin(TimeSpan.Zero),
+				agentFactory.CreateSodaMachine(TimeSpan.Zero),
+				agentFactory.CreateWaterFountain(TimeSpan.Zero)
+			};
+
 			return purchasableItems;
 		}
 
@@ -301,11 +296,8 @@ namespace MyThirdSDL.Screens
 			base.Draw(gameTime, renderer);
 
 			renderer.ClearScreen();
-			allDrawables.Clear();
-			AddAndSortDrawablesByDrawDepth();
 
-			foreach (var drawable in allDrawables)
-				drawable.Draw(gameTime, renderer);
+			tiledMap.Draw(gameTime, renderer);
 
 			foreach (var agent in simulationManager.TrackedAgents)
 				agent.Draw(gameTime, renderer);
@@ -377,16 +369,6 @@ namespace MyThirdSDL.Screens
 		}
 
 		#endregion UI Manager Events
-
-		/// <summary>
-		/// Selects out the non-empty height tiles from the height layer in the tile map and sorts them by their draw depth.
-		/// </summary>
-		///
-		private void AddAndSortDrawablesByDrawDepth()
-		{
-			allDrawables.AddRange(tiledMap.MapCells);
-			allDrawables.Sort((d1, d2) => d1.Depth.CompareTo(d2.Depth));
-		}
 
 		private MapCell GetHoveredMapCell(int x, int y)
 		{

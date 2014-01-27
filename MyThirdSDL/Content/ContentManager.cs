@@ -10,9 +10,9 @@ namespace MyThirdSDL.Content
 {
 	public class ContentManager
 	{
-		private Random random = new Random();
+		private readonly Random random = new Random();
 
-		private Renderer renderer;
+		private readonly Renderer renderer;
 
 		private const string contentRoot = "Content/";
 		private const string contentDataRoot = contentRoot + "Data/";
@@ -22,12 +22,13 @@ namespace MyThirdSDL.Content
 		private const string companyDataPath = contentDataRoot + "CompanyData.json";
 		private const string thoughtReferencePath = contentDataRoot + "ThoughtReference.json";
 
-		private Dictionary<string, string> contentReference = new Dictionary<string, string>();
-		private Dictionary<string, AgentMetadata> agentMetadataDictionary = new Dictionary<string, AgentMetadata>();
-		private List<string> firstNames = new List<string>();
-		private List<string> lastNames = new List<string>();
-		private List<CompanyMetadata> companies = new List<CompanyMetadata>();
-		private List<ThoughtMetadata> thoughtPool = new List<ThoughtMetadata>();
+		private readonly Dictionary<string, string> contentReference = new Dictionary<string, string>();
+		private readonly Dictionary<string, AgentMetadata> agentMetadataDictionary = new Dictionary<string, AgentMetadata>();
+		private readonly Dictionary<string, RoomMetadata> roomMetadataDictionary = new Dictionary<string, RoomMetadata>();
+		private readonly List<string> firstNames = new List<string>();
+		private readonly List<string> lastNames = new List<string>();
+		private readonly List<CompanyMetadata> companies = new List<CompanyMetadata>();
+		private readonly List<ThoughtMetadata> thoughtPool = new List<ThoughtMetadata>();
 
 		public IEnumerable<ThoughtMetadata> ThoughtPool { get { return thoughtPool; } }
 
@@ -53,6 +54,8 @@ namespace MyThirdSDL.Content
 
 		public Texture GetTexture(string texturePathKey)
 		{
+			if (texturePathKey == null) throw new ArgumentNullException("texturePathKey");
+
 			string texturePath = GetContentPath(texturePathKey);
 			Surface surface = new Surface(texturePath, SurfaceType.PNG);
 			Texture texture = new Texture(renderer, surface);
@@ -61,11 +64,16 @@ namespace MyThirdSDL.Content
 
 		public TrueTypeText GetTrueTypeText(string fontPath, int fontSize, Color color, string text, int wrapLength)
 		{
+			if (fontPath == null) throw new ArgumentNullException("fontPath");
+			if (text == null) throw new ArgumentNullException("text");
+
 			return TrueTypeTextFactory.CreateTrueTypeText(renderer, fontPath, fontSize, color, text, wrapLength);
 		}
 
 		private void LoadCompanyData(string json)
 		{
+			if (json == null) throw new ArgumentNullException("json");
+
 			JObject o = JObject.Parse(json);
 
 			foreach (var company in o["companies"])
@@ -80,6 +88,8 @@ namespace MyThirdSDL.Content
 
 		private void LoadPeopleNames(string json)
 		{
+			if (json == null) throw new ArgumentNullException("json");
+
 			JObject o = JObject.Parse(json);
 
 			foreach (var firstName in o["firstNames"])
@@ -91,11 +101,12 @@ namespace MyThirdSDL.Content
 
 		private void LoadAgentMetadata(string json)
 		{
+			if (json == null) throw new ArgumentNullException("json");
+
 			JObject o = JObject.Parse(json);
 
 			foreach (var equipment in o["equipment"])
 			{
-				AgentMetadata agentMetadata = null;
 				NecessityEffect necessityEffectData = null;
 				SkillEffect skillEffectData = null;
 
@@ -125,13 +136,51 @@ namespace MyThirdSDL.Content
 					skillEffectData = new SkillEffect(intelligence, creativity, communication, leadership);
 				}
 
-				agentMetadata = new AgentMetadata(price, name, iconKey, necessityEffectData, skillEffectData);
+				AgentMetadata agentMetadata = new AgentMetadata(price, name, iconKey, necessityEffectData, skillEffectData);
 				agentMetadataDictionary.Add(key, agentMetadata);
+			}
+
+			foreach (var room in o["rooms"])
+			{
+				NecessityEffect necessityEffectData = null;
+				SkillEffect skillEffectData = null;
+
+				string key = room["key"].ToString();
+				string name = room["name"].ToString();
+				int price = Int32.Parse(room["price"].ToString());
+				string iconKey = room["icon"].ToString();
+				string mapPathKey = room["map"].ToString();
+
+				foreach (var necessityEffect in room["necessityEffect"])
+				{
+					int health = Int32.Parse(necessityEffect["health"].ToString());
+					int hygiene = Int32.Parse(necessityEffect["hygiene"].ToString());
+					int sleep = Int32.Parse(necessityEffect["sleep"].ToString());
+					int thirst = Int32.Parse(necessityEffect["thirst"].ToString());
+					int hunger = Int32.Parse(necessityEffect["hunger"].ToString());
+
+					necessityEffectData = new NecessityEffect(health, hygiene, sleep, thirst, hunger);
+				}
+
+				foreach (var skillEffect in room["skillEffect"])
+				{
+					int intelligence = Int32.Parse(skillEffect["intelligence"].ToString());
+					int creativity = Int32.Parse(skillEffect["creativity"].ToString());
+					int communication = Int32.Parse(skillEffect["communication"].ToString());
+					int leadership = Int32.Parse(skillEffect["leadership"].ToString());
+
+					skillEffectData = new SkillEffect(intelligence, creativity, communication, leadership);
+				}
+
+				RoomMetadata roomMetadata = new RoomMetadata(price, name, iconKey, necessityEffectData, skillEffectData, mapPathKey);
+				roomMetadataDictionary.Add(key, roomMetadata);
 			}
 		}
 
 		private void LoadContentFiles(string json)
 		{
+			if (json == null) throw new ArgumentNullException("json");
+
 			JObject o = JObject.Parse(json);
 			foreach (var font in o["fonts"])
 			{
@@ -148,10 +197,17 @@ namespace MyThirdSDL.Content
 				var keyValuePair = GetKeyValuePair(map);
 				contentReference.Add(keyValuePair.Key, keyValuePair.Value);
 			}
+			foreach (var room in o["rooms"])
+			{
+				var keyValuePair = GetKeyValuePair(room);
+				contentReference.Add(keyValuePair.Key, keyValuePair.Value);
+			}
 		}
 
 		public CompanyMetadata GetCompany(string name)
 		{
+			if (name == null) throw new ArgumentNullException("name");
+
 			var company = companies.FirstOrDefault(c => c.Name == name);
 
 			if (company == null)
@@ -162,27 +218,46 @@ namespace MyThirdSDL.Content
 
 		public AgentMetadata GetAgentMetadata(string key)
 		{
+			if (key == null) throw new ArgumentNullException("key");
+
 			AgentMetadata agentMetaData;
 			bool success = agentMetadataDictionary.TryGetValue(key, out agentMetaData);
 			if (success)
 				return agentMetaData;
-			else
-				throw new KeyNotFoundException(String.Format("The content with key '{0}' was not found.", key));
+			
+			throw new KeyNotFoundException(String.Format("The content with key '{0}' was not found.", key));
+		}
+
+		public RoomMetadata GetRoomMetadata(string key)
+		{
+			if (key == null) throw new ArgumentNullException("key");
+
+			RoomMetadata roomMetaData;
+			bool success = roomMetadataDictionary.TryGetValue(key, out roomMetaData);
+			if (success)
+				return roomMetaData;
+
+			throw new KeyNotFoundException(String.Format("The content with key '{0}' was not found.", key));
 		}
 
 		public string GetContentPath(string contentKey)
 		{
+			if (contentKey == null) throw new ArgumentNullException("contentKey");
+
 			string contentPath;
 			if (contentReference.TryGetValue(contentKey, out contentPath))
 				return contentRoot + contentPath;
-			else
-				throw new KeyNotFoundException(String.Format("The content with key '{0}' was not found.", contentKey));
+
+			throw new KeyNotFoundException(String.Format("The content with key '{0}' was not found.", contentKey));
 		}
 
 		private KeyValuePair<string, string> GetKeyValuePair(JToken o)
 		{
+			if (o == null) throw new ArgumentNullException("o");
+
 			string key = o["key"].ToString();
 			string value = o["value"].ToString();
+			
 			return new KeyValuePair<string, string>(key, value);
 		}
 
@@ -200,6 +275,8 @@ namespace MyThirdSDL.Content
 
 		private void LoadThoughtData(string json)
 		{
+			if (json == null) throw new ArgumentNullException("json");
+
 			JObject o = JObject.Parse(json);
 
 			foreach (var equipment in o["idle"])
@@ -236,9 +313,11 @@ namespace MyThirdSDL.Content
 				AddThoughtToCollection(equipment, ThoughtType.NotChallenged);
 		}
 
-		private void AddThoughtToCollection(JToken equipment, ThoughtType type)
+		private void AddThoughtToCollection(JToken thoughtData, ThoughtType type)
 		{
-			string idea = equipment["idea"].ToString();
+			if (thoughtData == null) throw new ArgumentNullException("thoughtData");
+
+			string idea = thoughtData["idea"].ToString();
 			ThoughtMetadata thoughtMetadata = new ThoughtMetadata(type, idea);
 			thoughtPool.Add(thoughtMetadata);
 		}

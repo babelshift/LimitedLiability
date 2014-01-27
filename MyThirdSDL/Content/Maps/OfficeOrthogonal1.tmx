@@ -5,7 +5,7 @@
  </tileset>
  <layer name="Floor" width="25" height="25">
   <data encoding="base64" compression="zlib">
-   eJzdlsEKgzAMhiNYPM/hmJe6OnH1ad0jr4MIWWg629IxPHxgQuNvkqZVVQDqAFwB4EzoMm1O71gcIyHX5ixIQ0ixVYAjatyxRzbBVsTmTKihHTfskcm0pZ7rglCNk5BrKq1HQ8o1FePRGH9Qq5L9uARqys+ilsTyc64X/NverQX4WWTg8/v4HpX83zRCNeDzrj0xvlrV5NlGaMzonz3raG7SDO/RGNA/CBqp+6VhSOseEDe/W+zeOAvx8726+/lZxc177P3/fv9a+B/jXzVeDEI5nA==
+   eJzdlsEKgzAMhiNYPM/hmJe6buLq07pHXgcRYmg629IxPHxgQuNv0yRVVQDqAFwB4EzoMm1O75gdd0KuzZmRhpBiqwBH1HjgGdkEWxGbM6KGdtzwjEymLZ25LgjVOAl7TaX1aEh7TcV4NH6Rq5Ial0BO+SxqSSyfc73gX2u3FuCzyMD2+3iNSv5vGqEc8H7XnhhfrmrybCM0JvRPnnV0b1IP79EY0D8IGqn10jCkdU+I6981dm+chfj+Xtz9/Kri+j32/v+8fyn8j/GvGm/4AzmY
   </data>
  </layer>
  <layer name="0_Objects" width="25" height="25">

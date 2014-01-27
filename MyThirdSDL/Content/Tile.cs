@@ -1,13 +1,6 @@
 using SharpDL;
 using SharpDL.Graphics;
-using SharpTiles;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using MyThirdSDL.Descriptors;
-using MyThirdSDL.Simulation;
 
 namespace MyThirdSDL.Content
 {
@@ -101,15 +94,20 @@ namespace MyThirdSDL.Content
 		/// <param name="renderer"></param>
 		public void Draw(GameTime gameTime, Renderer renderer)
 		{
-			if (!IsEmpty)
-			{
-				renderer.RenderTexture(
-					Texture,
-					ProjectedPosition.X - Camera.Position.X,
-					ProjectedPosition.Y - Camera.Position.Y,
-					SourceTextureBounds
-				);
-			}
+			if (IsEmpty) return;
+
+			renderer.RenderTexture(
+				Texture, 
+				ProjectedPosition.X - Camera.Position.X, 
+				ProjectedPosition.Y - Camera.Position.Y, 
+				SourceTextureBounds);
+		}
+
+		public void Draw(GameTime gameTime, Renderer renderer, int x, int y)
+		{
+			if (IsEmpty) return;
+
+			renderer.RenderTexture(Texture, x, y, SourceTextureBounds);
 		}
 
 		public void Dispose()
@@ -129,5 +127,4 @@ namespace MyThirdSDL.Content
 				Texture.Dispose();
 		}
 	}
-
 }

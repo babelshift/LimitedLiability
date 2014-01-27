@@ -15,5 +15,6 @@ namespace MyThirdSDL
 		Vector ProjectedPosition { get; }
 		float Depth { get; }
 		void Draw(GameTime gameTime, Renderer renderer);
+		void Draw(GameTime gameTime, Renderer renderer, int x, int y);
 	}
 }

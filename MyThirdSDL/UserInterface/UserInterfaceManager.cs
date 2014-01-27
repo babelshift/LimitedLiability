@@ -286,18 +286,23 @@ namespace MyThirdSDL.UserInterface
 
 		#region ToolboxTray Events
 
-		private void ToolboxTray_ButtonMailMenuClicked(object sender, EventArgs e)
-		{
-			if (isMenuMailboxOpen)
-				ClearMenusOpen();
-			else
-				ShowMenuMailbox();
-		}
-
 		private void ToolboxTray_ButtonMainMenuClicked(object sender, EventArgs e)
 		{
 			if (MainMenuButtonClicked != null)
 				MainMenuButtonClicked(sender, e);
+		}
+
+		private void ToolboxTray_ButtonMailMenuClicked(object sender, EventArgs e)
+		{
+			if (isMenuMailboxOpen)
+				ClearMenusOpen();
+			else if (AreAnyMenusOpen)
+			{
+				ClearMenusOpen();
+				ShowMenuMailbox();
+			}
+			else
+				ShowMenuMailbox();
 		}
 
 		private void ToolboxTray_ButtonProductsClicked(object sender, EventArgs e)
@@ -314,8 +319,14 @@ namespace MyThirdSDL.UserInterface
 		{
 			if (isMenuCompanyOpen)
 				ClearMenusOpen();
+			else if (AreAnyMenusOpen)
+			{
+				ClearMenusOpen();
+				ShowMenuCompany();
+			}
 			else
 				ShowMenuCompany();
+
 		}
 
 		private void ToolboxTray_ButtonFinancesClicked(object sender, EventArgs e)
@@ -325,8 +336,13 @@ namespace MyThirdSDL.UserInterface
 
 		private void ToolboxTray_ButtonSelectRoomClicked(object sender, EventArgs e)
 		{
-			if(isMenuRoomsOpen)
+			if (isMenuRoomsOpen)
 				ClearMenusOpen();
+			else if (AreAnyMenusOpen)
+			{
+				ClearMenusOpen();
+				ShowMenuRooms();
+			}
 			else
 				ShowMenuRooms();
 		}
@@ -335,6 +351,11 @@ namespace MyThirdSDL.UserInterface
 		{
 			if (isMenuEquipmentOpen)
 				ClearMenusOpen();
+			else if (AreAnyMenusOpen)
+			{
+				ClearMenusOpen();
+				ShowMenuEquipment();
+			}
 			else
 				ShowMenuEquipment();
 		}
@@ -342,6 +363,15 @@ namespace MyThirdSDL.UserInterface
 		private void ToolboxTray_ButtonSelectGeneralClicked(object sender, EventArgs e)
 		{
 			ChangeState(UserInterfaceState.Default);
+		}
+
+		private bool AreAnyMenusOpen
+		{
+			get
+			{
+				return isMenuCompanyOpen || isMenuEquipmentOpen || isMenuInspectEmployeeOpen || isMenuMailboxOpen || isMenuRoomsOpen ||
+					   IsMenuInspectEmployeeOpen;
+			}
 		}
 
 		#endregion ToolboxTray Events
@@ -441,7 +471,7 @@ namespace MyThirdSDL.UserInterface
 			menuPurchaseRooms = new MenuPurchase(contentManager, "IconForklift", "Rooms", purchasableRooms); // controlFactory.CreateMenuPurchase(menuPosition, "IconForklift", "Rooms", purchasableRooms);
 			menuPurchaseRooms.Position = new Vector(bottomRightPointOfWindow.X / 2 - menuPurchaseRooms.Width / 2, bottomRightPointOfWindow.Y / 2 - menuPurchaseRooms.Height / 2);
 			menuPurchaseRooms.ButtonCloseWindowClicked += menuPurchaseRooms_ButtonCloseWindowClicked;
-			menuPurchaseRooms.ButtonConfirmWindowClicked += menuPurchaseRooms_ButtonConfirmWindowClicked;
+			menuPurchaseRooms.ButtonConfirmWindowClicked += menuPurchaseRooms_PurchasableItemSelected;
 		}
 
 		private void ShowMenuRooms()
@@ -456,14 +486,16 @@ namespace MyThirdSDL.UserInterface
 			ChangeState(UserInterfaceState.Default);
 		}
 
-		private void menuPurchaseRooms_ButtonConfirmWindowClicked(object sender, ButtonConfirmWindowClickedEventArgs e)
+		private void menuPurchaseRooms_PurchasableItemSelected(object sender, ButtonConfirmWindowClickedEventArgs e)
 		{
-			if (PurchasableItemPlaced != null)
-				PurchasableItemPlaced(sender, new PurchasableItemPlacedEventArgs(e.PurchasableItem, hoveredMapCell));
+			selectedPurchasableItem = e.PurchasableItem;
 
 			HideMenuRooms();
 
 			ChangeState(UserInterfaceState.PlaceRoomActive);
+
+			if (PurchasableItemSelected != null)
+				PurchasableItemSelected(this, EventArgs.Empty);
 		}
 
 		private void menuPurchaseRooms_ButtonCloseWindowClicked(object sender, EventArgs e)
@@ -583,14 +615,13 @@ namespace MyThirdSDL.UserInterface
 
 		public void Draw(GameTime gameTime, Renderer renderer)
 		{
-			if (CurrentState == UserInterfaceState.PlaceEquipmentActive)
+			if (CurrentState == UserInterfaceState.PlaceEquipmentActive || CurrentState == UserInterfaceState.PlaceRoomActive)
 			{
 				if (hoveredMapCell != null)
 				{
 					Vector drawPosition = CoordinateHelper.ProjectedPositionToDrawPosition(hoveredMapCell.ProjectedPosition);
 
-					foreach (var activeTexture in selectedPurchasableItem.ActiveTextures)
-						renderer.RenderTexture(activeTexture, drawPosition.X, drawPosition.Y);
+					selectedPurchasableItem.Draw(gameTime, renderer, (int)drawPosition.X, (int)drawPosition.Y);
 				}
 			}
 

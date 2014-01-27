@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" width="6" height="6" tilewidth="32" tileheight="32">
+ <tileset firstgid="1" name="TileSet1" tilewidth="32" tileheight="32">
+  <image source="Content/Maps/TileSet1.png" width="480" height="1216"/>
+ </tileset>
+ <layer name="Floor" width="6" height="6">
+  <data encoding="base64" compression="zlib">
+   eJyTYGBgEEbDkkCsCcRKaFgTivnRMD5xdSAWQRJTBmINIFaAmgkTB7EVgRgAEpsDuw==
+  </data>
+ </layer>
+ <layer name="0_Objects" width="6" height="6">
+  <data encoding="base64" compression="zlib">
+   eJxjYMANTIHYDImGARcgdkWiiQHdQNyDRXwWEM9G4gMA8tQENQ==
+  </data>
+ </layer>
+ <layer name="1_Objects" width="6" height="6">
+  <data encoding="base64" compression="zlib">
+   eJxjYBhcAAAAkAAB
+  </data>
+ </layer>
+ <objectgroup color="#55ff00" name="PathNodes" width="6" height="6">
+  <object x="32" y="96" width="32" height="32"/>
+  <object x="64" y="96" width="32" height="32"/>
+  <object x="96" y="96" width="32" height="32"/>
+  <object x="128" y="96" width="32" height="32"/>
+  <object x="64" y="128" width="32" height="32"/>
+  <object x="96" y="128" width="32" height="32"/>
+  <object x="64" y="160" width="32" height="32"/>
+  <object x="96" y="160" width="32" height="32"/>
+ </objectgroup>
+ <objectgroup color="#ff0000" name="DeadZones" width="6" height="6">
+  <object x="0" y="0" width="32" height="32"/>
+  <object x="0" y="32" width="32" height="32"/>
+  <object x="0" y="64" width="32" height="32"/>
+  <object x="0" y="160" width="32" height="32"/>
+  <object x="0" y="128" width="32" height="32"/>
+  <object x="0" y="96" width="32" height="32"/>
+  <object x="160" y="160" width="32" height="32"/>
+  <object x="160" y="128" width="32" height="32"/>
+  <object x="160" y="96" width="32" height="32"/>
+  <object x="160" y="64" width="32" height="32"/>
+  <object x="128" y="0" width="32" height="32"/>
+  <object x="160" y="0" width="32" height="32"/>
+  <object x="160" y="32" width="32" height="32"/>
+  <object x="96" y="0" width="32" height="32"/>
+  <object x="64" y="0" width="32" height="32"/>
+  <object x="32" y="128" width="32" height="32"/>
+  <object x="32" y="160" width="32" height="32"/>
+  <object x="128" y="128" width="32" height="32"/>
+  <object x="128" y="160" width="32" height="32"/>
+  <object x="32" y="0" width="32" height="32"/>
+  <object x="64" y="32" width="32" height="32"/>
+  <object x="32" y="32" width="32" height="32"/>
+  <object x="96" y="32" width="32" height="32"/>
+  <object x="128" y="32" width="32" height="32"/>
+  <object x="64" y="64" width="32" height="32"/>
+  <object x="32" y="64" width="32" height="32"/>
+  <object x="96" y="64" width="32" height="32"/>
+  <object x="128" y="64" width="32" height="32"/>
+ </objectgroup>
+</map>

@@ -28,7 +28,7 @@
 	],
 	"rooms": [
 		{
-			"key": "Library", "name": "Library", "price": "500", "icon": "IconLibrary", 
+			"key": "Library", "name": "Library", "price": "500", "icon": "IconLibrary", "map": "Library", 
 				"necessityEffect": [ { "health":  "0", "hygiene": "0", "sleep": "-1", "thirst": "0", "hunger": "0" } ],
 				"skillEffect": [ { "intelligence": "1", "creativity": "1", "communication": "0", "leadership": "0" } ]
 		}

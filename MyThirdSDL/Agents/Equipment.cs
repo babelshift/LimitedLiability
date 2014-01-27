@@ -15,8 +15,6 @@ namespace MyThirdSDL.Agents
 
 		public string IconTextureKey { get; private set; }
 
-		public IReadOnlyList<Texture> ActiveTextures { get { return new List<Texture>() { ActiveTexture }; } }
-
 		public Equipment(TimeSpan birthTime, string agentName, Texture activeTexture, Vector startingPosition, int price, string iconTextureKey)
 			: base(birthTime, agentName, startingPosition)
 		{
@@ -45,6 +43,14 @@ namespace MyThirdSDL.Agents
 				drawPosition.X,
 				drawPosition.Y
 			);
+		}
+
+		public override void Draw(SharpDL.GameTime gameTime, Renderer renderer, int x, int y)
+		{
+			renderer.RenderTexture(
+				ActiveTexture,
+				x, y
+				);
 		}
 	}
 }

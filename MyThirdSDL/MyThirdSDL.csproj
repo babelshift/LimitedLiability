@@ -86,6 +86,7 @@
     <Compile Include="Agents\MobileAgent.cs" />
     <Compile Include="Agents\OfficeDesk.cs" />
     <Compile Include="Agents\Room.cs" />
+    <Compile Include="Agents\RoomFactory.cs" />
     <Compile Include="Agents\SnackMachine.cs" />
     <Compile Include="Agents\SodaMachine.cs" />
     <Compile Include="Agents\Thought.cs" />
@@ -148,6 +149,7 @@
     <Compile Include="Mail\MailState.cs" />
     <Compile Include="Mail\MailAddressType.cs" />
     <Compile Include="MainGame.cs" />
+    <Compile Include="RoomMetadata.cs" />
     <Compile Include="Screens\LoadGameScreen.cs" />
     <Compile Include="Screens\OptionsScreen.cs" />
     <Compile Include="Screens\PauseMenuScreen.cs" />
@@ -280,6 +282,9 @@
     <Content Include="Content\Images\User Interface\IconFolderOpen.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Content\Images\User Interface\IconLibrary.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Content\Images\User Interface\IconMailArchive.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -364,6 +369,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\Maps\OfficeOrthogonal1.tmx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Maps\Library.tmx">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <None Include="packages.config" />

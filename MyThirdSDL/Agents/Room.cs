@@ -1,30 +1,17 @@
-﻿using System.Collections.Generic;
-using MyThirdSDL.Content;
+﻿using MyThirdSDL.Content;
 using MyThirdSDL.Descriptors;
+using SharpDL;
 using SharpDL.Graphics;
-using System;
-using System.Linq;
 
 namespace MyThirdSDL.Agents
 {
 	public class Room : IPurchasable
 	{
-		private readonly MapCell[,] mapCells;
+		private TiledMap tiledMap;
 
 		public NecessityEffect NecessityEffect { get; protected set; }
 
 		public SkillEffect SkillEffect { get; protected set; }
-
-		public IReadOnlyList<Texture> ActiveTextures
-		{
-			get
-			{
-				List<Texture> textures = new List<Texture>();
-				foreach (var mapCell in mapCells)
-					textures.Add(mapCell.FloorTexture);
-				return textures;
-			}
-		}
 
 		public string Name { get; private set; }
 
@@ -32,33 +19,21 @@ namespace MyThirdSDL.Agents
 
 		public string IconTextureKey { get; private set; }
 
-		public int Width { get { return mapCells.GetLength(0); } }
+		public int Width { get { return tiledMap.PixelWidth; } }
 
-		public int Height { get { return mapCells.GetLength(1); } }
+		public int Height { get { return tiledMap.PixelHeight; } }
 
-		public Room(string name, int price, int width, int height, string iconTextureKey)
+		public Room(string name, int price, string iconTextureKey, TiledMap tiledMap)
 		{
 			Name = name;
 			Price = price;
 			IconTextureKey = iconTextureKey;
-			mapCells = new MapCell[width, height];
+			this.tiledMap = tiledMap;
 		}
 
-		protected void AddMapCell(MapCell mapCell, int rowIndex, int columnIndex)
+		public void Draw(GameTime gameTime, Renderer renderer, int x, int y)
 		{
-			if (rowIndex < 0)
-				throw new ArgumentOutOfRangeException("rowIndex", "Row index must be greater than 0.");
-
-			if (columnIndex < 0)
-				throw new ArgumentOutOfRangeException("columnIndex", "Column index must be greater than 0.");
-
-			if (rowIndex >= Width)
-				throw new ArgumentOutOfRangeException("rowIndex", "Row index cannot exceed the width of the array.");
-
-			if (columnIndex >= Height)
-				throw new ArgumentOutOfRangeException("columnIndex", "Column index cannot exceed the height of the array.");
-
-			mapCells[rowIndex, columnIndex] = mapCell;
+			tiledMap.Draw(gameTime, renderer, x, y);
 		}
 	}
 }

@@ -17,16 +17,14 @@ namespace MyThirdSDL.Agents
 		private TextureStore textureStore;
 		private ContentManager contentManager;
 		private JobFactory jobFactory;
-		private Renderer renderer;
 		private int currentEmployeeNumber = 0;
 		private int currentEquipmentNumber = 0;
 
 		public AgentFactory(Renderer renderer, ContentManager contentManager, JobFactory jobFactory)
 		{
-			this.renderer = renderer;
 			this.contentManager = contentManager;
 			this.jobFactory = jobFactory;
-			this.textureStore = new TextureStore(renderer);
+			textureStore = new TextureStore(renderer);
 		}
 
 		#region Employees

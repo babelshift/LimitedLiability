@@ -1,17 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using SharpDL;
 using SharpDL.Graphics;
 
 namespace MyThirdSDL.Descriptors
 {
 	public interface IPurchasable : IAffectsNecessities, ISkillsAffector
 	{
-		IReadOnlyList<Texture> ActiveTextures { get; }
+		void Draw(GameTime gameTime, Renderer renderer, int x, int y);
+
 		string Name { get; }
+
 		int Price { get; }
+
 		string IconTextureKey { get; }
 	}
 }

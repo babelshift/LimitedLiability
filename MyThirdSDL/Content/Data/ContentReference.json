@@ -88,6 +88,7 @@
 		{ "key": "IconMailArchive",				"value": "Images/User Interface/IconMailArchive.png" },
 		{ "key": "IconSeparator",				"value": "Images/User Interface/IconSeparator.png" },
 		{ "key": "IconInputBar",				"value": "Images/User Interface/IconInputBar.png" },
+		{ "key": "IconLibrary",					"value": "Images/User Interface/IconLibrary.png" },
 
 		{ "key": "CursorHandRight",				"value": "Images/User Interface/CursorHandRight.png" },
 		{ "key": "CursorHandUp",				"value": "Images/User Interface/CursorHandUp.png" },
@@ -100,5 +101,8 @@
 	],
 	"maps": [
 		{ "key": "OfficeOrthogonal1",			"value": "Maps/OfficeOrthogonal1.tmx" }
-	] 
+	],
+	"rooms": [
+		{ "key": "Library",						"value": "Maps/Library.tmx" }
+	]  
 }
