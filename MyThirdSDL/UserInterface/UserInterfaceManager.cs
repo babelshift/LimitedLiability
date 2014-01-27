@@ -101,7 +101,7 @@ namespace MyThirdSDL.UserInterface
 
 		public event EventHandler<PurchasableItemPlacedEventArgs> PurchasableItemPlaced;
 
-		public event EventHandler PurchasableItemSelected;
+		public event EventHandler<PurchasableItemSelectedEventArgs> PurchasableItemSelected;
 
 		public bool IsToolboxTrayHovered
 		{
@@ -122,12 +122,17 @@ namespace MyThirdSDL.UserInterface
 			HideMenuCompany();
 		}
 
-		public void SetHoveredMapCell(MapCell hoveredMapCell)
+		public void SetHoveredMapCells(IReadOnlyList<MapCell> hoveredMapCells)
 		{
-			this.hoveredMapCell = hoveredMapCell;
+			if (hoveredMapCells == null) throw new ArgumentNullException("hoveredMapCells");
+
+			this.hoveredMapCells = hoveredMapCells;
+
+			// if any of these hovered map cells overlaps with selected purchasable map cells, shade the selected purchasable in red
+			SelectedPurchasableItem.CheckOverlap(hoveredMapCells);
 		}
 
-		private MapCell hoveredMapCell;
+		private IReadOnlyList<MapCell> hoveredMapCells;
 
 		#region Constructors
 
@@ -488,14 +493,14 @@ namespace MyThirdSDL.UserInterface
 
 		private void menuPurchaseRooms_PurchasableItemSelected(object sender, ButtonConfirmWindowClickedEventArgs e)
 		{
-			selectedPurchasableItem = e.PurchasableItem;
+			SelectedPurchasableItem = e.PurchasableItem;
 
 			HideMenuRooms();
 
 			ChangeState(UserInterfaceState.PlaceRoomActive);
 
 			if (PurchasableItemSelected != null)
-				PurchasableItemSelected(this, EventArgs.Empty);
+				PurchasableItemSelected(this, new PurchasableItemSelectedEventArgs(SelectedPurchasableItem));
 		}
 
 		private void menuPurchaseRooms_ButtonCloseWindowClicked(object sender, EventArgs e)
@@ -529,14 +534,14 @@ namespace MyThirdSDL.UserInterface
 
 		private void menuEquipment_PurchasableItemSelected(object sender, ButtonConfirmWindowClickedEventArgs e)
 		{
-			selectedPurchasableItem = e.PurchasableItem;
+			SelectedPurchasableItem = e.PurchasableItem;
 
 			HideMenuEquipment();
 
 			ChangeState(UserInterfaceState.PlaceEquipmentActive);
 
 			if (PurchasableItemSelected != null)
-				PurchasableItemSelected(this, EventArgs.Empty);
+				PurchasableItemSelected(this, new PurchasableItemSelectedEventArgs(SelectedPurchasableItem));
 		}
 
 		private void menuEquipment_ButtonCloseWindowClicked(object sender, EventArgs e)
@@ -617,11 +622,11 @@ namespace MyThirdSDL.UserInterface
 		{
 			if (CurrentState == UserInterfaceState.PlaceEquipmentActive || CurrentState == UserInterfaceState.PlaceRoomActive)
 			{
-				if (hoveredMapCell != null)
+				if (hoveredMapCells != null)
 				{
-					Vector drawPosition = CoordinateHelper.ProjectedPositionToDrawPosition(hoveredMapCell.ProjectedPosition);
+					Vector drawPosition = CoordinateHelper.ProjectedPositionToDrawPosition(hoveredMapCells[0].ProjectedPosition);
 
-					selectedPurchasableItem.Draw(gameTime, renderer, (int)drawPosition.X, (int)drawPosition.Y);
+					SelectedPurchasableItem.Draw(gameTime, renderer, (int)drawPosition.X, (int)drawPosition.Y);
 				}
 			}
 
@@ -677,14 +682,14 @@ namespace MyThirdSDL.UserInterface
 			focusedControl.HandleTextInput(e.Text);
 		}
 
-		private IPurchasable selectedPurchasableItem;
+		public IPurchasable SelectedPurchasableItem { get; private set; }
 
 		public void HandleMouseButtonPressedEvent(object sender, MouseButtonEventArgs e)
 		{
 			if (CurrentState == UserInterfaceState.PlaceEquipmentActive)
 				if (e.MouseButton == MouseButtonCode.Left)
 					if (PurchasableItemPlaced != null)
-						PurchasableItemPlaced(this, new PurchasableItemPlacedEventArgs(selectedPurchasableItem, hoveredMapCell));
+						PurchasableItemPlaced(this, new PurchasableItemPlacedEventArgs(SelectedPurchasableItem, hoveredMapCells));
 
 			toolboxTray.HandleMouseButtonPressedEvent(sender, e);
 

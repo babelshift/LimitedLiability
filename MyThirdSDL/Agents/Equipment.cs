@@ -1,4 +1,6 @@
-﻿using MyThirdSDL.Descriptors;
+﻿using System.Linq;
+using MyThirdSDL.Content;
+using MyThirdSDL.Descriptors;
 using SharpDL.Graphics;
 using System;
 using System.Collections.Generic;
@@ -15,7 +17,11 @@ namespace MyThirdSDL.Agents
 
 		public string IconTextureKey { get; private set; }
 
-		public Equipment(TimeSpan birthTime, string agentName, Texture activeTexture, Vector startingPosition, int price, string iconTextureKey)
+		public int HorizontalMapCellCount { get { return 1; } }
+
+		public int VerticalMapCellCount { get { return 1; } }
+
+		protected Equipment(TimeSpan birthTime, string agentName, Texture activeTexture, Vector startingPosition, int price, string iconTextureKey)
 			: base(birthTime, agentName, startingPosition)
 		{
 			Price = price;
@@ -47,10 +53,42 @@ namespace MyThirdSDL.Agents
 
 		public override void Draw(SharpDL.GameTime gameTime, Renderer renderer, int x, int y)
 		{
+			if (isOverlappingDeadZone)
+			{
+				// alter the texture shaded red
+				renderer.SetTextureColorMod(ActiveTexture, 150, 0, 0);
+			}
+			else
+				renderer.SetTextureColorMod(ActiveTexture, 255, 255, 255);
+
 			renderer.RenderTexture(
 				ActiveTexture,
-				x, y
-				);
+				x, y);
+
+			lastDrawPositionX = x;
+			lastDrawPositionY = y;
+		}
+
+		private int lastDrawPositionX;
+		private int lastDrawPositionY;
+		private bool isOverlappingDeadZone;
+
+		public void CheckOverlap(IReadOnlyList<MapCell> mapCells)
+		{
+			if (mapCells == null) throw new ArgumentNullException("mapCells");
+
+			if (mapCells[0] == null) return;
+
+			Vector origin = mapCells[0].WorldPosition;
+
+			Vector offsetPosition = new Vector(WorldPosition.X + origin.X, WorldPosition.Y + origin.Y);
+
+			isOverlappingDeadZone =
+				mapCells
+					.Where(mc => mc.Type == MapCellType.DeadZone)
+					.Any(mc => mc.Bounds.Contains(offsetPosition));
+
+			int i = 0;
 		}
 	}
 }

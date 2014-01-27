@@ -31,6 +31,8 @@ namespace MyThirdSDL.Screens
 		private TiledMap tiledMap;
 		private bool IsUserInterfaceStateChangeDelayPassed { get { return userInterfaceManager.TimeSpentInCurrentState > TimeSpan.FromSeconds(0.1); } }
 
+		private IReadOnlyList<MapCell> hoveredMapCells;
+
 		#endregion Members
 
 		public event EventHandler ReturnToMainMenu;
@@ -98,7 +100,11 @@ namespace MyThirdSDL.Screens
 		{
 			// get the map cell that the user's mouse is hovering over
 			if (userInterfaceManager.CurrentState == UserInterfaceState.PlaceEquipmentActive || userInterfaceManager.CurrentState == UserInterfaceState.PlaceRoomActive)
-				userInterfaceManager.SetHoveredMapCell(GetHoveredMapCell(e.RelativeToWindowX, e.RelativeToWindowY));
+			{
+				IPurchasable selectedPurchasable = userInterfaceManager.SelectedPurchasableItem;
+				hoveredMapCells = GetHoveredMapCellAndNeighbors(e.RelativeToWindowX, e.RelativeToWindowY, selectedPurchasable.HorizontalMapCellCount, selectedPurchasable.VerticalMapCellCount);
+				userInterfaceManager.SetHoveredMapCells(hoveredMapCells);
+			}
 
 			userInterfaceManager.HandleMouseMovingEvent(sender, e);
 		}
@@ -140,9 +146,10 @@ namespace MyThirdSDL.Screens
 			}
 		}
 
-		private void UserInterfaceManagerOnPurchasableItemSelected(object sender, EventArgs eventArgs)
+		private void UserInterfaceManagerOnPurchasableItemSelected(object sender, PurchasableItemSelectedEventArgs e)
 		{
-			//userInterfaceManager.SetHoveredMapCell(GetHoveredMapCell(e.RelativeToWindowX, e.RelativeToWindowY));
+			hoveredMapCells = GetHoveredMapCellAndNeighbors(Mouse.X, Mouse.Y, e.PurchasableItem.HorizontalMapCellCount, e.PurchasableItem.VerticalMapCellCount);
+			userInterfaceManager.SetHoveredMapCells(hoveredMapCells);
 		}
 
 		private void HandlePlaceEquipment(object sender, PurchasableItemPlacedEventArgs e)
@@ -158,18 +165,18 @@ namespace MyThirdSDL.Screens
 
 			if (e.PurchasableItem is SodaMachine)
 			{
-				var agentToAdd = agentFactory.CreateSodaMachine(SimulationManager.SimulationTime, new Vector(e.HoveredMapCell.WorldPosition.X, e.HoveredMapCell.WorldPosition.Y));
-				AddEquipmentToSimulationAndHoveredMapCell(agentToAdd, e.HoveredMapCell);
+				var agentToAdd = agentFactory.CreateSodaMachine(SimulationManager.SimulationTime, new Vector(e.HoveredMapCells[0].WorldPosition.X, e.HoveredMapCells[0].WorldPosition.Y));
+				AddEquipmentToSimulationAndHoveredMapCell(agentToAdd, e.HoveredMapCells[0]);
 			}
 			else if (e.PurchasableItem is SnackMachine)
 			{
-				var agentToAdd = agentFactory.CreateSnackMachine(SimulationManager.SimulationTime, new Vector(e.HoveredMapCell.WorldPosition.X, e.HoveredMapCell.WorldPosition.Y));
-				AddEquipmentToSimulationAndHoveredMapCell(agentToAdd, e.HoveredMapCell);
+				var agentToAdd = agentFactory.CreateSnackMachine(SimulationManager.SimulationTime, new Vector(e.HoveredMapCells[0].WorldPosition.X, e.HoveredMapCells[0].WorldPosition.Y));
+				AddEquipmentToSimulationAndHoveredMapCell(agentToAdd, e.HoveredMapCells[0]);
 			}
 			else if (e.PurchasableItem is OfficeDesk)
 			{
-				var agentToAdd = agentFactory.CreateOfficeDesk(SimulationManager.SimulationTime, new Vector(e.HoveredMapCell.WorldPosition.X, e.HoveredMapCell.WorldPosition.Y));
-				AddEquipmentToSimulationAndHoveredMapCell(agentToAdd, e.HoveredMapCell);
+				var agentToAdd = agentFactory.CreateOfficeDesk(SimulationManager.SimulationTime, new Vector(e.HoveredMapCells[0].WorldPosition.X, e.HoveredMapCells[0].WorldPosition.Y));
+				AddEquipmentToSimulationAndHoveredMapCell(agentToAdd, e.HoveredMapCells[0]);
 			}
 		}
 
@@ -378,6 +385,16 @@ namespace MyThirdSDL.Screens
 				CoordinateHelper.ScreenProjectionType.Orthogonal);
 
 			return tiledMap.GetMapCellAtWorldPosition(worldPositionAtMousePosition);
+		}
+
+		private IReadOnlyList<MapCell> GetHoveredMapCellAndNeighbors(int mapCellPositionX, int mapCellPositionY, int tileCountRight, int tileCountDown)
+		{
+			Vector worldPositionAtMousePosition = CoordinateHelper.ScreenSpaceToWorldSpace(
+				mapCellPositionX, mapCellPositionY,
+				CoordinateHelper.ScreenOffset,
+				CoordinateHelper.ScreenProjectionType.Orthogonal);
+
+			return tiledMap.GetMapCellAtWorldPositionAndNeighbors(worldPositionAtMousePosition, tileCountRight, tileCountDown);
 		}
 
 		/// <summary>

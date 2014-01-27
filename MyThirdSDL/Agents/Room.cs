@@ -2,6 +2,8 @@
 using MyThirdSDL.Descriptors;
 using SharpDL;
 using SharpDL.Graphics;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace MyThirdSDL.Agents
 {
@@ -23,6 +25,16 @@ namespace MyThirdSDL.Agents
 
 		public int Height { get { return tiledMap.PixelHeight; } }
 
+		public int HorizontalMapCellCount
+		{
+			get { return tiledMap.HorizontalTileCount; }
+		}
+
+		public int VerticalMapCellCount
+		{
+			get { return tiledMap.VerticalTileCount; }
+		}
+
 		public Room(string name, int price, string iconTextureKey, TiledMap tiledMap)
 		{
 			Name = name;
@@ -33,7 +45,37 @@ namespace MyThirdSDL.Agents
 
 		public void Draw(GameTime gameTime, Renderer renderer, int x, int y)
 		{
+			if (isOverlappingDeadZone)
+			{
+				// alter the texture shaded red
+				
+			}
+
 			tiledMap.Draw(gameTime, renderer, x, y);
+		}
+
+		private bool isOverlappingDeadZone;
+
+		public void CheckOverlap(IReadOnlyList<MapCell> mapCells)
+		{
+			// mapCells = the cells that we have hovered over
+			// need to check if our map cells overlap with any deadzones in the hovered map cells
+			// problem is: our map cells are origined at 0,0 and simply drawn at an offset
+			// mapCell[0] is origin
+			Vector origin = mapCells[0].WorldPosition;
+
+			foreach (var mapCell in tiledMap.MapCells)
+			{
+				Vector offsetPosition = new Vector(mapCell.WorldPosition.X + origin.X, mapCell.WorldPosition.Y + origin.Y);
+
+				isOverlappingDeadZone =
+					mapCells
+					.Where(mc => mc.Type == MapCellType.DeadZone)
+					.Any(mc => mc.Bounds.Contains(offsetPosition));
+
+				if (isOverlappingDeadZone)
+					return;
+			}
 		}
 	}
 }

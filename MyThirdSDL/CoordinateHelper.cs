@@ -92,14 +92,14 @@ namespace MyThirdSDL
 				Vector offsetScreenSpace = screenSpace + offset;
 				return offsetScreenSpace;
 			}
-			else
-				return new Vector(worldX, worldY);
+
+			return new Vector(worldX, worldY);
 		}
 
 		public static Vector ProjectedPositionToDrawPosition(Vector projectedPosition)
 		{
 			float drawPositionX = projectedPosition.X - Camera.Position.X;
-			float drawPositionY = projectedPosition.Y - Camera.Position.Y - CoordinateHelper.TileMapTileHeight;
+			float drawPositionY = projectedPosition.Y - Camera.Position.Y - TileMapTileHeight;
 
 			return new Vector(drawPositionX, drawPositionY);
 		}

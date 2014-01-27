@@ -1,5 +1,8 @@
-﻿using SharpDL;
+﻿using System.Collections.Generic;
+using System.Security.Cryptography.X509Certificates;
+using SharpDL;
 using SharpDL.Graphics;
+using MyThirdSDL.Content;
 
 namespace MyThirdSDL.Descriptors
 {
@@ -12,5 +15,11 @@ namespace MyThirdSDL.Descriptors
 		int Price { get; }
 
 		string IconTextureKey { get; }
+
+		int HorizontalMapCellCount { get; }
+
+		int VerticalMapCellCount { get; }
+
+		void CheckOverlap(IReadOnlyList<MapCell> mapCells);
 	}
 }

@@ -114,7 +114,7 @@ namespace MyThirdSDL.Content
 		private void CreateLayers(MapContent mapContent)
 		{
 			if (mapContent == null) throw new ArgumentNullException("mapContent");
-			
+
 			foreach (LayerContent layerContent in mapContent.Layers)
 			{
 				if (layerContent is TileLayerContent)
@@ -413,7 +413,7 @@ namespace MyThirdSDL.Content
 		{
 			if (mapObject == null) throw new ArgumentNullException("mapObject");
 			if (mapCell == null) throw new ArgumentNullException("mapCell");
-			
+
 			Equipment equipment = null;
 			EquipmentObject equipmentObject = (EquipmentObject)mapObject;
 
@@ -548,7 +548,7 @@ namespace MyThirdSDL.Content
 
 			if (pathNode != null)
 				return pathNode;
-			
+
 			throw new Exception(String.Format("No path node found at [{0},{1}]", worldPosition.X, worldPosition.Y));
 		}
 
@@ -599,11 +599,33 @@ namespace MyThirdSDL.Content
 			return null;
 		}
 
+		public IReadOnlyList<MapCell> GetMapCellAtWorldPositionAndNeighbors(Vector worldPosition, int tileCountRight,
+			int tileCountDown)
+		{
+			List<MapCell> mapCells = new List<MapCell>();
+
+			for (int i = 0; i < tileCountRight; i++)
+			{
+				for (int j = 0; j < tileCountDown; j++)
+				{
+					MapCell mapCellNeighbor = GetMapCellAtWorldPosition(
+						new Vector(
+							worldPosition.X + (CoordinateHelper.WorldGridCellWidth * i),
+							worldPosition.Y + (CoordinateHelper.WorldGridCellHeight * j)
+						)
+					);
+					mapCells.Add(mapCellNeighbor);
+				}
+			}
+
+			return mapCells;
+		}
+
 		public IReadOnlyCollection<Equipment> GetEquipmentOccupants()
 		{
-			return (from mapCell 
-					in mapCells 
-					where mapCell.OccupantEquipment != null 
+			return (from mapCell
+					in mapCells
+					where mapCell.OccupantEquipment != null
 					select mapCell.OccupantEquipment)
 					.ToList();
 		}
@@ -613,7 +635,7 @@ namespace MyThirdSDL.Content
 		public void Draw(GameTime gameTime, Renderer renderer)
 		{
 			List<IDrawable> drawableMapCells = new List<IDrawable>();
-			
+
 			drawableMapCells.AddRange(MapCells);
 			drawableMapCells.Sort((d1, d2) => d1.Depth.CompareTo(d2.Depth));
 
