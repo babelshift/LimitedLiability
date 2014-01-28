@@ -109,6 +109,7 @@
     <Compile Include="Content\MapObjectLayer.cs" />
     <Compile Include="Content\MapObjectLayerType.cs" />
     <Compile Include="Content\MapObjectType.cs" />
+    <Compile Include="Content\TextureBook.cs" />
     <Compile Include="Content\TextureStore.cs" />
     <Compile Include="Content\ThoughtMetadata.cs" />
     <Compile Include="Content\Tile.cs" />
@@ -179,7 +180,6 @@
     <Compile Include="Simulation\SimulationMessageFactory.cs" />
     <Compile Include="Simulation\Subscription.cs" />
     <Compile Include="Simulation\Trigger.cs" />
-    <Compile Include="TextureBook.cs" />
     <Compile Include="UserInterface\Button.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -240,7 +240,16 @@
     <Content Include="Content\Images\Equipment\SodaMachine.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Images\MaleEmployee0001.png">
+    <Content Include="Content\Images\MaleEmployee0001_FacingDown.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Images\MaleEmployee0001_FacingLeft.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Images\MaleEmployee0001_FacingRight.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Images\MaleEmployee0001_FacingUp.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\Images\TileHighlight.png">

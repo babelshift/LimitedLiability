@@ -157,14 +157,14 @@ namespace MyThirdSDL.Agents
 		private Texture GetTextureFromStore(string texturePathKey)
 		{
 			string texturePath = contentManager.GetContentPath(texturePathKey);
-			Texture texture = textureStore.GetTexture(texturePath);
+			Texture texture = textureStore.CreateTexture(texturePath);
 			return texture;
 		}
 
-		private TextureBook GetTextureBookFromStore(string texturePathKey)
-		{
-			string texturePath = contentManager.GetContentPath(texturePathKey);
-			return textureStore.GetTextureBook(texturePath);
-		}
+		//private TextureBook GetTextureBookFromStore(string texturePathKey)
+		//{
+		//	string texturePath = contentManager.GetContentPath(texturePathKey);
+		//	return textureStore.GetTextureBook(texturePath);
+		//}
 	}
 }

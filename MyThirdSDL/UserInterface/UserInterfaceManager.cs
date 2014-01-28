@@ -624,9 +624,12 @@ namespace MyThirdSDL.UserInterface
 			{
 				if (hoveredMapCells != null)
 				{
-					Vector drawPosition = CoordinateHelper.ProjectedPositionToDrawPosition(hoveredMapCells[0].ProjectedPosition);
+					if (hoveredMapCells[0] != null)
+					{
+						Vector drawPosition = CoordinateHelper.ProjectedPositionToDrawPosition(hoveredMapCells[0].ProjectedPosition);
 
-					SelectedPurchasableItem.Draw(gameTime, renderer, (int)drawPosition.X, (int)drawPosition.Y);
+						SelectedPurchasableItem.Draw(gameTime, renderer, (int)drawPosition.X, (int)drawPosition.Y);
+					}
 				}
 			}
 

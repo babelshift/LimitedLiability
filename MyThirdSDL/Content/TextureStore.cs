@@ -2,15 +2,11 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MyThirdSDL.Content
 {
 	public class TextureStore
 	{
-		private Dictionary<string, Texture> textureDictionary = new Dictionary<string, Texture>();
 		private Renderer renderer;
 
 		public TextureStore(Renderer renderer)
@@ -18,25 +14,7 @@ namespace MyThirdSDL.Content
 			this.renderer = renderer;
 		}
 
-		public Texture GetTextureCopy(string texturePath)
-		{
-			return CreateTexture(texturePath);
-		}
-
-		public Texture GetTexture(string texturePath)
-		{
-			Texture texture;
-
-			if (!textureDictionary.TryGetValue(texturePath, out texture))
-			{
-				texture = CreateTexture(texturePath);
-				textureDictionary.Add(texturePath, texture);
-			}
-
-			return texture;
-		}
-
-		private Texture CreateTexture(string texturePath)
+		public Texture CreateTexture(string texturePath)
 		{
 			Surface surface = new Surface(texturePath, SurfaceType.PNG);
 			Texture texture = new Texture(renderer, surface);
@@ -45,46 +23,42 @@ namespace MyThirdSDL.Content
 
 		public TextureBook GetTextureBook(string contentPath)
 		{
+			if (String.IsNullOrEmpty(contentPath)) throw new ArgumentNullException("contentPath");
+
 			string fileExtension = Path.GetExtension(contentPath);
 
-			string contentTopLeftPath = contentPath.Replace(String.Format("{0}", fileExtension), String.Format("FacingLeft{0}", fileExtension));
-			string contentTopRightPath = contentPath.Replace(String.Format("{0}", fileExtension), String.Format("FacingRight{0}", fileExtension));
-			string contentBottomRightPath = contentPath.Replace(String.Format("{0}", fileExtension), String.Format("FacingUp{0}", fileExtension));
-			string contentBottomLeftPath = contentPath.Replace(String.Format("{0}", fileExtension), String.Format("FacingDown{0}", fileExtension));
+			if (String.IsNullOrEmpty(fileExtension)) throw new ArgumentException("contentPath", String.Format("The path '{0}' does not have a valid file extension.", contentPath));
 
-			Texture textureTopLeft = null;
+			string contentTopLeftPath = contentPath.Replace(fileExtension, String.Format("_FacingLeft{0}", fileExtension));
+			string contentTopRightPath = contentPath.Replace(fileExtension, String.Format("_FacingRight{0}", fileExtension));
+			string contentBottomRightPath = contentPath.Replace(fileExtension, String.Format("_FacingUp{0}", fileExtension));
+			string contentBottomLeftPath = contentPath.Replace(fileExtension, String.Format("_FacingDown{0}", fileExtension));
+
+			Texture textureTopLeft;
 			if (File.Exists(contentTopLeftPath))
-			{
-				Surface surfaceTopLeft = new Surface(contentTopLeftPath, SurfaceType.PNG);
-				textureTopLeft = new Texture(renderer, surfaceTopLeft);
-			}
+				textureTopLeft = CreateTexture(contentTopLeftPath);
 			else
-			{
-				Surface surface = new Surface(contentPath, SurfaceType.PNG);
-				textureTopLeft = new Texture(renderer, surface);
-			}
-			
-			Texture textureTopRight = null;
-			Texture textureBottomRight = null;
-			Texture textureBottomLeft = null;
+				textureTopLeft = CreateTexture(contentPath);
 
-			if (File.Exists(contentTopRightPath))
-			{
-				Surface surfaceTopRight = new Surface(contentTopRightPath, SurfaceType.PNG);
-				textureTopRight = new Texture(renderer, surfaceTopRight);
-			}
+			Texture textureTopRight;
+			Texture textureBottomRight;
+			Texture textureBottomLeft;
 
-			if (File.Exists(contentBottomRightPath))
-			{
-				Surface surfaceBottomRight = new Surface(contentBottomRightPath, SurfaceType.PNG);
-				textureBottomRight = new Texture(renderer, surfaceBottomRight);
-			}
+			if (!File.Exists(contentTopRightPath))
+				throw new IOException(String.Format("The file at path '{0}' does not exist.", contentTopRightPath));
 
-			if (File.Exists(contentBottomLeftPath))
-			{
-				Surface surfaceBottomLeft = new Surface(contentBottomLeftPath, SurfaceType.PNG);
-				textureBottomLeft = new Texture(renderer, surfaceBottomLeft);
-			}
+			textureTopRight = CreateTexture(contentTopRightPath);
+
+			if (!File.Exists(contentBottomRightPath))
+				throw new IOException(String.Format("The file at path '{0}' does not exist.", contentBottomRightPath));
+
+			textureBottomRight = CreateTexture(contentBottomRightPath);
+
+
+			if (!File.Exists(contentBottomLeftPath))
+				throw new IOException(String.Format("The file at path '{0}' does not exist.", contentBottomLeftPath));
+
+			textureBottomLeft = CreateTexture(contentBottomLeftPath);
 
 			return new TextureBook(textureTopLeft, textureBottomLeft, textureTopRight, textureBottomRight);
 		}

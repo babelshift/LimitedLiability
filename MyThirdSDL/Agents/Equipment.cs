@@ -56,7 +56,7 @@ namespace MyThirdSDL.Agents
 			if (isOverlappingDeadZone)
 			{
 				// alter the texture shaded red
-				renderer.SetTextureColorMod(ActiveTexture, 150, 0, 0);
+				renderer.SetTextureColorMod(ActiveTexture, 255, 0, 0);
 			}
 			else
 				renderer.SetTextureColorMod(ActiveTexture, 255, 255, 255);
@@ -64,13 +64,8 @@ namespace MyThirdSDL.Agents
 			renderer.RenderTexture(
 				ActiveTexture,
 				x, y);
-
-			lastDrawPositionX = x;
-			lastDrawPositionY = y;
 		}
 
-		private int lastDrawPositionX;
-		private int lastDrawPositionY;
 		private bool isOverlappingDeadZone;
 
 		public void CheckOverlap(IReadOnlyList<MapCell> mapCells)
@@ -87,8 +82,6 @@ namespace MyThirdSDL.Agents
 				mapCells
 					.Where(mc => mc.Type == MapCellType.DeadZone)
 					.Any(mc => mc.Bounds.Contains(offsetPosition));
-
-			int i = 0;
 		}
 	}
 }

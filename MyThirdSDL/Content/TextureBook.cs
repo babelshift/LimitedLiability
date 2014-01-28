@@ -1,12 +1,7 @@
 ﻿using MyThirdSDL.Agents;
 using SharpDL.Graphics;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace MyThirdSDL
+namespace MyThirdSDL.Content
 {
 	public class TextureBook
 	{
@@ -29,25 +24,24 @@ namespace MyThirdSDL
 
 		public void SetOrientation(AgentOrientation orientation)
 		{
-			if (orientation == AgentOrientation.FacingLeft)
+			switch (orientation)
 			{
-				if (textureTopLeft != null)
-					ActiveTexture = textureTopLeft;
-			}
-			else if (orientation == AgentOrientation.FacingDown)
-			{
-				if (textureBottomLeft != null)
-					ActiveTexture = textureBottomLeft;
-			}
-			else if (orientation == AgentOrientation.FacingUp)
-			{
-				if (textureBottomRight != null)
-					ActiveTexture = textureBottomRight;
-			}
-			else if (orientation == AgentOrientation.FacingRight)
-			{
-				if (textureTopRight != null)
-					ActiveTexture = textureTopRight;
+				case AgentOrientation.FacingLeft:
+					if (textureTopLeft != null)
+						ActiveTexture = textureTopLeft;
+					break;
+				case AgentOrientation.FacingDown:
+					if (textureBottomLeft != null)
+						ActiveTexture = textureBottomLeft;
+					break;
+				case AgentOrientation.FacingUp:
+					if (textureBottomRight != null)
+						ActiveTexture = textureBottomRight;
+					break;
+				case AgentOrientation.FacingRight:
+					if (textureTopRight != null)
+						ActiveTexture = textureTopRight;
+					break;
 			}
 		}
 	}
