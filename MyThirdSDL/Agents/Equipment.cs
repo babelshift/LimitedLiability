@@ -1,9 +1,10 @@
-﻿using System.Linq;
-using MyThirdSDL.Content;
+﻿using MyThirdSDL.Content;
 using MyThirdSDL.Descriptors;
+using SharpDL;
 using SharpDL.Graphics;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace MyThirdSDL.Agents
 {
@@ -34,7 +35,7 @@ namespace MyThirdSDL.Agents
 		/// </summary>
 		/// <param name="gameTime"></param>
 		/// <param name="renderer"></param>
-		public override void Draw(SharpDL.GameTime gameTime, Renderer renderer)
+		public override void Draw(GameTime gameTime, Renderer renderer)
 		{
 			Vector drawPosition = new Vector(ProjectedPosition.X - Camera.Position.X, ProjectedPosition.Y - Camera.Position.Y);
 			Vector offset = Vector.Zero;
@@ -51,13 +52,22 @@ namespace MyThirdSDL.Agents
 			);
 		}
 
-		public override void Draw(SharpDL.GameTime gameTime, Renderer renderer, int x, int y)
+		/// <summary>
+		/// Draw used for exact positioning when the equipment is being hovered in the map for placement (before purchase).
+		/// </summary>
+		/// <param name="gameTime"></param>
+		/// <param name="renderer"></param>
+		/// <param name="x"></param>
+		/// <param name="y"></param>
+		/// <param name="isOverlappingDeadZoneOverride"></param>
+		public override void Draw(GameTime gameTime, Renderer renderer, int x, int y, bool? isOverlappingDeadZoneOverride = null)
 		{
+			if (isOverlappingDeadZoneOverride.HasValue)
+				isOverlappingDeadZone = isOverlappingDeadZoneOverride.Value;
+
+			// overlapping a deadzone shades the texture red
 			if (isOverlappingDeadZone)
-			{
-				// alter the texture shaded red
 				renderer.SetTextureColorMod(ActiveTexture, 255, 0, 0);
-			}
 			else
 				renderer.SetTextureColorMod(ActiveTexture, 255, 255, 255);
 

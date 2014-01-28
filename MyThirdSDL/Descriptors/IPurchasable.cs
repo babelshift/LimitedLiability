@@ -8,7 +8,7 @@ namespace MyThirdSDL.Descriptors
 {
 	public interface IPurchasable : IAffectsNecessities, ISkillsAffector
 	{
-		void Draw(GameTime gameTime, Renderer renderer, int x, int y);
+		void Draw(GameTime gameTime, Renderer renderer, int x, int y, bool? isOverlappingDeadZoneOverride = null);
 
 		string Name { get; }
 

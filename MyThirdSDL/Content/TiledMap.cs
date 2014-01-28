@@ -643,7 +643,7 @@ namespace MyThirdSDL.Content
 				drawable.Draw(gameTime, renderer);
 		}
 
-		public void Draw(GameTime gameTime, Renderer renderer, int x, int y)
+		public void Draw(GameTime gameTime, Renderer renderer, int x, int y, bool isOverlappingDeadZone)
 		{
 			List<MapCell> mapCells = new List<MapCell>();
 
@@ -651,7 +651,7 @@ namespace MyThirdSDL.Content
 			mapCells.Sort((d1, d2) => d1.Depth.CompareTo(d2.Depth));
 
 			foreach (var mapCell in mapCells)
-				mapCell.Draw(gameTime, renderer, x, y);
+				mapCell.Draw(gameTime, renderer, x, y, isOverlappingDeadZone);
 		}
 
 		#region Dispose
