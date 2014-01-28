@@ -17,9 +17,30 @@ namespace MyThirdSDL.UserInterface
 	{
 		#region Members
 
-		private Point bottomRightPointOfWindow;
 		private readonly ContentManager contentManager;
+		private Point bottomRightPointOfWindow;
 		private TimeSpan timeOfStatusChange = TimeSpan.Zero;
+		private Control focusedControl;
+		private IReadOnlyList<MapCell> hoveredMapCells;
+
+		private bool isMenuEquipmentOpen;
+		private bool isMenuRoomsOpen;
+		private bool isMenuInspectEmployeeOpen;
+		private bool isMenuMailboxOpen;
+		private bool isMenuCompanyOpen;
+
+		#region Controls
+
+		private readonly ToolboxTray toolboxTray;
+		private readonly IEnumerable<IPurchasable> purchasableEquipment;
+		private readonly IEnumerable<IPurchasable> purchasableRooms;
+		private MenuMailbox menuMailbox;
+		private MenuCompany menuCompany;
+		private MenuPurchase menuPurchaseEquipment;
+		private MenuPurchase menuPurchaseRooms;
+		private MenuInspectEmployee menuInspectEmployee;
+
+		#endregion Controls
 
 		#endregion Members
 
@@ -31,7 +52,42 @@ namespace MyThirdSDL.UserInterface
 		/// <value>The mouse mode.</value>
 		public UserInterfaceState CurrentState { get; private set; }
 
+		/// <summary>
+		/// The time spent in the current state after a state change.
+		/// </summary>
 		public TimeSpan TimeSpentInCurrentState { get; private set; }
+
+		public IPurchasable SelectedPurchasableItem { get; private set; }
+
+		private Control FocusedControl
+		{
+			get { return focusedControl; }
+			set
+			{
+				if (focusedControl != null)
+					focusedControl.Blur();
+				focusedControl = value;
+			}
+		}
+
+		public bool IsToolboxTrayHovered
+		{
+			get
+			{
+				if (toolboxTray != null)
+					return toolboxTray.IsHovered;
+				return false;
+			}
+		}
+
+		private bool AnyMenusAreOpen
+		{
+			get
+			{
+				return isMenuCompanyOpen || isMenuEquipmentOpen || isMenuInspectEmployeeOpen || isMenuMailboxOpen || isMenuRoomsOpen ||
+					   isMenuInspectEmployeeOpen;
+			}
+		}
 
 		#endregion Properties
 
@@ -46,54 +102,14 @@ namespace MyThirdSDL.UserInterface
 
 		#region Message List
 
-		private Dictionary<Guid, Dictionary<SimulationMessageType, SimulationLabel>> labelMessagesForMultipleAgents
+		private readonly Dictionary<Guid, Dictionary<SimulationMessageType, SimulationLabel>> labelMessagesForMultipleAgents
 			= new Dictionary<Guid, Dictionary<SimulationMessageType, SimulationLabel>>();
 
 		private List<Label> labels = new List<Label>();
 
 		#endregion Message List
 
-		#region Controls
-
-		private Control focusedControl;
-
-		private Control FocusedControl
-		{
-			get { return focusedControl; }
-			set
-			{
-				if (focusedControl != null)
-					focusedControl.Blur();
-				focusedControl = value;
-			}
-		}
-
-		private ToolboxTray toolboxTray;
-
-		private IEnumerable<IPurchasable> purchasableEquipment;
-		private MenuPurchase menuPurchaseEquipment;
-		private bool isMenuEquipmentOpen = false;
-
-		private IEnumerable<IPurchasable> purchasableRooms;
-		private MenuPurchase menuPurchaseRooms;
-		private bool isMenuRoomsOpen = false;
-
-		private MenuInspectEmployee menuInspectEmployee;
-		private bool isMenuInspectEmployeeOpen = false;
-
-		private bool IsMenuInspectEmployeeOpen
-		{
-			get { return isMenuInspectEmployeeOpen; }
-			set { isMenuInspectEmployeeOpen = value; }
-		}
-
-		private MenuMailbox menuMailbox;
-		private bool isMenuMailboxOpen = false;
-
-		private MenuCompany menuCompany;
-		private bool isMenuCompanyOpen = false;
-
-		#endregion Controls
+		#region Public Events
 
 		public event EventHandler MainMenuButtonClicked;
 
@@ -103,15 +119,9 @@ namespace MyThirdSDL.UserInterface
 
 		public event EventHandler<PurchasableItemSelectedEventArgs> PurchasableItemSelected;
 
-		public bool IsToolboxTrayHovered
-		{
-			get
-			{
-				if (toolboxTray != null)
-					return toolboxTray.IsHovered;
-				return false;
-			}
-		}
+		#endregion Public Events
+
+		#region General Methods
 
 		private void ClearMenusOpen()
 		{
@@ -132,14 +142,62 @@ namespace MyThirdSDL.UserInterface
 			SelectedPurchasableItem.CheckOverlap(hoveredMapCells);
 		}
 
-		private IReadOnlyList<MapCell> hoveredMapCells;
+		/// <summary>
+		/// Gets the label font details.
+		/// </summary>
+		/// <returns>The label font details.</returns>
+		/// <param name="contentManager">Content manager.</param>
+		/// <param name="fontColor">Font color.</param>
+		/// <param name="fontSizeContent">Font size content.</param>
+		private string GetLabelFontDetails(out Color fontColor, out int fontSizeContent)
+		{
+			string fontPath = contentManager.GetContentPath("Arcade");
+			fontColor = new Color(255, 165, 0);
+			fontSizeContent = 16;
+			return fontPath;
+		}
+
+		public void UpdateDisplayedBankAccountBalance(int balance)
+		{
+			toolboxTray.UpdateDisplayedBankAccountBalance(balance);
+		}
+
+		public void SetEmployeeBeingInspected(Employee employee)
+		{
+			if (employee == null) throw new ArgumentNullException("employee");
+
+			ClearMenusOpen();
+			ShowMenuInspectEmployee();
+			menuInspectEmployee.SetInfoValues(employee);
+			menuInspectEmployee.SetNeedsValues(employee.Necessities);
+			menuInspectEmployee.SetSkillsValues(employee.Skills);
+		}
+
+		public void UpdateTrackedEmployeeCount(int trackedEmployeeCount)
+		{
+			menuCompany.UpdateEmployeeCount(trackedEmployeeCount);
+		}
+
+		private void UpdateDisplayedDateAndTime(DateTime dateTime)
+		{
+			if (toolboxTray != null)
+				toolboxTray.UpdateDisplayedDateAndTime(dateTime);
+		}
+
+		private void ChangeState(UserInterfaceState state)
+		{
+			timeOfStatusChange = SimulationManager.SimulationTime;
+			CurrentState = state;
+			labelState.Text = String.Format("UI State: {0}", state);
+		}
+
+		#endregion General Methods
 
 		#region Constructors
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="MyThirdSDL.UserInterface.UserInterfaceManager"/> class.
 		/// </summary>
-		/// <param name="renderer"></param>
 		/// <param name="contentManager">Content manager.</param>
 		/// <param name="bottomRightPointOfWindow">Bottom right point of window.</param>
 		/// <param name="purchasableEquipment">Purchasable items.</param>
@@ -150,7 +208,8 @@ namespace MyThirdSDL.UserInterface
 		/// <param name="unreadMailCount"></param>
 		/// <param name="money"></param>
 		/// <param name="employeeCount"></param>
-		public UserInterfaceManager(Renderer renderer, ContentManager contentManager, Point bottomRightPointOfWindow,
+		public UserInterfaceManager(ContentManager contentManager, 
+			Point bottomRightPointOfWindow,
 			IEnumerable<IPurchasable> purchasableEquipment,
 			IEnumerable<IPurchasable> purchasableRooms,
 			IEnumerable<MailItem> inbox,
@@ -160,14 +219,19 @@ namespace MyThirdSDL.UserInterface
 			int money,
 			int employeeCount)
 		{
+			if (purchasableEquipment == null) throw new ArgumentNullException("purchasableEquipment");
+			if (purchasableRooms == null) throw new ArgumentNullException("purchasableRooms");
+			if (inbox == null) throw new ArgumentNullException("inbox");
+			if (outbox == null) throw new ArgumentNullException("outbox");
+			if (archive == null) throw new ArgumentNullException("archive");
+			
 			this.bottomRightPointOfWindow = bottomRightPointOfWindow;
 			this.contentManager = contentManager;
-
 			this.purchasableEquipment = purchasableEquipment;
 			this.purchasableRooms = purchasableRooms;
 
 			Vector toolboxTrayPosition = new Vector(bottomRightPointOfWindow.X / 2 - 350, bottomRightPointOfWindow.Y - 50);
-			toolboxTray = new ToolboxTray(contentManager, unreadMailCount, money);// controlFactory.CreateToolboxTray(toolboxTrayPosition, unreadMailCount, money);
+			toolboxTray = new ToolboxTray(contentManager, unreadMailCount, money);
 			toolboxTray.Position = toolboxTrayPosition;
 			toolboxTray.ButtonSelectGeneralClicked += ToolboxTray_ButtonSelectGeneralClicked;
 			toolboxTray.ButtonSelectEquipmentClicked += ToolboxTray_ButtonSelectEquipmentClicked;
@@ -209,21 +273,6 @@ namespace MyThirdSDL.UserInterface
 			ChangeState(UserInterfaceState.Default);
 		}
 
-		/// <summary>
-		/// Gets the label font details.
-		/// </summary>
-		/// <returns>The label font details.</returns>
-		/// <param name="contentManager">Content manager.</param>
-		/// <param name="fontColor">Font color.</param>
-		/// <param name="fontSizeContent">Font size content.</param>
-		private string GetLabelFontDetails(out Color fontColor, out int fontSizeContent)
-		{
-			string fontPath = contentManager.GetContentPath("Arcade");
-			fontColor = new Color(255, 165, 0);
-			fontSizeContent = 16;
-			return fontPath;
-		}
-
 		#endregion Constructors
 
 		#region Message Events
@@ -243,14 +292,14 @@ namespace MyThirdSDL.UserInterface
 				labelMessagesForMultipleAgents.Add(agentId, labelMessagesForSingleAgent);
 
 			// if there are no messages of the passed type in the agent's message collection, add it to his collection
-			if (!labelMessagesForSingleAgent.ContainsKey(message.Type))
-			{
-				Color fontColor;
-				int fontSizeContent;
-				string fontPath = GetLabelFontDetails(out fontColor, out fontSizeContent);
-				//SimulationLabel labelMessage = controlFactory.CreateSimulationLabel(Vector.Zero, fontPath, fontSizeContent, fontColor, message);
-				//labelMessagesForSingleAgent.Add(message.Type, labelMessage);
-			}
+			//if (!labelMessagesForSingleAgent.ContainsKey(message.Type))
+			//{
+			//	Color fontColor;
+			//	int fontSizeContent;
+			//	string fontPath = GetLabelFontDetails(out fontColor, out fontSizeContent);
+			//	//SimulationLabel labelMessage = controlFactory.CreateSimulationLabel(Vector.Zero, fontPath, fontSizeContent, fontColor, message);
+			//	//labelMessagesForSingleAgent.Add(message.Type, labelMessage);
+			//}
 		}
 
 		/// <summary>
@@ -264,11 +313,11 @@ namespace MyThirdSDL.UserInterface
 			var labelMessagesForSingleAgent = GetMessagesForAgent(agentId);
 			SimulationLabel labelToRemove;
 			bool success = labelMessagesForSingleAgent.TryGetValue(messageType, out labelToRemove);
-			if (success)
-			{
-				labelToRemove.Dispose();
-				labelMessagesForSingleAgent.Remove(messageType);
-			}
+			
+			if (!success) return;
+			
+			labelToRemove.Dispose();
+			labelMessagesForSingleAgent.Remove(messageType);
 		}
 
 		/// <summary>
@@ -283,8 +332,8 @@ namespace MyThirdSDL.UserInterface
 
 			if (success)
 				return labelMessagesForSingleAgent;
-			else
-				return new Dictionary<SimulationMessageType, SimulationLabel>();
+			
+			return new Dictionary<SimulationMessageType, SimulationLabel>();
 		}
 
 		#endregion Message Events
@@ -301,7 +350,7 @@ namespace MyThirdSDL.UserInterface
 		{
 			if (isMenuMailboxOpen)
 				ClearMenusOpen();
-			else if (AreAnyMenusOpen)
+			else if (AnyMenusAreOpen)
 			{
 				ClearMenusOpen();
 				ShowMenuMailbox();
@@ -324,14 +373,13 @@ namespace MyThirdSDL.UserInterface
 		{
 			if (isMenuCompanyOpen)
 				ClearMenusOpen();
-			else if (AreAnyMenusOpen)
+			else if (AnyMenusAreOpen)
 			{
 				ClearMenusOpen();
 				ShowMenuCompany();
 			}
 			else
 				ShowMenuCompany();
-
 		}
 
 		private void ToolboxTray_ButtonFinancesClicked(object sender, EventArgs e)
@@ -343,7 +391,7 @@ namespace MyThirdSDL.UserInterface
 		{
 			if (isMenuRoomsOpen)
 				ClearMenusOpen();
-			else if (AreAnyMenusOpen)
+			else if (AnyMenusAreOpen)
 			{
 				ClearMenusOpen();
 				ShowMenuRooms();
@@ -356,7 +404,7 @@ namespace MyThirdSDL.UserInterface
 		{
 			if (isMenuEquipmentOpen)
 				ClearMenusOpen();
-			else if (AreAnyMenusOpen)
+			else if (AnyMenusAreOpen)
 			{
 				ClearMenusOpen();
 				ShowMenuEquipment();
@@ -368,15 +416,6 @@ namespace MyThirdSDL.UserInterface
 		private void ToolboxTray_ButtonSelectGeneralClicked(object sender, EventArgs e)
 		{
 			ChangeState(UserInterfaceState.Default);
-		}
-
-		private bool AreAnyMenusOpen
-		{
-			get
-			{
-				return isMenuCompanyOpen || isMenuEquipmentOpen || isMenuInspectEmployeeOpen || isMenuMailboxOpen || isMenuRoomsOpen ||
-					   IsMenuInspectEmployeeOpen;
-			}
 		}
 
 		#endregion ToolboxTray Events
@@ -392,11 +431,6 @@ namespace MyThirdSDL.UserInterface
 		{
 			menuMailbox.ClearButtonsAndSeparators();
 			menuMailbox.AddButtonMailItems(contentManager, inbox, outbox, archive);
-		}
-
-		public void UpdateDisplayedBankAccountBalance(int balance)
-		{
-			toolboxTray.UpdateDisplayedBankAccountBalance(balance);
 		}
 
 		private void ShowMenuMailbox()
@@ -441,24 +475,15 @@ namespace MyThirdSDL.UserInterface
 			menuInspectEmployee.ButtonCloseWindowClicked += menuInspectEmployee_ButtonCloseWindowClicked;
 		}
 
-		public void SetEmployeeBeingInspected(Employee employee)
-		{
-			ClearMenusOpen();
-			ShowMenuInspectEmployee();
-			menuInspectEmployee.SetInfoValues(employee);
-			menuInspectEmployee.SetNeedsValues(employee.Necessities);
-			menuInspectEmployee.SetSkillsValues(employee.Skills);
-		}
-
 		private void ShowMenuInspectEmployee()
 		{
-			IsMenuInspectEmployeeOpen = true;
+			isMenuInspectEmployeeOpen = true;
 			ChangeState(UserInterfaceState.InspectEmployeeMenuActive);
 		}
 
 		private void HideMenuInspectEmployee()
 		{
-			IsMenuInspectEmployeeOpen = false;
+			isMenuInspectEmployeeOpen = false;
 			ChangeState(UserInterfaceState.Default);
 		}
 
@@ -553,11 +578,6 @@ namespace MyThirdSDL.UserInterface
 
 		#region Menu Company
 
-		public void UpdateTrackedEmployeeCount(int trackedEmployeeCount)
-		{
-			menuCompany.UpdateEmployeeCount(trackedEmployeeCount);
-		}
-
 		private void CreateMenuCompany(int employeeCount)
 		{
 			menuCompany = new MenuCompany(contentManager, "Skiles Inc.", employeeCount, 10, 15, "Energy", 500000);
@@ -589,7 +609,7 @@ namespace MyThirdSDL.UserInterface
 		public void Update(GameTime gameTime, DateTime worldDateTime)
 		{
 			string simulationTimeDisplay = String.Format("{0} minutes, {1} seconds, {2} milliseconds",
-				SimulationManager.SimulationTime.Minutes.ToString(), SimulationManager.SimulationTime.Seconds.ToString(), SimulationManager.SimulationTime.Milliseconds.ToString());
+				SimulationManager.SimulationTime.Minutes, SimulationManager.SimulationTime.Seconds, SimulationManager.SimulationTime.Milliseconds);
 			labelSimulationTime.Text = String.Format("Simulation Time: {0}", simulationTimeDisplay);
 
 			toolboxTray.Update(gameTime);
@@ -597,7 +617,7 @@ namespace MyThirdSDL.UserInterface
 			if (isMenuEquipmentOpen)
 				menuPurchaseEquipment.Update(gameTime);
 
-			if (IsMenuInspectEmployeeOpen)
+			if (isMenuInspectEmployeeOpen)
 				menuInspectEmployee.Update(gameTime);
 
 			if (isMenuMailboxOpen)
@@ -620,44 +640,21 @@ namespace MyThirdSDL.UserInterface
 
 		public void Draw(GameTime gameTime, Renderer renderer)
 		{
-			if (CurrentState == UserInterfaceState.PlaceEquipmentActive || CurrentState == UserInterfaceState.PlaceRoomActive)
-			{
-				if (hoveredMapCells != null)
-				{
-					if (hoveredMapCells[0] != null)
-					{
-						Vector drawPosition = CoordinateHelper.ProjectedPositionToDrawPosition(hoveredMapCells[0].ProjectedPosition);
+			DrawSelectedPurchasableItem(gameTime, renderer);
 
-						SelectedPurchasableItem.Draw(gameTime, renderer, (int)drawPosition.X, (int)drawPosition.Y);
-					}
-				}
-			}
-
-			int i = 0;
-
-			foreach (var label in labels)
-			{
-				label.Position = new Vector(0, i * 18);
-				label.Draw(gameTime, renderer);
-				i++;
-			}
-
-			foreach (var labelMessagesForSingleAgent in labelMessagesForMultipleAgents.Values)
-			{
-				foreach (var labelMessage in labelMessagesForSingleAgent.Values)
-				{
-					labelMessage.Position = new Vector(0, i * 18);
-					labelMessage.Draw(gameTime, renderer);
-					i++;
-				}
-			}
+			DrawDiagnosticLabels(gameTime, renderer);
 
 			toolboxTray.Draw(gameTime, renderer);
 
+			DrawMenus(gameTime, renderer);
+		}
+
+		private void DrawMenus(GameTime gameTime, Renderer renderer)
+		{
 			if (isMenuEquipmentOpen)
 				menuPurchaseEquipment.Draw(gameTime, renderer);
 
-			if (IsMenuInspectEmployeeOpen)
+			if (isMenuInspectEmployeeOpen)
 				menuInspectEmployee.Draw(gameTime, renderer);
 
 			if (isMenuMailboxOpen)
@@ -670,10 +667,42 @@ namespace MyThirdSDL.UserInterface
 				menuCompany.Draw(gameTime, renderer);
 		}
 
-		private void UpdateDisplayedDateAndTime(DateTime dateTime)
+		private void DrawDiagnosticLabels(GameTime gameTime, Renderer renderer)
 		{
-			if (toolboxTray != null)
-				toolboxTray.UpdateDisplayedDateAndTime(dateTime);
+			int i = 0;
+
+			foreach (var label in labels)
+			{
+				label.Position = new Vector(0, i*18);
+				label.Draw(gameTime, renderer);
+				i++;
+			}
+
+			foreach (var labelMessagesForSingleAgent in labelMessagesForMultipleAgents.Values)
+			{
+				foreach (var labelMessage in labelMessagesForSingleAgent.Values)
+				{
+					labelMessage.Position = new Vector(0, i*18);
+					labelMessage.Draw(gameTime, renderer);
+					i++;
+				}
+			}
+		}
+
+		private void DrawSelectedPurchasableItem(GameTime gameTime, Renderer renderer)
+		{
+			if (CurrentState == UserInterfaceState.PlaceEquipmentActive || CurrentState == UserInterfaceState.PlaceRoomActive)
+			{
+				if (hoveredMapCells != null)
+				{
+					if (hoveredMapCells[0] != null)
+					{
+						Vector drawPosition = CoordinateHelper.ProjectedPositionToDrawPosition(hoveredMapCells[0].ProjectedPosition);
+
+						SelectedPurchasableItem.Draw(gameTime, renderer, (int) drawPosition.X, (int) drawPosition.Y);
+					}
+				}
+			}
 		}
 
 		#endregion Game Loop
@@ -685,21 +714,16 @@ namespace MyThirdSDL.UserInterface
 			focusedControl.HandleTextInput(e.Text);
 		}
 
-		public IPurchasable SelectedPurchasableItem { get; private set; }
-
 		public void HandleMouseButtonPressedEvent(object sender, MouseButtonEventArgs e)
 		{
-			if (CurrentState == UserInterfaceState.PlaceEquipmentActive)
-				if (e.MouseButton == MouseButtonCode.Left)
-					if (PurchasableItemPlaced != null)
-						PurchasableItemPlaced(this, new PurchasableItemPlacedEventArgs(SelectedPurchasableItem, hoveredMapCells));
+			TryToPlacePurchasableItem(e);
 
 			toolboxTray.HandleMouseButtonPressedEvent(sender, e);
 
 			if (isMenuEquipmentOpen)
 				menuPurchaseEquipment.HandleMouseButtonPressedEvent(sender, e);
 
-			if (IsMenuInspectEmployeeOpen)
+			if (isMenuInspectEmployeeOpen)
 				menuInspectEmployee.HandleMouseButtonPressedEvent(sender, e);
 
 			if (isMenuMailboxOpen)
@@ -712,21 +736,24 @@ namespace MyThirdSDL.UserInterface
 				menuCompany.HandleMouseButtonPressedEvent(sender, e);
 		}
 
+		private void TryToPlacePurchasableItem(MouseButtonEventArgs e)
+		{
+			if (CurrentState == UserInterfaceState.PlaceEquipmentActive)
+				if (e.MouseButton == MouseButtonCode.Left)
+					if (PurchasableItemPlaced != null)
+						PurchasableItemPlaced(this, new PurchasableItemPlacedEventArgs(SelectedPurchasableItem, hoveredMapCells));
+		}
+
 		public void HandleMouseMovingEvent(object sender, MouseMotionEventArgs e)
 		{
-			var mousePositionAbsolute = new Vector(e.RelativeToWindowX, e.RelativeToWindowY);
-			var mousePositionIsometric = CoordinateHelper.ScreenSpaceToWorldSpace(e.RelativeToWindowX, e.RelativeToWindowY,
-											 CoordinateHelper.ScreenOffset, CoordinateHelper.ScreenProjectionType.Orthogonal);
-
-			labelMousePositionAbsolute.Text = String.Format("Mouse Position (Absolute): ({0}, {1})", mousePositionAbsolute.X, mousePositionAbsolute.Y);
-			labelMousePositionIsometric.Text = String.Format("Mouse Position (Isometric): ({0}, {1})", mousePositionIsometric.X, mousePositionIsometric.Y);
+			UpdateMousePositionDiagnostics(e);
 
 			toolboxTray.HandleMouseMovingEvent(sender, e);
 
 			if (isMenuEquipmentOpen)
 				menuPurchaseEquipment.HandleMouseMovingEvent(sender, e);
 
-			if (IsMenuInspectEmployeeOpen)
+			if (isMenuInspectEmployeeOpen)
 				menuInspectEmployee.HandleMouseMovingEvent(sender, e);
 
 			if (isMenuMailboxOpen)
@@ -739,19 +766,23 @@ namespace MyThirdSDL.UserInterface
 				menuCompany.HandleMouseMovingEvent(sender, e);
 		}
 
+		private void UpdateMousePositionDiagnostics(MouseMotionEventArgs e)
+		{
+			var mousePositionAbsolute = new Vector(e.RelativeToWindowX, e.RelativeToWindowY);
+			var mousePositionIsometric = CoordinateHelper.ScreenSpaceToWorldSpace(e.RelativeToWindowX, e.RelativeToWindowY,
+				CoordinateHelper.ScreenOffset, CoordinateHelper.ScreenProjectionType.Orthogonal);
+
+			labelMousePositionAbsolute.Text = String.Format("Mouse Position (Absolute): ({0}, {1})", mousePositionAbsolute.X,
+				mousePositionAbsolute.Y);
+			labelMousePositionIsometric.Text = String.Format("Mouse Position (Isometric): ({0}, {1})", mousePositionIsometric.X,
+				mousePositionIsometric.Y);
+		}
+
 		public void HandleKeyStates(IEnumerable<KeyInformation> keysPressed, IEnumerable<KeyInformation> keysReleased)
 		{
 			foreach (var key in keysPressed)
 				if (FocusedControl != null)
 					FocusedControl.HandleKeyPressed(key);
-		}
-
-		private void ChangeState(UserInterfaceState state)
-		{
-			// TODO: maybe a global here isn't the best idea?
-			timeOfStatusChange = SimulationManager.SimulationTime;
-			CurrentState = state;
-			labelState.Text = String.Format("UI State: {0}", state.ToString());
 		}
 
 		#endregion User Input Events

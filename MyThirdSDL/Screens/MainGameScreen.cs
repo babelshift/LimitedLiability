@@ -21,27 +21,40 @@ namespace MyThirdSDL.Screens
 		private JobFactory jobFactory;
 		private AgentFactory agentFactory;
 		private RoomFactory roomFactory;
+
 		private SimulationManager simulationManager;
 		private UserInterfaceManager userInterfaceManager;
 		private MailManager mailManager;
 
 		private BankAccount bankAccount;
-
-		private string mapPathToLoad;
 		private TiledMap tiledMap;
-		private bool IsUserInterfaceStateChangeDelayPassed { get { return userInterfaceManager.TimeSpentInCurrentState > TimeSpan.FromSeconds(0.1); } }
+		private string mapPathToLoad;
 
 		private IReadOnlyList<MapCell> hoveredMapCells;
 
 		#endregion Members
 
+		#region Properties
+
+		private bool IsUserInterfaceStateChangeDelayPassed { get { return userInterfaceManager.TimeSpentInCurrentState > TimeSpan.FromSeconds(0.1); } }
+
+		#endregion Properties
+
+		#region Public Events
+
 		public event EventHandler ReturnToMainMenu;
+
+		#endregion Public Events
 
 		#region Constructor
 
 		public MainGameScreen(Renderer renderer, ContentManager contentManager, string mapPathToLoad)
 			: base(contentManager)
 		{
+			if (renderer == null) throw new ArgumentNullException("renderer");
+			if (contentManager == null) throw new ArgumentNullException("contentManager");
+			if (String.IsNullOrEmpty(mapPathToLoad)) throw new ArgumentNullException("mapPathToLoad");
+
 			simulationManager = new SimulationManager(DateTime.Now, contentManager.ThoughtPool);
 			jobFactory = new JobFactory();
 			agentFactory = new AgentFactory(renderer, contentManager, jobFactory);
@@ -67,7 +80,7 @@ namespace MyThirdSDL.Screens
 
 		public override void HandleMouseButtonPressedEvent(object sender, MouseButtonEventArgs e)
 		{
-			// if the agent being updated is an employee and that agent is being clicked on by the user, fire the event telling subscribers of such
+			// if the equipment being updated is an employee and that equipment is being clicked on by the user, fire the event telling subscribers of such
 			// we can use this event to react to the user interacting with the employees to do things like display their inspection information
 			foreach (var employee in simulationManager.TrackedEmployees)
 				if (IsEmployeeClicked(employee, e))
@@ -78,12 +91,14 @@ namespace MyThirdSDL.Screens
 		}
 
 		/// <summary>
-		/// Determines whether this employee is clicked based on the passed mouse state by translating the screen coordinates to world space and checking the agent's collision box.
+		/// Determines whether this employee is clicked based on the passed mouse state by translating the screen coordinates to world space and checking the equipment's collision box.
 		/// </summary>
 		/// <returns><c>true</c> if this the passed employee is clicked based on the passed mouse state; otherwise, <c>false</c>.</returns>
 		/// <param name="employee">Employee.</param>
 		private bool IsEmployeeClicked(Employee employee, MouseButtonEventArgs e)
 		{
+			if (employee == null) throw new ArgumentNullException("employee");
+
 			if (e.MouseButton == MouseButtonCode.Left)
 			{
 				Vector worldPositionAtMousePosition = CoordinateHelper.ScreenSpaceToWorldSpace(
@@ -120,19 +135,6 @@ namespace MyThirdSDL.Screens
 			userInterfaceManager.HandleKeyStates(keysPressed, keysReleased);
 		}
 
-		private PauseMenuScreen CreatePauseMenuScreen()
-		{
-			var pauseMenuScreen = new PauseMenuScreen(ContentManager);
-			pauseMenuScreen.QuitButtonClicked += pauseMenuScreen_QuitButtonClicked;
-			return pauseMenuScreen;
-		}
-
-		private void pauseMenuScreen_QuitButtonClicked(object sender, EventArgs e)
-		{
-			if (ReturnToMainMenu != null)
-				ReturnToMainMenu(sender, e);
-		}
-
 		public override void HandleInput(GameTime gameTime, bool isMouseInsideWindowBounds)
 		{
 			base.HandleInput(gameTime, isMouseInsideWindowBounds);
@@ -146,22 +148,10 @@ namespace MyThirdSDL.Screens
 			}
 		}
 
-		private void UserInterfaceManagerOnPurchasableItemSelected(object sender, PurchasableItemSelectedEventArgs e)
-		{
-			hoveredMapCells = GetHoveredMapCellAndNeighbors(Mouse.X, Mouse.Y, e.PurchasableItem.HorizontalMapCellCount, e.PurchasableItem.VerticalMapCellCount);
-			userInterfaceManager.SetHoveredMapCells(hoveredMapCells);
-		}
-
 		private void HandlePlaceEquipment(object sender, PurchasableItemPlacedEventArgs e)
 		{
-			// if the user is not hovering over a valid map cell, don't take any action (this happens when the mouse is outside the bounds of the world)
-			//if (!IsValidMapCellHovered) return;
-
 			// place equipment active only if we have been in this state for more than a second to prevent super fast action being taken
 			if (!IsUserInterfaceStateChangeDelayPassed) return;
-
-			// if the user has clicked or released any mouse buttons while in this mode, try to place the equipment
-			//if (!Mouse.IsLeftMouseButtonClicked) return;
 
 			if (e.PurchasableItem is SodaMachine)
 			{
@@ -178,39 +168,32 @@ namespace MyThirdSDL.Screens
 				var agentToAdd = agentFactory.CreateOfficeDesk(SimulationManager.SimulationTime, new Vector(e.HoveredMapCells[0].WorldPosition.X, e.HoveredMapCells[0].WorldPosition.Y));
 				AddEquipmentToSimulationAndHoveredMapCell(agentToAdd, e.HoveredMapCells[0]);
 			}
+			else if (e.PurchasableItem is Library)
+			{
+			}
 		}
 
 		#endregion User Input
 
+		#region Screen Game Loop
+
 		public override void Activate(Renderer renderer)
 		{
-			// Help Variables
+			if (renderer == null) throw new ArgumentNullException("renderer");
+
 			Point bottomRightPointOfScreen = new Point(MainGame.SCREEN_WIDTH_LOGICAL, MainGame.SCREEN_HEIGHT_LOGICAL);
 
-			// Map
 			string mapPath = ContentManager.GetContentPath(mapPathToLoad);
 			tiledMap = new TiledMap(mapPath, renderer, agentFactory);
 
-			// SimulationManager
 			simulationManager.SetCurrentMap(tiledMap);
 
-			// Finances
 			bankAccount = new BankAccount(1000);
 			bankAccount.AmountDeposited += bankAccount_AmountDeposited;
 			bankAccount.AmountWithdrawn += bankAccount_AmountWithdrawn;
 
-			// Agents
-			var pathNodes = tiledMap.GetPathNodes();
-			Random random = new Random();
-			for (int i = 0; i < 10; i++)
-			{
-				int x = random.Next(0, pathNodes.Count);
-				var pathNode = pathNodes[x];
-				Employee employee = agentFactory.CreateEmployee(SimulationManager.SimulationTime, simulationManager.WorldDateTime, new Vector(pathNode.WorldPosition.X, pathNode.WorldPosition.Y));
-				simulationManager.AddAgent(employee);
-			}
+			AddRandomEmployeesToSimulation();
 
-			// MailManager
 			mailManager = new MailManager();
 			mailManager.UnreadMailCountChanged += mailbox_UnreadMailCountChanged;
 			mailManager.SendMail(new MailItem("first.last@recruiters.com", "first.last@company.com", "Test Subject 1", "Test Body 1", MailState.Unread));
@@ -219,12 +202,10 @@ namespace MyThirdSDL.Screens
 			mailManager.SendMail(new MailItem("first.last@recruiters.com", "first.last@company.com", "Test Subject 4", "Test Body 4", MailState.Unread));
 			mailManager.SendMail(new MailItem("first.last@recruiters.com", "first.last@company.com", "Test Subject 5", "Test Body 5", MailState.Unread));
 
-			// Purchasable Items
 			IEnumerable<IPurchasable> purchasableEquipment = GetPurchasableEquipment();
 			IEnumerable<IPurchasable> purchasableRooms = GetPurchasableRooms(renderer);
 
-			// UI Manager
-			userInterfaceManager = new UserInterfaceManager(renderer, ContentManager, bottomRightPointOfScreen,
+			userInterfaceManager = new UserInterfaceManager(ContentManager, bottomRightPointOfScreen,
 				purchasableEquipment,
 				purchasableRooms,
 				mailManager.PlayerInbox,
@@ -240,42 +221,18 @@ namespace MyThirdSDL.Screens
 			userInterfaceManager.MainMenuButtonClicked += (sender, e) => ScreenManager.AddScreen(CreatePauseMenuScreen());
 		}
 
-		private void bankAccount_AmountWithdrawn(object sender, BankAccountTransactionEventArgs e)
+		private void AddRandomEmployeesToSimulation()
 		{
-			userInterfaceManager.UpdateDisplayedBankAccountBalance(e.NewBalance);
-		}
-
-		private void bankAccount_AmountDeposited(object sender, BankAccountTransactionEventArgs e)
-		{
-			userInterfaceManager.UpdateDisplayedBankAccountBalance(e.NewBalance);
-		}
-
-		private IEnumerable<IPurchasable> GetPurchasableRooms(Renderer renderer)
-		{
-			List<IPurchasable> purchasableRooms = new List<IPurchasable> { roomFactory.CreateLibrary(renderer, agentFactory) };
-
-			return purchasableRooms;
-		}
-
-		private IEnumerable<IPurchasable> GetPurchasableEquipment()
-		{
-			List<IPurchasable> purchasableItems = new List<IPurchasable>
+			var pathNodes = tiledMap.GetPathNodes();
+			Random random = new Random();
+			for (int i = 0; i < 10; i++)
 			{
-				agentFactory.CreateSnackMachine(TimeSpan.Zero),
-				agentFactory.CreateSodaMachine(TimeSpan.Zero),
-				agentFactory.CreateWaterFountain(TimeSpan.Zero),
-				agentFactory.CreateOfficeDesk(TimeSpan.Zero),
-				agentFactory.CreateTrashBin(TimeSpan.Zero),
-				agentFactory.CreateSnackMachine(TimeSpan.Zero),
-				agentFactory.CreateSodaMachine(TimeSpan.Zero),
-				agentFactory.CreateWaterFountain(TimeSpan.Zero),
-				agentFactory.CreateOfficeDesk(TimeSpan.Zero),
-				agentFactory.CreateTrashBin(TimeSpan.Zero),
-				agentFactory.CreateSodaMachine(TimeSpan.Zero),
-				agentFactory.CreateWaterFountain(TimeSpan.Zero)
-			};
-
-			return purchasableItems;
+				int x = random.Next(0, pathNodes.Count);
+				var pathNode = pathNodes[x];
+				Employee employee = agentFactory.CreateEmployee(SimulationManager.SimulationTime, simulationManager.WorldDateTime,
+					new Vector(pathNode.WorldPosition.X, pathNode.WorldPosition.Y));
+				simulationManager.AddAgent(employee);
+			}
 		}
 
 		public override void Update(GameTime gameTime, bool otherWindowHasFocus, bool coveredByOtherScreen)
@@ -313,78 +270,69 @@ namespace MyThirdSDL.Screens
 			DrawEmployeCollisionBoxes(renderer);
 
 			userInterfaceManager.Draw(gameTime, renderer);
-
-			//cursor.Draw(renderer);
 		}
 
-		#region Employee Events
+		#endregion Screen Game Loop
 
-		private Employee GetEmployeeFromEventSender(object sender)
+		#region General Methods
+
+		private void pauseMenuScreen_QuitButtonClicked(object sender, EventArgs e)
 		{
-			var employee = sender as Employee;
-			if (employee == null)
-				throw new ArgumentException("HandleEmployee handlers can only work with Employee objects!");
-			return employee;
+			if (ReturnToMainMenu != null)
+				ReturnToMainMenu(sender, e);
 		}
 
-		private void HandleEmployeeHungerSatisfied(object sender, EventArgs e)
+		private PauseMenuScreen CreatePauseMenuScreen()
 		{
-			var employee = GetEmployeeFromEventSender(sender);
-			userInterfaceManager.RemoveMessageForAgentByType(employee.ID, SimulationMessageType.EmployeeIsHungry);
+			var pauseMenuScreen = new PauseMenuScreen(ContentManager);
+			pauseMenuScreen.QuitButtonClicked += pauseMenuScreen_QuitButtonClicked;
+			return pauseMenuScreen;
 		}
 
-		private void HandleEmployeeThirstSatisfied(object sender, EventArgs e)
+		private void bankAccount_AmountWithdrawn(object sender, BankAccountTransactionEventArgs e)
 		{
-			var employee = GetEmployeeFromEventSender(sender);
-			userInterfaceManager.RemoveMessageForAgentByType(employee.ID, SimulationMessageType.EmployeeIsThirsty);
+			userInterfaceManager.UpdateDisplayedBankAccountBalance(e.NewBalance);
+		}
+
+		private void bankAccount_AmountDeposited(object sender, BankAccountTransactionEventArgs e)
+		{
+			userInterfaceManager.UpdateDisplayedBankAccountBalance(e.NewBalance);
+		}
+
+		private IEnumerable<IPurchasable> GetPurchasableRooms(Renderer renderer)
+		{
+			if (renderer == null) throw new ArgumentNullException("renderer");
+
+			List<IPurchasable> purchasableRooms = new List<IPurchasable> { roomFactory.CreateLibrary(renderer, agentFactory) };
+
+			return purchasableRooms;
+		}
+
+		private IEnumerable<IPurchasable> GetPurchasableEquipment()
+		{
+			List<IPurchasable> purchasableItems = new List<IPurchasable>
+			{
+				agentFactory.CreateSnackMachine(TimeSpan.Zero),
+				agentFactory.CreateSodaMachine(TimeSpan.Zero),
+				agentFactory.CreateWaterFountain(TimeSpan.Zero),
+				agentFactory.CreateOfficeDesk(TimeSpan.Zero),
+				agentFactory.CreateTrashBin(TimeSpan.Zero),
+				agentFactory.CreateSnackMachine(TimeSpan.Zero),
+				agentFactory.CreateSodaMachine(TimeSpan.Zero),
+				agentFactory.CreateWaterFountain(TimeSpan.Zero),
+				agentFactory.CreateOfficeDesk(TimeSpan.Zero),
+				agentFactory.CreateTrashBin(TimeSpan.Zero),
+				agentFactory.CreateSodaMachine(TimeSpan.Zero),
+				agentFactory.CreateWaterFountain(TimeSpan.Zero)
+			};
+
+			return purchasableItems;
 		}
 
 		private void SendEmployeeMessageToUserInterface(Employee employee, string messageText, SimulationMessageType messageType)
 		{
 			var message = SimulationMessageFactory.Create(employee.ProjectedPosition, messageText, messageType);
 			userInterfaceManager.AddMessageForAgent(employee.ID, message);
-		}
-
-		private void HandleEmployeeHadThought(object sender, ThoughtEventArgs e)
-		{
-			var employee = GetEmployeeFromEventSender(sender);
-
-			//if (e.Type == ThoughtType.Hungry)
-			//	SendEmployeeMessageToUserInterface(employee, String.Format("{0} is hungry!", employee.FullName), SimulationMessageType.EmployeeIsHungry);
-			//else if (e.Type == ThoughtType.Thirsty)
-			//	SendEmployeeMessageToUserInterface(employee, String.Format("{0} is thirsty!", employee.FullName), SimulationMessageType.EmployeeIsThirsty);
-			//else if (e.Type == ThoughtType.Dirty)
-			//	SendEmployeeMessageToUserInterface(employee, String.Format("{0} is dirty!", employee.FullName), SimulationMessageType.EmployeeIsDirty);
-			//else if (e.Type == ThoughtType.NeedsDeskAssignment)
-			//	SendEmployeeMessageToUserInterface(employee, String.Format("{0} needs and office desk to work!", employee.FullName), SimulationMessageType.EmployeeNeedsDesk);
-			//else if (e.Type == ThoughtType.Sleepy)
-			//	SendEmployeeMessageToUserInterface(employee, String.Format("{0} is sleepy!", employee.FullName), SimulationMessageType.EmployeeIsSleepy);
-			//else if (e.Type == ThoughtType.Unhappy)
-			//	SendEmployeeMessageToUserInterface(employee, String.Format("{0} is unhappy!", employee.FullName), SimulationMessageType.EmployeeIsUnhappy);
-			//else if (e.Type == ThoughtType.Unhealthy)
-			//	SendEmployeeMessageToUserInterface(employee, String.Format("{0} is unhealthy!", employee.FullName), SimulationMessageType.EmployeeIsUnhealthy);
-		}
-
-		#endregion Employee Events
-
-		#region UI Manager Events
-
-		private void userInterfaceManager_ArchiveMailButtonClicked(object sender, ArchiveEventArgs e)
-		{
-			mailManager.ArchiveMail(e.SelectedMailItem);
-			userInterfaceManager.UpdateMenuMailBox(mailManager.PlayerInbox, mailManager.PlayerOutbox, mailManager.PlayerArchive);
-		}
-
-		#endregion UI Manager Events
-
-		private MapCell GetHoveredMapCell(int x, int y)
-		{
-			Vector worldPositionAtMousePosition = CoordinateHelper.ScreenSpaceToWorldSpace(
-				x, y,
-				CoordinateHelper.ScreenOffset,
-				CoordinateHelper.ScreenProjectionType.Orthogonal);
-
-			return tiledMap.GetMapCellAtWorldPosition(worldPositionAtMousePosition);
 		}
 
 		private IReadOnlyList<MapCell> GetHoveredMapCellAndNeighbors(int mapCellPositionX, int mapCellPositionY, int tileCountRight, int tileCountDown)
@@ -398,20 +346,24 @@ namespace MyThirdSDL.Screens
 		}
 
 		/// <summary>
-		/// Adds the passed agent to the simulation by registering it with the simulation manager and adding it as a drawable object on the clicked map cell. Does nothing if
-		/// the passed agent is null.
+		/// Adds the passed equipment to the simulation by registering it with the simulation manager and adding it as a drawable object on the clicked map cell. Does nothing if
+		/// the passed equipment is null.
 		/// </summary>
-		/// <param name="agent">Agent.</param>
+		/// <param name="equipment">Agent.</param>
 		/// <param name="hoveredMapCell"></param>
-		private void AddEquipmentToSimulationAndHoveredMapCell<T>(T agent, MapCell hoveredMapCell)
+		private void AddEquipmentToSimulationAndHoveredMapCell<T>(T equipment, MapCell hoveredMapCell)
 			where T : Equipment
 		{
-			if (agent == null) throw new ArgumentNullException("agent");
+			if (equipment == null) throw new ArgumentNullException("equipment");
 			if (hoveredMapCell == null) throw new ArgumentNullException("hoveredMapCell");
 
-			simulationManager.AddAgent(agent);
-			hoveredMapCell.OccupantEquipment = agent;
-			bankAccount.Withdraw(agent.Price);
+			simulationManager.AddAgent(equipment);
+			hoveredMapCell.OccupantEquipment = equipment;
+			bankAccount.Withdraw(equipment.Price);
+		}
+
+		private void AddRoomToSimulationAndHoveredMapCells<T>(T room, MapCell hoveredMapCell)
+		{
 		}
 
 		/// <summary>
@@ -503,11 +455,76 @@ namespace MyThirdSDL.Screens
 			return mouseOverScreenEdges;
 		}
 
+		#endregion General Methods
+
+		#region Employee Events
+
+		private Employee GetEmployeeFromEventSender(object sender)
+		{
+			if (sender == null) throw new ArgumentNullException("sender");
+
+			var employee = sender as Employee;
+			if (employee == null)
+				throw new ArgumentException("HandleEmployee handlers can only work with Employee objects!");
+
+			return employee;
+		}
+
+		private void HandleEmployeeHungerSatisfied(object sender, EventArgs e)
+		{
+			var employee = GetEmployeeFromEventSender(sender);
+			userInterfaceManager.RemoveMessageForAgentByType(employee.ID, SimulationMessageType.EmployeeIsHungry);
+		}
+
+		private void HandleEmployeeThirstSatisfied(object sender, EventArgs e)
+		{
+			var employee = GetEmployeeFromEventSender(sender);
+			userInterfaceManager.RemoveMessageForAgentByType(employee.ID, SimulationMessageType.EmployeeIsThirsty);
+		}
+
+		private void HandleEmployeeHadThought(object sender, ThoughtEventArgs e)
+		{
+			var employee = GetEmployeeFromEventSender(sender);
+
+			//if (e.Type == ThoughtType.Hungry)
+			//	SendEmployeeMessageToUserInterface(employee, String.Format("{0} is hungry!", employee.FullName), SimulationMessageType.EmployeeIsHungry);
+			//else if (e.Type == ThoughtType.Thirsty)
+			//	SendEmployeeMessageToUserInterface(employee, String.Format("{0} is thirsty!", employee.FullName), SimulationMessageType.EmployeeIsThirsty);
+			//else if (e.Type == ThoughtType.Dirty)
+			//	SendEmployeeMessageToUserInterface(employee, String.Format("{0} is dirty!", employee.FullName), SimulationMessageType.EmployeeIsDirty);
+			//else if (e.Type == ThoughtType.NeedsDeskAssignment)
+			//	SendEmployeeMessageToUserInterface(employee, String.Format("{0} needs and office desk to work!", employee.FullName), SimulationMessageType.EmployeeNeedsDesk);
+			//else if (e.Type == ThoughtType.Sleepy)
+			//	SendEmployeeMessageToUserInterface(employee, String.Format("{0} is sleepy!", employee.FullName), SimulationMessageType.EmployeeIsSleepy);
+			//else if (e.Type == ThoughtType.Unhappy)
+			//	SendEmployeeMessageToUserInterface(employee, String.Format("{0} is unhappy!", employee.FullName), SimulationMessageType.EmployeeIsUnhappy);
+			//else if (e.Type == ThoughtType.Unhealthy)
+			//	SendEmployeeMessageToUserInterface(employee, String.Format("{0} is unhealthy!", employee.FullName), SimulationMessageType.EmployeeIsUnhealthy);
+		}
+
+		#endregion Employee Events
+
+		#region UI Manager Events
+
+		private void UserInterfaceManagerOnPurchasableItemSelected(object sender, PurchasableItemSelectedEventArgs e)
+		{
+			hoveredMapCells = GetHoveredMapCellAndNeighbors(Mouse.X, Mouse.Y, e.PurchasableItem.HorizontalMapCellCount, e.PurchasableItem.VerticalMapCellCount);
+			userInterfaceManager.SetHoveredMapCells(hoveredMapCells);
+		}
+
+		private void userInterfaceManager_ArchiveMailButtonClicked(object sender, ArchiveEventArgs e)
+		{
+			mailManager.ArchiveMail(e.SelectedMailItem);
+			userInterfaceManager.UpdateMenuMailBox(mailManager.PlayerInbox, mailManager.PlayerOutbox, mailManager.PlayerArchive);
+		}
+
 		private void mailbox_UnreadMailCountChanged(object sender, EventArgs e)
 		{
 			if (userInterfaceManager != null)
 				userInterfaceManager.UpdateUnreadMailCount(mailManager.PlayerUnreadMailCount);
 		}
+
+		#endregion UI Manager Events
 
 		#region Dispose
 
@@ -520,7 +537,6 @@ namespace MyThirdSDL.Screens
 		private void Dispose(bool disposing)
 		{
 			userInterfaceManager.Dispose();
-			//cursor.Dispose();
 			tiledMap.Dispose();
 		}
 
