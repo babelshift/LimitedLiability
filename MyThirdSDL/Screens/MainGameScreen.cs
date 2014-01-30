@@ -148,7 +148,7 @@ namespace MyThirdSDL.Screens
 			}
 		}
 
-		private void HandlePlaceEquipment(object sender, PurchasableItemPlacedEventArgs e)
+		private void UserInterfaceManagerOnPurchasableItemPlaced(object sender, PurchasableItemPlacedEventArgs e)
 		{
 			// place equipment active only if we have been in this state for more than a second to prevent super fast action being taken
 			if (!IsUserInterfaceStateChangeDelayPassed) return;
@@ -216,8 +216,8 @@ namespace MyThirdSDL.Screens
 				simulationManager.TrackedEmployees.Count());
 
 			userInterfaceManager.PurchasableItemSelected += UserInterfaceManagerOnPurchasableItemSelected;
-			userInterfaceManager.PurchasableItemPlaced += HandlePlaceEquipment;
-			userInterfaceManager.ArchiveMailButtonClicked += userInterfaceManager_ArchiveMailButtonClicked;
+			userInterfaceManager.PurchasableItemPlaced += UserInterfaceManagerOnPurchasableItemPlaced;
+			userInterfaceManager.ArchiveMailButtonClicked += UserInterfaceManagerOnArchiveMailButtonClicked;
 			userInterfaceManager.MainMenuButtonClicked += (sender, e) => ScreenManager.AddScreen(CreatePauseMenuScreen());
 		}
 
@@ -512,7 +512,7 @@ namespace MyThirdSDL.Screens
 			userInterfaceManager.SetHoveredMapCells(hoveredMapCells);
 		}
 
-		private void userInterfaceManager_ArchiveMailButtonClicked(object sender, ArchiveEventArgs e)
+		private void UserInterfaceManagerOnArchiveMailButtonClicked(object sender, ArchiveEventArgs e)
 		{
 			mailManager.ArchiveMail(e.SelectedMailItem);
 			userInterfaceManager.UpdateMenuMailBox(mailManager.PlayerInbox, mailManager.PlayerOutbox, mailManager.PlayerArchive);

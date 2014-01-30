@@ -210,7 +210,7 @@ namespace MyThirdSDL.UserInterface
 		/// <param name="unreadMailCount"></param>
 		/// <param name="money"></param>
 		/// <param name="employeeCount"></param>
-		public UserInterfaceManager(ContentManager contentManager, 
+		public UserInterfaceManager(ContentManager contentManager,
 			Point bottomRightPointOfWindow,
 			IEnumerable<IPurchasable> purchasableEquipment,
 			IEnumerable<IPurchasable> purchasableRooms,
@@ -226,7 +226,7 @@ namespace MyThirdSDL.UserInterface
 			if (inbox == null) throw new ArgumentNullException("inbox");
 			if (outbox == null) throw new ArgumentNullException("outbox");
 			if (archive == null) throw new ArgumentNullException("archive");
-			
+
 			this.bottomRightPointOfWindow = bottomRightPointOfWindow;
 			this.contentManager = contentManager;
 			this.purchasableEquipment = purchasableEquipment;
@@ -315,9 +315,9 @@ namespace MyThirdSDL.UserInterface
 			var labelMessagesForSingleAgent = GetMessagesForAgent(agentId);
 			SimulationLabel labelToRemove;
 			bool success = labelMessagesForSingleAgent.TryGetValue(messageType, out labelToRemove);
-			
+
 			if (!success) return;
-			
+
 			labelToRemove.Dispose();
 			labelMessagesForSingleAgent.Remove(messageType);
 		}
@@ -334,7 +334,7 @@ namespace MyThirdSDL.UserInterface
 
 			if (success)
 				return labelMessagesForSingleAgent;
-			
+
 			return new Dictionary<SimulationMessageType, SimulationLabel>();
 		}
 
@@ -675,7 +675,7 @@ namespace MyThirdSDL.UserInterface
 
 			foreach (var label in labels)
 			{
-				label.Position = new Vector(0, i*18);
+				label.Position = new Vector(0, i * 18);
 				label.Draw(gameTime, renderer);
 				i++;
 			}
@@ -684,7 +684,7 @@ namespace MyThirdSDL.UserInterface
 			{
 				foreach (var labelMessage in labelMessagesForSingleAgent.Values)
 				{
-					labelMessage.Position = new Vector(0, i*18);
+					labelMessage.Position = new Vector(0, i * 18);
 					labelMessage.Draw(gameTime, renderer);
 					i++;
 				}
@@ -701,7 +701,7 @@ namespace MyThirdSDL.UserInterface
 					{
 						Vector drawPosition = CoordinateHelper.ProjectedPositionToDrawPosition(hoveredMapCells[0].ProjectedPosition);
 
-						SelectedPurchasableItem.Draw(gameTime, renderer, (int) drawPosition.X, (int) drawPosition.Y, isSelectedPurchasableOverlappingDeadZone);
+						SelectedPurchasableItem.Draw(gameTime, renderer, (int)drawPosition.X, (int)drawPosition.Y, isSelectedPurchasableOverlappingDeadZone);
 					}
 				}
 			}
@@ -740,10 +740,11 @@ namespace MyThirdSDL.UserInterface
 
 		private void TryToPlacePurchasableItem(MouseButtonEventArgs e)
 		{
-			if (CurrentState == UserInterfaceState.PlaceEquipmentActive)
-				if (e.MouseButton == MouseButtonCode.Left)
-					if (PurchasableItemPlaced != null)
-						PurchasableItemPlaced(this, new PurchasableItemPlacedEventArgs(SelectedPurchasableItem, hoveredMapCells));
+			if (CurrentState != UserInterfaceState.PlaceEquipmentActive) return;
+			if (e.MouseButton != MouseButtonCode.Left) return;
+			if (isSelectedPurchasableOverlappingDeadZone) return;
+			if (PurchasableItemPlaced != null)
+				PurchasableItemPlaced(this, new PurchasableItemPlacedEventArgs(SelectedPurchasableItem, hoveredMapCells));
 		}
 
 		public void HandleMouseMovingEvent(object sender, MouseMotionEventArgs e)

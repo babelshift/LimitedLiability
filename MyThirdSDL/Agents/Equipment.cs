@@ -77,14 +77,13 @@ namespace MyThirdSDL.Agents
 		{
 			if (mapCells == null) throw new ArgumentNullException("mapCells");
 
-			if (mapCells[0] == null) return false;
+			if (mapCells[0] == null) return true;
 
 			Vector origin = mapCells[0].WorldPosition;
 
 			Vector offsetPosition = new Vector(WorldPosition.X + origin.X, WorldPosition.Y + origin.Y);
 
-			return
-				mapCells
+			return mapCells
 					.Where(mc => mc.Type == MapCellType.DeadZone)
 					.Any(mc => mc.Bounds.Contains(offsetPosition));
 		}
