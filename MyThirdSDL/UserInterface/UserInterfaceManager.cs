@@ -29,6 +29,8 @@ namespace MyThirdSDL.UserInterface
 		private bool isMenuMailboxOpen;
 		private bool isMenuCompanyOpen;
 
+		private bool isSelectedPurchasableOverlappingDeadZone;
+
 		#region Controls
 
 		private readonly ToolboxTray toolboxTray;
@@ -139,7 +141,7 @@ namespace MyThirdSDL.UserInterface
 			this.hoveredMapCells = hoveredMapCells;
 
 			// if any of these hovered map cells overlaps with selected purchasable map cells, shade the selected purchasable in red
-			SelectedPurchasableItem.CheckOverlap(hoveredMapCells);
+			isSelectedPurchasableOverlappingDeadZone = SelectedPurchasableItem.IsOverlappingDeadZone(hoveredMapCells);
 		}
 
 		/// <summary>
@@ -699,7 +701,7 @@ namespace MyThirdSDL.UserInterface
 					{
 						Vector drawPosition = CoordinateHelper.ProjectedPositionToDrawPosition(hoveredMapCells[0].ProjectedPosition);
 
-						SelectedPurchasableItem.Draw(gameTime, renderer, (int) drawPosition.X, (int) drawPosition.Y);
+						SelectedPurchasableItem.Draw(gameTime, renderer, (int) drawPosition.X, (int) drawPosition.Y, isSelectedPurchasableOverlappingDeadZone);
 					}
 				}
 			}

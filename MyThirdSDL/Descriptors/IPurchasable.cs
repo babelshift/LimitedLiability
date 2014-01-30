@@ -8,7 +8,7 @@ namespace MyThirdSDL.Descriptors
 {
 	public interface IPurchasable : IAffectsNecessities, ISkillsAffector
 	{
-		void Draw(GameTime gameTime, Renderer renderer, int x, int y, bool? isOverlappingDeadZoneOverride = null);
+		void Draw(GameTime gameTime, Renderer renderer, int x, int y, bool isOverlappingDeadZone);
 
 		string Name { get; }
 
@@ -20,6 +20,6 @@ namespace MyThirdSDL.Descriptors
 
 		int VerticalMapCellCount { get; }
 
-		void CheckOverlap(IReadOnlyList<MapCell> mapCells);
+		bool IsOverlappingDeadZone(IReadOnlyList<MapCell> mapCells);
 	}
 }

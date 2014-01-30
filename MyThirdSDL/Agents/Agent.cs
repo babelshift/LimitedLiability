@@ -111,7 +111,7 @@ namespace MyThirdSDL.Agents
 			);
 		}
 
-		public virtual void Draw(GameTime gameTime, Renderer renderer, int x, int y, bool? isOverlappingDeadZoneOverride = null)
+		public virtual void Draw(GameTime gameTime, Renderer renderer, int x, int y, bool isOverlappingDeadZone)
 		{
 			renderer.RenderTexture(
 				ActiveTexture,

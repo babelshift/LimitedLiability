@@ -44,17 +44,15 @@ namespace MyThirdSDL.Agents
 			this.tiledMap = tiledMap;
 		}
 
-		public void Draw(GameTime gameTime, Renderer renderer, int x, int y, bool? isOverlappingDeadZoneOverride = null)
+		public void Draw(GameTime gameTime, Renderer renderer, int x, int y, bool isOverlappingDeadZone)
 		{
 			tiledMap.Draw(gameTime, renderer, x, y, isOverlappingDeadZone);
 		}
 
-		private bool isOverlappingDeadZone;
-
-		public void CheckOverlap(IReadOnlyList<MapCell> mapCells)
+		public bool IsOverlappingDeadZone(IReadOnlyList<MapCell> mapCells)
 		{
 			if (mapCells == null) throw new ArgumentNullException("mapCells");
-			if (mapCells[0] == null) return;
+			if (mapCells[0] == null) return false;
 
 			// mapCells = the cells that we have hovered over
 			// need to check if our map cells overlap with any deadzones in the hovered map cells
@@ -62,6 +60,8 @@ namespace MyThirdSDL.Agents
 			// mapCell[0] is origin
 
 			Vector origin = mapCells[0].WorldPosition;
+
+			bool isOverlappingDeadZone;
 
 			foreach (var mapCell in tiledMap.MapCells)
 			{
@@ -74,8 +74,10 @@ namespace MyThirdSDL.Agents
 					.Any(mc => mc.Bounds.Contains(offsetPosition));
 
 				if (isOverlappingDeadZone)
-					return;
+					return true;
 			}
+
+			return false;
 		}
 	}
 }

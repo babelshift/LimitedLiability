@@ -103,17 +103,12 @@ namespace MyThirdSDL.Content
 				SourceTextureBounds);
 		}
 
-		public void Draw(GameTime gameTime, Renderer renderer, int x, int y, bool? isOverlappingDeadZoneOverride = null)
+		public void Draw(GameTime gameTime, Renderer renderer, int x, int y, bool isOverlappingDeadZoneOverride)
 		{
 			if (IsEmpty) return;
 
-			if (isOverlappingDeadZoneOverride.HasValue)
-			{
-				if (isOverlappingDeadZoneOverride.Value)
-					renderer.SetTextureColorMod(Texture, 255, 0, 0);
-				else
-					renderer.SetTextureColorMod(Texture, 255, 255, 255);
-			}
+			if (isOverlappingDeadZoneOverride)
+				renderer.SetTextureColorMod(Texture, 255, 0, 0);
 			else
 				renderer.SetTextureColorMod(Texture, 255, 255, 255);
 

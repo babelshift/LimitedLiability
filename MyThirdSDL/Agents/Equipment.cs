@@ -59,12 +59,9 @@ namespace MyThirdSDL.Agents
 		/// <param name="renderer"></param>
 		/// <param name="x"></param>
 		/// <param name="y"></param>
-		/// <param name="isOverlappingDeadZoneOverride"></param>
-		public override void Draw(GameTime gameTime, Renderer renderer, int x, int y, bool? isOverlappingDeadZoneOverride = null)
+		/// <param name="isOverlappingDeadZone"></param>
+		public override void Draw(GameTime gameTime, Renderer renderer, int x, int y, bool isOverlappingDeadZone)
 		{
-			if (isOverlappingDeadZoneOverride.HasValue)
-				isOverlappingDeadZone = isOverlappingDeadZoneOverride.Value;
-
 			// overlapping a deadzone shades the texture red
 			if (isOverlappingDeadZone)
 				renderer.SetTextureColorMod(ActiveTexture, 255, 0, 0);
@@ -76,19 +73,17 @@ namespace MyThirdSDL.Agents
 				x, y);
 		}
 
-		private bool isOverlappingDeadZone;
-
-		public void CheckOverlap(IReadOnlyList<MapCell> mapCells)
+		public bool IsOverlappingDeadZone(IReadOnlyList<MapCell> mapCells)
 		{
 			if (mapCells == null) throw new ArgumentNullException("mapCells");
 
-			if (mapCells[0] == null) return;
+			if (mapCells[0] == null) return false;
 
 			Vector origin = mapCells[0].WorldPosition;
 
 			Vector offsetPosition = new Vector(WorldPosition.X + origin.X, WorldPosition.Y + origin.Y);
 
-			isOverlappingDeadZone =
+			return
 				mapCells
 					.Where(mc => mc.Type == MapCellType.DeadZone)
 					.Any(mc => mc.Bounds.Contains(offsetPosition));

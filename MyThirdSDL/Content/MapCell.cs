@@ -71,7 +71,7 @@ namespace MyThirdSDL.Content
 				drawable.Draw(gameTime, renderer);
 		}
 
-		public void Draw(GameTime gameTime, Renderer renderer, int x, int y, bool? isOverlappingDeadZoneOverride = null)
+		public void Draw(GameTime gameTime, Renderer renderer, int x, int y, bool isOverlappingDeadZoneOverride)
 		{
 			x += (int)ProjectedPosition.X;
 			y += (int)ProjectedPosition.Y;
@@ -79,7 +79,9 @@ namespace MyThirdSDL.Content
 			FloorTile.Draw(gameTime, renderer, x, y, isOverlappingDeadZoneOverride);
 
 			if (OccupantEquipment != null)
+			{
 				OccupantEquipment.Draw(gameTime, renderer, x, y, isOverlappingDeadZoneOverride);
+			}
 
 			foreach (var drawable in drawableObjects)
 				drawable.Draw(gameTime, renderer, x, y, isOverlappingDeadZoneOverride);
