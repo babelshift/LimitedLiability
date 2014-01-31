@@ -4,7 +4,7 @@ using System;
 
 namespace MyThirdSDL.Agents
 {
-	public abstract class Agent : ICollidable, IDrawable
+	public abstract class Agent : ICollidable, IDrawable, IDisposable
 	{
 		#region Members
 
@@ -24,7 +24,7 @@ namespace MyThirdSDL.Agents
 
 		public AgentState State { get; private set; }
 
-		public Vector WorldPosition { get; protected set; }
+		public Vector WorldPosition { get; internal set; }
 
 		public float Depth { get { return WorldPosition.X + WorldPosition.Y; } }
 
@@ -120,5 +120,17 @@ namespace MyThirdSDL.Agents
 		}
 
 		#endregion Game Loop
+
+		public void Dispose()
+		{
+			Dispose(true);
+			GC.SuppressFinalize(this);
+		}
+
+		private void Dispose(bool isDisposing)
+		{
+			if(ActiveTexture != null)
+				ActiveTexture.Dispose();
+		}
 	}
 }

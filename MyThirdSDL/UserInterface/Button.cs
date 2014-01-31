@@ -222,7 +222,7 @@ namespace MyThirdSDL.UserInterface
 			if (TextureFrameHovered != null)
 				TextureFrameHovered.Dispose();
 			if (TextureFrameSelected != null)
-				TextureFrameHovered.Dispose();
+				TextureFrameSelected.Dispose();
 			if (Label != null)
 				Label.Dispose();
 			if (Tooltip != null)

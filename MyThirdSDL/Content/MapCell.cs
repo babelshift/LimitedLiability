@@ -1,3 +1,4 @@
+using System.Runtime.InteropServices;
 using MyThirdSDL.Agents;
 using MyThirdSDL.Simulation;
 using SharpDL;
@@ -12,7 +13,9 @@ namespace MyThirdSDL.Content
 	{
 		private PathNode containedPathNode;
 
-		private List<IDrawable> drawableObjects = new List<IDrawable>();
+		private List<Tile> tileObjects = new List<Tile>();
+
+		public IEnumerable<Tile> TileObjects { get { return tileObjects; } }
 
 		public Equipment OccupantEquipment { get; set; }
 
@@ -33,17 +36,50 @@ namespace MyThirdSDL.Content
 
 		public Tile FloorTile { get; set; }
 
-		public Texture FloorTexture { get { return FloorTile.Texture; } }
-
 		public MapCellType Type { get; set; }
 
 		public Guid ID { get; private set; }
 
 		public Point WorldGridIndex { get; internal set; }
 
-		public Vector WorldPosition { get; internal set; }
+		public Vector WorldPosition
+		{
+			get { return worldPosition; }
+			internal set
+			{
+				worldPosition = value;
 
-		public Vector ProjectedPosition { get; internal set; }
+				if (FloorTile != null)
+				{
+					FloorTile.WorldGridIndex = WorldGridIndex;
+					FloorTile.WorldPosition = worldPosition;
+				}
+
+				if (OccupantEquipment != null)
+					OccupantEquipment.WorldPosition = worldPosition;
+
+				foreach (var tileObject in tileObjects)
+				{
+					tileObject.WorldGridIndex = WorldGridIndex;
+					tileObject.WorldPosition = worldPosition;
+				}
+			}
+		}
+
+		public Vector ProjectedPosition
+		{
+			get
+			{
+				Vector projectedPosition = CoordinateHelper.WorldSpaceToScreenSpace(
+					WorldPosition.X,
+					WorldPosition.Y,
+					CoordinateHelper.ScreenOffset,
+					CoordinateHelper.ScreenProjectionType.Orthogonal
+				);
+
+				return projectedPosition;
+			}
+		}
 
 		public float Depth { get { return WorldPosition.X + WorldPosition.Y; } }
 
@@ -67,8 +103,8 @@ namespace MyThirdSDL.Content
 			if (OccupantEquipment != null)
 				OccupantEquipment.Draw(gameTime, renderer);
 
-			foreach (var drawable in drawableObjects)
-				drawable.Draw(gameTime, renderer);
+			foreach (var tileObject in tileObjects)
+				tileObject.Draw(gameTime, renderer);
 		}
 
 		public void Draw(GameTime gameTime, Renderer renderer, int x, int y, bool isOverlappingDeadZoneOverride)
@@ -79,20 +115,58 @@ namespace MyThirdSDL.Content
 			FloorTile.Draw(gameTime, renderer, x, y, isOverlappingDeadZoneOverride);
 
 			if (OccupantEquipment != null)
-			{
 				OccupantEquipment.Draw(gameTime, renderer, x, y, isOverlappingDeadZoneOverride);
-			}
 
-			foreach (var drawable in drawableObjects)
-				drawable.Draw(gameTime, renderer, x, y, isOverlappingDeadZoneOverride);
+			foreach (var tileObject in tileObjects)
+				tileObject.Draw(gameTime, renderer, x, y, isOverlappingDeadZoneOverride);
 		}
 
-		public void AddDrawableObject(IDrawable drawable)
+		public void AddTileObject(Tile tileObject)
 		{
-			if (drawableObjects.Any(d => d.ID == drawable.ID))
+			if (tileObjects.Any(d => d.ID == tileObject.ID))
 				throw new InvalidOperationException("Cannot add the same object to the same map cell twice.");
 
-			drawableObjects.Add(drawable);
+			tileObjects.Add(tileObject);
+		}
+
+		private void UpdateFloorTile(Tile tile)
+		{
+			FloorTile.UpdateTile(tile);
+		}
+
+		private void ReplaceTileObjects(IEnumerable<Tile> tileObjectsToAdd)
+		{
+			trashTileObjects.AddRange(tileObjects);
+			tileObjects.Clear();
+			tileObjects.AddRange(tileObjectsToAdd);
+		}
+
+		private List<Tile> trashTileObjects = new List<Tile>();
+		private Vector worldPosition;
+
+		public void UpdateMapCell(MapCell mapCell)
+		{
+			UpdateFloorTile(mapCell.FloorTile);
+			ReplaceTileObjects(mapCell.TileObjects);
+			if (OccupantEquipment != null)
+				OccupantEquipment.Dispose();
+			OccupantEquipment = mapCell.OccupantEquipment;
+		}
+
+		public void Dispose()
+		{
+			Dispose(true);
+			GC.SuppressFinalize(this);
+		}
+
+		private void Dispose(bool isDisposing)
+		{
+			if (FloorTile != null)
+				FloorTile.Dispose();
+			if (OccupantEquipment != null)
+				OccupantEquipment.Dispose();
+			foreach (var tileObject in tileObjects)
+				tileObject.Dispose();
 		}
 	}
 }

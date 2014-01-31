@@ -47,11 +47,6 @@ namespace MyThirdSDL.Content
 			GC.SuppressFinalize(this);
 		}
 
-		~TileLayer()
-		{
-			Dispose(false);
-		}
-
 		private void Dispose(bool isDisposing)
 		{
 			foreach (Tile tile in tiles)

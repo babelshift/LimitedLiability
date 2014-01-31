@@ -631,10 +631,6 @@ namespace MyThirdSDL.UserInterface
 			if (isMenuCompanyOpen)
 				menuCompany.Update(gameTime);
 
-			if (CurrentState == UserInterfaceState.PlaceEquipmentActive || CurrentState == UserInterfaceState.PlaceRoomActive)
-				if (Mouse.ButtonsPressed.Contains(MouseButtonCode.Right))
-					ChangeState(UserInterfaceState.Default);
-
 			TimeSpentInCurrentState = SimulationManager.SimulationTime.Subtract(timeOfStatusChange);
 
 			UpdateDisplayedDateAndTime(worldDateTime);
@@ -718,6 +714,14 @@ namespace MyThirdSDL.UserInterface
 
 		public void HandleMouseButtonPressedEvent(object sender, MouseButtonEventArgs e)
 		{
+			if (CurrentState == UserInterfaceState.PlaceEquipmentActive || CurrentState == UserInterfaceState.PlaceRoomActive)
+			{
+				if (e.MouseButton == MouseButtonCode.Right)
+				{
+					ChangeState(UserInterfaceState.Default);
+				}
+			}
+
 			TryToPlacePurchasableItem(e);
 
 			toolboxTray.HandleMouseButtonPressedEvent(sender, e);
@@ -740,11 +744,14 @@ namespace MyThirdSDL.UserInterface
 
 		private void TryToPlacePurchasableItem(MouseButtonEventArgs e)
 		{
-			if (CurrentState != UserInterfaceState.PlaceEquipmentActive) return;
+			if (CurrentState != UserInterfaceState.PlaceEquipmentActive && CurrentState != UserInterfaceState.PlaceRoomActive) return;
 			if (e.MouseButton != MouseButtonCode.Left) return;
 			if (isSelectedPurchasableOverlappingDeadZone) return;
 			if (PurchasableItemPlaced != null)
+			{
 				PurchasableItemPlaced(this, new PurchasableItemPlacedEventArgs(SelectedPurchasableItem, hoveredMapCells));
+				ChangeState(UserInterfaceState.Default);
+			}
 		}
 
 		public void HandleMouseMovingEvent(object sender, MouseMotionEventArgs e)

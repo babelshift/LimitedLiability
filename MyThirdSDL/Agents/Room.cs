@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.InteropServices;
 using MyThirdSDL.Content;
 using MyThirdSDL.Descriptors;
 using SharpDL;
@@ -35,6 +36,20 @@ namespace MyThirdSDL.Agents
 		{
 			get { return tiledMap.VerticalTileCount; }
 		}
+
+		public IEnumerable<Equipment> EquipmentOccupants
+		{
+			get
+			{
+				return tiledMap.MapCells
+					.Where(mc => mc.OccupantEquipment != null)
+					.Select(mc => mc.OccupantEquipment);
+			}
+		}
+
+		public IEnumerable<MapCell> MapCells { get { return tiledMap.MapCells; } }
+
+		public MapCell OriginMapCell { get { return tiledMap.OriginMapCell; } }
 
 		public Room(string name, int price, string iconTextureKey, TiledMap tiledMap)
 		{
@@ -77,5 +92,7 @@ namespace MyThirdSDL.Agents
 
 			return false;
 		}
+
+
 	}
 }

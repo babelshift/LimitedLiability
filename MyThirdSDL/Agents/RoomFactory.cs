@@ -6,19 +6,21 @@ namespace MyThirdSDL.Agents
 {
 	public class RoomFactory
 	{
+		private Renderer renderer;
 		private ContentManager contentManager;
 
-		public RoomFactory(ContentManager contentManager)
+		public RoomFactory(Renderer renderer, ContentManager contentManager)
 		{
+			this.renderer = renderer;
 			this.contentManager = contentManager;
 		}
 
-		public Library CreateLibrary(Renderer renderer, AgentFactory agentFactory)
+		public Library CreateLibrary(AgentFactory agentFactory)
 		{
-			return CreateRoom<Library>(renderer, agentFactory, "Library");
+			return CreateRoom<Library>(agentFactory, "Library");
 		}
 
-		private T CreateRoom<T>(Renderer renderer, AgentFactory agentFactory, string roomKey)
+		private T CreateRoom<T>(AgentFactory agentFactory, string roomKey)
 		{
 			RoomMetadata roomMetaData = contentManager.GetRoomMetadata(roomKey);
 			string mapPath = contentManager.GetContentPath(roomMetaData.MapPathKey);

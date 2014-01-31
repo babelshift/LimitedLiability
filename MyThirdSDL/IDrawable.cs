@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace MyThirdSDL
 {
-	public interface IDrawable
+	public interface IDrawable : IDisposable
 	{
 		Guid ID { get; }
 		Vector WorldPosition { get; }

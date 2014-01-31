@@ -25,7 +25,20 @@ namespace MyThirdSDL.Content
 		/// <summary>
 		/// Projected position is the calculated position for rendering based on world space position
 		/// </summary>
-		public Vector ProjectedPosition { get; internal set; }
+		public Vector ProjectedPosition
+		{
+			get
+			{
+				Vector projectedPosition = CoordinateHelper.WorldSpaceToScreenSpace(
+					WorldPosition.X,
+					WorldPosition.Y,
+					CoordinateHelper.ScreenOffset,
+					CoordinateHelper.ScreenProjectionType.Orthogonal
+					);
+
+				return projectedPosition;
+			}
+		}
 
 		/// <summary>
 		/// Depth determines the rendering order of the tile as compared to other drawable objects with depth
@@ -50,7 +63,7 @@ namespace MyThirdSDL.Content
 		/// <summary>
 		/// Rectangle determining where in the Texture to select the specific texture for our sprite or frame
 		/// </summary>
-		private Rectangle SourceTextureBounds { get; set; }
+		public Rectangle SourceTextureBounds { get; private set; }
 
 		/// <summary>
 		/// Tiles are empty if they have no texture assigned within Tiled Map Editor
@@ -115,15 +128,15 @@ namespace MyThirdSDL.Content
 			renderer.RenderTexture(Texture, x, y, SourceTextureBounds);
 		}
 
+		public void UpdateTile(Tile tile)
+		{
+			SourceTextureBounds = tile.SourceTextureBounds;
+		}
+
 		public void Dispose()
 		{
 			Dispose(true);
 			GC.SuppressFinalize(this);
-		}
-
-		~Tile()
-		{
-			Dispose(false);
 		}
 
 		private void Dispose(bool isDisposing)

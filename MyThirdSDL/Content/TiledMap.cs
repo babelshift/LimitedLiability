@@ -56,6 +56,8 @@ namespace MyThirdSDL.Content
 		/// </summary>
 		public int TileHeight { get; private set; }
 
+		public MapCell OriginMapCell { get { return mapCells[0]; } }
+
 		/// <summary>
 		/// Map cells contain references to tiles, map objects, and an optional equipment occupant. These map cells are used to draw things in the correct order,
 		/// path agents to the correct location, stop agents from pathing to certain locations, and more.
@@ -352,12 +354,11 @@ namespace MyThirdSDL.Content
 						if (tile.IsEmpty) continue;
 
 						mapCell.WorldPosition = tile.WorldPosition;
-						mapCell.ProjectedPosition = tile.ProjectedPosition;
 
 						if (tile.Type == TileType.Floor)
 							mapCell.FloorTile = tile;
 						else if (tile.Type == TileType.Object)
-							mapCell.AddDrawableObject(tile);
+							mapCell.AddTileObject(tile);
 					}
 					else
 						throw new Exception(String.Format("No map cell found at [{0},{1}].", tile.WorldGridIndex.X, tile.WorldGridIndex.Y));
@@ -491,7 +492,6 @@ namespace MyThirdSDL.Content
 
 						TilePosition tilePosition = GetTilePositionBasedOnOrientation(mapOrientation, x, y);
 
-						tile.ProjectedPosition = tilePosition.ProjectedPosition;
 						tile.WorldPosition = tilePosition.WorldPosition;
 						tile.WorldGridIndex = new Point(x, y);
 					}
@@ -532,6 +532,25 @@ namespace MyThirdSDL.Content
 		#endregion Map Population Methods
 
 		#region Finder Methods
+
+		public void ReplaceMapCellAtPosition(MapCell mapCellToAdd, Vector position)
+		{
+			if (mapCellToAdd == null) throw new ArgumentNullException("mapCellToAdd");
+
+			MapCell mapCellToReplace = mapCells.FirstOrDefault(mc => mc.Bounds.Contains(position));
+
+			if(mapCellToReplace == null) 
+				throw new InvalidOperationException(String.Format("Cannot replace a cell at location ({0},{1}) because there is no cell at that position.", position.X, position.Y));
+
+			mapCellToAdd.WorldGridIndex = mapCellToReplace.WorldGridIndex;
+			mapCellToAdd.WorldPosition = mapCellToReplace.WorldPosition;
+
+			int index = mapCells.IndexOf(mapCellToReplace);
+
+			mapCells.Remove(mapCellToReplace);
+			
+			mapCells.Insert(index, mapCellToAdd);
+		}
 
 		/// <summary>
 		/// Returns the path node that contains the passed vector position. The path node must be enabled in order to be returned. Path nodes are enabled unless
@@ -634,13 +653,13 @@ namespace MyThirdSDL.Content
 
 		public void Draw(GameTime gameTime, Renderer renderer)
 		{
-			List<IDrawable> drawableMapCells = new List<IDrawable>();
+			List<MapCell> mapCells = new List<MapCell>();
 
-			drawableMapCells.AddRange(MapCells);
-			drawableMapCells.Sort((d1, d2) => d1.Depth.CompareTo(d2.Depth));
+			mapCells.AddRange(MapCells);
+			mapCells.Sort((d1, d2) => d1.Depth.CompareTo(d2.Depth));
 
-			foreach (var drawable in drawableMapCells)
-				drawable.Draw(gameTime, renderer);
+			foreach (var mapCell in mapCells)
+				mapCell.Draw(gameTime, renderer);
 		}
 
 		public void Draw(GameTime gameTime, Renderer renderer, int x, int y, bool isOverlappingDeadZone)

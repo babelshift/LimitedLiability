@@ -58,7 +58,7 @@ namespace MyThirdSDL.Screens
 			simulationManager = new SimulationManager(DateTime.Now, contentManager.ThoughtPool);
 			jobFactory = new JobFactory();
 			agentFactory = new AgentFactory(renderer, contentManager, jobFactory);
-			roomFactory = new RoomFactory(contentManager);
+			roomFactory = new RoomFactory(renderer, contentManager);
 
 			simulationManager.HadThought += HandleEmployeeHadThought;
 			simulationManager.EmployeeThirstSatisfied += HandleEmployeeThirstSatisfied;
@@ -170,6 +170,8 @@ namespace MyThirdSDL.Screens
 			}
 			else if (e.PurchasableItem is Library)
 			{
+				var agentToAdd = roomFactory.CreateLibrary(agentFactory);
+				AddRoomToSimulationAndHoveredMapCells(agentToAdd, e.HoveredMapCells);
 			}
 		}
 
@@ -203,7 +205,7 @@ namespace MyThirdSDL.Screens
 			mailManager.SendMail(new MailItem("first.last@recruiters.com", "first.last@company.com", "Test Subject 5", "Test Body 5", MailState.Unread));
 
 			IEnumerable<IPurchasable> purchasableEquipment = GetPurchasableEquipment();
-			IEnumerable<IPurchasable> purchasableRooms = GetPurchasableRooms(renderer);
+			IEnumerable<IPurchasable> purchasableRooms = GetPurchasableRooms();
 
 			userInterfaceManager = new UserInterfaceManager(ContentManager, bottomRightPointOfScreen,
 				purchasableEquipment,
@@ -299,11 +301,9 @@ namespace MyThirdSDL.Screens
 			userInterfaceManager.UpdateDisplayedBankAccountBalance(e.NewBalance);
 		}
 
-		private IEnumerable<IPurchasable> GetPurchasableRooms(Renderer renderer)
+		private IEnumerable<IPurchasable> GetPurchasableRooms()
 		{
-			if (renderer == null) throw new ArgumentNullException("renderer");
-
-			List<IPurchasable> purchasableRooms = new List<IPurchasable> { roomFactory.CreateLibrary(renderer, agentFactory) };
+			List<IPurchasable> purchasableRooms = new List<IPurchasable> { roomFactory.CreateLibrary(agentFactory) };
 
 			return purchasableRooms;
 		}
@@ -362,8 +362,22 @@ namespace MyThirdSDL.Screens
 			bankAccount.Withdraw(equipment.Price);
 		}
 
-		private void AddRoomToSimulationAndHoveredMapCells<T>(T room, MapCell hoveredMapCell)
+		private void AddRoomToSimulationAndHoveredMapCells<T>(T room, IReadOnlyList<MapCell> hoveredMapCells)
+			where T : Room
 		{
+			if (room == null) throw new ArgumentNullException("room");
+			if (hoveredMapCells == null) throw new ArgumentNullException("hoveredMapCells");
+
+			foreach(var equipmentOccupant in room.EquipmentOccupants)
+				simulationManager.AddAgent(equipmentOccupant);
+
+			// for each map cell in the room that's being placed, replace whatever map cell it's hovering in the main tile map
+			Vector origin = hoveredMapCells[0].WorldPosition;
+			foreach (var roomMapCell in room.MapCells)
+			{
+				Vector offsetPosition = new Vector(roomMapCell.WorldPosition.X + origin.X, roomMapCell.WorldPosition.Y + origin.Y);
+				tiledMap.ReplaceMapCellAtPosition(roomMapCell, offsetPosition);
+			}
 		}
 
 		/// <summary>
