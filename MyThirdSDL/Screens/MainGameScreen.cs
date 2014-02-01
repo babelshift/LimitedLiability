@@ -198,11 +198,11 @@ namespace MyThirdSDL.Screens
 
 			mailManager = new MailManager();
 			mailManager.UnreadMailCountChanged += mailbox_UnreadMailCountChanged;
-			mailManager.SendMail(new MailItem("first.last@recruiters.com", "first.last@company.com", "Test Subject 1", "Test Body 1", MailState.Unread));
-			mailManager.SendMail(new MailItem("first.last@recruiters.com", "first.last@company.com", "Test Subject 2", "Test Body 2", MailState.Unread));
-			mailManager.SendMail(new MailItem("first.last@recruiters.com", "first.last@company.com", "Test Subject 3", "Test Body 3", MailState.Unread));
-			mailManager.SendMail(new MailItem("first.last@recruiters.com", "first.last@company.com", "Test Subject 4", "Test Body 4", MailState.Unread));
-			mailManager.SendMail(new MailItem("first.last@recruiters.com", "first.last@company.com", "Test Subject 5", "Test Body 5", MailState.Unread));
+			mailManager.SendMail(new MailItem("first.last@recruiters.com", "first.last@company.com", "Test Subject 1", "Test Body 1", AttachmentType.Resume,  MailState.Unread));
+			mailManager.SendMail(new MailItem("first.last@recruiters.com", "first.last@company.com", "Test Subject 2", "Test Body 2", AttachmentType.Resume, MailState.Unread));
+			mailManager.SendMail(new MailItem("first.last@recruiters.com", "first.last@company.com", "Test Subject 3", "Test Body 3", AttachmentType.Resume, MailState.Unread));
+			mailManager.SendMail(new MailItem("first.last@recruiters.com", "first.last@company.com", "Test Subject 4", "Test Body 4", AttachmentType.Resume, MailState.Unread));
+			mailManager.SendMail(new MailItem("first.last@recruiters.com", "first.last@company.com", "Test Subject 5", "Test Body 5", AttachmentType.Resume, MailState.Unread));
 
 			IEnumerable<IPurchasable> purchasableEquipment = GetPurchasableEquipment();
 			IEnumerable<IPurchasable> purchasableRooms = GetPurchasableRooms();
@@ -453,16 +453,16 @@ namespace MyThirdSDL.Screens
 		{
 			List<MouseOverScreenEdge> mouseOverScreenEdges = new List<MouseOverScreenEdge>();
 
-			if (Mouse.X <= 10 && Mouse.X >= 0)
+			if (Mouse.X <= 1 && Mouse.X >= 0)
 				mouseOverScreenEdges.Add(MouseOverScreenEdge.Left);
 
-			if (Mouse.X >= MainGame.SCREEN_WIDTH_LOGICAL - 10 && Mouse.X <= MainGame.SCREEN_WIDTH_LOGICAL)
+			if (Mouse.X >= MainGame.SCREEN_WIDTH_LOGICAL - 1 && Mouse.X <= MainGame.SCREEN_WIDTH_LOGICAL)
 				mouseOverScreenEdges.Add(MouseOverScreenEdge.Right);
 
-			if (Mouse.Y <= 10 && Mouse.Y >= 0)
+			if (Mouse.Y <= 1 && Mouse.Y >= 0)
 				mouseOverScreenEdges.Add(MouseOverScreenEdge.Top);
 
-			if (Mouse.Y >= MainGame.SCREEN_HEIGHT_LOGICAL - 10 && Mouse.Y <= MainGame.SCREEN_HEIGHT_LOGICAL)
+			if (Mouse.Y >= MainGame.SCREEN_HEIGHT_LOGICAL - 1 && Mouse.Y <= MainGame.SCREEN_HEIGHT_LOGICAL)
 				mouseOverScreenEdges.Add(MouseOverScreenEdge.Bottom);
 
 			if (mouseOverScreenEdges.Count == 0)

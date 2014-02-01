@@ -1,7 +1,6 @@
 ﻿{
 	"fonts": [
-		{ "key": "Arcade",						"value": "Fonts/Arcade N.ttf" },  
-		{ "key": "Aharoni Bold",				"value": "Fonts/ahronbd.ttf" }, 
+		{ "key": "Arcade",						"value": "Fonts/Arcade N.ttf" },
 		{ "key": "DroidSans",					"value": "Fonts/DroidSans.ttf" }, 
 		{ "key": "DroidSans Bold",				"value": "Fonts/DroidSans-Bold.ttf" }  
 	], 
@@ -29,6 +28,7 @@
 		{ "key": "MenuCompanyFrame",			"value": "Images/User Interface/MenuCompanyFrame.png" },
 		{ "key": "MenuScenarioFrame",			"value": "Images/User Interface/MenuScenarioFrame.png" },
 		{ "key": "MenuScenarioFrame2",			"value": "Images/User Interface/MenuScenarioFrame2.png" },
+		{ "key": "MenuResumeFrame",				"value": "Images/User Interface/MenuResumeFrame.png" },
 		{ "key": "TextboxLongFrame",			"value": "Images/User Interface/TextboxLongFrame.png" },
 		{ "key": "BackgroundStripeTile",		"value": "Images/User Interface/BackgroundStripeTile.png" },
 		{ "key": "BackgroundStripeTileFaded",	"value": "Images/User Interface/BackgroundStripeTileFaded.png" },
@@ -65,7 +65,7 @@
 		{ "key": "ButtonStatistics",			"value": "Images/User Interface/ButtonStatistics.png" },
 		{ "key": "ButtonStatisticsHover",		"value": "Images/User Interface/ButtonStatisticsHover.png" },
 		{ "key": "ButtonTopBar",				"value": "Images/User Interface/ButtonTopBar.png" },
-		{ "key": "ButtonTopBarHover",				"value": "Images/User Interface/ButtonTopBarHover.png" },
+		{ "key": "ButtonTopBarHover",			"value": "Images/User Interface/ButtonTopBarHover.png" },
 		
 		{ "key": "IconPenPaper",				"value": "Images/User Interface/IconPenPaper.png" },
 		{ "key": "IconWindow",					"value": "Images/User Interface/IconWindow.png" },

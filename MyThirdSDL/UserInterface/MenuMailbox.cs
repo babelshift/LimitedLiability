@@ -6,8 +6,6 @@ using SharpDL.Graphics;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MyThirdSDL.UserInterface
 {
@@ -16,6 +14,8 @@ namespace MyThirdSDL.UserInterface
 		#region Members
 
 		private Icon iconFrame;
+
+		private MenuResume menuResume;
 
 		private enum ActiveTab
 		{
@@ -34,7 +34,7 @@ namespace MyThirdSDL.UserInterface
 		private MailItem selectedMailItemOutbox;
 		private MailItem selectedMailItemArchive;
 
-		#endregion
+		#endregion Members
 
 		#region Pages
 
@@ -43,7 +43,7 @@ namespace MyThirdSDL.UserInterface
 		private Dictionary<int, MailItemPage> mailItemOutboxPages = new Dictionary<int, MailItemPage>();
 		private Dictionary<int, MailItemPage> mailItemArchivePages = new Dictionary<int, MailItemPage>();
 
-		#endregion
+		#endregion Pages
 
 		#region Labels
 
@@ -56,7 +56,7 @@ namespace MyThirdSDL.UserInterface
 		private Label labelArchiveFolder;
 		private Label labelSelectedFolderHeader;
 
-		#endregion
+		#endregion Labels
 
 		#region Buttons
 
@@ -69,7 +69,7 @@ namespace MyThirdSDL.UserInterface
 		private Button buttonArchive;
 		private Button buttonCloseWindow;
 
-		#endregion
+		#endregion Buttons
 
 		#region Icons
 
@@ -80,7 +80,7 @@ namespace MyThirdSDL.UserInterface
 		private Icon iconSelectedFolderHeader;
 		private Icon iconTopSeparator;
 
-		#endregion
+		#endregion Icons
 
 		#region Properties
 
@@ -99,8 +99,8 @@ namespace MyThirdSDL.UserInterface
 
 				if (currentDisplayedPage > CurrentDisplayedPageCount)
 					return CurrentDisplayedPageCount;
-				else
-					return currentDisplayedPage;
+
+				return currentDisplayedPage;
 			}
 		}
 
@@ -125,14 +125,17 @@ namespace MyThirdSDL.UserInterface
 		{
 			get
 			{
-				if (activeTab == ActiveTab.Inbox)
-					return selectedMailItemInbox;
-				else if (activeTab == ActiveTab.Outbox)
-					return selectedMailItemOutbox;
-				else if (activeTab == ActiveTab.Archive)
-					return selectedMailItemArchive;
-				else
-					return null;
+				switch (activeTab)
+				{
+					case ActiveTab.Inbox:
+						return selectedMailItemInbox;
+					case ActiveTab.Outbox:
+						return selectedMailItemOutbox;
+					case ActiveTab.Archive:
+						return selectedMailItemArchive;
+					default:
+						return null;
+				}
 			}
 			set
 			{
@@ -186,14 +189,15 @@ namespace MyThirdSDL.UserInterface
 			}
 		}
 
-		#endregion
+		#endregion Properties
 
 		#region Public Events
 
 		public event EventHandler<ArchiveEventArgs> ArchiveMailButtonClicked;
+
 		public event EventHandler<EventArgs> CloseButtonClicked;
 
-		#endregion
+		#endregion Public Events
 
 		#region Constructors
 
@@ -288,20 +292,35 @@ namespace MyThirdSDL.UserInterface
 			Controls.Add(iconTopSeparator);
 			Controls.Add(buttonCloseWindow);
 
-			this.buttonInboxFolder.Clicked += buttonInboxFolder_Clicked;
-			this.buttonOutboxFolder.Clicked += buttonOutboxFolder_Clicked;
-			this.buttonArchiveFolder.Clicked += buttonArchiveFolder_Clicked;
-			this.buttonArrowLeft.Clicked += buttonArrowLeft_Clicked;
-			this.buttonArrowRight.Clicked += buttonArrowRight_Clicked;
-			this.buttonView.Clicked += buttonView_Clicked;
-			this.buttonArchive.Clicked += buttonArchive_Clicked;
-			this.buttonCloseWindow.Clicked += buttonCloseWindow_Clicked;
+			buttonInboxFolder.Clicked += buttonInboxFolder_Clicked;
+			buttonOutboxFolder.Clicked += buttonOutboxFolder_Clicked;
+			buttonArchiveFolder.Clicked += buttonArchiveFolder_Clicked;
+			buttonArrowLeft.Clicked += buttonArrowLeft_Clicked;
+			buttonArrowRight.Clicked += buttonArrowRight_Clicked;
+			buttonView.Clicked += buttonView_Clicked;
+			buttonArchive.Clicked += buttonArchive_Clicked;
+			buttonCloseWindow.Clicked += buttonCloseWindow_Clicked;
 
-			this.currentDisplayedPageInbox = 1;
+			currentDisplayedPageInbox = 1;
 			SetActiveTab(ActiveTab.Inbox);
+
+			menuResume = new MenuResume(contentManager);
+			menuResume.Visible = false;
+			menuResume.Accepted += MenuResumeOnAccepted;
+			menuResume.Rejected += MenuResumeOnRejected;
 		}
 
-		#endregion
+		private void MenuResumeOnRejected(object sender, EventArgs eventArgs)
+		{
+			Visible = true;
+		}
+
+		private void MenuResumeOnAccepted(object sender, EventArgs eventArgs)
+		{
+			Visible = true;
+		}
+
+		#endregion Constructors
 
 		public void AddButtonMailItems(ContentManager contentManager, IEnumerable<MailItem> inbox, IEnumerable<MailItem> outbox, IEnumerable<MailItem> archive)
 		{
@@ -373,7 +392,15 @@ namespace MyThirdSDL.UserInterface
 
 		private void buttonView_Clicked(object sender, EventArgs e)
 		{
-
+			if (SelectedMailItem != null)
+			{
+				if (SelectedMailItem.AttachmentType == AttachmentType.Resume)
+				{
+					menuResume.Position = base.Position;
+					menuResume.Visible = true;
+					Visible = false;
+				}
+			}
 		}
 
 		private void buttonArrowRight_Clicked(object sender, EventArgs e)
@@ -416,75 +443,95 @@ namespace MyThirdSDL.UserInterface
 			SetActiveTab(ActiveTab.Inbox);
 		}
 
-		#endregion
+		#endregion Button Events
 
 		#region Game Loop
 
 		public override void Update(GameTime gameTime)
 		{
-			base.Update(gameTime);
-
-			if (iconSelectedFolderHeader != null)
-				iconSelectedFolderHeader.Update(gameTime);
-
-			if (labelSelectedFolderHeader != null)
-				labelSelectedFolderHeader.Update(gameTime);
-
-			MailItemPage currentPage = null;
-			bool success = mailItemPages.TryGetValue(CurrentDisplayedPageNumber, out currentPage);
-			if (success)
+			if (Visible)
 			{
-				foreach (var button in currentPage.Buttons)
-					button.Update(gameTime);
-				foreach (var separator in currentPage.Separators)
-					separator.Update(gameTime);
+				base.Update(gameTime);
+
+				if (iconSelectedFolderHeader != null)
+					iconSelectedFolderHeader.Update(gameTime);
+
+				if (labelSelectedFolderHeader != null)
+					labelSelectedFolderHeader.Update(gameTime);
+
+				MailItemPage currentPage = null;
+				bool success = mailItemPages.TryGetValue(CurrentDisplayedPageNumber, out currentPage);
+				if (success)
+				{
+					foreach (var button in currentPage.Buttons)
+						button.Update(gameTime);
+					foreach (var separator in currentPage.Separators)
+						separator.Update(gameTime);
+				}
 			}
+
+			menuResume.Update(gameTime);
 		}
 
 		public override void Draw(GameTime gameTime, Renderer renderer)
 		{
-			base.Draw(gameTime, renderer);
-
-			if (iconSelectedFolderHeader != null)
-				iconSelectedFolderHeader.Draw(gameTime, renderer);
-
-			if (labelSelectedFolderHeader != null)
-				labelSelectedFolderHeader.Draw(gameTime, renderer);
-
-			MailItemPage currentPage = null;
-			bool success = mailItemPages.TryGetValue(CurrentDisplayedPageNumber, out currentPage);
-			if (success)
+			if (Visible)
 			{
-				foreach (var button in currentPage.Buttons)
-					button.Draw(gameTime, renderer);
-				foreach (var separator in currentPage.Separators)
-					separator.Draw(gameTime, renderer);
+				base.Draw(gameTime, renderer);
+
+				if (iconSelectedFolderHeader != null)
+					iconSelectedFolderHeader.Draw(gameTime, renderer);
+
+				if (labelSelectedFolderHeader != null)
+					labelSelectedFolderHeader.Draw(gameTime, renderer);
+
+				MailItemPage currentPage = null;
+				bool success = mailItemPages.TryGetValue(CurrentDisplayedPageNumber, out currentPage);
+				if (success)
+				{
+					foreach (var button in currentPage.Buttons)
+						button.Draw(gameTime, renderer);
+					foreach (var separator in currentPage.Separators)
+						separator.Draw(gameTime, renderer);
+				}
 			}
+
+			menuResume.Draw(gameTime, renderer);
 		}
 
 		public override void HandleMouseButtonPressedEvent(object sender, MouseButtonEventArgs e)
 		{
-			base.HandleMouseButtonPressedEvent(sender, e);
+			if (Visible)
+			{
+				base.HandleMouseButtonPressedEvent(sender, e);
 
-			MailItemPage currentPage = null;
-			bool success = mailItemPages.TryGetValue(CurrentDisplayedPageNumber, out currentPage);
-			if (success)
-				foreach (var button in currentPage.Buttons)
-					button.HandleMouseButtonPressedEvent(sender, e);
+				MailItemPage currentPage = null;
+				bool success = mailItemPages.TryGetValue(CurrentDisplayedPageNumber, out currentPage);
+				if (success)
+					foreach (var button in currentPage.Buttons)
+						button.HandleMouseButtonPressedEvent(sender, e);
+			}
+
+			menuResume.HandleMouseButtonPressedEvent(sender, e);
 		}
 
 		public override void HandleMouseMovingEvent(object sender, MouseMotionEventArgs e)
 		{
-			base.HandleMouseMovingEvent(sender, e);
+			if (Visible)
+			{
+				base.HandleMouseMovingEvent(sender, e);
 
-			MailItemPage currentPage = null;
-			bool success = mailItemPages.TryGetValue(CurrentDisplayedPageNumber, out currentPage);
-			if (success)
-				foreach (var button in currentPage.Buttons)
-					button.HandleMouseMovingEvent(sender, e);
+				MailItemPage currentPage = null;
+				bool success = mailItemPages.TryGetValue(CurrentDisplayedPageNumber, out currentPage);
+				if (success)
+					foreach (var button in currentPage.Buttons)
+						button.HandleMouseMovingEvent(sender, e);
+			}
+
+			menuResume.HandleMouseMovingEvent(sender, e);
 		}
 
-		#endregion
+		#endregion Game Loop
 
 		#region Methods
 
@@ -705,7 +752,7 @@ namespace MyThirdSDL.UserInterface
 			mailItemPages = new Dictionary<int, MailItemPage>();
 		}
 
-		#endregion
+		#endregion Methods
 
 		private void Dispose(bool disposing)
 		{

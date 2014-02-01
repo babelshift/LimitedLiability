@@ -62,15 +62,21 @@ namespace MyThirdSDL.UserInterface
 
 		public virtual void Update(GameTime gameTime)
 		{
-			if (IsHovered)
-				OnHovered(EventArgs.Empty);
+			if (Visible)
+			{
+				if (IsHovered)
+					OnHovered(EventArgs.Empty);
+			}
 		}
 
 		public abstract void Draw(GameTime gameTime, Renderer renderer);
 
 		public virtual void HandleMouseMovingEvent(object sender, MouseMotionEventArgs e)
 		{
-			IsHovered = GetHovered(e.RelativeToWindowX, e.RelativeToWindowY);
+			if (Visible)
+			{
+				IsHovered = GetHovered(e.RelativeToWindowX, e.RelativeToWindowY);
+			}
 		}
 
 		private bool GetHovered(int x, int y)
@@ -80,20 +86,29 @@ namespace MyThirdSDL.UserInterface
 
 		public virtual void HandleMouseButtonPressedEvent(object sender, MouseButtonEventArgs e)
 		{
-			IsHovered = GetHovered(e.RelativeToWindowX, e.RelativeToWindowY);
+			if (Visible)
+			{
+				IsHovered = GetHovered(e.RelativeToWindowX, e.RelativeToWindowY);
 
-			bool isClicked = GetClicked(e);
+				bool isClicked = GetClicked(e);
 
-			if (isClicked)
-				OnClicked(EventArgs.Empty);
+				if (isClicked)
+					OnClicked(EventArgs.Empty);
+			}
 		}
 
 		public virtual void HandleTextInput(string text)
 		{
+			if (Visible)
+			{
+			}
 		}
 
 		public virtual void HandleKeyPressed(KeyInformation key)
 		{
+			if (Visible)
+			{
+			}
 		}
 
 		public virtual void Focus()

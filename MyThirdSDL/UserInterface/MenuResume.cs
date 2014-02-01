@@ -14,9 +14,6 @@ namespace MyThirdSDL.UserInterface
 
 		private Label labelName;
 		private Label labelEmailAddress;
-		private Label labelAddressLine1;
-		private Label labelAddressLine2;
-		private Label labelPhoneNumber;
 
 		private Label labelContent;
 
@@ -46,12 +43,37 @@ namespace MyThirdSDL.UserInterface
 		public override Vector Position
 		{
 			get { return base.Position; }
-			set { base.Position = value; }
+			set
+			{
+				base.Position = value;
+
+				iconFrame.Position = base.Position;
+				iconMainMenu.Position = base.Position + new Vector(3, 5);
+				iconSkillsMenu.Position = base.Position + new Vector(560, 5);
+				labelMainMenu.Position = base.Position + new Vector(38, 15);
+				buttonReject.Position = base.Position + new Vector(Width - buttonReject.Width, Height + 5);
+				buttonAccept.Position = base.Position + new Vector(Width - buttonAccept.Width - buttonReject.Width - 5, Height + 5);
+				labelName.Position = base.Position + new Vector(5, 50);
+				labelEmailAddress.Position = base.Position + new Vector(5, 70);
+				labelJob.Position = base.Position + new Vector(Width - labelJob.Width - 155, 50);
+				labelSalary.Position = base.Position + new Vector(Width - labelSalary.Width - 155, 70);
+				labelContent.Position = base.Position + new Vector(5, 130);
+
+				labelSkillsMenu.Position = base.Position + new Vector(590, 15);
+				iconCommunication.Position = base.Position + new Vector(565, 50);
+				iconLeadership.Position = base.Position + new Vector(565, 80);
+				iconCreativity.Position = base.Position + new Vector(565, 110);
+				iconIntelligence.Position = base.Position + new Vector(565, 140);
+				labelCommunicationValue.Position = base.Position + new Vector(600, 60);
+				labelLeadershipValue.Position = base.Position + new Vector(600, 90);
+				labelCreativityValue.Position = base.Position + new Vector(600, 120);
+				labelIntelligenceValue.Position = base.Position + new Vector(600, 150);
+			}
 		}
 
 		public MenuResume(ContentManager contentManager)
 		{
-			Texture textureFrame = contentManager.GetTexture("MenuInspectEmployeeFrame");
+			Texture textureFrame = contentManager.GetTexture("MenuResumeFrame");
 			iconFrame = new Icon(textureFrame);
 			Width = iconFrame.Width;
 			Height = iconFrame.Height;
@@ -97,12 +119,18 @@ namespace MyThirdSDL.UserInterface
 			labelIntelligenceValue = ControlFactory.CreateLabel(contentManager, fontPath, fontSizeContent, fontColorValue,
 				defaultText);
 
+			labelName = ControlFactory.CreateLabel(contentManager, fontPath, fontSizeContent, fontColorValue, "Turd Burglar");
+			labelEmailAddress = ControlFactory.CreateLabel(contentManager, fontPath, fontSizeContent, fontColorValue,
+				"Turd@Burglars.com");
+			labelContent = ControlFactory.CreateLabel(contentManager, fontPath, fontSizeContent, fontColorValue,
+				"At my past job, I spent a lot of time sleeping at my desk. I promise not to do that if you hire me. Also, I need money. That said, I can't promise that my narcolepsy is completely cured. I have a doctor's note if you need one.", 550);
+			labelJob = ControlFactory.CreateLabel(contentManager, fontPath, fontSizeContent, fontColorValue, "Software Engineer");
+			labelSalary = ControlFactory.CreateLabel(contentManager, fontPath, fontSizeContent, fontColorValue, "$100K / yr");
+
 			Controls.Add(iconFrame);
 			Controls.Add(iconMainMenu);
 			Controls.Add(iconSkillsMenu);
 			Controls.Add(labelName);
-			Controls.Add(labelAddressLine1);
-			Controls.Add(labelAddressLine2);
 			Controls.Add(labelCommunicationValue);
 			Controls.Add(labelContent);
 			Controls.Add(labelCreativityValue);
@@ -111,7 +139,6 @@ namespace MyThirdSDL.UserInterface
 			Controls.Add(labelJob);
 			Controls.Add(labelLeadershipValue);
 			Controls.Add(labelMainMenu);
-			Controls.Add(labelPhoneNumber);
 			Controls.Add(labelSalary);
 			Controls.Add(labelSkillsMenu);
 			Controls.Add(iconCommunication);
@@ -124,12 +151,16 @@ namespace MyThirdSDL.UserInterface
 
 		private void ButtonAcceptOnClicked(object sender, EventArgs eventArgs)
 		{
-			throw new NotImplementedException();
+			Visible = false;
+			if (Accepted != null)
+				Accepted(sender, eventArgs);
 		}
 
 		private void ButtonRejectOnClicked(object sender, EventArgs eventArgs)
 		{
-			throw new NotImplementedException();
+			Visible = false;
+			if (Rejected != null)
+				Rejected(sender, eventArgs);
 		}
 	}
 }

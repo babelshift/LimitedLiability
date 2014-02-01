@@ -22,7 +22,7 @@ namespace MyThirdSDL.Mail
 
 		public AttachmentType AttachmentType { get; private set; }
 
-		public MailItem(string from, string to, string subject, string body, MailState mailState)
+		public MailItem(string from, string to, string subject, string body, AttachmentType attachmentType, MailState mailState)
 		{
 			ID = Guid.NewGuid();
 			From = from;
@@ -30,6 +30,7 @@ namespace MyThirdSDL.Mail
 			Subject = subject;
 			Body = body;
 			MailState = mailState;
+			AttachmentType = attachmentType;
 		}
 
 		public void ChangeState(MailState mailState)
