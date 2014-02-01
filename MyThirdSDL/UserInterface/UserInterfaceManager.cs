@@ -34,6 +34,7 @@ namespace MyThirdSDL.UserInterface
 		#region Controls
 
 		private readonly ToolboxTray toolboxTray;
+		private readonly TopToolboxTray topToolboxTray;
 		private readonly IEnumerable<IPurchasable> purchasableEquipment;
 		private readonly IEnumerable<IPurchasable> purchasableRooms;
 		private MenuMailbox menuMailbox;
@@ -161,7 +162,8 @@ namespace MyThirdSDL.UserInterface
 
 		public void UpdateDisplayedBankAccountBalance(int balance)
 		{
-			toolboxTray.UpdateDisplayedBankAccountBalance(balance);
+			if (topToolboxTray != null)
+				topToolboxTray.UpdateDisplayedBankAccountBalance(balance);
 		}
 
 		public void SetEmployeeBeingInspected(Employee employee)
@@ -182,8 +184,8 @@ namespace MyThirdSDL.UserInterface
 
 		private void UpdateDisplayedDateAndTime(DateTime dateTime)
 		{
-			if (toolboxTray != null)
-				toolboxTray.UpdateDisplayedDateAndTime(dateTime);
+			if (topToolboxTray != null)
+				topToolboxTray.UpdateDisplayedDateAndTime(dateTime);
 		}
 
 		private void ChangeState(UserInterfaceState state)
@@ -232,7 +234,7 @@ namespace MyThirdSDL.UserInterface
 			this.purchasableEquipment = purchasableEquipment;
 			this.purchasableRooms = purchasableRooms;
 
-			toolboxTray = new ToolboxTray(contentManager, unreadMailCount, money);
+			toolboxTray = new ToolboxTray(contentManager);
 			toolboxTray.Position = new Vector(bottomRightPointOfWindow.X / 2 - toolboxTray.Width / 2, bottomRightPointOfWindow.Y - toolboxTray.Height);
 			toolboxTray.ButtonSelectGeneralClicked += ToolboxTray_ButtonSelectGeneralClicked;
 			toolboxTray.ButtonSelectEquipmentClicked += ToolboxTray_ButtonSelectEquipmentClicked;
@@ -241,8 +243,11 @@ namespace MyThirdSDL.UserInterface
 			toolboxTray.ButtonCompanyClicked += ToolboxTray_ButtonCompanyClicked;
 			toolboxTray.ButtonEmployeesClicked += ToolboxTray_ButtonEmployeesClicked;
 			toolboxTray.ButtonProductsClicked += ToolboxTray_ButtonProductsClicked;
-			toolboxTray.ButtonMainMenuClicked += ToolboxTray_ButtonMainMenuClicked;
-			toolboxTray.ButtonMailMenuClicked += ToolboxTray_ButtonMailMenuClicked;
+
+			topToolboxTray = new TopToolboxTray(contentManager, money);
+			topToolboxTray.Position = Vector.Zero;
+			topToolboxTray.ButtonMainMenuClicked += ButtonMainMenuOnClicked;
+			topToolboxTray.ButtonMailMenuClicked += ButtonMailMenuOnClicked;
 
 			Color fontColor;
 			int fontSizeContent;
@@ -341,13 +346,13 @@ namespace MyThirdSDL.UserInterface
 
 		#region ToolboxTray Events
 
-		private void ToolboxTray_ButtonMainMenuClicked(object sender, EventArgs e)
+		private void ButtonMainMenuOnClicked(object sender, EventArgs e)
 		{
 			if (MainMenuButtonClicked != null)
 				MainMenuButtonClicked(sender, e);
 		}
 
-		private void ToolboxTray_ButtonMailMenuClicked(object sender, EventArgs e)
+		private void ButtonMailMenuOnClicked(object sender, EventArgs e)
 		{
 			if (isMenuMailboxOpen)
 				ClearMenusOpen();
@@ -425,7 +430,8 @@ namespace MyThirdSDL.UserInterface
 
 		public void UpdateUnreadMailCount(int unreadMailCount)
 		{
-			toolboxTray.UpdateDisplayedUnreadMailCount(unreadMailCount);
+			if (topToolboxTray != null)
+				topToolboxTray.UpdateDisplayedUnreadMailCount(unreadMailCount);
 		}
 
 		public void UpdateMenuMailBox(IEnumerable<MailItem> inbox, IEnumerable<MailItem> outbox, IEnumerable<MailItem> archive)
@@ -614,6 +620,7 @@ namespace MyThirdSDL.UserInterface
 			labelSimulationTime.Text = String.Format("Simulation Time: {0}", simulationTimeDisplay);
 
 			toolboxTray.Update(gameTime);
+			topToolboxTray.Update(gameTime);
 
 			if (isMenuEquipmentOpen)
 				menuPurchaseEquipment.Update(gameTime);
@@ -639,9 +646,10 @@ namespace MyThirdSDL.UserInterface
 		{
 			DrawSelectedPurchasableItem(gameTime, renderer);
 
-			DrawDiagnosticLabels(gameTime, renderer);
+			//DrawDiagnosticLabels(gameTime, renderer);
 
 			toolboxTray.Draw(gameTime, renderer);
+			topToolboxTray.Draw(gameTime, renderer);
 
 			DrawMenus(gameTime, renderer);
 		}
@@ -724,6 +732,7 @@ namespace MyThirdSDL.UserInterface
 			TryToPlacePurchasableItem(e);
 
 			toolboxTray.HandleMouseButtonPressedEvent(sender, e);
+			topToolboxTray.HandleMouseButtonPressedEvent(sender, e);
 
 			if (isMenuEquipmentOpen)
 				menuPurchaseEquipment.HandleMouseButtonPressedEvent(sender, e);
@@ -758,6 +767,7 @@ namespace MyThirdSDL.UserInterface
 			UpdateMousePositionDiagnostics(e);
 
 			toolboxTray.HandleMouseMovingEvent(sender, e);
+			topToolboxTray.HandleMouseMovingEvent(sender, e);
 
 			if (isMenuEquipmentOpen)
 				menuPurchaseEquipment.HandleMouseMovingEvent(sender, e);

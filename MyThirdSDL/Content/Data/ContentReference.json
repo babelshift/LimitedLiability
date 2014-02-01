@@ -1,6 +1,9 @@
 ﻿{
 	"fonts": [
-		{ "key": "Arcade",						"value": "Fonts/Arcade N.ttf" }  
+		{ "key": "Arcade",						"value": "Fonts/Arcade N.ttf" },  
+		{ "key": "Aharoni Bold",				"value": "Fonts/ahronbd.ttf" }, 
+		{ "key": "DroidSans",					"value": "Fonts/DroidSans.ttf" }, 
+		{ "key": "DroidSans Bold",				"value": "Fonts/DroidSans-Bold.ttf" }  
 	], 
 	"textures": [
 		{ "key": "MaleEmployee0001",			"value": "Images/MaleEmployee0001.png" },
@@ -61,6 +64,8 @@
 		{ "key": "ButtonRoomsHover",			"value": "Images/User Interface/ButtonRoomsHover.png" },
 		{ "key": "ButtonStatistics",			"value": "Images/User Interface/ButtonStatistics.png" },
 		{ "key": "ButtonStatisticsHover",		"value": "Images/User Interface/ButtonStatisticsHover.png" },
+		{ "key": "ButtonTopBar",				"value": "Images/User Interface/ButtonTopBar.png" },
+		{ "key": "ButtonTopBarHover",				"value": "Images/User Interface/ButtonTopBarHover.png" },
 		
 		{ "key": "IconPenPaper",				"value": "Images/User Interface/IconPenPaper.png" },
 		{ "key": "IconWindow",					"value": "Images/User Interface/IconWindow.png" },
@@ -106,12 +111,13 @@
 		{ "key": "IconInputBar",				"value": "Images/User Interface/IconInputBar.png" },
 		{ "key": "IconLibrary",					"value": "Images/User Interface/IconLibrary.png" },
 		{ "key": "IconNametag",					"value": "Images/User Interface/IconNametag.png" },
+		{ "key": "IconMailNotification",		"value": "Images/User Interface/IconMailNotification.png" },
+		{ "key": "IconAlertNotification",		"value": "Images/User Interface/IconAlertNotification.png" },
+		{ "key": "IconPause",					"value": "Images/User Interface/IconPause.png" },
+		{ "key": "IconPlay",					"value": "Images/User Interface/IconPlay.png" },
+		{ "key": "IconFastForward",				"value": "Images/User Interface/IconFastForward.png" },
+		{ "key": "IconGameMenu",				"value": "Images/User Interface/IconGameMenu.png" },
 
-		{ "key": "CursorHandRight",				"value": "Images/User Interface/CursorHandRight.png" },
-		{ "key": "CursorHandUp",				"value": "Images/User Interface/CursorHandUp.png" },
-		{ "key": "CursorHandLeft",				"value": "Images/User Interface/CursorHandLeft.png" },
-		{ "key": "CursorHandDown",				"value": "Images/User Interface/CursorHandDown.png" },
-		
 		{ "key": "ScenarioThumbnail1",			"value": "Images/User Interface/ScenarioThumbnail1.png" },
 		{ "key": "ScenarioThumbnail1Selected",	"value": "Images/User Interface/ScenarioThumbnail1Selected.png" },
 		{ "key": "ScenarioOverview1",			"value": "Images/User Interface/ScenarioOverview1.png" }

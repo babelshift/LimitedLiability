@@ -39,9 +39,9 @@ namespace MyThirdSDL.UserInterface
 
 		public event EventHandler ButtonProductsClicked;
 
-		public event EventHandler ButtonMainMenuClicked;
+		//public event EventHandler ButtonMainMenuClicked;
 
-		public event EventHandler ButtonMailMenuClicked;
+		//public event EventHandler ButtonMailMenuClicked;
 
 		public override Vector Position
 		{
@@ -82,10 +82,9 @@ namespace MyThirdSDL.UserInterface
 			}
 		}
 
-		public ToolboxTray(ContentManager contentManager, int unreadMailCount, int money)
+		public ToolboxTray(ContentManager contentManager)
 		{
-			Texture textureFrame = contentManager.GetTexture("BottomBar");
-			iconFrame = new Icon(textureFrame);
+			iconFrame = ControlFactory.CreateIcon(contentManager, "BottomBar");
 			Width = iconFrame.Width;
 			Height = iconFrame.Height;
 
@@ -159,34 +158,8 @@ namespace MyThirdSDL.UserInterface
 			buttonCompany.Clicked += ButtonCompany_Clicked;
 			buttonEmployees.Clicked += ButtonEmployees_Clicked;
 			buttonProducts.Clicked += ButtonProducts_Clicked;
-			buttonMainMenu.Clicked += ButtonMainMenu_Clicked;
+			//buttonMainMenu.Clicked += ButtonMainMenu_Clicked;
 			//buttonMailMenu.Clicked += ButtonMailMenu_Clicked;
-		}
-
-		public void UpdateDisplayedDateAndTime(DateTime dateTime)
-		{
-			//labelTime.Text = dateTime.ToShortTimeString();
-			//labelDate.Text = dateTime.ToShortDateString();
-		}
-
-		public void UpdateDisplayedUnreadMailCount(int unreadMailCount)
-		{
-			//buttonMailMenu.Text = unreadMailCount.ToString();
-		}
-
-		public void UpdateDisplayedBankAccountBalance(int money)
-		{
-			//labelMoney.Text = money.ToString();
-		}
-
-		private void ButtonMailMenu_Clicked(object sender, EventArgs e)
-		{
-			OnButtonMailMenuClicked(sender, e);
-		}
-
-		private void ButtonMainMenu_Clicked(object sender, EventArgs e)
-		{
-			OnButtonMainMenuClicked(sender, e);
 		}
 
 		private void ButtonProducts_Clicked(object sender, EventArgs e)
@@ -264,18 +237,6 @@ namespace MyThirdSDL.UserInterface
 		{
 			if (ButtonProductsClicked != null)
 				ButtonProductsClicked(sender, e);
-		}
-
-		private void OnButtonMainMenuClicked(object sender, EventArgs e)
-		{
-			if (ButtonMainMenuClicked != null)
-				ButtonMainMenuClicked(sender, e);
-		}
-
-		private void OnButtonMailMenuClicked(object sender, EventArgs e)
-		{
-			if (ButtonMailMenuClicked != null)
-				ButtonMailMenuClicked(sender, e);
 		}
 	}
 }
