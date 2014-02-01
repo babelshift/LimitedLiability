@@ -232,9 +232,8 @@ namespace MyThirdSDL.UserInterface
 			this.purchasableEquipment = purchasableEquipment;
 			this.purchasableRooms = purchasableRooms;
 
-			Vector toolboxTrayPosition = new Vector(bottomRightPointOfWindow.X / 2 - 350, bottomRightPointOfWindow.Y - 50);
 			toolboxTray = new ToolboxTray(contentManager, unreadMailCount, money);
-			toolboxTray.Position = toolboxTrayPosition;
+			toolboxTray.Position = new Vector(bottomRightPointOfWindow.X / 2 - toolboxTray.Width / 2, bottomRightPointOfWindow.Y - toolboxTray.Height);
 			toolboxTray.ButtonSelectGeneralClicked += ToolboxTray_ButtonSelectGeneralClicked;
 			toolboxTray.ButtonSelectEquipmentClicked += ToolboxTray_ButtonSelectEquipmentClicked;
 			toolboxTray.ButtonSelectRoomClicked += ToolboxTray_ButtonSelectRoomClicked;

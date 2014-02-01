@@ -1,12 +1,7 @@
 ﻿using MyThirdSDL.Content;
 using SharpDL;
 using SharpDL.Graphics;
-using SharpDL.Input;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MyThirdSDL.UserInterface
 {
@@ -14,7 +9,8 @@ namespace MyThirdSDL.UserInterface
 	{
 		TextOnly,
 		IconOnly,
-		IconAndText
+		IconAndText,
+		FrameOnly
 	}
 
 	public class Button : Control
@@ -24,12 +20,14 @@ namespace MyThirdSDL.UserInterface
 		private Texture textureFrame;
 		private ButtonType buttonType;
 
-		#endregion
+		#endregion Members
 
 		#region Properties
 
 		public Icon Icon { get; set; }
+
 		public Icon IconHovered { get; set; }
+
 		public Texture TextureFrame
 		{
 			get { return textureFrame; }
@@ -40,24 +38,35 @@ namespace MyThirdSDL.UserInterface
 				Height = textureFrame.Height;
 			}
 		}
+
 		public Texture TextureFrameHovered { get; set; }
+
 		public Texture TextureFrameSelected { get; set; }
+
 		public Label Label { get; set; }
+
 		public Tooltip Tooltip { get; set; }
+
 		public string Text { get { return Label.Text; } set { Label.Text = value; } }
+
 		public bool IsPressed { get; private set; }
+
 		public ButtonType ButtonType
 		{
 			get { return buttonType; }
 			set
 			{
 				buttonType = value;
-				if (buttonType == UserInterface.ButtonType.TextOnly)
+				if (buttonType == ButtonType.FrameOnly)
+				{
+
+				}
+				else if (buttonType == ButtonType.TextOnly)
 				{
 					if (Label != null)
 						Label.Position = new Vector(base.Position.X + TextureFrame.Width / 2 - Label.Width / 2, base.Position.Y + TextureFrame.Height / 2 - Label.Height / 2);
 				}
-				else if (buttonType == UserInterface.ButtonType.IconOnly)
+				else if (buttonType == ButtonType.IconOnly)
 				{
 					if (Icon != null)
 						Icon.Position = new Vector(base.Position.X + (TextureFrame.Width / 2 - Icon.Width / 2), base.Position.Y + (TextureFrame.Height / 2 - Icon.Height / 2));
@@ -65,7 +74,7 @@ namespace MyThirdSDL.UserInterface
 					if (IconHovered != null)
 						IconHovered.Position = new Vector(base.Position.X + (TextureFrame.Width / 2 - IconHovered.Width / 2), base.Position.Y + (TextureFrame.Height / 2 - IconHovered.Height / 2));
 				}
-				else if (buttonType == UserInterface.ButtonType.IconAndText)
+				else if (buttonType == ButtonType.IconAndText)
 				{
 					if (Icon != null)
 						Icon.Position = new Vector(base.Position.X + 5, base.Position.Y + (TextureFrame.Height / 2 - Icon.Height / 2));
@@ -118,11 +127,11 @@ namespace MyThirdSDL.UserInterface
 
 		public void EnableLabelShadow(ContentManager contentManager, int shadowOffsetX, int shadowOffsetY)
 		{
-			if(Label != null)
+			if (Label != null)
 				Label.EnableShadow(contentManager, shadowOffsetX, shadowOffsetY);
 		}
 
-		#endregion
+		#endregion Properties
 
 		#region Constructors
 
@@ -131,7 +140,7 @@ namespace MyThirdSDL.UserInterface
 			Visible = true;
 		}
 
-		#endregion
+		#endregion Constructors
 
 		#region Game Loop
 
@@ -191,7 +200,7 @@ namespace MyThirdSDL.UserInterface
 			}
 		}
 
-		#endregion
+		#endregion Game Loop
 
 		#region Behaviors
 
@@ -205,7 +214,7 @@ namespace MyThirdSDL.UserInterface
 			IsPressed = false;
 		}
 
-		#endregion
+		#endregion Behaviors
 
 		public override void Dispose()
 		{

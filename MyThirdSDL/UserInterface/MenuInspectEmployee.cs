@@ -14,7 +14,7 @@ namespace MyThirdSDL.UserInterface
 {
 	public class MenuInspectEmployee : Menu
 	{
-		private string defaultText = "N/A";
+		private const string defaultText = "N/A";
 
 		private Icon iconFrame;
 
@@ -191,7 +191,7 @@ namespace MyThirdSDL.UserInterface
 
 			iconMoodHappy = ControlFactory.CreateIcon(contentManager, "IconPersonHappy");
 			iconMoodAngry = ControlFactory.CreateIcon(contentManager, "IconPersonAngry");
-			
+
 			Controls.Add(iconFrame);
 			Controls.Add(buttonCloseWindow);
 			Controls.Add(iconMainMenu);
@@ -296,7 +296,7 @@ namespace MyThirdSDL.UserInterface
 		{
 			base.Dispose();
 
-			if(iconMoodActive != null)
+			if (iconMoodActive != null)
 				iconMoodActive.Dispose();
 		}
 	}

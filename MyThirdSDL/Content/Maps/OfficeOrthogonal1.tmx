@@ -1,24 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" width="25" height="25" tilewidth="32" tileheight="32">
+<map version="1.0" orientation="orthogonal" width="50" height="50" tilewidth="32" tileheight="32">
  <tileset firstgid="1" name="free_tileset_version_10" tilewidth="32" tileheight="32">
   <image source="Content/Maps/TileSet1.png" width="480" height="1216"/>
  </tileset>
- <layer name="Floor" width="25" height="25">
+ <layer name="Floor" width="50" height="50">
   <data encoding="base64" compression="zlib">
-   eJzdlsEKgzAMhiNYPM/hmJe6buLq07pHXgcRYmg629IxPHxgQuNv0yRVVQDqAFwB4EzoMm1O75gdd0KuzZmRhpBiqwBH1HjgGdkEWxGbM6KGdtzwjEymLZ25LgjVOAl7TaX1aEh7TcV4NH6Rq5Ial0BO+SxqSSyfc73gX2u3FuCzyMD2+3iNSv5vGqEc8H7XnhhfrmrybCM0JvRPnnV0b1IP79EY0D8IGqn10jCkdU+I6981dm+chfj+Xtz9/Kri+j32/v+8fyn8j/GvGm/4AzmY
+   eJztll0LgjAUho/g8DqjyBs/Kkx/rf3kDCbMgzM36czsvXigc2C0R96dTUVECmyGCxEdDU4ra05GMh5t/z9Xg7U1pxX0SAx8ajUDPP7b46bPZeNRK6Pm3AU98p5Sn8tqZR3ynOdfRNrjYMmFL2kgD1sufKkCeewlV7/ucZ7JOH87pcb++Lsss/Ql525sgb+dKhp/Zz5fbf0teMzlhd/r+cSaULmKjd+Ng0et+3UgDzMHQ27KiRx98ih0vwjo4TuHEkbIefUgt3t62N/SdY2Qx5ChpXT9mmfkdq9LeLjydug2sA947MsDAAAAAAAAAAAAAADgzgvjNGWK
   </data>
  </layer>
- <layer name="0_Objects" width="25" height="25">
+ <layer name="0_Objects" width="50" height="50">
   <data encoding="base64" compression="zlib">
-   eJxjYEAAZUYEmx/IFkDio8uDgCgS/wsQf4WyBYHiQkhyyPqQ9cgB2fJoZuIDzEC1LFD1CkBakRHTTFqDZCAOpoBvAMSGQGwCxL5A7IfDniQK+PZA7ADEzkAcA8SxOOygB7hLIZ8Q6KYyHxuYRWX+SACmQGyGxEfOAxdIMCcYj5wLELsi8WF54AEQ3wfie1D8AIveMCAOB+IIBsy8RC2QCsRpQJxOI/OJAR1oNAh0QmlY2CZj0QeLP0s08SwgzobSMDAdjQaBGVAaFrahQLwDzSxY/HmgiVcCcRWUxgbw5dnjeORIAdjy7GUgvgrE10gwB5TWL1LBPRlAnIlDDpTWH5BpLigse8jUSywAheVsCs0QRqvjVcis87G1FThwtE9IATAz0N2FzzxlHHrQAbIZSmhqQfYCAI6LMyk=
+   eJztmMtKAzEUhqfYRXdqxa2X1geooIIrBRXc6KZ4WejG4v0J9AkU3Sv6Ir6BW0XqTjsPofv+gYSGdFpnJpmJ1v+Dj5OTScIZyEwgQdChWui0h9Ee0XLzuWBcy7/gt2yPor9sjM0avTa9rgm0JxPUMoSxRTl+CnG60L0miUcD1i3yGpyFc3ADbmZTZiwOLPIluAxX4B7cd1rZ/+TDMv8N3DjOffHgOCdEZx4uaLl+RrwkWKf+85BMWYVrWq7OiBC24Kc0jJi7DXfgbtB91vwlDuERPPZdyABwZUTBtYxqrzci5qnvadHoP4PnMubJnREF9zKqvb4Fn4x56ntaN/ov4KWMvuh3Nj/nVoU9UWfzG2zC9wTriP/0q5OKsucEnvZ4Jv7TYX6lJEbsu1vfRThA7LtH30XEYMy4F5hJeU/g636h1OPeJM0aad/dhn41V2PWpa9RMcaWeO9DCCGEEEIIIYQQQsjA0AZKTTMp
   </data>
  </layer>
- <layer name="1_Objects" width="25" height="25">
+ <layer name="1_Objects" width="50" height="50">
   <data encoding="base64" compression="zlib">
-   eJxjYBgFo2AUjILhCXbiED+HhEcBdoAr7MgBd6loFj5wgoZmX6eh2aNgFJALACXrBlk=
+   eJzt0qENACAMRUH234gNUFgUu2AxFQSSIu6Sb6qeaCkAAGSqwb1vg1vRn/1qZgc81LIDLo3sAAAAAAAAgAMLuP0GWQ==
   </data>
  </layer>
- <objectgroup color="#00ff00" name="PathNodes" width="25" height="25">
+ <objectgroup color="#00ff00" name="PathNodes" width="50" height="50">
   <object x="32" y="128" width="32" height="32"/>
   <object x="32" y="160" width="32" height="32"/>
   <object x="64" y="160" width="32" height="32"/>
@@ -205,7 +205,7 @@
   <object x="384" y="768" width="32" height="32"/>
   <object x="416" y="736" width="32" height="32"/>
  </objectgroup>
- <objectgroup color="#ff0000" name="DeadZones" width="25" height="25">
+ <objectgroup color="#ff0000" name="DeadZones" width="50" height="50">
   <object x="0" y="0" width="32" height="32"/>
   <object x="32" y="0" width="32" height="32"/>
   <object x="32" y="32" width="32" height="32"/>
@@ -592,7 +592,7 @@
   <object x="544" y="512" width="32" height="32"/>
   <object x="512" y="512" width="32" height="32"/>
  </objectgroup>
- <objectgroup color="#0055ff" name="Equipment" width="25" height="25">
+ <objectgroup color="#0055ff" name="Equipment" width="50" height="50">
   <object name="Equipment1" type="SnackMachine" x="704" y="128" width="32" height="32"/>
   <object name="Equipment2" type="SodaMachine" x="736" y="128" width="32" height="32"/>
   <object name="Equipment3" type="OfficeDesk" x="480" y="192" width="32" height="32"/>

@@ -20,6 +20,8 @@ namespace MyThirdSDL.Mail
 
 		public MailState MailState { get; private set; }
 
+		public AttachmentType AttachmentType { get; private set; }
+
 		public MailItem(string from, string to, string subject, string body, MailState mailState)
 		{
 			ID = Guid.NewGuid();

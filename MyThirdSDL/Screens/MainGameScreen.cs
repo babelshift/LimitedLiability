@@ -378,6 +378,8 @@ namespace MyThirdSDL.Screens
 				Vector offsetPosition = new Vector(roomMapCell.WorldPosition.X + origin.X, roomMapCell.WorldPosition.Y + origin.Y);
 				tiledMap.ReplaceMapCellAtPosition(roomMapCell, offsetPosition);
 			}
+
+			bankAccount.Withdraw(room.Price);
 		}
 
 		/// <summary>

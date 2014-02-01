@@ -12,6 +12,7 @@ namespace MyThirdSDL.Content
 	public class MapCell : IDrawable
 	{
 		private PathNode containedPathNode;
+		private Vector worldPosition;
 
 		private List<Tile> tileObjects = new List<Tile>();
 
@@ -127,30 +128,6 @@ namespace MyThirdSDL.Content
 				throw new InvalidOperationException("Cannot add the same object to the same map cell twice.");
 
 			tileObjects.Add(tileObject);
-		}
-
-		private void UpdateFloorTile(Tile tile)
-		{
-			FloorTile.UpdateTile(tile);
-		}
-
-		private void ReplaceTileObjects(IEnumerable<Tile> tileObjectsToAdd)
-		{
-			trashTileObjects.AddRange(tileObjects);
-			tileObjects.Clear();
-			tileObjects.AddRange(tileObjectsToAdd);
-		}
-
-		private List<Tile> trashTileObjects = new List<Tile>();
-		private Vector worldPosition;
-
-		public void UpdateMapCell(MapCell mapCell)
-		{
-			UpdateFloorTile(mapCell.FloorTile);
-			ReplaceTileObjects(mapCell.TileObjects);
-			if (OccupantEquipment != null)
-				OccupantEquipment.Dispose();
-			OccupantEquipment = mapCell.OccupantEquipment;
 		}
 
 		public void Dispose()
