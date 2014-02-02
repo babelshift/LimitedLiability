@@ -117,6 +117,8 @@ namespace MyThirdSDL.UserInterface
 			Controls.Add(buttonCloseWindow);
 
 			buttonCloseWindow.Clicked += buttonCloseWindow_Clicked;
+
+			Visible = false;
 		}
 
 		private void buttonCloseWindow_Clicked(object sender, EventArgs e)

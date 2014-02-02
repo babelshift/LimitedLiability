@@ -229,6 +229,8 @@ namespace MyThirdSDL.UserInterface
 			buttonArrowCircleLeft.Clicked += buttonArrowCircleLeft_Clicked;
 			buttonArrowCircleRight.Clicked += buttonArrowCircleRight_Clicked;
 			buttonCloseWindow.Clicked += buttonCloseWindow_Clicked;
+			
+			Visible = false;
 		}
 
 		#endregion Constructor
@@ -237,56 +239,68 @@ namespace MyThirdSDL.UserInterface
 
 		public override void Update(GameTime gameTime)
 		{
-			bool isAnyButtonMenuItemHovered = false;
-			List<ButtonMenuItem> buttonMenuItemsOnCurrentPage;
-			bool success = buttonMenuItemPages.TryGetValue(currentDisplayedPage, out buttonMenuItemsOnCurrentPage);
-			if (success)
+			if (Visible)
 			{
-				foreach (var buttonMenuItem in buttonMenuItemsOnCurrentPage)
+				bool isAnyButtonMenuItemHovered = false;
+				List<ButtonMenuItem> buttonMenuItemsOnCurrentPage;
+				bool success = buttonMenuItemPages.TryGetValue(currentDisplayedPage, out buttonMenuItemsOnCurrentPage);
+				if (success)
 				{
-					buttonMenuItem.Update(gameTime);
-					if (buttonMenuItem.IsHovered)
-						isAnyButtonMenuItemHovered = true;
+					foreach (var buttonMenuItem in buttonMenuItemsOnCurrentPage)
+					{
+						buttonMenuItem.Update(gameTime);
+						if (buttonMenuItem.IsHovered)
+							isAnyButtonMenuItemHovered = true;
+					}
 				}
+
+				if (!isAnyButtonMenuItemHovered)
+					ClearInfoAndSkillsText();
+
+				base.Update(gameTime);
 			}
-
-			if (!isAnyButtonMenuItemHovered)
-				ClearInfoAndSkillsText();
-
-			base.Update(gameTime);
 		}
 
 		public override void Draw(GameTime gameTime, Renderer renderer)
 		{
-			base.Draw(gameTime, renderer);
+			if (Visible)
+			{
+				base.Draw(gameTime, renderer);
 
-			List<ButtonMenuItem> buttonMenuItemsOnCurrentPage;
-			bool success = buttonMenuItemPages.TryGetValue(currentDisplayedPage, out buttonMenuItemsOnCurrentPage);
-			if (success)
-				foreach (var buttonMenuItem in buttonMenuItemsOnCurrentPage)
-					buttonMenuItem.Draw(gameTime, renderer);
+				List<ButtonMenuItem> buttonMenuItemsOnCurrentPage;
+				bool success = buttonMenuItemPages.TryGetValue(currentDisplayedPage, out buttonMenuItemsOnCurrentPage);
+				if (success)
+					foreach (var buttonMenuItem in buttonMenuItemsOnCurrentPage)
+						buttonMenuItem.Draw(gameTime, renderer);
+			}
 		}
 
 		public override void HandleMouseButtonPressedEvent(object sender, MouseButtonEventArgs e)
 		{
-			base.HandleMouseButtonPressedEvent(sender, e);
+			if (Visible)
+			{
+				base.HandleMouseButtonPressedEvent(sender, e);
 
-			List<ButtonMenuItem> buttonMenuItemsOnCurrentPage;
-			bool success = buttonMenuItemPages.TryGetValue(currentDisplayedPage, out buttonMenuItemsOnCurrentPage);
-			if (success)
-				foreach (var buttonMenuItem in buttonMenuItemsOnCurrentPage)
-					buttonMenuItem.HandleMouseButtonPressedEvent(sender, e);
+				List<ButtonMenuItem> buttonMenuItemsOnCurrentPage;
+				bool success = buttonMenuItemPages.TryGetValue(currentDisplayedPage, out buttonMenuItemsOnCurrentPage);
+				if (success)
+					foreach (var buttonMenuItem in buttonMenuItemsOnCurrentPage)
+						buttonMenuItem.HandleMouseButtonPressedEvent(sender, e);
+			}
 		}
 
 		public override void HandleMouseMovingEvent(object sender, MouseMotionEventArgs e)
 		{
-			base.HandleMouseMovingEvent(sender, e);
+			if (Visible)
+			{
+				base.HandleMouseMovingEvent(sender, e);
 
-			List<ButtonMenuItem> buttonMenuItemsOnCurrentPage;
-			bool success = buttonMenuItemPages.TryGetValue(currentDisplayedPage, out buttonMenuItemsOnCurrentPage);
-			if (success)
-				foreach (var buttonMenuItem in buttonMenuItemsOnCurrentPage)
-					buttonMenuItem.HandleMouseMovingEvent(sender, e);
+				List<ButtonMenuItem> buttonMenuItemsOnCurrentPage;
+				bool success = buttonMenuItemPages.TryGetValue(currentDisplayedPage, out buttonMenuItemsOnCurrentPage);
+				if (success)
+					foreach (var buttonMenuItem in buttonMenuItemsOnCurrentPage)
+						buttonMenuItem.HandleMouseMovingEvent(sender, e);
+			}
 		}
 
 		#endregion Game Loop
@@ -355,9 +369,9 @@ namespace MyThirdSDL.UserInterface
 			{
 				List<ButtonMenuItem> currentPage = null;
 				bool success = buttonMenuItemPages.TryGetValue(key, out currentPage);
-				
+
 				if (!success) continue;
-				
+
 				foreach (var buttonMenuItem in currentPage)
 				{
 					if (currentPage.IndexOf(buttonMenuItem) == 0)

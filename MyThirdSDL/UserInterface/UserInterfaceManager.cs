@@ -9,7 +9,6 @@ using SharpDL.Graphics;
 using SharpDL.Input;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace MyThirdSDL.UserInterface
 {
@@ -22,12 +21,6 @@ namespace MyThirdSDL.UserInterface
 		private TimeSpan timeOfStatusChange = TimeSpan.Zero;
 		private Control focusedControl;
 		private IReadOnlyList<MapCell> hoveredMapCells;
-
-		private bool isMenuEquipmentOpen;
-		private bool isMenuRoomsOpen;
-		private bool isMenuInspectEmployeeOpen;
-		private bool isMenuMailboxOpen;
-		private bool isMenuCompanyOpen;
 
 		private bool isSelectedPurchasableOverlappingDeadZone;
 
@@ -87,8 +80,7 @@ namespace MyThirdSDL.UserInterface
 		{
 			get
 			{
-				return isMenuCompanyOpen || isMenuEquipmentOpen || isMenuInspectEmployeeOpen || isMenuMailboxOpen || isMenuRoomsOpen ||
-					   isMenuInspectEmployeeOpen;
+				return menuCompany.Visible || menuPurchaseEquipment.Visible || menuInspectEmployee.Visible || menuMailbox.Visible || menuPurchaseRooms.Visible || menuInspectEmployee.Visible;
 			}
 		}
 
@@ -354,7 +346,7 @@ namespace MyThirdSDL.UserInterface
 
 		private void ButtonMailMenuOnClicked(object sender, EventArgs e)
 		{
-			if (isMenuMailboxOpen)
+			if (menuMailbox.Visible)
 				ClearMenusOpen();
 			else if (AnyMenusAreOpen)
 			{
@@ -377,7 +369,7 @@ namespace MyThirdSDL.UserInterface
 
 		private void ToolboxTray_ButtonCompanyClicked(object sender, EventArgs e)
 		{
-			if (isMenuCompanyOpen)
+			if (menuCompany.Visible)
 				ClearMenusOpen();
 			else if (AnyMenusAreOpen)
 			{
@@ -395,7 +387,7 @@ namespace MyThirdSDL.UserInterface
 
 		private void ToolboxTray_ButtonSelectRoomClicked(object sender, EventArgs e)
 		{
-			if (isMenuRoomsOpen)
+			if (menuPurchaseRooms.Visible)
 				ClearMenusOpen();
 			else if (AnyMenusAreOpen)
 			{
@@ -408,7 +400,7 @@ namespace MyThirdSDL.UserInterface
 
 		private void ToolboxTray_ButtonSelectEquipmentClicked(object sender, EventArgs e)
 		{
-			if (isMenuEquipmentOpen)
+			if (menuPurchaseEquipment.Visible)
 				ClearMenusOpen();
 			else if (AnyMenusAreOpen)
 			{
@@ -442,13 +434,13 @@ namespace MyThirdSDL.UserInterface
 
 		private void ShowMenuMailbox()
 		{
-			isMenuMailboxOpen = true;
+			menuMailbox.Visible = true;
 			ChangeState(UserInterfaceState.MailboxMenuActive);
 		}
 
 		private void HideMenuMailbox()
 		{
-			isMenuMailboxOpen = false;
+			menuMailbox.Visible = false;
 			ChangeState(UserInterfaceState.Default);
 		}
 
@@ -484,13 +476,13 @@ namespace MyThirdSDL.UserInterface
 
 		private void ShowMenuInspectEmployee()
 		{
-			isMenuInspectEmployeeOpen = true;
+			menuInspectEmployee.Visible = true;
 			ChangeState(UserInterfaceState.InspectEmployeeMenuActive);
 		}
 
 		private void HideMenuInspectEmployee()
 		{
-			isMenuInspectEmployeeOpen = false;
+			menuInspectEmployee.Visible = false;
 			ChangeState(UserInterfaceState.Default);
 		}
 
@@ -513,13 +505,13 @@ namespace MyThirdSDL.UserInterface
 
 		private void ShowMenuRooms()
 		{
-			isMenuRoomsOpen = true;
+			menuPurchaseRooms.Visible = true;
 			ChangeState(UserInterfaceState.SelectRoomMenuActive);
 		}
 
 		private void HideMenuRooms()
 		{
-			isMenuRoomsOpen = false;
+			menuPurchaseRooms.Visible = false;
 			ChangeState(UserInterfaceState.Default);
 		}
 
@@ -554,13 +546,13 @@ namespace MyThirdSDL.UserInterface
 
 		private void ShowMenuEquipment()
 		{
-			isMenuEquipmentOpen = true;
+			menuPurchaseEquipment.Visible = true;
 			ChangeState(UserInterfaceState.SelectEquipmentMenuActive);
 		}
 
 		private void HideMenuEquipment()
 		{
-			isMenuEquipmentOpen = false;
+			menuPurchaseEquipment.Visible = false;
 			ChangeState(UserInterfaceState.Default);
 		}
 
@@ -594,13 +586,13 @@ namespace MyThirdSDL.UserInterface
 
 		private void ShowMenuCompany()
 		{
-			isMenuCompanyOpen = true;
+			menuCompany.Visible = true;
 			ChangeState(UserInterfaceState.CompanyMenuActive);
 		}
 
 		private void HideMenuCompany()
 		{
-			isMenuCompanyOpen = false;
+			menuCompany.Visible = false;
 			ChangeState(UserInterfaceState.Default);
 		}
 
@@ -622,20 +614,11 @@ namespace MyThirdSDL.UserInterface
 			toolboxTray.Update(gameTime);
 			topToolboxTray.Update(gameTime);
 
-			if (isMenuEquipmentOpen)
-				menuPurchaseEquipment.Update(gameTime);
-
-			if (isMenuInspectEmployeeOpen)
-				menuInspectEmployee.Update(gameTime);
-
-			if (isMenuMailboxOpen)
-				menuMailbox.Update(gameTime);
-
-			if (isMenuRoomsOpen)
-				menuPurchaseRooms.Update(gameTime);
-
-			if (isMenuCompanyOpen)
-				menuCompany.Update(gameTime);
+			menuPurchaseEquipment.Update(gameTime);
+			menuInspectEmployee.Update(gameTime);
+			menuMailbox.Update(gameTime);
+			menuPurchaseRooms.Update(gameTime);
+			menuCompany.Update(gameTime);
 
 			TimeSpentInCurrentState = SimulationManager.SimulationTime.Subtract(timeOfStatusChange);
 
@@ -656,20 +639,11 @@ namespace MyThirdSDL.UserInterface
 
 		private void DrawMenus(GameTime gameTime, Renderer renderer)
 		{
-			if (isMenuEquipmentOpen)
-				menuPurchaseEquipment.Draw(gameTime, renderer);
-
-			if (isMenuInspectEmployeeOpen)
-				menuInspectEmployee.Draw(gameTime, renderer);
-
-			if (isMenuMailboxOpen)
-				menuMailbox.Draw(gameTime, renderer);
-
-			if (isMenuRoomsOpen)
-				menuPurchaseRooms.Draw(gameTime, renderer);
-
-			if (isMenuCompanyOpen)
-				menuCompany.Draw(gameTime, renderer);
+			menuPurchaseEquipment.Draw(gameTime, renderer);
+			menuInspectEmployee.Draw(gameTime, renderer);
+			menuMailbox.Draw(gameTime, renderer);
+			menuPurchaseRooms.Draw(gameTime, renderer);
+			menuCompany.Draw(gameTime, renderer);
 		}
 
 		private void DrawDiagnosticLabels(GameTime gameTime, Renderer renderer)
@@ -734,20 +708,11 @@ namespace MyThirdSDL.UserInterface
 			toolboxTray.HandleMouseButtonPressedEvent(sender, e);
 			topToolboxTray.HandleMouseButtonPressedEvent(sender, e);
 
-			if (isMenuEquipmentOpen)
-				menuPurchaseEquipment.HandleMouseButtonPressedEvent(sender, e);
-
-			if (isMenuInspectEmployeeOpen)
-				menuInspectEmployee.HandleMouseButtonPressedEvent(sender, e);
-
-			if (isMenuMailboxOpen)
-				menuMailbox.HandleMouseButtonPressedEvent(sender, e);
-
-			if (isMenuRoomsOpen)
-				menuPurchaseRooms.HandleMouseButtonPressedEvent(sender, e);
-
-			if (isMenuCompanyOpen)
-				menuCompany.HandleMouseButtonPressedEvent(sender, e);
+			menuPurchaseEquipment.HandleMouseButtonPressedEvent(sender, e);
+			menuInspectEmployee.HandleMouseButtonPressedEvent(sender, e);
+			menuMailbox.HandleMouseButtonPressedEvent(sender, e);
+			menuPurchaseRooms.HandleMouseButtonPressedEvent(sender, e);
+			menuCompany.HandleMouseButtonPressedEvent(sender, e);
 		}
 
 		private void TryToPlacePurchasableItem(MouseButtonEventArgs e)
@@ -769,20 +734,11 @@ namespace MyThirdSDL.UserInterface
 			toolboxTray.HandleMouseMovingEvent(sender, e);
 			topToolboxTray.HandleMouseMovingEvent(sender, e);
 
-			if (isMenuEquipmentOpen)
-				menuPurchaseEquipment.HandleMouseMovingEvent(sender, e);
-
-			if (isMenuInspectEmployeeOpen)
-				menuInspectEmployee.HandleMouseMovingEvent(sender, e);
-
-			if (isMenuMailboxOpen)
-				menuMailbox.HandleMouseMovingEvent(sender, e);
-
-			if (isMenuRoomsOpen)
-				menuPurchaseRooms.HandleMouseMovingEvent(sender, e);
-
-			if (isMenuCompanyOpen)
-				menuCompany.HandleMouseMovingEvent(sender, e);
+			menuPurchaseEquipment.HandleMouseMovingEvent(sender, e);
+			menuInspectEmployee.HandleMouseMovingEvent(sender, e);
+			menuMailbox.HandleMouseMovingEvent(sender, e);
+			menuPurchaseRooms.HandleMouseMovingEvent(sender, e);
+			menuCompany.HandleMouseMovingEvent(sender, e);
 		}
 
 		private void UpdateMousePositionDiagnostics(MouseMotionEventArgs e)

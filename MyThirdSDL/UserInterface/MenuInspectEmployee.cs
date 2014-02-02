@@ -231,6 +231,8 @@ namespace MyThirdSDL.UserInterface
 			Controls.Add(labelSalaryValue);
 			Controls.Add(labelStatusValue);
 			Controls.Add(labelBirthValue);
+
+			Visible = false;
 		}
 
 		private void OnButtonCloseWindowOnClicked(object sender, EventArgs e)
@@ -274,16 +276,22 @@ namespace MyThirdSDL.UserInterface
 
 		public override void Update(GameTime gameTime)
 		{
-			base.Update(gameTime);
+			if (Visible)
+			{
+				base.Update(gameTime);
 
-			iconMoodActive.Update(gameTime);
+				iconMoodActive.Update(gameTime);
+			}
 		}
 
 		public override void Draw(GameTime gameTime, Renderer renderer)
 		{
-			base.Draw(gameTime, renderer);
+			if (Visible)
+			{
+				base.Draw(gameTime, renderer);
 
-			iconMoodActive.Draw(gameTime, renderer);
+				iconMoodActive.Draw(gameTime, renderer);
+			}
 		}
 
 		public override void Dispose()

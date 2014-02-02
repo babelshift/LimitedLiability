@@ -308,6 +308,8 @@ namespace MyThirdSDL.UserInterface
 			menuResume.Visible = false;
 			menuResume.Accepted += MenuResumeOnAccepted;
 			menuResume.Rejected += MenuResumeOnRejected;
+
+			Visible = false;
 		}
 
 		private void MenuResumeOnRejected(object sender, EventArgs eventArgs)
