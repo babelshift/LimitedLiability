@@ -120,8 +120,7 @@ namespace MyThirdSDL.UserInterface
 
 		public MenuPurchase(ContentManager contentManager, string iconMainMenuContentPathKey, string menuTitle, IEnumerable<IPurchasable> purchasableItems)
 		{
-			Texture textureFrame = contentManager.GetTexture("MenuPurchaseFrame");
-			iconFrame = new Icon(textureFrame);
+			iconFrame = new Icon(contentManager.GetTexture("MenuPurchaseFrame"));
 			Width = iconFrame.Width;
 			Height = iconFrame.Height;
 

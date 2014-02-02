@@ -1,14 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using MyThirdSDL.Content;
 using SharpDL.Graphics;
-using MyThirdSDL.Content;
-using MyThirdSDL.Descriptors;
-using MyThirdSDL.Simulation;
-using MyThirdSDL.Mail;
-using System.Reflection;
+using System;
 
 namespace MyThirdSDL.UserInterface
 {
@@ -31,8 +23,17 @@ namespace MyThirdSDL.UserInterface
 		//	return new SimulationLabel(position, trueTypeText, simulationMessage);
 		//}
 
+		public static MessageBox CreateMessageBox(ContentManager contentManager, MessageBoxType type)
+		{
+			if (contentManager == null) throw new ArgumentNullException("contentManager");
+			MessageBox messageBox = new MessageBox(contentManager, type);
+			return messageBox;
+		}
+
 		public static Button CreateButton(ContentManager contentManager, string textureFrameKey, string textureFrameHoveredKey = "", string textureFrameSelectedKey = "")
 		{
+			if (contentManager == null) throw new ArgumentNullException("contentManager");
+
 			if (String.IsNullOrEmpty(textureFrameKey))
 				throw new ArgumentNullException("textureFrameKey");
 
@@ -44,12 +45,14 @@ namespace MyThirdSDL.UserInterface
 
 			if(!String.IsNullOrEmpty(textureFrameSelectedKey))
 				button.TextureFrameSelected = contentManager.GetTexture(textureFrameSelectedKey);
-	
+
 			return button;
 		}
 
 		public static Icon CreateIcon(ContentManager contentManager, string iconKey)
 		{
+			if (contentManager == null) throw new ArgumentNullException("contentManager");
+
 			if (String.IsNullOrEmpty(iconKey))
 				throw new ArgumentNullException("iconKey");
 
@@ -59,6 +62,8 @@ namespace MyThirdSDL.UserInterface
 
 		public static Label CreateLabel(ContentManager contentManager, string fontPath, int fontSize, Color fontColor, string text, int wrapLength = 0)
 		{
+			if (contentManager == null) throw new ArgumentNullException("contentManager");
+
 			if (String.IsNullOrEmpty(fontPath))
 				throw new ArgumentNullException("fontPath");
 
@@ -76,6 +81,8 @@ namespace MyThirdSDL.UserInterface
 
 		public static Tooltip CreateTooltip(ContentManager contentManager, string textureFrameKey, string fontPath, int fontSize, Color fontColor, string text)
 		{
+			if (contentManager == null) throw new ArgumentNullException("contentManager");
+
 			if (String.IsNullOrEmpty(textureFrameKey))
 				throw new ArgumentNullException("textureFrameKey");
 
@@ -90,7 +97,7 @@ namespace MyThirdSDL.UserInterface
 
 			Tooltip tooltip = new Tooltip();
 			tooltip.TextureFrame = contentManager.GetTexture(textureFrameKey);
-			tooltip.Label = ControlFactory.CreateLabel(contentManager, fontPath, fontSize, fontColor, text);
+			tooltip.Label = CreateLabel(contentManager, fontPath, fontSize, fontColor, text);
 
 			return tooltip;
 		}

@@ -117,6 +117,9 @@
 		{ "key": "IconPlay",					"value": "Images/User Interface/IconPlay.png" },
 		{ "key": "IconFastForward",				"value": "Images/User Interface/IconFastForward.png" },
 		{ "key": "IconGameMenu",				"value": "Images/User Interface/IconGameMenu.png" },
+		{ "key": "IconReject",					"value": "Images/User Interface/IconReject.png" },
+		{ "key": "IconAccept",					"value": "Images/User Interface/IconAccept.png" },
+		{ "key": "IconInfo",					"value": "Images/User Interface/IconInfo.png" },
 
 		{ "key": "ScenarioThumbnail1",			"value": "Images/User Interface/ScenarioThumbnail1.png" },
 		{ "key": "ScenarioThumbnail1Selected",	"value": "Images/User Interface/ScenarioThumbnail1Selected.png" },

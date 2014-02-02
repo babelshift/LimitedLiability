@@ -129,10 +129,13 @@ namespace MyThirdSDL.UserInterface
 				{
 					case ActiveTab.Inbox:
 						return selectedMailItemInbox;
+
 					case ActiveTab.Outbox:
 						return selectedMailItemOutbox;
+
 					case ActiveTab.Archive:
 						return selectedMailItemArchive;
+
 					default:
 						return null;
 				}
@@ -192,6 +195,8 @@ namespace MyThirdSDL.UserInterface
 		#endregion Properties
 
 		#region Public Events
+
+		public event EventHandler ResumeAccepted;
 
 		public event EventHandler<ArchiveEventArgs> ArchiveMailButtonClicked;
 
@@ -312,70 +317,7 @@ namespace MyThirdSDL.UserInterface
 			Visible = false;
 		}
 
-		private void MenuResumeOnRejected(object sender, EventArgs eventArgs)
-		{
-			Visible = true;
-		}
-
-		private void MenuResumeOnAccepted(object sender, EventArgs eventArgs)
-		{
-			Visible = true;
-		}
-
 		#endregion Constructors
-
-		public void AddButtonMailItems(ContentManager contentManager, IEnumerable<MailItem> inbox, IEnumerable<MailItem> outbox, IEnumerable<MailItem> archive)
-		{
-			string fontPath = contentManager.GetContentPath(Styles.FontPaths.Arcade);
-			Color fontColorTitle = Styles.Colors.PaleGreen;
-			int fontSizeTitle = Styles.FontSizes.Title;
-			int fontSizeContent = Styles.FontSizes.Content;
-
-			foreach (MailItem mailItem in inbox)
-			{
-				ButtonMailItem buttonMailItem = new ButtonMailItem(mailItem);
-				buttonMailItem.TextureFrame = contentManager.GetTexture("ButtonMailItem");
-				buttonMailItem.TextureFrameHovered = contentManager.GetTexture("ButtonMailItemHover");
-				buttonMailItem.TextureFrameSelected = contentManager.GetTexture("ButtonMailItemSelected");
-				buttonMailItem.IconMailUnread = ControlFactory.CreateIcon(contentManager, "IconMailUnread");
-				buttonMailItem.IconMailRead = ControlFactory.CreateIcon(contentManager, "IconMailRead");
-				buttonMailItem.LabelFrom = ControlFactory.CreateLabel(contentManager, fontPath, fontSizeContent, fontColorTitle, mailItem.From);
-				buttonMailItem.LabelSubject = ControlFactory.CreateLabel(contentManager, fontPath, fontSizeContent, fontColorTitle, mailItem.Subject);
-				Icon iconSeparator = ControlFactory.CreateIcon(contentManager, "IconSeparator");
-				AddButtonMailItemInbox(buttonMailItem, iconSeparator);
-			}
-
-			foreach (MailItem mailItem in outbox)
-			{
-				ButtonMailItem buttonMailItem = new ButtonMailItem(mailItem);
-				buttonMailItem.TextureFrame = contentManager.GetTexture("ButtonMailItem");
-				buttonMailItem.TextureFrameHovered = contentManager.GetTexture("ButtonMailItemHover");
-				buttonMailItem.TextureFrameSelected = contentManager.GetTexture("ButtonMailItemSelected");
-				buttonMailItem.IconMailUnread = ControlFactory.CreateIcon(contentManager, "IconMailUnread");
-				buttonMailItem.IconMailRead = ControlFactory.CreateIcon(contentManager, "IconMailRead");
-				buttonMailItem.LabelFrom = ControlFactory.CreateLabel(contentManager, fontPath, fontSizeContent, fontColorTitle, mailItem.From);
-				buttonMailItem.LabelSubject = ControlFactory.CreateLabel(contentManager, fontPath, fontSizeContent, fontColorTitle, mailItem.Subject);
-				Icon iconSeparator = ControlFactory.CreateIcon(contentManager, "IconSeparator");
-				AddButtonMailItemOutbox(buttonMailItem, iconSeparator);
-			}
-
-			foreach (MailItem mailItem in archive)
-			{
-				ButtonMailItem buttonMailItem = new ButtonMailItem(mailItem);
-				buttonMailItem.TextureFrame = contentManager.GetTexture("ButtonMailItem");
-				buttonMailItem.TextureFrameHovered = contentManager.GetTexture("ButtonMailItemHover");
-				buttonMailItem.TextureFrameSelected = contentManager.GetTexture("ButtonMailItemSelected");
-				buttonMailItem.IconMailUnread = ControlFactory.CreateIcon(contentManager, "IconMailUnread");
-				buttonMailItem.IconMailRead = ControlFactory.CreateIcon(contentManager, "IconMailRead");
-				buttonMailItem.LabelFrom = ControlFactory.CreateLabel(contentManager, fontPath, fontSizeContent, fontColorTitle, mailItem.From);
-				buttonMailItem.LabelSubject = ControlFactory.CreateLabel(contentManager, fontPath, fontSizeContent, fontColorTitle, mailItem.Subject);
-				Icon iconSeparator = ControlFactory.CreateIcon(contentManager, "IconSeparator");
-				AddButtonMailItemArchive(buttonMailItem, iconSeparator);
-			}
-
-			buttonView.Visible = false;
-			buttonArchive.Visible = false;
-		}
 
 		#region Button Events
 
@@ -387,9 +329,7 @@ namespace MyThirdSDL.UserInterface
 
 		private void buttonArchive_Clicked(object sender, EventArgs e)
 		{
-			if (SelectedMailItem != null)
-				if (ArchiveMailButtonClicked != null)
-					ArchiveMailButtonClicked(sender, new ArchiveEventArgs(SelectedMailItem));
+			OnArchive(sender);
 		}
 
 		private void buttonView_Clicked(object sender, EventArgs e)
@@ -443,6 +383,27 @@ namespace MyThirdSDL.UserInterface
 		private void buttonInboxFolder_Clicked(object sender, EventArgs e)
 		{
 			SetActiveTab(ActiveTab.Inbox);
+		}
+
+		private void MenuResumeOnRejected(object sender, EventArgs eventArgs)
+		{
+			Visible = true;
+			OnArchive(sender);
+		}
+
+		private void MenuResumeOnAccepted(object sender, EventArgs eventArgs)
+		{
+			Visible = true;
+			OnArchive(sender);
+			if (ResumeAccepted != null)
+				ResumeAccepted(sender, eventArgs);
+		}
+
+		private void OnArchive(object sender)
+		{
+			if (SelectedMailItem != null)
+				if (ArchiveMailButtonClicked != null)
+					ArchiveMailButtonClicked(sender, new ArchiveEventArgs(SelectedMailItem));
 		}
 
 		#endregion Button Events
@@ -536,6 +497,59 @@ namespace MyThirdSDL.UserInterface
 		#endregion Game Loop
 
 		#region Methods
+
+		public void AddButtonMailItems(ContentManager contentManager, IEnumerable<MailItem> inbox, IEnumerable<MailItem> outbox, IEnumerable<MailItem> archive)
+		{
+			string fontPath = contentManager.GetContentPath(Styles.FontPaths.Arcade);
+			Color fontColorTitle = Styles.Colors.PaleGreen;
+			int fontSizeTitle = Styles.FontSizes.Title;
+			int fontSizeContent = Styles.FontSizes.Content;
+
+			foreach (MailItem mailItem in inbox)
+			{
+				ButtonMailItem buttonMailItem = new ButtonMailItem(mailItem);
+				buttonMailItem.TextureFrame = contentManager.GetTexture("ButtonMailItem");
+				buttonMailItem.TextureFrameHovered = contentManager.GetTexture("ButtonMailItemHover");
+				buttonMailItem.TextureFrameSelected = contentManager.GetTexture("ButtonMailItemSelected");
+				buttonMailItem.IconMailUnread = ControlFactory.CreateIcon(contentManager, "IconMailUnread");
+				buttonMailItem.IconMailRead = ControlFactory.CreateIcon(contentManager, "IconMailRead");
+				buttonMailItem.LabelFrom = ControlFactory.CreateLabel(contentManager, fontPath, fontSizeContent, fontColorTitle, mailItem.From);
+				buttonMailItem.LabelSubject = ControlFactory.CreateLabel(contentManager, fontPath, fontSizeContent, fontColorTitle, mailItem.Subject);
+				Icon iconSeparator = ControlFactory.CreateIcon(contentManager, "IconSeparator");
+				AddButtonMailItemInbox(buttonMailItem, iconSeparator);
+			}
+
+			foreach (MailItem mailItem in outbox)
+			{
+				ButtonMailItem buttonMailItem = new ButtonMailItem(mailItem);
+				buttonMailItem.TextureFrame = contentManager.GetTexture("ButtonMailItem");
+				buttonMailItem.TextureFrameHovered = contentManager.GetTexture("ButtonMailItemHover");
+				buttonMailItem.TextureFrameSelected = contentManager.GetTexture("ButtonMailItemSelected");
+				buttonMailItem.IconMailUnread = ControlFactory.CreateIcon(contentManager, "IconMailUnread");
+				buttonMailItem.IconMailRead = ControlFactory.CreateIcon(contentManager, "IconMailRead");
+				buttonMailItem.LabelFrom = ControlFactory.CreateLabel(contentManager, fontPath, fontSizeContent, fontColorTitle, mailItem.From);
+				buttonMailItem.LabelSubject = ControlFactory.CreateLabel(contentManager, fontPath, fontSizeContent, fontColorTitle, mailItem.Subject);
+				Icon iconSeparator = ControlFactory.CreateIcon(contentManager, "IconSeparator");
+				AddButtonMailItemOutbox(buttonMailItem, iconSeparator);
+			}
+
+			foreach (MailItem mailItem in archive)
+			{
+				ButtonMailItem buttonMailItem = new ButtonMailItem(mailItem);
+				buttonMailItem.TextureFrame = contentManager.GetTexture("ButtonMailItem");
+				buttonMailItem.TextureFrameHovered = contentManager.GetTexture("ButtonMailItemHover");
+				buttonMailItem.TextureFrameSelected = contentManager.GetTexture("ButtonMailItemSelected");
+				buttonMailItem.IconMailUnread = ControlFactory.CreateIcon(contentManager, "IconMailUnread");
+				buttonMailItem.IconMailRead = ControlFactory.CreateIcon(contentManager, "IconMailRead");
+				buttonMailItem.LabelFrom = ControlFactory.CreateLabel(contentManager, fontPath, fontSizeContent, fontColorTitle, mailItem.From);
+				buttonMailItem.LabelSubject = ControlFactory.CreateLabel(contentManager, fontPath, fontSizeContent, fontColorTitle, mailItem.Subject);
+				Icon iconSeparator = ControlFactory.CreateIcon(contentManager, "IconSeparator");
+				AddButtonMailItemArchive(buttonMailItem, iconSeparator);
+			}
+
+			buttonView.Visible = false;
+			buttonArchive.Visible = false;
+		}
 
 		public void AddButtonMailItemInbox(ButtonMailItem buttonMailItem, Icon iconSeparator)
 		{
@@ -756,6 +770,8 @@ namespace MyThirdSDL.UserInterface
 
 		#endregion Methods
 
+		#region Dispose
+
 		private void Dispose(bool disposing)
 		{
 			base.Dispose();
@@ -783,6 +799,8 @@ namespace MyThirdSDL.UserInterface
 
 			mailItemPages.Clear();
 		}
+
+		#endregion Dispose
 	}
 
 	public class ArchiveEventArgs : EventArgs

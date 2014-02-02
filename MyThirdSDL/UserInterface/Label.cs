@@ -33,7 +33,7 @@ namespace MyThirdSDL.UserInterface
 			get { return TrueTypeText.Text; }
 			set
 			{
-				TrueTypeText.UpdateText(value);
+				TrueTypeText.UpdateText(value, TrueTypeText.WrapLength);
 				Width = TrueTypeText.Texture.Width;
 				Height = TrueTypeText.Texture.Height;
 			}

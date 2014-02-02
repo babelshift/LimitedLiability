@@ -57,7 +57,7 @@ namespace MyThirdSDL.UserInterface
 				labelEmailAddress.Position = base.Position + new Vector(5, 70);
 				labelJob.Position = base.Position + new Vector(Width - labelJob.Width - 155, 50);
 				labelSalary.Position = base.Position + new Vector(Width - labelSalary.Width - 155, 70);
-				labelContent.Position = base.Position + new Vector(5, 130);
+				labelContent.Position = base.Position + new Vector(5, 110);
 
 				labelSkillsMenu.Position = base.Position + new Vector(590, 15);
 				iconCommunication.Position = base.Position + new Vector(565, 50);
@@ -85,14 +85,14 @@ namespace MyThirdSDL.UserInterface
 			int fontSizeContent = 12;
 
 			buttonReject = ControlFactory.CreateButton(contentManager, "ButtonSquare", "ButtonSquareHover");
-			buttonReject.Icon = ControlFactory.CreateIcon(contentManager, "IconWindowClose");
-			buttonReject.IconHovered = ControlFactory.CreateIcon(contentManager, "IconWindowClose");
+			buttonReject.Icon = ControlFactory.CreateIcon(contentManager, "IconReject");
+			buttonReject.IconHovered = ControlFactory.CreateIcon(contentManager, "IconReject");
 			buttonReject.ButtonType = ButtonType.IconOnly;
 			buttonReject.Clicked += ButtonRejectOnClicked;
 
 			buttonAccept = ControlFactory.CreateButton(contentManager, "ButtonSquare", "ButtonSquareHover");
-			buttonAccept.Icon = ControlFactory.CreateIcon(contentManager, "IconWindowConfirm");
-			buttonAccept.IconHovered = ControlFactory.CreateIcon(contentManager, "IconWindowConfirm");
+			buttonAccept.Icon = ControlFactory.CreateIcon(contentManager, "IconAccept");
+			buttonAccept.IconHovered = ControlFactory.CreateIcon(contentManager, "IconAccept");
 			buttonAccept.ButtonType = ButtonType.IconOnly;
 			buttonAccept.Clicked += ButtonAcceptOnClicked;
 

@@ -26,6 +26,7 @@ namespace MyThirdSDL.UserInterface
 
 		#region Controls
 
+		private MessageBox messageBox;
 		private readonly ToolboxTray toolboxTray;
 		private readonly TopToolboxTray topToolboxTray;
 		private readonly IEnumerable<IPurchasable> purchasableEquipment;
@@ -450,6 +451,16 @@ namespace MyThirdSDL.UserInterface
 			menuMailbox.Position = new Vector(bottomRightPointOfWindow.X / 2 - menuMailbox.Width / 2, bottomRightPointOfWindow.Y / 2 - menuMailbox.Height / 2);
 			menuMailbox.ArchiveMailButtonClicked += menuMailbox_ArchiveMailButtonClicked;
 			menuMailbox.CloseButtonClicked += menuMailbox_CloseButtonClicked;
+			menuMailbox.ResumeAccepted += MenuMailboxOnResumeAccepted;
+		}
+
+		private void MenuMailboxOnResumeAccepted(object sender, EventArgs eventArgs)
+		{
+			messageBox = ControlFactory.CreateMessageBox(contentManager, MessageBoxType.Information);
+			messageBox.UpdateLabels(contentManager, "Resume Accepted!", "Your new employee will begin working in the next 7 to 10 business days.");
+			messageBox.Position = new Vector(MainGame.SCREEN_WIDTH_LOGICAL - messageBox.Width - 5, topToolboxTray.Height + 5);
+			messageBox.Show();
+			// send up to main game screen
 		}
 
 		private void menuMailbox_CloseButtonClicked(object sender, EventArgs e)
@@ -620,6 +631,9 @@ namespace MyThirdSDL.UserInterface
 			menuPurchaseRooms.Update(gameTime);
 			menuCompany.Update(gameTime);
 
+			if (messageBox != null)
+				messageBox.Update(gameTime);
+
 			TimeSpentInCurrentState = SimulationManager.SimulationTime.Subtract(timeOfStatusChange);
 
 			UpdateDisplayedDateAndTime(worldDateTime);
@@ -635,6 +649,9 @@ namespace MyThirdSDL.UserInterface
 			topToolboxTray.Draw(gameTime, renderer);
 
 			DrawMenus(gameTime, renderer);
+
+			if (messageBox != null)
+				messageBox.Draw(gameTime, renderer);
 		}
 
 		private void DrawMenus(GameTime gameTime, Renderer renderer)
@@ -713,18 +730,9 @@ namespace MyThirdSDL.UserInterface
 			menuMailbox.HandleMouseButtonPressedEvent(sender, e);
 			menuPurchaseRooms.HandleMouseButtonPressedEvent(sender, e);
 			menuCompany.HandleMouseButtonPressedEvent(sender, e);
-		}
 
-		private void TryToPlacePurchasableItem(MouseButtonEventArgs e)
-		{
-			if (CurrentState != UserInterfaceState.PlaceEquipmentActive && CurrentState != UserInterfaceState.PlaceRoomActive) return;
-			if (e.MouseButton != MouseButtonCode.Left) return;
-			if (isSelectedPurchasableOverlappingDeadZone) return;
-			if (PurchasableItemPlaced != null)
-			{
-				PurchasableItemPlaced(this, new PurchasableItemPlacedEventArgs(SelectedPurchasableItem, hoveredMapCells));
-				ChangeState(UserInterfaceState.Default);
-			}
+			if (messageBox != null)
+				messageBox.HandleMouseButtonPressedEvent(sender, e);
 		}
 
 		public void HandleMouseMovingEvent(object sender, MouseMotionEventArgs e)
@@ -739,6 +747,21 @@ namespace MyThirdSDL.UserInterface
 			menuMailbox.HandleMouseMovingEvent(sender, e);
 			menuPurchaseRooms.HandleMouseMovingEvent(sender, e);
 			menuCompany.HandleMouseMovingEvent(sender, e);
+
+			if (messageBox != null)
+				messageBox.HandleMouseMovingEvent(sender, e);
+		}
+
+		private void TryToPlacePurchasableItem(MouseButtonEventArgs e)
+		{
+			if (CurrentState != UserInterfaceState.PlaceEquipmentActive && CurrentState != UserInterfaceState.PlaceRoomActive) return;
+			if (e.MouseButton != MouseButtonCode.Left) return;
+			if (isSelectedPurchasableOverlappingDeadZone) return;
+			if (PurchasableItemPlaced != null)
+			{
+				PurchasableItemPlaced(this, new PurchasableItemPlacedEventArgs(SelectedPurchasableItem, hoveredMapCells));
+				ChangeState(UserInterfaceState.Default);
+			}
 		}
 
 		private void UpdateMousePositionDiagnostics(MouseMotionEventArgs e)
