@@ -15,8 +15,6 @@ namespace MyThirdSDL.UserInterface
 
 		private Icon iconFrame;
 
-		private MenuResume menuResume;
-
 		private enum ActiveTab
 		{
 			Inbox,
@@ -196,8 +194,6 @@ namespace MyThirdSDL.UserInterface
 
 		#region Public Events
 
-		public event EventHandler ResumeAccepted;
-
 		public event EventHandler<ArchiveEventArgs> ArchiveMailButtonClicked;
 
 		public event EventHandler<EventArgs> CloseButtonClicked;
@@ -309,11 +305,6 @@ namespace MyThirdSDL.UserInterface
 			currentDisplayedPageInbox = 1;
 			SetActiveTab(ActiveTab.Inbox);
 
-			menuResume = new MenuResume(contentManager);
-			menuResume.Visible = false;
-			menuResume.Accepted += MenuResumeOnAccepted;
-			menuResume.Rejected += MenuResumeOnRejected;
-
 			Visible = false;
 		}
 
@@ -335,14 +326,7 @@ namespace MyThirdSDL.UserInterface
 		private void buttonView_Clicked(object sender, EventArgs e)
 		{
 			if (SelectedMailItem != null)
-			{
-				if (SelectedMailItem.AttachmentType == AttachmentType.Resume)
-				{
-					menuResume.Position = base.Position;
-					menuResume.Visible = true;
-					Visible = false;
-				}
-			}
+				SelectedMailItem.Attachment.Open();
 		}
 
 		private void buttonArrowRight_Clicked(object sender, EventArgs e)
@@ -385,25 +369,17 @@ namespace MyThirdSDL.UserInterface
 			SetActiveTab(ActiveTab.Inbox);
 		}
 
-		private void MenuResumeOnRejected(object sender, EventArgs eventArgs)
-		{
-			Visible = true;
-			OnArchive(sender);
-		}
-
-		private void MenuResumeOnAccepted(object sender, EventArgs eventArgs)
-		{
-			Visible = true;
-			OnArchive(sender);
-			if (ResumeAccepted != null)
-				ResumeAccepted(sender, eventArgs);
-		}
-
 		private void OnArchive(object sender)
 		{
 			if (SelectedMailItem != null)
 				if (ArchiveMailButtonClicked != null)
 					ArchiveMailButtonClicked(sender, new ArchiveEventArgs(SelectedMailItem));
+		}
+
+		public void ArchiveSelectedMailItem(object sender)
+		{
+			if (ArchiveMailButtonClicked != null)
+				ArchiveMailButtonClicked(sender, new ArchiveEventArgs(SelectedMailItem));
 		}
 
 		#endregion Button Events
@@ -432,8 +408,6 @@ namespace MyThirdSDL.UserInterface
 						separator.Update(gameTime);
 				}
 			}
-
-			menuResume.Update(gameTime);
 		}
 
 		public override void Draw(GameTime gameTime, Renderer renderer)
@@ -458,8 +432,6 @@ namespace MyThirdSDL.UserInterface
 						separator.Draw(gameTime, renderer);
 				}
 			}
-
-			menuResume.Draw(gameTime, renderer);
 		}
 
 		public override void HandleMouseButtonPressedEvent(object sender, MouseButtonEventArgs e)
@@ -474,8 +446,6 @@ namespace MyThirdSDL.UserInterface
 					foreach (var button in currentPage.Buttons)
 						button.HandleMouseButtonPressedEvent(sender, e);
 			}
-
-			menuResume.HandleMouseButtonPressedEvent(sender, e);
 		}
 
 		public override void HandleMouseMovingEvent(object sender, MouseMotionEventArgs e)
@@ -490,8 +460,6 @@ namespace MyThirdSDL.UserInterface
 					foreach (var button in currentPage.Buttons)
 						button.HandleMouseMovingEvent(sender, e);
 			}
-
-			menuResume.HandleMouseMovingEvent(sender, e);
 		}
 
 		#endregion Game Loop

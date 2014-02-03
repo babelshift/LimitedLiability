@@ -143,7 +143,9 @@
     <Compile Include="ICollidable.cs" />
     <Compile Include="IDrawable.cs" />
     <Compile Include="INode.cs" />
+    <Compile Include="Mail\Resume.cs" />
     <Compile Include="Mail\AttachmentType.cs" />
+    <Compile Include="Mail\IAttachment.cs" />
     <Compile Include="Mail\MailItem.cs" />
     <Compile Include="Mail\MailAddress.cs" />
     <Compile Include="Mail\Mailbox.cs" />

@@ -107,10 +107,10 @@ namespace MyThirdSDL.Descriptors
 			int randomLeadership = random.Next(0, 10);
 
 			return new Skills(
-				(Skills.Rating)randomIntelligence,
-				(Skills.Rating)randomCreativity,
-				(Skills.Rating)randomCommunication,
-				(Skills.Rating)randomLeadership
+				(Rating)randomIntelligence,
+				(Rating)randomCreativity,
+				(Rating)randomCommunication,
+				(Rating)randomLeadership
 			);
 		}
 	}

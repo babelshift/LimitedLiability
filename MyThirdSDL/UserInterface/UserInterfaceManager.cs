@@ -36,6 +36,7 @@ namespace MyThirdSDL.UserInterface
 		private MenuPurchase menuPurchaseEquipment;
 		private MenuPurchase menuPurchaseRooms;
 		private MenuInspectEmployee menuInspectEmployee;
+		private MenuResume menuResume;
 
 		#endregion Controls
 
@@ -114,6 +115,8 @@ namespace MyThirdSDL.UserInterface
 		public event EventHandler<PurchasableItemPlacedEventArgs> PurchasableItemPlaced;
 
 		public event EventHandler<PurchasableItemSelectedEventArgs> PurchasableItemSelected;
+
+		public event EventHandler<ResumeAcceptedEventArgs> ResumeAccepted;
 
 		#endregion Public Events
 
@@ -451,16 +454,6 @@ namespace MyThirdSDL.UserInterface
 			menuMailbox.Position = new Vector(bottomRightPointOfWindow.X / 2 - menuMailbox.Width / 2, bottomRightPointOfWindow.Y / 2 - menuMailbox.Height / 2);
 			menuMailbox.ArchiveMailButtonClicked += menuMailbox_ArchiveMailButtonClicked;
 			menuMailbox.CloseButtonClicked += menuMailbox_CloseButtonClicked;
-			menuMailbox.ResumeAccepted += MenuMailboxOnResumeAccepted;
-		}
-
-		private void MenuMailboxOnResumeAccepted(object sender, EventArgs eventArgs)
-		{
-			messageBox = ControlFactory.CreateMessageBox(contentManager, MessageBoxType.Information);
-			messageBox.UpdateLabels(contentManager, "Resume Accepted!", "Your new employee will begin working in the next 7 to 10 business days.");
-			messageBox.Position = new Vector(MainGame.SCREEN_WIDTH_LOGICAL - messageBox.Width - 5, topToolboxTray.Height + 5);
-			messageBox.Show();
-			// send up to main game screen
 		}
 
 		private void menuMailbox_CloseButtonClicked(object sender, EventArgs e)
@@ -634,6 +627,9 @@ namespace MyThirdSDL.UserInterface
 			if (messageBox != null)
 				messageBox.Update(gameTime);
 
+			if (menuResume != null)
+				menuResume.Update(gameTime);
+
 			TimeSpentInCurrentState = SimulationManager.SimulationTime.Subtract(timeOfStatusChange);
 
 			UpdateDisplayedDateAndTime(worldDateTime);
@@ -649,6 +645,9 @@ namespace MyThirdSDL.UserInterface
 			topToolboxTray.Draw(gameTime, renderer);
 
 			DrawMenus(gameTime, renderer);
+
+			if (menuResume != null)
+				menuResume.Draw(gameTime, renderer);
 
 			if (messageBox != null)
 				messageBox.Draw(gameTime, renderer);
@@ -733,6 +732,9 @@ namespace MyThirdSDL.UserInterface
 
 			if (messageBox != null)
 				messageBox.HandleMouseButtonPressedEvent(sender, e);
+
+			if (menuResume != null)
+				menuResume.HandleMouseButtonPressedEvent(sender, e);
 		}
 
 		public void HandleMouseMovingEvent(object sender, MouseMotionEventArgs e)
@@ -750,6 +752,9 @@ namespace MyThirdSDL.UserInterface
 
 			if (messageBox != null)
 				messageBox.HandleMouseMovingEvent(sender, e);
+
+			if (menuResume != null)
+				menuResume.HandleMouseMovingEvent(sender, e);
 		}
 
 		private void TryToPlacePurchasableItem(MouseButtonEventArgs e)
@@ -808,5 +813,52 @@ namespace MyThirdSDL.UserInterface
 		}
 
 		#endregion Dispose
+
+		/// <summary>
+		/// Shows the passed resume in a window and hides the mailbox menu. This method should only be called in an Attachment action where the attachment is a resume.
+		/// The resume will invoke its Open action when the user opens the attachment, causing this method to execute.
+		/// </summary>
+		/// <param name="resume"></param>
+		public void ShowMenuResume(Resume resume)
+		{
+			menuResume = new MenuResume(contentManager, resume);
+			menuResume.Visible = false;
+			menuResume.Accepted += MenuResumeOnAccepted;
+			menuResume.Rejected += MenuResumeOnRejected;
+			menuResume.Position = menuMailbox.Position;
+			menuResume.Visible = true;
+			menuMailbox.Visible = false;
+		}
+
+		/// <summary>
+		/// When the user rejects a resume, make the mailbox menu visible again and archive the mail away.
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="eventArgs"></param>
+		private void MenuResumeOnRejected(object sender, EventArgs eventArgs)
+		{
+			menuMailbox.Visible = true;
+			menuMailbox.ArchiveSelectedMailItem(sender);
+		}
+
+		/// <summary>
+		/// When the user accepts a resume, make the mailbox menu visible again, archive the mail, and inform the game that a new employee needs to be added to the simulation.
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="eventArgs"></param>
+		private void MenuResumeOnAccepted(object sender, ResumeAcceptedEventArgs eventArgs)
+		{
+			menuMailbox.Visible = true;
+
+			messageBox = ControlFactory.CreateMessageBox(contentManager, MessageBoxType.Information);
+			messageBox.UpdateLabels(contentManager, "Resume Accepted!", "Your new employee will begin working in the next 7 to 10 business days.");
+			messageBox.Position = new Vector(MainGame.SCREEN_WIDTH_LOGICAL - messageBox.Width - 5, topToolboxTray.Height + 5);
+			messageBox.Show();
+
+			menuMailbox.ArchiveSelectedMailItem(sender);
+
+			if (ResumeAccepted != null)
+				ResumeAccepted(sender, eventArgs);
+		}
 	}
 }

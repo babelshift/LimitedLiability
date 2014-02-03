@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MyThirdSDL.Mail
 {
@@ -20,9 +16,9 @@ namespace MyThirdSDL.Mail
 
 		public MailState MailState { get; private set; }
 
-		public AttachmentType AttachmentType { get; private set; }
+		public IAttachment Attachment { get; private set; }
 
-		public MailItem(string from, string to, string subject, string body, AttachmentType attachmentType, MailState mailState)
+		public MailItem(string from, string to, string subject, string body, IAttachment attachment, MailState mailState)
 		{
 			ID = Guid.NewGuid();
 			From = from;
@@ -30,12 +26,12 @@ namespace MyThirdSDL.Mail
 			Subject = subject;
 			Body = body;
 			MailState = mailState;
-			AttachmentType = attachmentType;
+			Attachment = attachment;
 		}
 
 		public void ChangeState(MailState mailState)
 		{
-			if(MailState != mailState)
+			if (MailState != mailState)
 				MailState = mailState;
 		}
 	}

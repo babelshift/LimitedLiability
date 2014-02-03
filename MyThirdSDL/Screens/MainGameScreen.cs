@@ -194,15 +194,21 @@ namespace MyThirdSDL.Screens
 			bankAccount.AmountDeposited += bankAccount_AmountDeposited;
 			bankAccount.AmountWithdrawn += bankAccount_AmountWithdrawn;
 
-			AddRandomEmployeesToSimulation();
-
 			mailManager = new MailManager();
 			mailManager.UnreadMailCountChanged += mailbox_UnreadMailCountChanged;
-			mailManager.SendMail(new MailItem("first.last@recruiters.com", "first.last@company.com", "Test Subject 1", "Test Body 1", AttachmentType.Resume,  MailState.Unread));
-			mailManager.SendMail(new MailItem("first.last@recruiters.com", "first.last@company.com", "Test Subject 2", "Test Body 2", AttachmentType.Resume, MailState.Unread));
-			mailManager.SendMail(new MailItem("first.last@recruiters.com", "first.last@company.com", "Test Subject 3", "Test Body 3", AttachmentType.Resume, MailState.Unread));
-			mailManager.SendMail(new MailItem("first.last@recruiters.com", "first.last@company.com", "Test Subject 4", "Test Body 4", AttachmentType.Resume, MailState.Unread));
-			mailManager.SendMail(new MailItem("first.last@recruiters.com", "first.last@company.com", "Test Subject 5", "Test Body 5", AttachmentType.Resume, MailState.Unread));
+
+			Employee employee = agentFactory.CreateEmployee(SimulationManager.SimulationTime, simulationManager.WorldDateTime, GetRandomEmployeePosition());
+			Resume resume = new Resume(r => userInterfaceManager.ShowMenuResume(r), employee, "At my past job, I spent a lot of time sleeping at my desk. I promise not to do that if you hire me. Also, I need money. That said, I can't promise that my narcolepsy is completely cured. I have a doctor's note if you need one.");
+			Employee employee2 = agentFactory.CreateEmployee(SimulationManager.SimulationTime, simulationManager.WorldDateTime, GetRandomEmployeePosition());
+			Resume resume2 = new Resume(r => userInterfaceManager.ShowMenuResume(r), employee2, "At my past job, I spent a lot of time sleeping at my desk. I promise not to do that if you hire me. Also, I need money. That said, I can't promise that my narcolepsy is completely cured. I have a doctor's note if you need one.");
+			Employee employee3 = agentFactory.CreateEmployee(SimulationManager.SimulationTime, simulationManager.WorldDateTime, GetRandomEmployeePosition());
+			Resume resume3 = new Resume(r => userInterfaceManager.ShowMenuResume(r), employee3, "At my past job, I spent a lot of time sleeping at my desk. I promise not to do that if you hire me. Also, I need money. That said, I can't promise that my narcolepsy is completely cured. I have a doctor's note if you need one.");
+			
+			mailManager.SendMail(new MailItem("first.last@recruiters.com", "first.last@company.com", "Test Subject 1", "Test Body 1", resume, MailState.Unread));
+			mailManager.SendMail(new MailItem("first.last@recruiters.com", "first.last@company.com", "Test Subject 2", "Test Body 2", resume2, MailState.Unread));
+			mailManager.SendMail(new MailItem("first.last@recruiters.com", "first.last@company.com", "Test Subject 3", "Test Body 3", resume3, MailState.Unread));
+			mailManager.SendMail(new MailItem("first.last@recruiters.com", "first.last@company.com", "Test Subject 4", "Test Body 4", resume, MailState.Unread));
+			mailManager.SendMail(new MailItem("first.last@recruiters.com", "first.last@company.com", "Test Subject 5", "Test Body 5", resume, MailState.Unread));
 
 			IEnumerable<IPurchasable> purchasableEquipment = GetPurchasableEquipment();
 			IEnumerable<IPurchasable> purchasableRooms = GetPurchasableRooms();
@@ -221,20 +227,15 @@ namespace MyThirdSDL.Screens
 			userInterfaceManager.PurchasableItemPlaced += UserInterfaceManagerOnPurchasableItemPlaced;
 			userInterfaceManager.ArchiveMailButtonClicked += UserInterfaceManagerOnArchiveMailButtonClicked;
 			userInterfaceManager.MainMenuButtonClicked += (sender, e) => ScreenManager.AddScreen(CreatePauseMenuScreen());
+			userInterfaceManager.ResumeAccepted += (sender, e) => simulationManager.AddAgent(e.Employee);
 		}
 
-		private void AddRandomEmployeesToSimulation()
+		private Vector GetRandomEmployeePosition()
 		{
 			var pathNodes = tiledMap.GetPathNodes();
 			Random random = new Random();
-			for (int i = 0; i < 10; i++)
-			{
-				int x = random.Next(0, pathNodes.Count);
-				var pathNode = pathNodes[x];
-				Employee employee = agentFactory.CreateEmployee(SimulationManager.SimulationTime, simulationManager.WorldDateTime,
-					new Vector(pathNode.WorldPosition.X, pathNode.WorldPosition.Y));
-				simulationManager.AddAgent(employee);
-			}
+			var pathNode = pathNodes[random.Next(0, pathNodes.Count)];
+			return new Vector(pathNode.WorldPosition.X, pathNode.WorldPosition.Y);
 		}
 
 		public override void Update(GameTime gameTime, bool otherWindowHasFocus, bool coveredByOtherScreen)

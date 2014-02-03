@@ -1,4 +1,6 @@
-﻿using MyThirdSDL.Content;
+﻿using MyThirdSDL.Agents;
+using MyThirdSDL.Content;
+using MyThirdSDL.Mail;
 using SharpDL.Graphics;
 using System;
 
@@ -13,7 +15,6 @@ namespace MyThirdSDL.UserInterface
 		private Icon iconSkillsMenu;
 
 		private Label labelName;
-		private Label labelEmailAddress;
 
 		private Label labelContent;
 
@@ -36,7 +37,9 @@ namespace MyThirdSDL.UserInterface
 		private Button buttonAccept;
 		private Button buttonReject;
 
-		public event EventHandler Accepted;
+		private Resume resume;
+
+		public event EventHandler<ResumeAcceptedEventArgs> Accepted;
 
 		public event EventHandler Rejected;
 
@@ -54,7 +57,6 @@ namespace MyThirdSDL.UserInterface
 				buttonReject.Position = base.Position + new Vector(Width - buttonReject.Width, Height + 5);
 				buttonAccept.Position = base.Position + new Vector(Width - buttonAccept.Width - buttonReject.Width - 5, Height + 5);
 				labelName.Position = base.Position + new Vector(5, 50);
-				labelEmailAddress.Position = base.Position + new Vector(5, 70);
 				labelJob.Position = base.Position + new Vector(Width - labelJob.Width - 155, 50);
 				labelSalary.Position = base.Position + new Vector(Width - labelSalary.Width - 155, 70);
 				labelContent.Position = base.Position + new Vector(5, 110);
@@ -71,7 +73,7 @@ namespace MyThirdSDL.UserInterface
 			}
 		}
 
-		public MenuResume(ContentManager contentManager)
+		public MenuResume(ContentManager contentManager, Resume resume)
 		{
 			Texture textureFrame = contentManager.GetTexture("MenuResumeFrame");
 			iconFrame = new Icon(textureFrame);
@@ -119,13 +121,11 @@ namespace MyThirdSDL.UserInterface
 			labelIntelligenceValue = ControlFactory.CreateLabel(contentManager, fontPath, fontSizeContent, fontColorValue,
 				defaultText);
 
-			labelName = ControlFactory.CreateLabel(contentManager, fontPath, fontSizeContent, fontColorValue, "Turd Burglar");
-			labelEmailAddress = ControlFactory.CreateLabel(contentManager, fontPath, fontSizeContent, fontColorValue,
-				"Turd@Burglars.com");
+			labelName = ControlFactory.CreateLabel(contentManager, fontPath, fontSizeContent, fontColorValue, resume.Employee.FullName);
 			labelContent = ControlFactory.CreateLabel(contentManager, fontPath, fontSizeContent, fontColorValue,
-				"At my past job, I spent a lot of time sleeping at my desk. I promise not to do that if you hire me. Also, I need money. That said, I can't promise that my narcolepsy is completely cured. I have a doctor's note if you need one.", 550);
-			labelJob = ControlFactory.CreateLabel(contentManager, fontPath, fontSizeContent, fontColorValue, "Software Engineer");
-			labelSalary = ControlFactory.CreateLabel(contentManager, fontPath, fontSizeContent, fontColorValue, "$100K / yr");
+				resume.Content, 550);
+			labelJob = ControlFactory.CreateLabel(contentManager, fontPath, fontSizeContent, fontColorValue, resume.Employee.Job.Title);
+			labelSalary = ControlFactory.CreateLabel(contentManager, fontPath, fontSizeContent, fontColorValue, String.Format("${0} / yr", resume.Employee.Job.Salary));
 
 			Controls.Add(iconFrame);
 			Controls.Add(iconMainMenu);
@@ -134,7 +134,6 @@ namespace MyThirdSDL.UserInterface
 			Controls.Add(labelCommunicationValue);
 			Controls.Add(labelContent);
 			Controls.Add(labelCreativityValue);
-			Controls.Add(labelEmailAddress);
 			Controls.Add(labelIntelligenceValue);
 			Controls.Add(labelJob);
 			Controls.Add(labelLeadershipValue);
@@ -147,13 +146,15 @@ namespace MyThirdSDL.UserInterface
 			Controls.Add(iconLeadership);
 			Controls.Add(buttonAccept);
 			Controls.Add(buttonReject);
+
+			this.resume = resume;
 		}
 
 		private void ButtonAcceptOnClicked(object sender, EventArgs eventArgs)
 		{
 			Visible = false;
 			if (Accepted != null)
-				Accepted(sender, eventArgs);
+				Accepted(sender, new ResumeAcceptedEventArgs(resume.Employee));
 		}
 
 		private void ButtonRejectOnClicked(object sender, EventArgs eventArgs)
@@ -161,6 +162,16 @@ namespace MyThirdSDL.UserInterface
 			Visible = false;
 			if (Rejected != null)
 				Rejected(sender, eventArgs);
+		}
+	}
+
+	public class ResumeAcceptedEventArgs : EventArgs
+	{
+		public Employee Employee { get; private set; }
+
+		public ResumeAcceptedEventArgs(Employee employee)
+		{
+			Employee = employee;
 		}
 	}
 }
