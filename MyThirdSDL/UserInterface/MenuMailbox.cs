@@ -32,6 +32,8 @@ namespace MyThirdSDL.UserInterface
 		private MailItem selectedMailItemOutbox;
 		private MailItem selectedMailItemArchive;
 
+		private MenuEmail menuEmail;
+
 		#endregion Members
 
 		#region Pages
@@ -277,6 +279,9 @@ namespace MyThirdSDL.UserInterface
 			buttonCloseWindow.IconHovered = ControlFactory.CreateIcon(contentManager, "IconWindowClose");
 			buttonCloseWindow.ButtonType = ButtonType.IconOnly;
 
+			menuEmail = new MenuEmail(contentManager);
+			menuEmail.Closed += MenuEmailOnClosed;
+
 			AddButtonMailItems(contentManager, inbox, outbox, archive);
 
 			Controls.Add(iconFrame);
@@ -310,6 +315,11 @@ namespace MyThirdSDL.UserInterface
 			Visible = false;
 		}
 
+		private void MenuEmailOnClosed(object sender, EventArgs eventArgs)
+		{
+			Visible = true;
+		}
+
 		#endregion Constructors
 
 		#region Button Events
@@ -327,13 +337,15 @@ namespace MyThirdSDL.UserInterface
 
 		private void buttonView_Clicked(object sender, EventArgs e)
 		{
-			OnViewButtonClicked(sender);
+			OnViewButtonClicked();
 		}
 
-		private void OnViewButtonClicked(object sender)
+		private void OnViewButtonClicked()
 		{
-			if(ViewButtonClicked != null)
-				ViewButtonClicked(sender, new SelectedMailItemActionEventArgs(SelectedMailItem));
+			Visible = false;
+			menuEmail.SetMailItem(SelectedMailItem);
+			menuEmail.Position = Position;
+			menuEmail.Visible = true;
 		}
 
 		private void buttonArrowRight_Clicked(object sender, EventArgs e)
@@ -405,7 +417,7 @@ namespace MyThirdSDL.UserInterface
 				if (labelSelectedFolderHeader != null)
 					labelSelectedFolderHeader.Update(gameTime);
 
-				MailItemPage currentPage = null;
+				MailItemPage currentPage;
 				bool success = mailItemPages.TryGetValue(CurrentDisplayedPageNumber, out currentPage);
 				if (success)
 				{
@@ -415,6 +427,8 @@ namespace MyThirdSDL.UserInterface
 						separator.Update(gameTime);
 				}
 			}
+			else
+				menuEmail.Update(gameTime);
 		}
 
 		public override void Draw(GameTime gameTime, Renderer renderer)
@@ -429,7 +443,7 @@ namespace MyThirdSDL.UserInterface
 				if (labelSelectedFolderHeader != null)
 					labelSelectedFolderHeader.Draw(gameTime, renderer);
 
-				MailItemPage currentPage = null;
+				MailItemPage currentPage;
 				bool success = mailItemPages.TryGetValue(CurrentDisplayedPageNumber, out currentPage);
 				if (success)
 				{
@@ -439,6 +453,8 @@ namespace MyThirdSDL.UserInterface
 						separator.Draw(gameTime, renderer);
 				}
 			}
+			else
+				menuEmail.Draw(gameTime, renderer);
 		}
 
 		public override void HandleMouseButtonPressedEvent(object sender, MouseButtonEventArgs e)
@@ -447,12 +463,14 @@ namespace MyThirdSDL.UserInterface
 			{
 				base.HandleMouseButtonPressedEvent(sender, e);
 
-				MailItemPage currentPage = null;
+				MailItemPage currentPage;
 				bool success = mailItemPages.TryGetValue(CurrentDisplayedPageNumber, out currentPage);
 				if (success)
 					foreach (var button in currentPage.Buttons)
 						button.HandleMouseButtonPressedEvent(sender, e);
 			}
+			else
+				menuEmail.HandleMouseButtonPressedEvent(sender, e);
 		}
 
 		public override void HandleMouseMovingEvent(object sender, MouseMotionEventArgs e)
@@ -461,12 +479,14 @@ namespace MyThirdSDL.UserInterface
 			{
 				base.HandleMouseMovingEvent(sender, e);
 
-				MailItemPage currentPage = null;
+				MailItemPage currentPage;
 				bool success = mailItemPages.TryGetValue(CurrentDisplayedPageNumber, out currentPage);
 				if (success)
 					foreach (var button in currentPage.Buttons)
 						button.HandleMouseMovingEvent(sender, e);
 			}
+			else
+				menuEmail.HandleMouseMovingEvent(sender, e);
 		}
 
 		#endregion Game Loop

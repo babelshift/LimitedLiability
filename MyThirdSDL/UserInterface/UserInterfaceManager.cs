@@ -37,7 +37,6 @@ namespace MyThirdSDL.UserInterface
 		private MenuPurchase menuPurchaseRooms;
 		private MenuInspectEmployee menuInspectEmployee;
 		private MenuResume menuResume;
-		private MenuEmail menuEmail;
 
 		#endregion Controls
 
@@ -455,12 +454,6 @@ namespace MyThirdSDL.UserInterface
 			menuMailbox.Position = new Vector(bottomRightPointOfWindow.X / 2 - menuMailbox.Width / 2, bottomRightPointOfWindow.Y / 2 - menuMailbox.Height / 2);
 			menuMailbox.ArchiveMailButtonClicked += MenuMailboxArchiveMailButtonClicked;
 			menuMailbox.CloseButtonClicked += MenuMailboxOnCloseButtonClicked;
-			menuMailbox.ViewButtonClicked += MenuMailboxOnViewButtonClicked;
-		}
-
-		private void MenuMailboxOnViewButtonClicked(object sender, SelectedMailItemActionEventArgs eventArgs)
-		{
-			ShowMenuEmail(eventArgs.SelectedMailItem);
 		}
 
 		private void MenuMailboxOnCloseButtonClicked(object sender, EventArgs e)
@@ -637,9 +630,6 @@ namespace MyThirdSDL.UserInterface
 			if (menuResume != null)
 				menuResume.Update(gameTime);
 
-			if(menuEmail != null)
-				menuEmail.Update(gameTime);
-
 			TimeSpentInCurrentState = SimulationManager.SimulationTime.Subtract(timeOfStatusChange);
 
 			UpdateDisplayedDateAndTime(worldDateTime);
@@ -658,9 +648,6 @@ namespace MyThirdSDL.UserInterface
 
 			if (menuResume != null)
 				menuResume.Draw(gameTime, renderer);
-
-			if (menuEmail != null)
-				menuEmail.Draw(gameTime, renderer);
 
 			if (messageBox != null)
 				messageBox.Draw(gameTime, renderer);
@@ -748,9 +735,6 @@ namespace MyThirdSDL.UserInterface
 
 			if (menuResume != null)
 				menuResume.HandleMouseButtonPressedEvent(sender, e);
-
-			if (menuEmail != null)
-				menuEmail.HandleMouseButtonPressedEvent(sender, e);
 		}
 
 		public void HandleMouseMovingEvent(object sender, MouseMotionEventArgs e)
@@ -771,9 +755,6 @@ namespace MyThirdSDL.UserInterface
 
 			if (menuResume != null)
 				menuResume.HandleMouseMovingEvent(sender, e);
-
-			if (menuEmail != null)
-				menuEmail.HandleMouseMovingEvent(sender, e);
 		}
 
 		private void TryToPlacePurchasableItem(MouseButtonEventArgs e)
@@ -846,20 +827,6 @@ namespace MyThirdSDL.UserInterface
 			menuResume.Position = menuMailbox.Position;
 			menuResume.Visible = true;
 			menuMailbox.Visible = false;
-		}
-
-		public void ShowMenuEmail(MailItem mailItem)
-		{
-			menuEmail = new MenuEmail(contentManager, mailItem);
-			menuEmail.Closed += MenuEmailOnClosed;
-			menuEmail.Position = menuMailbox.Position;
-			menuEmail.Visible = true;
-			menuMailbox.Visible = false;
-		}
-
-		private void MenuEmailOnClosed(object sender, EventArgs eventArgs)
-		{
-			ShowMenuMailbox();
 		}
 
 		/// <summary>

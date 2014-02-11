@@ -7,6 +7,8 @@ namespace MyThirdSDL.UserInterface
 {
 	public class MenuEmail : Menu
 	{
+		private string defaultText = "N/A";
+
 		private Icon iconFrame;
 		private Icon iconMainMenu;
 
@@ -37,7 +39,7 @@ namespace MyThirdSDL.UserInterface
 			}
 		}
 
-		public MenuEmail(ContentManager contentManager, MailItem mailItem)
+		public MenuEmail(ContentManager contentManager)
 		{
 			Texture textureFrame = contentManager.GetTexture("MenuResumeFrame");
 			iconFrame = new Icon(textureFrame);
@@ -61,10 +63,9 @@ namespace MyThirdSDL.UserInterface
 			labelMainMenu = ControlFactory.CreateLabel(contentManager, fontPath, fontSizeTitle, fontColor, "Read Email");
 			labelMainMenu.EnableShadow(contentManager, 2, 2);
 
-			labelFrom = ControlFactory.CreateLabel(contentManager, fontPath, fontSizeTitle, fontColor, String.Format("From: {0}", mailItem.From));
-			labelSubject = ControlFactory.CreateLabel(contentManager, fontPath, fontSizeTitle, fontColor,
-				String.Format("Subject: {0}", mailItem.Subject));
-			labelContent = ControlFactory.CreateLabel(contentManager, fontPath, fontSizeTitle, fontColor, mailItem.Body, 550);
+			labelFrom = ControlFactory.CreateLabel(contentManager, fontPath, fontSizeTitle, fontColor, defaultText);
+			labelSubject = ControlFactory.CreateLabel(contentManager, fontPath, fontSizeTitle, fontColor, defaultText);
+			labelContent = ControlFactory.CreateLabel(contentManager, fontPath, fontSizeTitle, fontColor, defaultText, 550);
 
 			Controls.Add(iconFrame);
 			Controls.Add(iconMainMenu);
@@ -75,6 +76,13 @@ namespace MyThirdSDL.UserInterface
 			Controls.Add(buttonClose);
 
 			Visible = false;
+		}
+
+		public void SetMailItem(MailItem mailItem)
+		{
+			labelFrom.Text = String.Format("From: {0}", mailItem.From);
+			labelSubject.Text = String.Format("Subject: {0}", mailItem.Subject);
+			labelContent.Text = mailItem.Body;
 		}
 
 		private void ButtonCloseOnClicked(object sender, EventArgs eventArgs)
