@@ -194,7 +194,9 @@ namespace MyThirdSDL.UserInterface
 
 		#region Public Events
 
-		public event EventHandler<ArchiveEventArgs> ArchiveMailButtonClicked;
+		public event EventHandler<SelectedMailItemActionEventArgs> ViewButtonClicked;
+
+		public event EventHandler<SelectedMailItemActionEventArgs> ArchiveMailButtonClicked;
 
 		public event EventHandler<EventArgs> CloseButtonClicked;
 
@@ -325,8 +327,13 @@ namespace MyThirdSDL.UserInterface
 
 		private void buttonView_Clicked(object sender, EventArgs e)
 		{
-			if (SelectedMailItem != null)
-				SelectedMailItem.Attachment.Open();
+			OnViewButtonClicked(sender);
+		}
+
+		private void OnViewButtonClicked(object sender)
+		{
+			if(ViewButtonClicked != null)
+				ViewButtonClicked(sender, new SelectedMailItemActionEventArgs(SelectedMailItem));
 		}
 
 		private void buttonArrowRight_Clicked(object sender, EventArgs e)
@@ -373,13 +380,13 @@ namespace MyThirdSDL.UserInterface
 		{
 			if (SelectedMailItem != null)
 				if (ArchiveMailButtonClicked != null)
-					ArchiveMailButtonClicked(sender, new ArchiveEventArgs(SelectedMailItem));
+					ArchiveMailButtonClicked(sender, new SelectedMailItemActionEventArgs(SelectedMailItem));
 		}
 
 		public void ArchiveSelectedMailItem(object sender)
 		{
 			if (ArchiveMailButtonClicked != null)
-				ArchiveMailButtonClicked(sender, new ArchiveEventArgs(SelectedMailItem));
+				ArchiveMailButtonClicked(sender, new SelectedMailItemActionEventArgs(SelectedMailItem));
 		}
 
 		#endregion Button Events
@@ -771,11 +778,11 @@ namespace MyThirdSDL.UserInterface
 		#endregion Dispose
 	}
 
-	public class ArchiveEventArgs : EventArgs
+	public class SelectedMailItemActionEventArgs : EventArgs
 	{
 		public MailItem SelectedMailItem { get; private set; }
 
-		public ArchiveEventArgs(MailItem selectedMailItem)
+		public SelectedMailItemActionEventArgs(MailItem selectedMailItem)
 		{
 			SelectedMailItem = selectedMailItem;
 		}

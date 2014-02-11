@@ -529,7 +529,7 @@ namespace MyThirdSDL.Screens
 			userInterfaceManager.SetHoveredMapCells(hoveredMapCells);
 		}
 
-		private void UserInterfaceManagerOnArchiveMailButtonClicked(object sender, ArchiveEventArgs e)
+		private void UserInterfaceManagerOnArchiveMailButtonClicked(object sender, SelectedMailItemActionEventArgs e)
 		{
 			mailManager.ArchiveMail(e.SelectedMailItem);
 			userInterfaceManager.UpdateMenuMailBox(mailManager.PlayerInbox, mailManager.PlayerOutbox, mailManager.PlayerArchive);

@@ -6,10 +6,8 @@ using System;
 
 namespace MyThirdSDL.UserInterface
 {
-	internal class MenuResume : Menu
+	public class MenuResume : Menu
 	{
-		private const string defaultText = "N/A";
-
 		private Icon iconFrame;
 		private Icon iconMainMenu;
 		private Icon iconSkillsMenu;

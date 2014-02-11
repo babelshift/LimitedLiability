@@ -17,7 +17,8 @@ namespace MyThirdSDL.Mail
 		/// Constructs a resume and ses its open action to the passed action.
 		/// </summary>
 		/// <param name="action"></param>
-		/// <param name="personName"></param>
+		/// <param name="employee"></param>
+		/// <param name="content"></param>
 		public Resume(Action<Resume> action, Employee employee, string content)
 		{
 			this.action = action;

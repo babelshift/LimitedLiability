@@ -205,6 +205,7 @@
     <Compile Include="UserInterface\MailItemPage.cs" />
     <Compile Include="UserInterface\Menu.cs" />
     <Compile Include="UserInterface\MenuCompany.cs" />
+    <Compile Include="UserInterface\MenuEmail.cs" />
     <Compile Include="UserInterface\MenuPurchase.cs">
       <SubType>Code</SubType>
     </Compile>
