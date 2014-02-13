@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace MyThirdSDL
+namespace MyThirdSDL.Agents
 {
 	public class RoomMetadata : AgentMetadata
 	{
