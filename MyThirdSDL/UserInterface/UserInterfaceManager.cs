@@ -826,7 +826,6 @@ namespace MyThirdSDL.UserInterface
 			menuResume.Rejected += MenuResumeOnRejected;
 			menuResume.Position = menuMailbox.Position;
 			menuResume.Visible = true;
-			menuMailbox.Visible = false;
 		}
 
 		/// <summary>

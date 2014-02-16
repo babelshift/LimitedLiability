@@ -18,6 +18,9 @@ namespace MyThirdSDL.UserInterface
 		private Label labelContent;
 
 		private Button buttonClose;
+		private Button buttonAttachment;
+
+		private MailItem mailItem;
 
 		public event EventHandler Closed;
 
@@ -35,13 +38,14 @@ namespace MyThirdSDL.UserInterface
 				labelSubject.Position = base.Position + new Vector(5, 70);
 				labelContent.Position = base.Position + new Vector(5, 110);
 
+				buttonAttachment.Position = base.Position + new Vector(500, 50);
 				buttonClose.Position = base.Position + new Vector(Width - buttonClose.Width, Height + 5);
 			}
 		}
 
 		public MenuEmail(ContentManager contentManager)
 		{
-			Texture textureFrame = contentManager.GetTexture("MenuResumeFrame");
+			Texture textureFrame = contentManager.GetTexture("MenuEmailFrame");
 			iconFrame = new Icon(textureFrame);
 			Width = iconFrame.Width;
 			Height = iconFrame.Height;
@@ -57,6 +61,12 @@ namespace MyThirdSDL.UserInterface
 			buttonClose.IconHovered = ControlFactory.CreateIcon(contentManager, "IconAccept");
 			buttonClose.ButtonType = ButtonType.IconOnly;
 			buttonClose.Clicked += ButtonCloseOnClicked;
+
+			buttonAttachment = ControlFactory.CreateButton(contentManager, "ButtonSquare", "ButtonSquareHover");
+			buttonAttachment.Icon = ControlFactory.CreateIcon(contentManager, "IconAttachment");
+			buttonAttachment.IconHovered = ControlFactory.CreateIcon(contentManager, "IconAttachment");
+			buttonAttachment.ButtonType = ButtonType.IconOnly;
+			buttonAttachment.Clicked += ButtonAttachmentOnClicked;
 
 			iconMainMenu = ControlFactory.CreateIcon(contentManager, "IconMailUnread");
 
@@ -74,15 +84,27 @@ namespace MyThirdSDL.UserInterface
 			Controls.Add(labelFrom);
 			Controls.Add(labelSubject);
 			Controls.Add(buttonClose);
+			Controls.Add(buttonAttachment);
 
 			Visible = false;
 		}
 
+		private void ButtonAttachmentOnClicked(object sender, EventArgs eventArgs)
+		{
+			if (mailItem == null) return;
+
+			if (mailItem.Attachment == null) return;
+			
+			Visible = false;
+			mailItem.Attachment.Open();
+		}
+
 		public void SetMailItem(MailItem mailItem)
 		{
-			labelFrom.Text = String.Format("From: {0}", mailItem.From);
-			labelSubject.Text = String.Format("Subject: {0}", mailItem.Subject);
-			labelContent.Text = mailItem.Body;
+			this.mailItem = mailItem;
+			labelFrom.Text = String.Format("From: {0}", this.mailItem.From);
+			labelSubject.Text = String.Format("Subject: {0}", this.mailItem.Subject);
+			labelContent.Text = this.mailItem.Body;
 		}
 
 		private void ButtonCloseOnClicked(object sender, EventArgs eventArgs)

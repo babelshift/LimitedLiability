@@ -87,6 +87,7 @@
     <Compile Include="Agents\OfficeDesk.cs" />
     <Compile Include="Agents\Room.cs" />
     <Compile Include="Agents\RoomFactory.cs" />
+    <Compile Include="Agents\RoomMetadata.cs" />
     <Compile Include="Agents\SnackMachine.cs" />
     <Compile Include="Agents\SodaMachine.cs" />
     <Compile Include="Agents\Thought.cs" />
@@ -153,7 +154,6 @@
     <Compile Include="Mail\MailState.cs" />
     <Compile Include="Mail\MailAddressType.cs" />
     <Compile Include="MainGame.cs" />
-    <Compile Include="RoomMetadata.cs" />
     <Compile Include="Screens\LoadGameScreen.cs" />
     <Compile Include="Screens\OptionsScreen.cs" />
     <Compile Include="Screens\PauseMenuScreen.cs" />
@@ -353,6 +353,9 @@
     <Content Include="Content\Images\User Interface\IconAlertNotification.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Content\Images\User Interface\IconAttachment.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Content\Images\User Interface\IconFastForward.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -396,6 +399,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\Images\User Interface\IconReject.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Images\User Interface\MenuEmailFrame.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\Images\User Interface\MenuResumeFrame.png">
