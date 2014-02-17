@@ -98,12 +98,12 @@ namespace MyThirdSDL.UserInterface
 			{
 				base.Position = value;
 
-				if (buttonType == UserInterface.ButtonType.TextOnly)
+				if (buttonType == ButtonType.TextOnly)
 				{
 					if (Label != null)
 						Label.Position = new Vector(base.Position.X + (TextureFrame.Width / 2 - Label.Width / 2), base.Position.Y + (TextureFrame.Height / 2 - Label.Height / 2));
 				}
-				else if (buttonType == UserInterface.ButtonType.IconOnly)
+				else if (buttonType == ButtonType.IconOnly)
 				{
 					if (Icon != null)
 						Icon.Position = new Vector(base.Position.X + (TextureFrame.Width / 2 - Icon.Width / 2), base.Position.Y + (TextureFrame.Height / 2 - Icon.Height / 2));
@@ -111,7 +111,7 @@ namespace MyThirdSDL.UserInterface
 					if (IconHovered != null)
 						IconHovered.Position = new Vector(base.Position.X + (TextureFrame.Width / 2 - IconHovered.Width / 2), base.Position.Y + (TextureFrame.Height / 2 - IconHovered.Height / 2));
 				}
-				else if (buttonType == UserInterface.ButtonType.IconAndText)
+				else if (buttonType == ButtonType.IconAndText)
 				{
 					if (Icon != null)
 						Icon.Position = new Vector(base.Position.X + 5, base.Position.Y + (TextureFrame.Height / 2 - Icon.Height / 2));
@@ -125,10 +125,10 @@ namespace MyThirdSDL.UserInterface
 			}
 		}
 
-		public void EnableLabelShadow(ContentManager contentManager, int shadowOffsetX, int shadowOffsetY)
+		public void EnableLabelShadow(ContentManager content, int shadowOffsetX, int shadowOffsetY)
 		{
 			if (Label != null)
-				Label.EnableShadow(contentManager, shadowOffsetX, shadowOffsetY);
+				Label.EnableShadow(content, shadowOffsetX, shadowOffsetY);
 		}
 
 		#endregion Properties

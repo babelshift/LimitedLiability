@@ -82,13 +82,13 @@ namespace MyThirdSDL.UserInterface
 			}
 		}
 
-		public ToolboxTray(ContentManager contentManager)
+		public ToolboxTray(ContentManager content)
 		{
-			iconFrame = ControlFactory.CreateIcon(contentManager, "BottomBar");
+			iconFrame = ControlFactory.CreateIcon(content, "BottomBar");
 			Width = iconFrame.Width;
 			Height = iconFrame.Height;
 
-			string fontPath = contentManager.GetContentPath("Arcade");
+			string fontPath = content.GetContentPath("Arcade");
 			Color fontColor = Styles.Colors.PaleYellow;
 			int fontSizeContent = 12;
 			int fontSizeTooltipText = 8;
@@ -99,25 +99,25 @@ namespace MyThirdSDL.UserInterface
 			//buttonSelectGeneral.Tooltip = ControlFactory.CreateTooltip(contentManager, tooltipTexturePathKey, fontPath, fontSizeTooltipText, fontColor, "Select objects to inspect them");
 			//buttonSelectGeneral.ButtonType = ButtonType.IconOnly;
 
-			buttonSelectEquipment = ControlFactory.CreateButton(contentManager, "ButtonItems", "ButtonItemsHover");
+			buttonSelectEquipment = ControlFactory.CreateButton(content, "ButtonItems", "ButtonItemsHover");
 			buttonSelectEquipment.ButtonType = ButtonType.FrameOnly;
 
-			buttonSelectRoom = ControlFactory.CreateButton(contentManager, "ButtonRooms", "ButtonRoomsHover");
+			buttonSelectRoom = ControlFactory.CreateButton(content, "ButtonRooms", "ButtonRoomsHover");
 			buttonSelectRoom.ButtonType = ButtonType.FrameOnly;
 
-			buttonFinances = ControlFactory.CreateButton(contentManager, "ButtonFinances", "ButtonFinancesHover");
+			buttonFinances = ControlFactory.CreateButton(content, "ButtonFinances", "ButtonFinancesHover");
 			buttonFinances.ButtonType = ButtonType.FrameOnly;
 
-			buttonCompany = ControlFactory.CreateButton(contentManager, "ButtonStatistics", "ButtonStatisticsHover");
+			buttonCompany = ControlFactory.CreateButton(content, "ButtonStatistics", "ButtonStatisticsHover");
 			buttonCompany.ButtonType = ButtonType.FrameOnly;
 
-			buttonEmployees = ControlFactory.CreateButton(contentManager, "ButtonEmployees", "ButtonEmployeesHover");
+			buttonEmployees = ControlFactory.CreateButton(content, "ButtonEmployees", "ButtonEmployeesHover");
 			buttonEmployees.ButtonType = ButtonType.FrameOnly;
 
-			buttonProducts = ControlFactory.CreateButton(contentManager, "ButtonProducts", "ButtonProductsHover");
+			buttonProducts = ControlFactory.CreateButton(content, "ButtonProducts", "ButtonProductsHover");
 			buttonProducts.ButtonType = ButtonType.FrameOnly;
 
-			buttonMainMenu = ControlFactory.CreateButton(contentManager, "ButtonGameMenu", "ButtonGameMenuHover");
+			buttonMainMenu = ControlFactory.CreateButton(content, "ButtonGameMenu", "ButtonGameMenuHover");
 			buttonMainMenu.ButtonType = ButtonType.FrameOnly;
 
 			//buttonMailMenu = ControlFactory.CreateButton(contentManager, "ToolboxTrayButtonMail", "ToolboxTrayButtonMailHover");

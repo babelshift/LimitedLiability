@@ -71,15 +71,15 @@ namespace MyThirdSDL.UserInterface
 			}
 		}
 
-		public Textbox(ContentManager contentManager)
+		public Textbox(ContentManager content)
 		{
-			string fontPath = contentManager.GetContentPath("Arcade");
+			string fontPath = content.GetContentPath("Arcade");
 			Color fontColor = Styles.Colors.PaleGreen;
 			const int fontSizeContent = 12;
 
-			IconFrame = ControlFactory.CreateIcon(contentManager, "TextboxLongFrame");
-			IconInputBar = ControlFactory.CreateIcon(contentManager, "IconInputBar");
-			LabelText = ControlFactory.CreateLabel(contentManager, fontPath, fontSizeContent, fontColor, ".");
+			IconFrame = ControlFactory.CreateIcon(content, "TextboxLongFrame");
+			IconInputBar = ControlFactory.CreateIcon(content, "IconInputBar");
+			LabelText = ControlFactory.CreateLabel(content, fontPath, fontSizeContent, fontColor, ".");
 
 			Clicked += OnClicked;
 

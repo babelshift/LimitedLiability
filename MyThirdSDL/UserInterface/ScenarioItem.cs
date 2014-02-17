@@ -43,27 +43,27 @@ namespace MyThirdSDL.UserInterface
 			}
 		}
 
-		public ScenarioItem(ContentManager contentManager, string iconThumbnailKey, string iconThumbnailSelectedKey, string iconOverviewKey, string textItemName, string textOverview, string mapPathToLoad)
+		public ScenarioItem(ContentManager content, string iconThumbnailKey, string iconThumbnailSelectedKey, string iconOverviewKey, string textItemName, string textOverview, string mapPathToLoad)
 		{
 			MapPathToLoad = mapPathToLoad;
 
-			string fontPath = contentManager.GetContentPath("Arcade");
+			string fontPath = content.GetContentPath("Arcade");
 			Color fontColorWhite = Styles.Colors.White;
 			Color fontColorPaleYellow = Styles.Colors.PaleYellow;
 			int fontSizeName = 14;
 
-			labelName = ControlFactory.CreateLabel(contentManager, fontPath, fontSizeName, fontColorWhite, textItemName, 225);
-			labelName.EnableShadow(contentManager, 2, 2);
-			labelNameSelected = ControlFactory.CreateLabel(contentManager, fontPath, fontSizeName, fontColorPaleYellow, textItemName, 225);
-			labelNameSelected.EnableShadow(contentManager, 2, 2);
+			labelName = ControlFactory.CreateLabel(content, fontPath, fontSizeName, fontColorWhite, textItemName, 225);
+			labelName.EnableShadow(content, 2, 2);
+			labelNameSelected = ControlFactory.CreateLabel(content, fontPath, fontSizeName, fontColorPaleYellow, textItemName, 225);
+			labelNameSelected.EnableShadow(content, 2, 2);
 
-			labelOverview = ControlFactory.CreateLabel(contentManager, fontPath, fontSizeName, fontColorWhite, textOverview, 445);
-			labelOverview.EnableShadow(contentManager, 2, 2);
+			labelOverview = ControlFactory.CreateLabel(content, fontPath, fontSizeName, fontColorWhite, textOverview, 445);
+			labelOverview.EnableShadow(content, 2, 2);
 
-			iconThumbnail = new Icon(contentManager.GetTexture(iconThumbnailKey));
-			iconThumbnailSelected = new Icon(contentManager.GetTexture(iconThumbnailSelectedKey));
+			iconThumbnail = new Icon(content.GetTexture(iconThumbnailKey));
+			iconThumbnailSelected = new Icon(content.GetTexture(iconThumbnailSelectedKey));
 			iconActive = iconThumbnail;
-			iconOverview = new Icon(contentManager.GetTexture(iconOverviewKey));
+			iconOverview = new Icon(content.GetTexture(iconOverviewKey));
 
 			Width = iconThumbnail.Width + labelName.Width;
 			Height = iconThumbnail.Height;

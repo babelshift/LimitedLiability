@@ -9,9 +9,11 @@ namespace MyThirdSDL.UserInterface
 {
 	public static class Styles
 	{
-		public static class FontPaths
+		public static class Fonts
 		{
 			public static string Arcade = "Arcade";
+			public static string DroidSans = "DroidSans";
+			public static string DroidSansBold = "DroidSans Bold";
 		}
 
 		public static class FontSizes

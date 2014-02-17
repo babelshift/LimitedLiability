@@ -288,7 +288,14 @@ namespace MyThirdSDL.Simulation
 			List<Agent> agentsForType;
 			bool success = trackedAgents.TryGetValue(typeof(T), out agentsForType);
 			if (success)
-				agentsForType.RemoveAll(a => a.ID == agentId);
+			{
+				var matchingAgent = agentsForType.FirstOrDefault(a => a.ID == agentId);
+				if (matchingAgent != null)
+				{
+					agentsForType.Remove(matchingAgent);
+					matchingAgent.Dispose();
+				}
+			}
 		}
 
 		/// <summary>

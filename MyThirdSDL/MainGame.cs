@@ -28,7 +28,7 @@ namespace MyThirdSDL
 
 		#region Factories and Managers
 
-		private ContentManager contentManager;
+		private ContentManager content;
 		private ScreenManager screenManager;
 		private ScreenFactory screenFactory;
 
@@ -123,7 +123,7 @@ namespace MyThirdSDL
 			CreateRenderer(RendererFlags.RendererAccelerated | RendererFlags.RendererPresentVSync);
 			Renderer.SetRenderLogicalSize(SCREEN_WIDTH_LOGICAL, SCREEN_HEIGHT_LOGICAL);
 
-			contentManager = new ContentManager(Renderer);
+			content = new ContentManager(Renderer);
 			screenManager = new ScreenManager(Renderer);
 			screenManager.Initialize();
 			screenFactory = new ScreenFactory();
@@ -140,7 +140,7 @@ namespace MyThirdSDL
 
 		public MainMenuScreen CreateMainMenuScreen()
 		{
-			MainMenuScreen mainMenuScreen = new MainMenuScreen(contentManager);
+			MainMenuScreen mainMenuScreen = new MainMenuScreen(content);
 			mainMenuScreen.QuitButtonClicked += (sender, e) => Quit();
 			mainMenuScreen.NewGameButtonClicked += (sender, e) => LoadScenariosScreen();
 			return mainMenuScreen;
@@ -148,14 +148,14 @@ namespace MyThirdSDL
 
 		public MainGameScreen CreateMainGameScreen(string mapPathToLoad)
 		{
-			MainGameScreen mainGameScreen = new MainGameScreen(Renderer, contentManager, mapPathToLoad);
+			MainGameScreen mainGameScreen = new MainGameScreen(Renderer, content, mapPathToLoad);
 			mainGameScreen.ReturnToMainMenu += (sender, e) => LoadMainMenuScreen();
 			return mainGameScreen;
 		}
 
 		public ScenarioScreen CreateScenarioScreen()
 		{
-			ScenarioScreen scenarioScreen = new ScenarioScreen(contentManager);
+			ScenarioScreen scenarioScreen = new ScenarioScreen(content);
 			scenarioScreen.ReturnToMainMenu += (sender, e) => LoadMainMenuScreen();
 			scenarioScreen.ScenarioSelected += (sender, e) => LoadMainGameScreen(e.MapPathToLoad);
 			return scenarioScreen;
@@ -164,7 +164,7 @@ namespace MyThirdSDL
 		private void LoadScreen(Screen screen)
 		{
 			if (screen != null)
-				LoadingScreen.Load(contentManager, screenManager, false, screen);
+				LoadingScreen.Load(content, screenManager, false, screen);
 		}
 
 		private void LoadMainMenuScreen()
@@ -191,7 +191,7 @@ namespace MyThirdSDL
 		#endregion Create Screens
 
 		/// <summary>
-		/// Load any content that you will need to use in the update/draw game loop.
+		/// Load any contentManager that you will need to use in the update/draw game loop.
 		/// </summary>
 		protected override void LoadContent()
 		{
@@ -239,7 +239,7 @@ namespace MyThirdSDL
 		}
 
 		/// <summary>
-		/// Unload any content that was used during the update/draw game loop. If you load anything that uses native SDL structures such
+		/// Unload any contentManager that was used during the update/draw game loop. If you load anything that uses native SDL structures such
 		/// as textures, surfaces, fonts, and audio, you must dispose of them in this method to avoid memory leaks from native code.
 		/// </summary>
 		protected override void UnloadContent()

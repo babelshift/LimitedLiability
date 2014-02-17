@@ -1,16 +1,13 @@
 ﻿using SharpDL;
 using SharpDL.Graphics;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MyThirdSDL.UserInterface
 {
 	public class Tooltip : Control
 	{
-		public Texture TextureFrame { get; set; }
+		private Texture textureFrame;
+
 		public Label Label { get; set; }
 
 		public override Vector Position
@@ -23,12 +20,21 @@ namespace MyThirdSDL.UserInterface
 			{
 				base.Position = value;
 
-				Label.Position = base.Position + new Vector(7, 8);
+				Label.Position = base.Position + new Vector(7, Height / 2 - Label.Height / 2);
 			}
+		}
+
+		public Tooltip(Texture textureFrame)
+		{
+			this.textureFrame = textureFrame;
+			Width = textureFrame.Width;
+			Height = textureFrame.Height;
 		}
 
 		public override void Update(GameTime gameTime)
 		{
+			if (!Visible) return;
+
 			base.Update(gameTime);
 
 			if (Label != null)
@@ -37,13 +43,12 @@ namespace MyThirdSDL.UserInterface
 
 		public override void Draw(GameTime gameTime, Renderer renderer)
 		{
-			if (Visible)
-			{
-				if (TextureFrame != null)
-					renderer.RenderTexture(TextureFrame, Position.X, Position.Y);
-				if (Label != null)
-					Label.Draw(gameTime, renderer);
-			}
+			if (!Visible) return;
+
+			if (textureFrame != null)
+				renderer.RenderTexture(textureFrame, Position.X, Position.Y);
+			if (Label != null)
+				Label.Draw(gameTime, renderer);
 		}
 
 		public override void Dispose()
@@ -54,8 +59,8 @@ namespace MyThirdSDL.UserInterface
 
 		private void Dispose(bool disposing)
 		{
-			if (TextureFrame != null)
-				TextureFrame.Dispose();
+			if (textureFrame != null)
+				textureFrame.Dispose();
 			if (Label != null)
 				Label.Dispose();
 		}

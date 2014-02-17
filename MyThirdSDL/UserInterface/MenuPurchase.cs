@@ -118,79 +118,79 @@ namespace MyThirdSDL.UserInterface
 
 		#region Constructor
 
-		public MenuPurchase(ContentManager contentManager, string iconMainMenuContentPathKey, string menuTitle, IEnumerable<IPurchasable> purchasableItems)
+		public MenuPurchase(ContentManager content, string iconMainMenuContentPathKey, string menuTitle, IEnumerable<IPurchasable> purchasableItems)
 		{
-			iconFrame = new Icon(contentManager.GetTexture("MenuPurchaseFrame"));
+			iconFrame = new Icon(content.GetTexture("MenuPurchaseFrame"));
 			Width = iconFrame.Width;
 			Height = iconFrame.Height;
 
-			string fontPath = contentManager.GetContentPath(Styles.FontPaths.Arcade);
+			string fontPath = content.GetContentPath(Styles.Fonts.Arcade);
 			Color fontColorTitle = Styles.Colors.White;
 			Color fontColorLabelValue = Styles.Colors.PaleYellow;
 			int fontSizeTitle = Styles.FontSizes.Title;
 			int fontSizeContent = Styles.FontSizes.Content;
 
-			iconMainMenuHeader = ControlFactory.CreateIcon(contentManager, iconMainMenuContentPathKey);
-			iconInfoMenuHeader = ControlFactory.CreateIcon(contentManager, "IconStatistics");
-			iconSkillsMenuHeader = ControlFactory.CreateIcon(contentManager, "IconPenPaper");
+			iconMainMenuHeader = ControlFactory.CreateIcon(content, iconMainMenuContentPathKey);
+			iconInfoMenuHeader = ControlFactory.CreateIcon(content, "IconStatistics");
+			iconSkillsMenuHeader = ControlFactory.CreateIcon(content, "IconPenPaper");
 
-			labelMainMenuHeader = ControlFactory.CreateLabel(contentManager, fontPath, fontSizeTitle, fontColorTitle, menuTitle);
-			labelMainMenuHeader.EnableShadow(contentManager, 2, 2);
-			labelInfoMenuHeader = ControlFactory.CreateLabel(contentManager, fontPath, fontSizeTitle, fontColorTitle, "Needs");
-			labelInfoMenuHeader.EnableShadow(contentManager, 2, 2);
-			labelSkillsMenuHeader = ControlFactory.CreateLabel(contentManager, fontPath, fontSizeTitle, fontColorTitle, "Skills");
-			labelSkillsMenuHeader.EnableShadow(contentManager, 2, 2);
+			labelMainMenuHeader = ControlFactory.CreateLabel(content, fontPath, fontSizeTitle, fontColorTitle, menuTitle);
+			labelMainMenuHeader.EnableShadow(content, 2, 2);
+			labelInfoMenuHeader = ControlFactory.CreateLabel(content, fontPath, fontSizeTitle, fontColorTitle, "Needs");
+			labelInfoMenuHeader.EnableShadow(content, 2, 2);
+			labelSkillsMenuHeader = ControlFactory.CreateLabel(content, fontPath, fontSizeTitle, fontColorTitle, "Skills");
+			labelSkillsMenuHeader.EnableShadow(content, 2, 2);
 
-			iconMoney = ControlFactory.CreateIcon(contentManager, "IconMoney");
+			iconMoney = ControlFactory.CreateIcon(content, "IconMoney");
 
-			iconHealth = ControlFactory.CreateIcon(contentManager, "IconMedkit");
-			iconHygiene = ControlFactory.CreateIcon(contentManager, "IconToothbrush");
-			iconSleep = ControlFactory.CreateIcon(contentManager, "IconPersonTired");
-			iconThirst = ControlFactory.CreateIcon(contentManager, "IconSoda");
-			iconHunger = ControlFactory.CreateIcon(contentManager, "IconChicken");
+			iconHealth = ControlFactory.CreateIcon(content, "IconMedkit");
+			iconHygiene = ControlFactory.CreateIcon(content, "IconToothbrush");
+			iconSleep = ControlFactory.CreateIcon(content, "IconPersonTired");
+			iconThirst = ControlFactory.CreateIcon(content, "IconSoda");
+			iconHunger = ControlFactory.CreateIcon(content, "IconChicken");
 
-			labelMoney = ControlFactory.CreateLabel(contentManager, fontPath, fontSizeContent, fontColorLabelValue, defaultInfoAndSkillsText);
-			labelHealth = ControlFactory.CreateLabel(contentManager, fontPath, fontSizeContent, fontColorLabelValue, defaultInfoAndSkillsText);
-			labelHygiene = ControlFactory.CreateLabel(contentManager, fontPath, fontSizeContent, fontColorLabelValue, defaultInfoAndSkillsText);
-			labelSleep = ControlFactory.CreateLabel(contentManager, fontPath, fontSizeContent, fontColorLabelValue, defaultInfoAndSkillsText);
-			labelThirst = ControlFactory.CreateLabel(contentManager, fontPath, fontSizeContent, fontColorLabelValue, defaultInfoAndSkillsText);
-			labelHunger = ControlFactory.CreateLabel(contentManager, fontPath, fontSizeContent, fontColorLabelValue, defaultInfoAndSkillsText);
+			labelMoney = ControlFactory.CreateLabel(content, fontPath, fontSizeContent, fontColorLabelValue, defaultInfoAndSkillsText);
+			labelHealth = ControlFactory.CreateLabel(content, fontPath, fontSizeContent, fontColorLabelValue, defaultInfoAndSkillsText);
+			labelHygiene = ControlFactory.CreateLabel(content, fontPath, fontSizeContent, fontColorLabelValue, defaultInfoAndSkillsText);
+			labelSleep = ControlFactory.CreateLabel(content, fontPath, fontSizeContent, fontColorLabelValue, defaultInfoAndSkillsText);
+			labelThirst = ControlFactory.CreateLabel(content, fontPath, fontSizeContent, fontColorLabelValue, defaultInfoAndSkillsText);
+			labelHunger = ControlFactory.CreateLabel(content, fontPath, fontSizeContent, fontColorLabelValue, defaultInfoAndSkillsText);
 
-			iconCommunication = ControlFactory.CreateIcon(contentManager, "IconCommunication");
-			iconLeadership = ControlFactory.CreateIcon(contentManager, "IconLeadership");
-			iconCreativity = ControlFactory.CreateIcon(contentManager, "IconCreativity");
-			iconIntelligence = ControlFactory.CreateIcon(contentManager, "IconIntelligence");
+			iconCommunication = ControlFactory.CreateIcon(content, "IconCommunication");
+			iconLeadership = ControlFactory.CreateIcon(content, "IconLeadership");
+			iconCreativity = ControlFactory.CreateIcon(content, "IconCreativity");
+			iconIntelligence = ControlFactory.CreateIcon(content, "IconIntelligence");
 
-			labelCommunication = ControlFactory.CreateLabel(contentManager, fontPath, fontSizeContent, fontColorLabelValue, defaultInfoAndSkillsText);
-			labelLeadership = ControlFactory.CreateLabel(contentManager, fontPath, fontSizeContent, fontColorLabelValue, defaultInfoAndSkillsText);
-			labelCreativity = ControlFactory.CreateLabel(contentManager, fontPath, fontSizeContent, fontColorLabelValue, defaultInfoAndSkillsText);
-			labelIntelligence = ControlFactory.CreateLabel(contentManager, fontPath, fontSizeContent, fontColorLabelValue, defaultInfoAndSkillsText);
+			labelCommunication = ControlFactory.CreateLabel(content, fontPath, fontSizeContent, fontColorLabelValue, defaultInfoAndSkillsText);
+			labelLeadership = ControlFactory.CreateLabel(content, fontPath, fontSizeContent, fontColorLabelValue, defaultInfoAndSkillsText);
+			labelCreativity = ControlFactory.CreateLabel(content, fontPath, fontSizeContent, fontColorLabelValue, defaultInfoAndSkillsText);
+			labelIntelligence = ControlFactory.CreateLabel(content, fontPath, fontSizeContent, fontColorLabelValue, defaultInfoAndSkillsText);
 
-			buttonCloseWindow = ControlFactory.CreateButton(contentManager, "ButtonSquare", "ButtonSquareHover");
-			buttonCloseWindow.Icon = ControlFactory.CreateIcon(contentManager, "IconWindowClose");
-			buttonCloseWindow.IconHovered = ControlFactory.CreateIcon(contentManager, "IconWindowClose");
+			buttonCloseWindow = ControlFactory.CreateButton(content, "ButtonSquare", "ButtonSquareHover");
+			buttonCloseWindow.Icon = ControlFactory.CreateIcon(content, "IconWindowClose");
+			buttonCloseWindow.IconHovered = ControlFactory.CreateIcon(content, "IconWindowClose");
 			buttonCloseWindow.ButtonType = ButtonType.IconOnly;
 
-			buttonArrowCircleLeft = ControlFactory.CreateButton(contentManager, "ButtonSquare", "ButtonSquareHover");
-			buttonArrowCircleLeft.Icon = ControlFactory.CreateIcon(contentManager, "IconArrowCircleLeft");
-			buttonArrowCircleLeft.IconHovered = ControlFactory.CreateIcon(contentManager, "IconArrowCircleLeft");
+			buttonArrowCircleLeft = ControlFactory.CreateButton(content, "ButtonSquare", "ButtonSquareHover");
+			buttonArrowCircleLeft.Icon = ControlFactory.CreateIcon(content, "IconArrowCircleLeft");
+			buttonArrowCircleLeft.IconHovered = ControlFactory.CreateIcon(content, "IconArrowCircleLeft");
 			buttonArrowCircleLeft.ButtonType = ButtonType.IconOnly;
 
 			buttonArrowCircleRight = new Button();
-			buttonArrowCircleRight = ControlFactory.CreateButton(contentManager, "ButtonSquare", "ButtonSquareHover");
-			buttonArrowCircleRight.Icon = ControlFactory.CreateIcon(contentManager, "IconArrowCircleRight");
-			buttonArrowCircleRight.IconHovered = ControlFactory.CreateIcon(contentManager, "IconArrowCircleRight");
+			buttonArrowCircleRight = ControlFactory.CreateButton(content, "ButtonSquare", "ButtonSquareHover");
+			buttonArrowCircleRight.Icon = ControlFactory.CreateIcon(content, "IconArrowCircleRight");
+			buttonArrowCircleRight.IconHovered = ControlFactory.CreateIcon(content, "IconArrowCircleRight");
 			buttonArrowCircleRight.ButtonType = ButtonType.IconOnly;
 
 			foreach (var purchasableItem in purchasableItems)
 			{
 				ButtonMenuItem buttonMenuItem = new ButtonMenuItem(purchasableItem);
-				buttonMenuItem.TextureFrame = contentManager.GetTexture("ButtonMenuItem");
-				buttonMenuItem.TextureFrameHovered = contentManager.GetTexture("ButtonMenuItemHover");
-				buttonMenuItem.IconMain = ControlFactory.CreateIcon(contentManager, purchasableItem.IconTextureKey);
-				buttonMenuItem.IconMoney = ControlFactory.CreateIcon(contentManager, "IconMoney");
-				buttonMenuItem.LabelMain = ControlFactory.CreateLabel(contentManager, fontPath, fontSizeContent, fontColorLabelValue, purchasableItem.Name);
-				buttonMenuItem.LabelMoney = ControlFactory.CreateLabel(contentManager, fontPath, fontSizeContent, fontColorLabelValue, purchasableItem.Price.ToString());
+				buttonMenuItem.TextureFrame = content.GetTexture("ButtonMenuItem");
+				buttonMenuItem.TextureFrameHovered = content.GetTexture("ButtonMenuItemHover");
+				buttonMenuItem.IconMain = ControlFactory.CreateIcon(content, purchasableItem.IconTextureKey);
+				buttonMenuItem.IconMoney = ControlFactory.CreateIcon(content, "IconMoney");
+				buttonMenuItem.LabelMain = ControlFactory.CreateLabel(content, fontPath, fontSizeContent, fontColorLabelValue, purchasableItem.Name);
+				buttonMenuItem.LabelMoney = ControlFactory.CreateLabel(content, fontPath, fontSizeContent, fontColorLabelValue, purchasableItem.Price.ToString());
 				AddButtonMenuItem(buttonMenuItem);
 			}
 

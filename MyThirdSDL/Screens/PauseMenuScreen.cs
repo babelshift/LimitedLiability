@@ -39,7 +39,7 @@ namespace MyThirdSDL.Screens
 
 			textureBackgroundStripeTile = ContentManager.GetTexture("BackgroundStripeTileFaded");
 
-			string fontPath = ContentManager.GetContentPath(Styles.FontPaths.Arcade);
+			string fontPath = ContentManager.GetContentPath(Styles.Fonts.Arcade);
 			Color fontColorTitle = Styles.Colors.PaleGreen;
 			Color fontColorLabelValue = Styles.Colors.PaleYellow;
 			int fontSizeTitle = Styles.FontSizes.MainMenuTitle;

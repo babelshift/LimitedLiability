@@ -65,11 +65,11 @@ namespace MyThirdSDL.Screens
 		}
 
 		/// <summary>
-		/// Load your graphics content.
+		/// Load your graphics contentManager.
 		/// </summary>
 		protected void LoadContent()
 		{
-			// Tell each of the screens to load their content.
+			// Tell each of the screens to load their contentManager.
 			foreach (Screen screen in screens)
 			{
 				screen.Activate(renderer);
@@ -77,11 +77,11 @@ namespace MyThirdSDL.Screens
 		}
 
 		/// <summary>
-		/// Unload your graphics content.
+		/// Unload your graphics contentManager.
 		/// </summary>
 		protected void UnloadContent()
 		{
-			// Tell each of the screens to unload their content.
+			// Tell each of the screens to unload their contentManager.
 			foreach (Screen screen in screens)
 			{
 				screen.Unload();
@@ -218,7 +218,7 @@ namespace MyThirdSDL.Screens
 			screen.ScreenManager = this;
 			screen.IsExiting = false;
 
-			// If we have a graphics device, tell the screen to load content.
+			// If we have a graphics device, tell the screen to load contentManager.
 			if (IsInitialized)
 			{
 				screen.Activate(renderer);
@@ -235,7 +235,7 @@ namespace MyThirdSDL.Screens
 		/// </summary>
 		public void RemoveScreen(Screen screen)
 		{
-			// If we have a graphics device, tell the screen to unload content.
+			// If we have a graphics device, tell the screen to unload contentManager.
 			if (IsInitialized)
 			{
 				screen.Unload();

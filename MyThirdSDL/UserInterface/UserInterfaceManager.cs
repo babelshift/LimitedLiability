@@ -110,13 +110,15 @@ namespace MyThirdSDL.UserInterface
 
 		public event EventHandler MainMenuButtonClicked;
 
-		public event EventHandler<SelectedMailItemActionEventArgs> ArchiveMailButtonClicked;
+		public event EventHandler<SelectedMailItemActionEventArgs> MailArchived;
 
 		public event EventHandler<PurchasableItemPlacedEventArgs> PurchasableItemPlaced;
 
 		public event EventHandler<PurchasableItemSelectedEventArgs> PurchasableItemSelected;
 
 		public event EventHandler<ResumeAcceptedEventArgs> ResumeAccepted;
+
+		public event EventHandler<UserInterfaceEmployeeEventArgs> EmployeeFired;
 
 		#endregion Public Events
 
@@ -145,9 +147,9 @@ namespace MyThirdSDL.UserInterface
 		/// Gets the label font details.
 		/// </summary>
 		/// <returns>The label font details.</returns>
-		/// <param name="contentManager">Content manager.</param>
+		/// <param name="contentManager">contentManager manager.</param>
 		/// <param name="fontColor">Font color.</param>
-		/// <param name="fontSizeContent">Font size content.</param>
+		/// <param name="fontSizeContent">Font size contentManager.</param>
 		private string GetLabelFontDetails(out Color fontColor, out int fontSizeContent)
 		{
 			string fontPath = contentManager.GetContentPath("Arcade");
@@ -198,7 +200,7 @@ namespace MyThirdSDL.UserInterface
 		/// <summary>
 		/// Initializes a new instance of the <see cref="MyThirdSDL.UserInterface.UserInterfaceManager"/> class.
 		/// </summary>
-		/// <param name="contentManager">Content manager.</param>
+		/// <param name="contentManager">contentManager manager.</param>
 		/// <param name="bottomRightPointOfWindow">Bottom right point of window.</param>
 		/// <param name="purchasableEquipment">Purchasable items.</param>
 		/// <param name="purchasableRooms"></param>
@@ -463,8 +465,8 @@ namespace MyThirdSDL.UserInterface
 
 		private void MenuMailboxArchiveMailButtonClicked(object sender, SelectedMailItemActionEventArgs e)
 		{
-			if (ArchiveMailButtonClicked != null)
-				ArchiveMailButtonClicked(sender, e);
+			if (MailArchived != null)
+				MailArchived(sender, e);
 		}
 
 		#endregion Menu Mailbox Events
@@ -475,7 +477,14 @@ namespace MyThirdSDL.UserInterface
 		{
 			menuInspectEmployee = new MenuInspectEmployee(contentManager);
 			menuInspectEmployee.Position = new Vector(bottomRightPointOfWindow.X / 2 - menuInspectEmployee.Width / 2, bottomRightPointOfWindow.Y / 2 - menuInspectEmployee.Height / 2);
-			menuInspectEmployee.ButtonCloseWindowClicked += menuInspectEmployee_ButtonCloseWindowClicked;
+			menuInspectEmployee.ButtonCloseWindowClicked += MenuInspectEmployeeOnButtonCloseWindowClicked;
+			menuInspectEmployee.ButtonFireEmployeeClicked += MenuInspectEmployeeOnButtonFireEmployeeClicked;
+		}
+
+		private void MenuInspectEmployeeOnButtonFireEmployeeClicked(object sender, UserInterfaceEmployeeEventArgs userInterfaceEmployeeEventArgs)
+		{
+			if (EmployeeFired != null)
+				EmployeeFired(sender, userInterfaceEmployeeEventArgs);
 		}
 
 		private void ShowMenuInspectEmployee()
@@ -490,7 +499,7 @@ namespace MyThirdSDL.UserInterface
 			ChangeState(UserInterfaceState.Default);
 		}
 
-		private void menuInspectEmployee_ButtonCloseWindowClicked(object sender, EventArgs e)
+		private void MenuInspectEmployeeOnButtonCloseWindowClicked(object sender, EventArgs e)
 		{
 			HideMenuInspectEmployee();
 		}
@@ -706,7 +715,7 @@ namespace MyThirdSDL.UserInterface
 
 		public void HandleTextInputtingEvent(object sender, TextInputEventArgs e)
 		{
-			focusedControl.HandleTextInput(e.Text);
+			//focusedControl.HandleTextInput(e.Text);
 		}
 
 		public void HandleMouseButtonPressedEvent(object sender, MouseButtonEventArgs e)

@@ -61,45 +61,45 @@ namespace MyThirdSDL.UserInterface
 
 		public event EventHandler ButtonFastForwardClicked;
 
-		public TopToolboxTray(ContentManager contentManager, int money)
+		public TopToolboxTray(ContentManager content, int money)
 		{
-			iconFrame = ControlFactory.CreateIcon(contentManager, "TopBar");
+			iconFrame = ControlFactory.CreateIcon(content, "TopBar");
 			Width = iconFrame.Width;
 			Height = iconFrame.Height;
 
-			string fontPath = contentManager.GetContentPath("DroidSans Bold");
+			string fontPath = content.GetContentPath("DroidSans Bold");
 			Color fontColor = Styles.Colors.White;
 			int fontSizeContent = 14;
 
-			buttonPause = ControlFactory.CreateButton(contentManager, "ButtonTopBar", "ButtonTopBarHover");
-			buttonPause.Icon = ControlFactory.CreateIcon(contentManager, "IconPause");
+			buttonPause = ControlFactory.CreateButton(content, "ButtonTopBar", "ButtonTopBarHover");
+			buttonPause.Icon = ControlFactory.CreateIcon(content, "IconPause");
 			buttonPause.ButtonType = ButtonType.IconOnly;
 
-			buttonPlay = ControlFactory.CreateButton(contentManager, "ButtonTopBar", "ButtonTopBarHover");
-			buttonPlay.Icon = ControlFactory.CreateIcon(contentManager, "IconPlay");
+			buttonPlay = ControlFactory.CreateButton(content, "ButtonTopBar", "ButtonTopBarHover");
+			buttonPlay.Icon = ControlFactory.CreateIcon(content, "IconPlay");
 			buttonPlay.ButtonType = ButtonType.IconOnly;
 
-			buttonFastForward = ControlFactory.CreateButton(contentManager, "ButtonTopBar", "ButtonTopBarHover");
-			buttonFastForward.Icon = ControlFactory.CreateIcon(contentManager, "IconFastForward");
+			buttonFastForward = ControlFactory.CreateButton(content, "ButtonTopBar", "ButtonTopBarHover");
+			buttonFastForward.Icon = ControlFactory.CreateIcon(content, "IconFastForward");
 			buttonFastForward.ButtonType = ButtonType.IconOnly;
 
-			buttonAlerts = ControlFactory.CreateButton(contentManager, "ButtonTopBar", "ButtonTopBarHover");
-			buttonAlerts.Icon = ControlFactory.CreateIcon(contentManager, "IconAlertNotification");
+			buttonAlerts = ControlFactory.CreateButton(content, "ButtonTopBar", "ButtonTopBarHover");
+			buttonAlerts.Icon = ControlFactory.CreateIcon(content, "IconAlertNotification");
 			buttonAlerts.ButtonType = ButtonType.IconOnly;
 
-			buttonEmails = ControlFactory.CreateButton(contentManager, "ButtonTopBar", "ButtonTopBarHover");
-			buttonEmails.Icon = ControlFactory.CreateIcon(contentManager, "IconMailNotification");
+			buttonEmails = ControlFactory.CreateButton(content, "ButtonTopBar", "ButtonTopBarHover");
+			buttonEmails.Icon = ControlFactory.CreateIcon(content, "IconMailNotification");
 			buttonEmails.ButtonType = ButtonType.IconOnly;
 
-			buttonMenu = ControlFactory.CreateButton(contentManager, "ButtonTopBar", "ButtonTopBarHover");
-			buttonMenu.Icon = ControlFactory.CreateIcon(contentManager, "IconGameMenu");
+			buttonMenu = ControlFactory.CreateButton(content, "ButtonTopBar", "ButtonTopBarHover");
+			buttonMenu.Icon = ControlFactory.CreateIcon(content, "IconGameMenu");
 			buttonMenu.ButtonType = ButtonType.IconOnly;
 
-			labelMoney = ControlFactory.CreateLabel(contentManager, fontPath, fontSizeContent, fontColor, String.Format("${0}", money));
-			labelDate = ControlFactory.CreateLabel(contentManager, fontPath, fontSizeContent, fontColor, ".");
-			labelTime = ControlFactory.CreateLabel(contentManager, fontPath, fontSizeContent, fontColor, ".");
-			labelAlerts = ControlFactory.CreateLabel(contentManager, fontPath, fontSizeContent, fontColor, "0");
-			labelEmails = ControlFactory.CreateLabel(contentManager, fontPath, fontSizeContent, fontColor, "0");
+			labelMoney = ControlFactory.CreateLabel(content, fontPath, fontSizeContent, fontColor, String.Format("${0}", money));
+			labelDate = ControlFactory.CreateLabel(content, fontPath, fontSizeContent, fontColor, ".");
+			labelTime = ControlFactory.CreateLabel(content, fontPath, fontSizeContent, fontColor, ".");
+			labelAlerts = ControlFactory.CreateLabel(content, fontPath, fontSizeContent, fontColor, "0");
+			labelEmails = ControlFactory.CreateLabel(content, fontPath, fontSizeContent, fontColor, "0");
 
 			Controls.Add(iconFrame);
 			Controls.Add(buttonPause);

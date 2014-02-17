@@ -1,0 +1,6 @@
+﻿{
+	"LABEL_DEFAULT": "N/A",
+	"TOOLTIP_BUTTON_FIRE_EMPLOYEE": "Fire this employee (permanent)",
+	"TOOLTIP_BUTTON_PROMOTE_EMPLOYEE": "Promote this employee (increases salary and happiness)",
+	"TOOLTIP_BUTTON_DISCIPLINE_EMPLOYEE": "Discipline this employee (increases productivity but reduces happiness)"
+}

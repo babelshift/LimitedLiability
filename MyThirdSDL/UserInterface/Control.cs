@@ -54,7 +54,7 @@ namespace MyThirdSDL.UserInterface
 
 		public event EventHandler Blurred;
 
-		public Control()
+		protected Control()
 		{
 			ID = Guid.NewGuid();
 			Visible = true;

@@ -122,6 +122,9 @@
 		{ "key": "IconAccept",					"value": "Images/User Interface/IconAccept.png" },
 		{ "key": "IconInfo",					"value": "Images/User Interface/IconInfo.png" },
 		{ "key": "IconAttachment",				"value": "Images/User Interface/IconAttachment.png" },
+		{ "key": "IconFireEmployee",			"value": "Images/User Interface/IconFireEmployee.png" },
+		{ "key": "IconDisciplineEmployee",		"value": "Images/User Interface/IconDisciplineEmployee.png" },
+		{ "key": "IconPromoteEmployee",			"value": "Images/User Interface/IconPromoteEmployee.png" },
 
 		{ "key": "ScenarioThumbnail1",			"value": "Images/User Interface/ScenarioThumbnail1.png" },
 		{ "key": "ScenarioThumbnail1Selected",	"value": "Images/User Interface/ScenarioThumbnail1Selected.png" },

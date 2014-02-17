@@ -8,9 +8,9 @@ namespace MyThirdSDL.UserInterface
 	{
 		//private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
-		//private ContentManager contentManager;
+		//private contentManager contentManager;
 
-		//public ControlFactory(ContentManager contentManager)
+		//public ControlFactory(contentManager contentManager)
 		//{
 		//	this.contentManager = contentManager;
 		//}
@@ -23,46 +23,46 @@ namespace MyThirdSDL.UserInterface
 		//	return new SimulationLabel(position, trueTypeText, simulationMessage);
 		//}
 
-		public static MessageBox CreateMessageBox(ContentManager contentManager, MessageBoxType type)
+		public static MessageBox CreateMessageBox(ContentManager content, MessageBoxType type)
 		{
-			if (contentManager == null) throw new ArgumentNullException("contentManager");
-			MessageBox messageBox = new MessageBox(contentManager, type);
+			if (content == null) throw new ArgumentNullException("content");
+			MessageBox messageBox = new MessageBox(content, type);
 			return messageBox;
 		}
 
-		public static Button CreateButton(ContentManager contentManager, string textureFrameKey, string textureFrameHoveredKey = "", string textureFrameSelectedKey = "")
+		public static Button CreateButton(ContentManager content, string textureFrameKey, string textureFrameHoveredKey = "", string textureFrameSelectedKey = "")
 		{
-			if (contentManager == null) throw new ArgumentNullException("contentManager");
+			if (content == null) throw new ArgumentNullException("content");
 
 			if (String.IsNullOrEmpty(textureFrameKey))
 				throw new ArgumentNullException("textureFrameKey");
 
 			Button button = new Button();
-			button.TextureFrame = contentManager.GetTexture(textureFrameKey);
+			button.TextureFrame = content.GetTexture(textureFrameKey);
 
 			if(!String.IsNullOrEmpty(textureFrameHoveredKey))
-				button.TextureFrameHovered = contentManager.GetTexture(textureFrameHoveredKey);
+				button.TextureFrameHovered = content.GetTexture(textureFrameHoveredKey);
 
 			if(!String.IsNullOrEmpty(textureFrameSelectedKey))
-				button.TextureFrameSelected = contentManager.GetTexture(textureFrameSelectedKey);
+				button.TextureFrameSelected = content.GetTexture(textureFrameSelectedKey);
 
 			return button;
 		}
 
-		public static Icon CreateIcon(ContentManager contentManager, string iconKey)
+		public static Icon CreateIcon(ContentManager content, string iconKey)
 		{
-			if (contentManager == null) throw new ArgumentNullException("contentManager");
+			if (content == null) throw new ArgumentNullException("content");
 
 			if (String.IsNullOrEmpty(iconKey))
 				throw new ArgumentNullException("iconKey");
 
-			Icon icon = new Icon(contentManager.GetTexture(iconKey));
+			Icon icon = new Icon(content.GetTexture(iconKey));
 			return icon;
 		}
 
-		public static Label CreateLabel(ContentManager contentManager, string fontPath, int fontSize, Color fontColor, string text, int wrapLength = 0)
+		public static Label CreateLabel(ContentManager content, string fontPath, int fontSize, Color fontColor, string text, int wrapLength = 0)
 		{
-			if (contentManager == null) throw new ArgumentNullException("contentManager");
+			if (content == null) throw new ArgumentNullException("content");
 
 			if (String.IsNullOrEmpty(fontPath))
 				throw new ArgumentNullException("fontPath");
@@ -74,14 +74,14 @@ namespace MyThirdSDL.UserInterface
 				throw new ArgumentOutOfRangeException("fontSize");
 
 			Label label = new Label();
-			label.TrueTypeText = contentManager.GetTrueTypeText(fontPath, fontSize, fontColor, text, wrapLength);
+			label.TrueTypeText = content.GetTrueTypeText(fontPath, fontSize, fontColor, text, wrapLength);
 
 			return label;
 		}
 
-		public static Tooltip CreateTooltip(ContentManager contentManager, string textureFrameKey, string fontPath, int fontSize, Color fontColor, string text)
+		public static Tooltip CreateTooltip(ContentManager content, string textureFrameKey, string fontPath, int fontSize, Color fontColor, string text)
 		{
-			if (contentManager == null) throw new ArgumentNullException("contentManager");
+			if (content == null) throw new ArgumentNullException("content");
 
 			if (String.IsNullOrEmpty(textureFrameKey))
 				throw new ArgumentNullException("textureFrameKey");
@@ -95,9 +95,8 @@ namespace MyThirdSDL.UserInterface
 			if (fontSize <= 0)
 				throw new ArgumentOutOfRangeException("fontSize");
 
-			Tooltip tooltip = new Tooltip();
-			tooltip.TextureFrame = contentManager.GetTexture(textureFrameKey);
-			tooltip.Label = CreateLabel(contentManager, fontPath, fontSize, fontColor, text);
+			Tooltip tooltip = new Tooltip(content.GetTexture(textureFrameKey));
+			tooltip.Label = CreateLabel(content, fontPath, fontSize, fontColor, text);
 
 			return tooltip;
 		}

@@ -112,7 +112,7 @@ namespace MyThirdSDL.Content
 		/// <summary>
 		/// Create tile layers and object layers based on what we find in the Tiled Map TMX file.
 		/// </summary>
-		/// <param name="mapContent">Map content.</param>
+		/// <param name="mapContent">Map contentManager.</param>
 		private void CreateLayers(MapContent mapContent)
 		{
 			if (mapContent == null) throw new ArgumentNullException("mapContent");
@@ -133,7 +133,7 @@ namespace MyThirdSDL.Content
 		}
 
 		/// <summary>
-		/// Creates a tile layer by reading the content we got from the SharpTiles library. This will create our tile layers of type "Floor" and "Objects".
+		/// Creates a tile layer by reading the contentManager we got from the SharpTiles library. This will create our tile layers of type "Floor" and "Objects".
 		/// </summary>
 		/// <param name="layerContent"></param>
 		/// <param name="tileSets"></param>
@@ -289,7 +289,7 @@ namespace MyThirdSDL.Content
 		}
 
 		/// <summary>
-		/// Returns the type of the equipment object contained within the passed object content.
+		/// Returns the type of the equipment object contained within the passed object contentManager.
 		/// </summary>
 		/// <param name="objectContent"></param>
 		/// <returns></returns>
@@ -318,7 +318,7 @@ namespace MyThirdSDL.Content
 		/// Create empty map cells based on tile counts in the Tiled Map TMX. For example, a tile map of 15x15 tiles will be translated into
 		/// 15x15 map cells. These map cells are then later populated with 0-N tiles, 0-4 dead zones, and 0-4 path nodes.
 		/// </summary>
-		/// <param name="mapContent">Map content.</param>
+		/// <param name="mapContent">Map contentManager.</param>
 		private void CreateMapCells(MapContent mapContent)
 		{
 			if (mapContent == null) throw new ArgumentNullException("mapContent");

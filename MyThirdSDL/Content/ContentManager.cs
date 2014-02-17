@@ -21,6 +21,7 @@ namespace MyThirdSDL.Content
 		private const string peopleNamesPath = contentDataRoot + "PeopleNames.json";
 		private const string companyDataPath = contentDataRoot + "CompanyData.json";
 		private const string thoughtReferencePath = contentDataRoot + "ThoughtReference.json";
+		private const string stringReferencePath = contentDataRoot + "StringReference.json";
 
 		private readonly Dictionary<string, string> contentReference = new Dictionary<string, string>();
 		private readonly Dictionary<string, AgentMetadata> agentMetadataDictionary = new Dictionary<string, AgentMetadata>();
@@ -29,6 +30,7 @@ namespace MyThirdSDL.Content
 		private readonly List<string> lastNames = new List<string>();
 		private readonly List<CompanyMetadata> companies = new List<CompanyMetadata>();
 		private readonly List<ThoughtMetadata> thoughtPool = new List<ThoughtMetadata>();
+		private readonly Dictionary<string, string> stringReference = new Dictionary<string, string>();
 
 		public IEnumerable<ThoughtMetadata> ThoughtPool { get { return thoughtPool; } }
 
@@ -50,6 +52,9 @@ namespace MyThirdSDL.Content
 
 			string thoughtReferenceJson = File.ReadAllText(thoughtReferencePath);
 			LoadThoughtData(thoughtReferenceJson);
+
+			string stringReferenceJson = File.ReadAllText(stringReferencePath);
+			LoadStrings(stringReferenceJson);
 		}
 
 		public Texture GetTexture(string texturePathKey)
@@ -204,9 +209,31 @@ namespace MyThirdSDL.Content
 			}
 		}
 
+		private void LoadStrings(string json)
+		{
+			if (json == null) throw new ArgumentNullException("json");
+			JObject o = JObject.Parse(json);
+			foreach (var stringPair in o)
+				stringReference.Add(stringPair.Key, stringPair.Value.ToString());
+		}
+
+		public string GetString(string key)
+		{
+			if (String.IsNullOrEmpty(key)) throw new ArgumentNullException("key");
+
+			string returnKey = String.Empty;
+			stringReference.TryGetValue(key, out returnKey);
+
+			if (String.IsNullOrEmpty(returnKey))
+				throw new Exception(String.Format("String with key {0} is missing.", key));
+
+			return returnKey;
+
+		}
+
 		public CompanyMetadata GetCompany(string name)
 		{
-			if (name == null) throw new ArgumentNullException("name");
+			if (String.IsNullOrEmpty(name)) throw new ArgumentNullException("name");
 
 			var company = companies.FirstOrDefault(c => c.Name == name);
 
@@ -218,37 +245,37 @@ namespace MyThirdSDL.Content
 
 		public AgentMetadata GetAgentMetadata(string key)
 		{
-			if (key == null) throw new ArgumentNullException("key");
+			if (String.IsNullOrEmpty(key)) throw new ArgumentNullException("key");
 
 			AgentMetadata agentMetaData;
 			bool success = agentMetadataDictionary.TryGetValue(key, out agentMetaData);
 			if (success)
 				return agentMetaData;
-			
-			throw new KeyNotFoundException(String.Format("The content with key '{0}' was not found.", key));
+
+			throw new KeyNotFoundException(String.Format("The contentManager with key '{0}' was not found.", key));
 		}
 
 		public RoomMetadata GetRoomMetadata(string key)
 		{
-			if (key == null) throw new ArgumentNullException("key");
+			if (String.IsNullOrEmpty(key)) throw new ArgumentNullException("key");
 
 			RoomMetadata roomMetaData;
 			bool success = roomMetadataDictionary.TryGetValue(key, out roomMetaData);
 			if (success)
 				return roomMetaData;
 
-			throw new KeyNotFoundException(String.Format("The content with key '{0}' was not found.", key));
+			throw new KeyNotFoundException(String.Format("The contentManager with key '{0}' was not found.", key));
 		}
 
-		public string GetContentPath(string contentKey)
+		public string GetContentPath(string key)
 		{
-			if (contentKey == null) throw new ArgumentNullException("contentKey");
+			if (String.IsNullOrEmpty(key)) throw new ArgumentNullException("key");
 
 			string contentPath;
-			if (contentReference.TryGetValue(contentKey, out contentPath))
+			if (contentReference.TryGetValue(key, out contentPath))
 				return contentRoot + contentPath;
 
-			throw new KeyNotFoundException(String.Format("The content with key '{0}' was not found.", contentKey));
+			throw new KeyNotFoundException(String.Format("The contentManager with key '{0}' was not found.", key));
 		}
 
 		private KeyValuePair<string, string> GetKeyValuePair(JToken o)
@@ -257,9 +284,11 @@ namespace MyThirdSDL.Content
 
 			string key = o["key"].ToString();
 			string value = o["value"].ToString();
-			
+
 			return new KeyValuePair<string, string>(key, value);
 		}
+
+		#region Random Methods
 
 		public string GetRandomFirstName()
 		{
@@ -272,6 +301,8 @@ namespace MyThirdSDL.Content
 			int index = random.Next(0, lastNames.Count() - 1);
 			return lastNames[index];
 		}
+
+		#endregion
 
 		private void LoadThoughtData(string json)
 		{

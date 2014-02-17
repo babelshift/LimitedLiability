@@ -54,14 +54,14 @@ namespace MyThirdSDL.Screens
 		/// <summary>
 		/// Activates the loading screen.
 		/// </summary>
-		public static void Load(ContentManager contentManager, ScreenManager screenManager, bool loadingIsSlow, params Screen[] screensToLoad)
+		public static void Load(ContentManager content, ScreenManager screenManager, bool loadingIsSlow, params Screen[] screensToLoad)
 		{
 			// Tell all the current screens to transition off.
 			foreach (Screen screen in screenManager.GetScreens())
 				screen.ExitScreen();
 
 			// Create and activate the loading screen.
-			LoadingScreen loadingScreen = new LoadingScreen(contentManager, screenManager, loadingIsSlow, screensToLoad);
+			LoadingScreen loadingScreen = new LoadingScreen(content, screenManager, loadingIsSlow, screensToLoad);
 
 			screenManager.AddScreen(loadingScreen);
 		}

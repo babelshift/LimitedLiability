@@ -39,11 +39,11 @@ namespace MyThirdSDL.UserInterface
 			}
 		}
 
-		public void EnableShadow(ContentManager contentManager, int shadowOffsetX, int shadowOffsetY)
+		public void EnableShadow(ContentManager content, int shadowOffsetX, int shadowOffsetY)
 		{
 			this.shadowOffsetX = shadowOffsetX;
 			this.shadowOffsetY = shadowOffsetY;
-			trueTypeTextShadow = contentManager.GetTrueTypeText(TrueTypeText.Font.FilePath, TrueTypeText.Font.PointSize, Styles.Colors.Black, Text, TrueTypeText.WrapLength);
+			trueTypeTextShadow = content.GetTrueTypeText(TrueTypeText.Font.FilePath, TrueTypeText.Font.PointSize, Styles.Colors.Black, Text, TrueTypeText.WrapLength);
 		}
 
 		public override void Draw(GameTime gameTime, Renderer renderer)

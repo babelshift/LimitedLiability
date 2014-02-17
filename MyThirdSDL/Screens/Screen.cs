@@ -153,7 +153,7 @@ namespace MyThirdSDL.Screens
 		}
 
 		/// <summary>
-		/// Unload content for the screen. Called when the screen is removed from the screen manager.
+		/// Unload contentManager for the screen. Called when the screen is removed from the screen manager.
 		/// </summary>
 		public virtual void Unload()
 		{

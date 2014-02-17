@@ -1,20 +1,17 @@
 ﻿using MyThirdSDL.Agents;
+using MyThirdSDL.Content;
+using MyThirdSDL.Content.Data;
+using MyThirdSDL.Descriptors;
 using SharpDL;
 using SharpDL.Graphics;
 using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using MyThirdSDL.Descriptors;
-using MyThirdSDL.Content;
 
 namespace MyThirdSDL.UserInterface
 {
 	public class MenuInspectEmployee : Menu
 	{
-		private const string defaultText = "N/A";
+		private Guid selectedEmployeeId;
 
 		private Icon iconFrame;
 
@@ -65,8 +62,13 @@ namespace MyThirdSDL.UserInterface
 		private Icon iconIntelligence;
 
 		private Button buttonCloseWindow;
+		private Button buttonFireEmployee;
+		private Button buttonDisciplineEmployee;
+		private Button buttonPromoteEmployee;
 
 		public event EventHandler<EventArgs> ButtonCloseWindowClicked;
+
+		public event EventHandler<UserInterfaceEmployeeEventArgs> ButtonFireEmployeeClicked;
 
 		public override Vector Position
 		{
@@ -118,7 +120,13 @@ namespace MyThirdSDL.UserInterface
 				labelBirthValue.Position = new Vector(base.Position.X + 110, base.Position.Y + 210);
 				iconMoodHappy.Position = new Vector(base.Position.X + 110, base.Position.Y + 230);
 				iconMoodAngry.Position = new Vector(base.Position.X + 110, base.Position.Y + 230);
-				buttonCloseWindow.Position = new Vector(base.Position.X + 600, base.Position.Y - 47);
+				buttonCloseWindow.Position = new Vector(base.Position.X + Width - buttonCloseWindow.Width, base.Position.Y + Height + 5);
+				buttonFireEmployee.Position = buttonCloseWindow.Position - new Vector(buttonFireEmployee.Width + 5, 0);
+				buttonDisciplineEmployee.Position = buttonFireEmployee.Position - new Vector(buttonDisciplineEmployee.Width + 5, 0);
+				buttonPromoteEmployee.Position = buttonDisciplineEmployee.Position - new Vector(buttonPromoteEmployee.Width + 5, 0);
+				buttonFireEmployee.Tooltip.Position = new Vector(Position.X, buttonCloseWindow.Position.Y + buttonCloseWindow.Height + 5);
+				buttonDisciplineEmployee.Tooltip.Position = new Vector(Position.X, buttonCloseWindow.Position.Y + buttonCloseWindow.Height + 5);
+				buttonPromoteEmployee.Tooltip.Position = new Vector(Position.X, buttonCloseWindow.Position.Y + buttonCloseWindow.Height + 5);
 			}
 		}
 
@@ -129,17 +137,42 @@ namespace MyThirdSDL.UserInterface
 			Width = iconFrame.Width;
 			Height = iconFrame.Height;
 
-			string fontPath = contentManager.GetContentPath("Arcade");
+			string fontPath = contentManager.GetContentPath(Styles.Fonts.Arcade);
 			Color fontColor = Styles.Colors.White;
 			Color fontColorValue = Styles.Colors.PaleYellow;
-			int fontSizeTitle = 14;
-			int fontSizeContent = 12;
+			int fontSizeTitle = Styles.FontSizes.Title;
+			int fontSizeContent = Styles.FontSizes.Content;
+			int fontSizeTooltip = Styles.FontSizes.Tooltip;
 
 			buttonCloseWindow = ControlFactory.CreateButton(contentManager, "ButtonSquare", "ButtonSquareHover");
 			buttonCloseWindow.Icon = ControlFactory.CreateIcon(contentManager, "IconWindowClose");
 			buttonCloseWindow.IconHovered = ControlFactory.CreateIcon(contentManager, "IconWindowClose");
 			buttonCloseWindow.ButtonType = ButtonType.IconOnly;
 			buttonCloseWindow.Clicked += OnButtonCloseWindowOnClicked;
+
+			buttonFireEmployee = ControlFactory.CreateButton(contentManager, "ButtonSquare", "ButtonSquareHover");
+			buttonFireEmployee.Icon = ControlFactory.CreateIcon(contentManager, "IconFireEmployee");
+			buttonFireEmployee.IconHovered = ControlFactory.CreateIcon(contentManager, "IconFireEmployee");
+			buttonFireEmployee.ButtonType = ButtonType.IconOnly;
+			buttonFireEmployee.Tooltip = ControlFactory.CreateTooltip(contentManager, "TooltipFrame", fontPath, fontSizeTooltip,
+				fontColor, contentManager.GetString(StringReferenceKeys.TOOLTIP_BUTTON_FIRE_EMPLOYEE));
+			buttonFireEmployee.Clicked += ButtonFireEmployeeOnClicked;
+
+			buttonDisciplineEmployee = ControlFactory.CreateButton(contentManager, "ButtonSquare", "ButtonSquareHover");
+			buttonDisciplineEmployee.Icon = ControlFactory.CreateIcon(contentManager, "IconDisciplineEmployee");
+			buttonDisciplineEmployee.IconHovered = ControlFactory.CreateIcon(contentManager, "IconDisciplineEmployee");
+			buttonDisciplineEmployee.ButtonType = ButtonType.IconOnly;
+			buttonDisciplineEmployee.Tooltip = ControlFactory.CreateTooltip(contentManager, "TooltipFrame", fontPath, fontSizeTooltip,
+				fontColor, contentManager.GetString(StringReferenceKeys.TOOLTIP_BUTTON_DISCIPLINE_EMPLOYEE));
+			buttonDisciplineEmployee.Clicked += ButtonDisciplineEmployeeOnClicked;
+
+			buttonPromoteEmployee = ControlFactory.CreateButton(contentManager, "ButtonSquare", "ButtonSquareHover");
+			buttonPromoteEmployee.Icon = ControlFactory.CreateIcon(contentManager, "IconPromoteEmployee");
+			buttonPromoteEmployee.IconHovered = ControlFactory.CreateIcon(contentManager, "IconPromoteEmployee");
+			buttonPromoteEmployee.ButtonType = ButtonType.IconOnly;
+			buttonPromoteEmployee.Tooltip = ControlFactory.CreateTooltip(contentManager, "TooltipFrame", fontPath, fontSizeTooltip,
+				fontColor, contentManager.GetString(StringReferenceKeys.TOOLTIP_BUTTON_PROMOTE_EMPLOYEE));
+			buttonPromoteEmployee.Clicked += ButtonPromoteEmployeeOnClicked;
 
 			iconMainMenu = ControlFactory.CreateIcon(contentManager, "IconPersonPlain");
 			iconNeedsMenu = ControlFactory.CreateIcon(contentManager, "IconStatistics");
@@ -231,8 +264,25 @@ namespace MyThirdSDL.UserInterface
 			Controls.Add(labelSalaryValue);
 			Controls.Add(labelStatusValue);
 			Controls.Add(labelBirthValue);
+			Controls.Add(buttonFireEmployee);
+			Controls.Add(buttonDisciplineEmployee);
+			Controls.Add(buttonPromoteEmployee);
 
 			Visible = false;
+		}
+
+		private void ButtonPromoteEmployeeOnClicked(object sender, EventArgs eventArgs)
+		{
+		}
+
+		private void ButtonDisciplineEmployeeOnClicked(object sender, EventArgs eventArgs)
+		{
+		}
+
+		private void ButtonFireEmployeeOnClicked(object sender, EventArgs eventArgs)
+		{
+			if (ButtonFireEmployeeClicked != null)
+				ButtonFireEmployeeClicked(sender, new UserInterfaceEmployeeEventArgs(selectedEmployeeId));
 		}
 
 		private void OnButtonCloseWindowOnClicked(object sender, EventArgs e)
@@ -255,6 +305,8 @@ namespace MyThirdSDL.UserInterface
 				iconMoodActive = iconMoodHappy;
 			else
 				iconMoodActive = iconMoodAngry;
+
+			selectedEmployeeId = employee.ID;
 		}
 
 		public void SetNeedsValues(Necessities necessities)
@@ -276,22 +328,20 @@ namespace MyThirdSDL.UserInterface
 
 		public override void Update(GameTime gameTime)
 		{
-			if (Visible)
-			{
-				base.Update(gameTime);
+			if (!Visible) return;
 
-				iconMoodActive.Update(gameTime);
-			}
+			base.Update(gameTime);
+
+			iconMoodActive.Update(gameTime);
 		}
 
 		public override void Draw(GameTime gameTime, Renderer renderer)
 		{
-			if (Visible)
-			{
-				base.Draw(gameTime, renderer);
+			if (!Visible) return;
 
-				iconMoodActive.Draw(gameTime, renderer);
-			}
+			base.Draw(gameTime, renderer);
+
+			iconMoodActive.Draw(gameTime, renderer);
 		}
 
 		public override void Dispose()
@@ -306,6 +356,16 @@ namespace MyThirdSDL.UserInterface
 
 			if (iconMoodActive != null)
 				iconMoodActive.Dispose();
+		}
+	}
+
+	public class UserInterfaceEmployeeEventArgs : EventArgs
+	{
+		public Guid EmployeeId { get; private set; }
+
+		public UserInterfaceEmployeeEventArgs(Guid employeeId)
+		{
+			EmployeeId = employeeId;
 		}
 	}
 }

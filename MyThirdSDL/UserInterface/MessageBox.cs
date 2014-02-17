@@ -46,7 +46,7 @@ namespace MyThirdSDL.UserInterface
 			Width = iconFrame.Width;
 			Height = iconFrame.Height;
 
-			string fontPath = contentManager.GetContentPath(Styles.FontPaths.Arcade);
+			string fontPath = contentManager.GetContentPath(Styles.Fonts.Arcade);
 			Color fontColorTitle = Styles.Colors.White;
 			Color fontColorLabelValue = Styles.Colors.PaleYellow;
 			int fontSizeTitle = Styles.FontSizes.Title;
@@ -74,7 +74,7 @@ namespace MyThirdSDL.UserInterface
 			Hide();
 		}
 
-		public void UpdateLabels(ContentManager contentManager, string title, string content)
+		public void UpdateLabels(ContentManager contentManager, string title, string text)
 		{
 			labelTextContent.TrueTypeText.WrapLength = 325;
 
@@ -83,10 +83,10 @@ namespace MyThirdSDL.UserInterface
 			else
 				labelTextTitle.Text = title;
 
-			if (String.IsNullOrEmpty(content))
+			if (String.IsNullOrEmpty(text))
 				labelTextContent.Text = defaultText;
 			else
-				labelTextContent.Text = content;
+				labelTextContent.Text = text;
 
 			labelTextTitle.EnableShadow(contentManager, 2, 2);
 		}

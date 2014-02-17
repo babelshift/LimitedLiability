@@ -225,9 +225,15 @@ namespace MyThirdSDL.Screens
 
 			userInterfaceManager.PurchasableItemSelected += UserInterfaceManagerOnPurchasableItemSelected;
 			userInterfaceManager.PurchasableItemPlaced += UserInterfaceManagerOnPurchasableItemPlaced;
-			userInterfaceManager.ArchiveMailButtonClicked += UserInterfaceManagerOnArchiveMailButtonClicked;
+			userInterfaceManager.MailArchived += UserInterfaceManagerOnMailArchived;
 			userInterfaceManager.MainMenuButtonClicked += (sender, e) => ScreenManager.AddScreen(CreatePauseMenuScreen());
 			userInterfaceManager.ResumeAccepted += (sender, e) => simulationManager.AddAgent(e.Employee);
+			userInterfaceManager.EmployeeFired += UserInterfaceManagerOnEmployeeFired;
+		}
+
+		private void UserInterfaceManagerOnEmployeeFired(object sender, UserInterfaceEmployeeEventArgs userInterfaceEmployeeEventArgs)
+		{
+			simulationManager.RemoveAgent<Employee>(userInterfaceEmployeeEventArgs.EmployeeId);
 		}
 
 		private Vector GetRandomEmployeePosition()
@@ -529,7 +535,7 @@ namespace MyThirdSDL.Screens
 			userInterfaceManager.SetHoveredMapCells(hoveredMapCells);
 		}
 
-		private void UserInterfaceManagerOnArchiveMailButtonClicked(object sender, SelectedMailItemActionEventArgs e)
+		private void UserInterfaceManagerOnMailArchived(object sender, SelectedMailItemActionEventArgs e)
 		{
 			mailManager.ArchiveMail(e.SelectedMailItem);
 			userInterfaceManager.UpdateMenuMailBox(mailManager.PlayerInbox, mailManager.PlayerOutbox, mailManager.PlayerArchive);
