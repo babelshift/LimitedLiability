@@ -125,6 +125,11 @@ namespace MyThirdSDL.Agents
 				OnThoughtSatisfied(ThoughtType.Hungry);
 		}
 
+		public void Promote()
+		{
+			Job.Promote();
+		}
+
 		public override void Update(GameTime gameTime)
 		{
 			base.Update(gameTime);

@@ -1,11 +1,7 @@
-﻿using SharpDL.Graphics;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using MyThirdSDL.Content;
+﻿using MyThirdSDL.Content;
 using MyThirdSDL.Descriptors;
+using SharpDL.Graphics;
+using System;
 
 namespace MyThirdSDL.Agents
 {
@@ -13,16 +9,15 @@ namespace MyThirdSDL.Agents
 	{
 		private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
-		private Random random = new Random();
-		private TextureStore textureStore;
-		private ContentManager content;
-		private JobFactory jobFactory;
-		private int currentEmployeeNumber = 0;
-		private int currentEquipmentNumber = 0;
+		private readonly Random random = new Random();
+		private readonly TextureStore textureStore;
+		private readonly ContentManager contentManager;
+		private readonly JobFactory jobFactory;
+		private int currentEmployeeNumber;
 
-		public AgentFactory(Renderer renderer, ContentManager content, JobFactory jobFactory)
+		public AgentFactory(Renderer renderer, ContentManager contentManager, JobFactory jobFactory)
 		{
-			this.content = content;
+			this.contentManager = contentManager;
 			this.jobFactory = jobFactory;
 			textureStore = new TextureStore(renderer);
 		}
@@ -31,15 +26,15 @@ namespace MyThirdSDL.Agents
 
 		public Employee CreateEmployee(TimeSpan simulationBirthTime, DateTime worldDateTime, Vector position)
 		{
-			string texturePath = content.GetContentPath("MaleEmployee0001");
+			string texturePath = contentManager.GetContentPath("MaleEmployee0001");
 			TextureBook textureBook = textureStore.GetTextureBook(texturePath);
 
 			int employeeNumber = GetNextEmployeeNumber();
-			string firstName = content.GetRandomFirstName();
-			string lastName = content.GetRandomLastName();
+			string firstName = contentManager.GetRandomFirstName();
+			string lastName = contentManager.GetRandomLastName();
 			DateTime birthday = GetRandomBirthday(worldDateTime);
 			Skills skills = Skills.GetRandomSkills();
-			Job job = jobFactory.CreateJob(skills);
+			Job job = jobFactory.CreateRandomJob();
 
 			Employee employee = new Employee(simulationBirthTime, "Employee " + employeeNumber, textureBook, position, AgentOrientation.FacingLeft, firstName, lastName, birthday, skills, job);
 
@@ -51,8 +46,8 @@ namespace MyThirdSDL.Agents
 
 		private DateTime GetRandomBirthday(DateTime worldDateTime)
 		{
-			int minAgeInYears = 18;
-			int maxAgeInYears = 80;
+			const int minAgeInYears = 18;
+			const int maxAgeInYears = 80;
 			int randomYearsOld = random.Next(minAgeInYears, maxAgeInYears);
 			int randomYear = worldDateTime.AddYears(-1 * randomYearsOld).Year;
 			int randomMonth = random.Next(1, 12);
@@ -66,7 +61,7 @@ namespace MyThirdSDL.Agents
 			return currentEmployeeNumber++;
 		}
 
-		#endregion
+		#endregion Employees
 
 		#region Equipment
 
@@ -77,7 +72,7 @@ namespace MyThirdSDL.Agents
 
 		public TrashBin CreateTrashBin(TimeSpan birthTime, Vector position)
 		{
-			AgentMetadata agentMetaData = content.GetAgentMetadata("TrashBin");
+			AgentMetadata agentMetaData = contentManager.GetAgentMetadata("TrashBin");
 			return CreateEquipment<TrashBin>(birthTime, "TrashBin", position, agentMetaData);
 		}
 
@@ -88,7 +83,7 @@ namespace MyThirdSDL.Agents
 
 		public OfficeDesk CreateOfficeDesk(TimeSpan birthTime, Vector position)
 		{
-			AgentMetadata agentMetaData = content.GetAgentMetadata("OfficeDesk");
+			AgentMetadata agentMetaData = contentManager.GetAgentMetadata("OfficeDesk");
 			return CreateEquipment<OfficeDesk>(birthTime, "OfficeDesk", position, agentMetaData);
 		}
 
@@ -101,7 +96,7 @@ namespace MyThirdSDL.Agents
 		// TODO: agent factory should know about simulation time so we don't have to pass this in
 		public SnackMachine CreateSnackMachine(TimeSpan birthTime, Vector position)
 		{
-			AgentMetadata agentMetaData = content.GetAgentMetadata("SnackMachine");
+			AgentMetadata agentMetaData = contentManager.GetAgentMetadata("SnackMachine");
 			return CreateEquipment<SnackMachine>(birthTime, "SnackMachine", position, agentMetaData);
 		}
 
@@ -112,7 +107,7 @@ namespace MyThirdSDL.Agents
 
 		public SodaMachine CreateSodaMachine(TimeSpan birthTime, Vector position)
 		{
-			AgentMetadata agentMetaData = content.GetAgentMetadata("SodaMachine");
+			AgentMetadata agentMetaData = contentManager.GetAgentMetadata("SodaMachine");
 			return CreateEquipment<SodaMachine>(birthTime, "SodaMachine", position, agentMetaData);
 		}
 
@@ -126,7 +121,7 @@ namespace MyThirdSDL.Agents
 			return CreateEquipment<WaterFountain>("WaterFountain", birthTime, position);
 		}
 
-		#endregion
+		#endregion Equipment
 
 		#region Rooms
 
@@ -135,12 +130,12 @@ namespace MyThirdSDL.Agents
 		//	return CreateEquipment<Wall>("Wall", birthTime, position);
 		//}
 
-		#endregion
+		#endregion Rooms
 
 		public T CreateEquipment<T>(string agentKeyName, TimeSpan birthTime, Vector position)
 			where T : Equipment
 		{
-			var metaData = content.GetAgentMetadata(agentKeyName);
+			var metaData = contentManager.GetAgentMetadata(agentKeyName);
 			return CreateEquipment<T>(birthTime, agentKeyName, position, metaData);
 		}
 
@@ -156,7 +151,7 @@ namespace MyThirdSDL.Agents
 
 		private Texture GetTextureFromStore(string texturePathKey)
 		{
-			string texturePath = content.GetContentPath(texturePathKey);
+			string texturePath = contentManager.GetContentPath(texturePathKey);
 			Texture texture = textureStore.CreateTexture(texturePath);
 			return texture;
 		}

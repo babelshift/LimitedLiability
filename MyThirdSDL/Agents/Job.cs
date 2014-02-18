@@ -1,38 +1,62 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using MyThirdSDL.Descriptors;
+using log4net.Appender;
 
 namespace MyThirdSDL.Agents
 {
 	public class Job
 	{
-		public string Title { get; private set; }
-		public double Salary { get; private set; }
-		public Skills.Rating RequiredIntelligence { get; private set; }
-		public Skills.Rating RequiredCreativity { get; private set; }
-		public Skills.Rating RequiredCommunication { get; private set; }
-		public Skills.Rating RequiredLeadership { get; private set; }
+		private int currentLevel = 0;
+		private readonly IReadOnlyList<JobLevel> levels;
 
-		public Job(string title, double salary,
-			Skills.Rating requiredIntelligence,
-			Skills.Rating requiredCreativity,
-			Skills.Rating requiredCommunication,
-			Skills.Rating requiredLeadership)
+		public string FullTitle { get { return String.Format("{0} {1}", CurrentLevel.Prefix, Title); } }
+
+		public string Title { get; private set; }
+
+		public JobLevel CurrentLevel { get { return levels[currentLevel]; } }
+
+		public Job(string title, IReadOnlyList<JobLevel> levels)
 		{
 			Title = title;
-			Salary = salary;
-			RequiredIntelligence = requiredIntelligence;
-			RequiredCreativity = requiredCreativity;
-			RequiredCommunication = requiredCommunication;
-			RequiredLeadership = requiredIntelligence;
+			this.levels = levels;
+		}
+
+		/// <summary>
+		/// Private copy constructor
+		/// </summary>
+		/// <param name="title"></param>
+		/// <param name="levels"></param>
+		/// <param name="currentLevel"></param>
+		private Job(string title, IReadOnlyList<JobLevel> levels, int currentLevel)
+			: this(title, levels)
+		{
+			this.currentLevel = currentLevel;
 		}
 
 		public double GetMonthlyPaymentAmount()
 		{
-			return Salary / 12.0f;
+			return CurrentLevel.Salary / 12.0f;
+		}
+
+		public void Promote()
+		{
+			if (currentLevel + 1 > 4)
+				throw new InvalidOperationException("Cannot promote beyond Level 5.");
+
+			currentLevel++;
+		}
+
+		public void Demote()
+		{
+			if (currentLevel - 1 < 0)
+				throw new InvalidOperationException("Cannot demote beyond Level 1.");
+
+			currentLevel--;
+		}
+
+		public Job Copy()
+		{
+			return new Job(Title, levels, currentLevel);
 		}
 	}
 }

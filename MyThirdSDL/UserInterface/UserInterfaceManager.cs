@@ -120,6 +120,8 @@ namespace MyThirdSDL.UserInterface
 
 		public event EventHandler<UserInterfaceEmployeeEventArgs> EmployeeFired;
 
+		public event EventHandler<UserInterfaceEmployeeEventArgs> EmployeePromoted;
+
 		#endregion Public Events
 
 		#region General Methods
@@ -479,6 +481,13 @@ namespace MyThirdSDL.UserInterface
 			menuInspectEmployee.Position = new Vector(bottomRightPointOfWindow.X / 2 - menuInspectEmployee.Width / 2, bottomRightPointOfWindow.Y / 2 - menuInspectEmployee.Height / 2);
 			menuInspectEmployee.ButtonCloseWindowClicked += MenuInspectEmployeeOnButtonCloseWindowClicked;
 			menuInspectEmployee.ButtonFireEmployeeClicked += MenuInspectEmployeeOnButtonFireEmployeeClicked;
+			menuInspectEmployee.ButtonPromoteEmployeeClicked += MenuInspectEmployeeOnButtonPromoteEmployeeClicked;
+		}
+
+		private void MenuInspectEmployeeOnButtonPromoteEmployeeClicked(object sender, UserInterfaceEmployeeEventArgs userInterfaceEmployeeEventArgs)
+		{
+			if (EmployeePromoted != null)
+				EmployeePromoted(sender, userInterfaceEmployeeEventArgs);
 		}
 
 		private void MenuInspectEmployeeOnButtonFireEmployeeClicked(object sender, UserInterfaceEmployeeEventArgs userInterfaceEmployeeEventArgs)

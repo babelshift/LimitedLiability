@@ -69,6 +69,7 @@ namespace MyThirdSDL.UserInterface
 		public event EventHandler<EventArgs> ButtonCloseWindowClicked;
 
 		public event EventHandler<UserInterfaceEmployeeEventArgs> ButtonFireEmployeeClicked;
+		public event EventHandler<UserInterfaceEmployeeEventArgs> ButtonPromoteEmployeeClicked;
 
 		public override Vector Position
 		{
@@ -273,6 +274,8 @@ namespace MyThirdSDL.UserInterface
 
 		private void ButtonPromoteEmployeeOnClicked(object sender, EventArgs eventArgs)
 		{
+			if (ButtonPromoteEmployeeClicked != null)
+				ButtonPromoteEmployeeClicked(sender, new UserInterfaceEmployeeEventArgs(selectedEmployeeId));
 		}
 
 		private void ButtonDisciplineEmployeeOnClicked(object sender, EventArgs eventArgs)
@@ -297,7 +300,7 @@ namespace MyThirdSDL.UserInterface
 			double daysInYearOld = DateTimeHelper.DaysRemainderInYears(yearsOld);
 			labelAgeValue.Text = String.Format("{0} years, {1} days", (int)yearsOld, (int)daysInYearOld);
 			labelJobValue.Text = employee.Job.Title;
-			labelSalaryValue.Text = employee.Job.Salary.ToString("C", CultureInfo.CreateSpecificCulture("en-US"));
+			labelSalaryValue.Text = employee.Job.CurrentLevel.Salary.ToString("C", CultureInfo.CreateSpecificCulture("en-US"));
 			labelStatusValue.Text = employee.Activity.ToString();
 			labelBirthValue.Text = employee.Birthday.ToString("dd MMMM yyyy", CultureInfo.CreateSpecificCulture("en-US"));
 

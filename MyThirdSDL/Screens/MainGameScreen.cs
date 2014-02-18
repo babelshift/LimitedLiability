@@ -56,7 +56,7 @@ namespace MyThirdSDL.Screens
 			if (String.IsNullOrEmpty(mapPathToLoad)) throw new ArgumentNullException("mapPathToLoad");
 
 			simulationManager = new SimulationManager(DateTime.Now, contentManager.ThoughtPool);
-			jobFactory = new JobFactory();
+			jobFactory = new JobFactory(contentManager);
 			agentFactory = new AgentFactory(renderer, contentManager, jobFactory);
 			roomFactory = new RoomFactory(renderer, contentManager);
 
@@ -229,6 +229,12 @@ namespace MyThirdSDL.Screens
 			userInterfaceManager.MainMenuButtonClicked += (sender, e) => ScreenManager.AddScreen(CreatePauseMenuScreen());
 			userInterfaceManager.ResumeAccepted += (sender, e) => simulationManager.AddAgent(e.Employee);
 			userInterfaceManager.EmployeeFired += UserInterfaceManagerOnEmployeeFired;
+			userInterfaceManager.EmployeePromoted += UserInterfaceManagerOnEmployeePromoted;
+		}
+
+		private void UserInterfaceManagerOnEmployeePromoted(object sender, UserInterfaceEmployeeEventArgs userInterfaceEmployeeEventArgs)
+		{
+			simulationManager.PromoteEmployee(userInterfaceEmployeeEventArgs.EmployeeId);
 		}
 
 		private void UserInterfaceManagerOnEmployeeFired(object sender, UserInterfaceEmployeeEventArgs userInterfaceEmployeeEventArgs)

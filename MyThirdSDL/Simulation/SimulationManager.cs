@@ -335,7 +335,7 @@ namespace MyThirdSDL.Simulation
 			var agent = agentsForType.FirstOrDefault(a => a.ID == agentId);
 
 			if (agent != null)
-				return (T)agent;
+				return agent;
 
 			return null;
 		}
@@ -367,6 +367,13 @@ namespace MyThirdSDL.Simulation
 			
 			return new List<T>();
 		}
+
+		public void PromoteEmployee(Guid employeeId)
+		{
+			Employee employee = GetTrackedAgent<Employee>(employeeId);
+			employee.Promote();
+		}
+
 
 		#endregion Agent Tracking
 

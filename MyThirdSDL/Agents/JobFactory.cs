@@ -1,58 +1,68 @@
-﻿using System;
+﻿using MyThirdSDL.Content;
+using MyThirdSDL.Descriptors;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using MyThirdSDL.Descriptors;
 
 namespace MyThirdSDL.Agents
 {
 	public class JobFactory
 	{
-		private List<Job> jobs = new List<Job>();
-		private Random random = new Random();
+		private readonly Random random = new Random();
+		private readonly List<Job> jobs = new List<Job>();
 
-		public JobFactory()
+		public JobFactory(ContentManager contentManager)
 		{
-			Job janitor = new Job("Janitor", 25000, Skills.Rating.Atrocious, Skills.Rating.Atrocious, Skills.Rating.Atrocious, Skills.Rating.Atrocious);
-			Job maintenance = new Job("Maintenance", 30000, Skills.Rating.Satisfactory, Skills.Rating.Atrocious, Skills.Rating.Atrocious, Skills.Rating.Atrocious);
-			Job entertainer = new Job("Entertainer", 40000, Skills.Rating.Neutral, Skills.Rating.Great, Skills.Rating.Great, Skills.Rating.Neutral);
-			Job accountant = new Job("Accountant", 50000, Skills.Rating.Great, Skills.Rating.Atrocious, Skills.Rating.Atrocious, Skills.Rating.Atrocious);
-			Job engineer = new Job("Engineer", 70000, Skills.Rating.Excellent, Skills.Rating.Bad, Skills.Rating.Bad, Skills.Rating.Bad);
-			Job marketer = new Job("Marketer", 40000, Skills.Rating.Neutral, Skills.Rating.Good, Skills.Rating.Excellent, Skills.Rating.Neutral);
-			Job sales = new Job("Sales", 40000, Skills.Rating.Neutral, Skills.Rating.Great, Skills.Rating.Great, Skills.Rating.Neutral);
-			Job humanResources = new Job("Human Resources", 50000, Skills.Rating.Neutral, Skills.Rating.Atrocious, Skills.Rating.Great, Skills.Rating.Good);
-			Job manager = new Job("Manager", 90000, Skills.Rating.Good, Skills.Rating.Atrocious, Skills.Rating.Great, Skills.Rating.Great);
-			Job executive = new Job("Executive", 110000, Skills.Rating.Great, Skills.Rating.Atrocious, Skills.Rating.Excellent, Skills.Rating.Excellent);
+			IReadOnlyList<JobMetadata> jobMetadata = contentManager.Jobs;
+			foreach (var job in jobMetadata)
+			{
+				List<JobLevel> jobLevels = new List<JobLevel>();
+				foreach (var jobLevel in job.JobLevelMetadata)
+				{
+					string prefix = jobLevel.Prefix;
+					int salary;
+					Int32.TryParse(jobLevel.Salary, out salary);
 
-			jobs.Add(janitor);
-			jobs.Add(maintenance);
-			jobs.Add(entertainer);
-			jobs.Add(accountant);
-			jobs.Add(engineer);
-			jobs.Add(marketer);
-			jobs.Add(sales);
-			jobs.Add(humanResources);
-			jobs.Add(manager);
-			jobs.Add(executive);
+					int requiredIntelligence;
+					Int32.TryParse(jobLevel.Intelligence, out requiredIntelligence);
+
+					int requiredCreativity;
+					Int32.TryParse(jobLevel.Creativitity, out requiredCreativity);
+
+					int requiredCommunication;
+					Int32.TryParse(jobLevel.Communication, out requiredCommunication);
+
+					int requiredLeadership;
+					Int32.TryParse(jobLevel.Leadership, out requiredLeadership);
+
+					JobLevel newJobLevel = new JobLevel(prefix, salary, (Skills.Rating)requiredIntelligence, (Skills.Rating)requiredCreativity, (Skills.Rating)requiredCommunication, (Skills.Rating)requiredLeadership);
+
+					jobLevels.Add(newJobLevel);
+				}
+				Job newJob = new Job(job.Title, jobLevels);
+				jobs.Add(newJob);
+			}
 		}
 
 		/// <summary>
-		/// Return a random job that fits the passed skill criteria.
+		/// Return a random job at a random job level. For example: Janitor at Junior level or Sales at Senior level.
 		/// </summary>
-		/// <param name="skill"></param>
 		/// <returns></returns>
-		public Job CreateJob(Skills skill)
+		public Job CreateRandomJob()
 		{
-			List<Job> validJobs = jobs.Where(j =>
-			   skill.Intelligence >= j.RequiredIntelligence
-			   && skill.Creativity >= j.RequiredCreativity
-			   && skill.Communication >= j.RequiredCommunication
-			   && skill.Leadership >= j.RequiredLeadership).ToList();
+			int randomJobIndex = random.Next(0, jobs.Count - 1);
+			int randomJobLevel = random.Next(0, 4);
 
-			int i = random.Next(0, validJobs.Count - 1);
+			var job = jobs[randomJobIndex];
 
-			return validJobs[i];
+			// return a copy because there is the potential for the employee to be promoted/demoted which will affect the individual state of the job object
+			// if we returned a reference to the stored job object, every employee who had that reference would simultaneously be promoted/demoted
+			var jobCopy = job.Copy();
+
+			for(int i = 0; i <= randomJobLevel; i++)
+				jobCopy.Promote();
+
+			return jobCopy;
 		}
 	}
 }

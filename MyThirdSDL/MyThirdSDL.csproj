@@ -82,6 +82,7 @@
     <Compile Include="Agents\Equipment.cs" />
     <Compile Include="Agents\Job.cs" />
     <Compile Include="Agents\JobFactory.cs" />
+    <Compile Include="Agents\JobLevel.cs" />
     <Compile Include="Agents\Library.cs" />
     <Compile Include="Agents\MobileAgent.cs" />
     <Compile Include="Agents\OfficeDesk.cs" />
@@ -103,9 +104,14 @@
     <Content Include="Content\Data\StringReference.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Compile Include="Content\Data\StringReferencekeys.cs" />
+    <Content Include="Content\Data\JobReference.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Compile Include="Content\Data\StringReferenceKeys.cs" />
     <Compile Include="Content\EquipmentObject.cs" />
     <Compile Include="Content\EquipmentObjectType.cs" />
+    <Compile Include="Content\JobLevelMetadata.cs" />
+    <Compile Include="Content\JobMetadata.cs" />
     <Compile Include="Content\MapCell.cs">
       <SubType>Code</SubType>
     </Compile>

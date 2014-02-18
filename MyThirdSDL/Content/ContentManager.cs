@@ -22,6 +22,7 @@ namespace MyThirdSDL.Content
 		private const string companyDataPath = contentDataRoot + "CompanyData.json";
 		private const string thoughtReferencePath = contentDataRoot + "ThoughtReference.json";
 		private const string stringReferencePath = contentDataRoot + "StringReference.json";
+		private const string jobsReferencePath = contentDataRoot + "JobReference.json";
 
 		private readonly Dictionary<string, string> contentReference = new Dictionary<string, string>();
 		private readonly Dictionary<string, AgentMetadata> agentMetadataDictionary = new Dictionary<string, AgentMetadata>();
@@ -31,6 +32,9 @@ namespace MyThirdSDL.Content
 		private readonly List<CompanyMetadata> companies = new List<CompanyMetadata>();
 		private readonly List<ThoughtMetadata> thoughtPool = new List<ThoughtMetadata>();
 		private readonly Dictionary<string, string> stringReference = new Dictionary<string, string>();
+		private readonly List<JobMetadata> jobs = new List<JobMetadata>();
+
+		public IReadOnlyList<JobMetadata> Jobs { get { return jobs; } }
 
 		public IEnumerable<ThoughtMetadata> ThoughtPool { get { return thoughtPool; } }
 
@@ -55,6 +59,9 @@ namespace MyThirdSDL.Content
 
 			string stringReferenceJson = File.ReadAllText(stringReferencePath);
 			LoadStrings(stringReferenceJson);
+
+			string jobReferenceJson = File.ReadAllText(jobsReferencePath);
+			LoadJobs(jobReferenceJson);
 		}
 
 		public Texture GetTexture(string texturePathKey)
@@ -215,6 +222,44 @@ namespace MyThirdSDL.Content
 			JObject o = JObject.Parse(json);
 			foreach (var stringPair in o)
 				stringReference.Add(stringPair.Key, stringPair.Value.ToString());
+		}
+
+		private void LoadJobs(string json)
+		{
+			if (json == null) throw new ArgumentNullException("json");
+
+			JObject o = JObject.Parse(json);
+
+			foreach (var job in o["jobs"])
+			{
+				string title = job["title"].ToString();
+
+				JobMetadata jobMetadata = new JobMetadata(title);
+
+				foreach (var jobLevelOne in job["levelOne"])
+					jobMetadata.AddJobLevelMetadata(GetJobLevelMetadata(jobLevelOne));
+				foreach (var jobLevelTwo in job["levelTwo"])
+					jobMetadata.AddJobLevelMetadata(GetJobLevelMetadata(jobLevelTwo));
+				foreach (var jobLevelThree in job["levelThree"])
+					jobMetadata.AddJobLevelMetadata(GetJobLevelMetadata(jobLevelThree));
+				foreach (var jobLevelFour in job["levelFour"])
+					jobMetadata.AddJobLevelMetadata(GetJobLevelMetadata(jobLevelFour));
+				foreach (var jobLevelFive in job["levelFive"])
+					jobMetadata.AddJobLevelMetadata(GetJobLevelMetadata(jobLevelFive));
+
+				jobs.Add(jobMetadata);
+			}
+		}
+
+		private JobLevelMetadata GetJobLevelMetadata(JToken t)
+		{
+			string prefix = t["prefix"].ToString();
+			string salary = t["salary"].ToString();
+			string intelligence = t["intelligence"].ToString();
+			string creativity = t["creativity"].ToString();
+			string communication = t["communication"].ToString();
+			string leadership = t["leadership"].ToString();
+			return new JobLevelMetadata(prefix, salary, intelligence, creativity, communication, leadership);
 		}
 
 		public string GetString(string key)

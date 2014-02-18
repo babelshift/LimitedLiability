@@ -1,0 +1,68 @@
+﻿{
+	"jobs": [
+		{
+			"title": "Janitor",
+			"levelOne": [ { "prefix": "Junior", "salary": "25000", "intelligence": "0", "creativity": "0", "communication": "0", "leadership": "0" } ],
+			"levelTwo": [ { "prefix": "Regular", "salary": "30000", "intelligence": "2", "creativity": "0", "communication": "2", "leadership": "0" } ],
+			"levelThree": [ { "prefix": "Senior", "salary": "35000", "intelligence": "3", "creativity": "0", "communication": "2", "leadership": "2" } ],
+			"levelFour": [ { "prefix": "Principal", "salary": "40000", "intelligence": "4", "creativity": "0", "communication": "3", "leadership": "3" } ],
+			"levelFive": [ { "prefix": "Manager", "salary": "50000", "intelligence": "5", "creativity": "0", "communication": "5", "leadership": "5" } ]
+		},
+		{
+			"title": "Maintenance",
+			"levelOne": [ { "prefix": "Junior", "salary": "30000", "intelligence": "0", "creativity": "0", "communication": "0", "leadership": "0" } ],
+			"levelTwo": [ { "prefix": "Regular", "salary": "30000", "intelligence": "2", "creativity": "0", "communication": "2", "leadership": "0" } ],
+			"levelThree": [ { "prefix": "Senior", "salary": "30000", "intelligence": "3", "creativity": "0", "communication": "2", "leadership": "2" } ],
+			"levelFour": [ { "prefix": "Principal", "salary": "30000", "intelligence": "4", "creativity": "0", "communication": "3", "leadership": "3" } ],
+			"levelFive": [ { "prefix": "Manager", "salary": "30000", "intelligence": "5", "creativity": "0", "communication": "5", "leadership": "5" } ]
+		},
+		{
+			"title": "Accountant",
+			"levelOne": [ { "prefix": "Junior", "salary": "30000", "intelligence": "0", "creativity": "0", "communication": "0", "leadership": "0" } ],
+			"levelTwo": [ { "prefix": "Regular", "salary": "30000", "intelligence": "2", "creativity": "0", "communication": "2", "leadership": "0" } ],
+			"levelThree": [ { "prefix": "Senior", "salary": "30000", "intelligence": "3", "creativity": "0", "communication": "2", "leadership": "2" } ],
+			"levelFour": [ { "prefix": "Principal", "salary": "30000", "intelligence": "4", "creativity": "0", "communication": "3", "leadership": "3" } ],
+			"levelFive": [ { "prefix": "Manager", "salary": "30000", "intelligence": "5", "creativity": "0", "communication": "5", "leadership": "5" } ]
+		},
+		{
+			"title": "Engineer",
+			"levelOne": [ { "prefix": "Junior", "salary": "30000", "intelligence": "0", "creativity": "0", "communication": "0", "leadership": "0" } ],
+			"levelTwo": [ { "prefix": "Regular", "salary": "30000", "intelligence": "2", "creativity": "0", "communication": "2", "leadership": "0" } ],
+			"levelThree": [ { "prefix": "Senior", "salary": "30000", "intelligence": "3", "creativity": "0", "communication": "2", "leadership": "2" } ],
+			"levelFour": [ { "prefix": "Principal", "salary": "30000", "intelligence": "4", "creativity": "0", "communication": "3", "leadership": "3" } ],
+			"levelFive": [ { "prefix": "Manager", "salary": "30000", "intelligence": "5", "creativity": "0", "communication": "5", "leadership": "5" } ]
+		},
+		{
+			"title": "Marketer",
+			"levelOne": [ { "prefix": "Junior", "salary": "30000", "intelligence": "0", "creativity": "0", "communication": "0", "leadership": "0" } ],
+			"levelTwo": [ { "prefix": "Regular", "salary": "30000", "intelligence": "2", "creativity": "0", "communication": "2", "leadership": "0" } ],
+			"levelThree": [ { "prefix": "Senior", "salary": "30000", "intelligence": "3", "creativity": "0", "communication": "2", "leadership": "2" } ],
+			"levelFour": [ { "prefix": "Principal", "salary": "30000", "intelligence": "4", "creativity": "0", "communication": "3", "leadership": "3" } ],
+			"levelFive": [ { "prefix": "Manager", "salary": "30000", "intelligence": "5", "creativity": "0", "communication": "5", "leadership": "5" } ]
+		},
+		{
+			"title": "Sales",
+			"levelOne": [ { "prefix": "Junior", "salary": "30000", "intelligence": "0", "creativity": "0", "communication": "0", "leadership": "0" } ],
+			"levelTwo": [ { "prefix": "Regular", "salary": "30000", "intelligence": "2", "creativity": "0", "communication": "2", "leadership": "0" } ],
+			"levelThree": [ { "prefix": "Senior", "salary": "30000", "intelligence": "3", "creativity": "0", "communication": "2", "leadership": "2" } ],
+			"levelFour": [ { "prefix": "Principal", "salary": "30000", "intelligence": "4", "creativity": "0", "communication": "3", "leadership": "3" } ],
+			"levelFive": [ { "prefix": "Manager", "salary": "30000", "intelligence": "5", "creativity": "0", "communication": "5", "leadership": "5" } ]
+		},
+		{
+			"title": "Human Resources",
+			"levelOne": [ { "prefix": "Junior", "salary": "30000", "intelligence": "0", "creativity": "0", "communication": "0", "leadership": "0" } ],
+			"levelTwo": [ { "prefix": "Regular", "salary": "30000", "intelligence": "2", "creativity": "0", "communication": "2", "leadership": "0" } ],
+			"levelThree": [ { "prefix": "Senior", "salary": "30000", "intelligence": "3", "creativity": "0", "communication": "2", "leadership": "2" } ],
+			"levelFour": [ { "prefix": "Principal", "salary": "30000", "intelligence": "4", "creativity": "0", "communication": "3", "leadership": "3" } ],
+			"levelFive": [ { "prefix": "Manager", "salary": "30000", "intelligence": "5", "creativity": "0", "communication": "5", "leadership": "5" } ]
+		},
+		{
+			"title": "Manager",
+			"levelOne": [ { "prefix": "Junior", "salary": "30000", "intelligence": "0", "creativity": "0", "communication": "0", "leadership": "0" } ],
+			"levelTwo": [ { "prefix": "Regular", "salary": "30000", "intelligence": "2", "creativity": "0", "communication": "2", "leadership": "0" } ],
+			"levelThree": [ { "prefix": "Senior", "salary": "30000", "intelligence": "3", "creativity": "0", "communication": "2", "leadership": "2" } ],
+			"levelFour": [ { "prefix": "Principal", "salary": "30000", "intelligence": "4", "creativity": "0", "communication": "3", "leadership": "3" } ],
+			"levelFive": [ { "prefix": "Manager", "salary": "30000", "intelligence": "5", "creativity": "0", "communication": "5", "leadership": "5" } ]
+		}
+	]
+}

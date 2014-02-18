@@ -123,7 +123,7 @@ namespace MyThirdSDL.UserInterface
 			labelContent = ControlFactory.CreateLabel(contentManager, fontPath, fontSizeContent, fontColorValue,
 				resume.Content, 550);
 			labelJob = ControlFactory.CreateLabel(contentManager, fontPath, fontSizeContent, fontColorValue, resume.Employee.Job.Title);
-			labelSalary = ControlFactory.CreateLabel(contentManager, fontPath, fontSizeContent, fontColorValue, String.Format("${0} / yr", resume.Employee.Job.Salary));
+			labelSalary = ControlFactory.CreateLabel(contentManager, fontPath, fontSizeContent, fontColorValue, String.Format("${0} / yr", resume.Employee.Job.CurrentLevel.Salary));
 
 			Controls.Add(iconFrame);
 			Controls.Add(iconMainMenu);
