@@ -2,22 +2,23 @@
 using SharpDL;
 using SharpDL.Graphics;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MyThirdSDL.UserInterface
 {
 	public class ButtonMenuItem : Button, IDisposable
 	{
 		public Icon IconMain { get; set; }
+
 		public Label LabelMain { get; set; }
+
 		public Icon IconMoney { get; set; }
+
 		public Label LabelMoney { get; set; }
+
 		private IPurchasable purchasableItem;
 
 		public new event EventHandler<PurchasableItemSelectedEventArgs> Clicked;
+
 		public new event EventHandler<PurchasableItemSelectedEventArgs> Hovered;
 
 		public override Vector Position
@@ -41,7 +42,6 @@ namespace MyThirdSDL.UserInterface
 
 				if (LabelMoney != null)
 					LabelMoney.Position = new Vector(base.Position.X + 280, base.Position.Y + 15);
-
 			}
 		}
 
@@ -81,13 +81,13 @@ namespace MyThirdSDL.UserInterface
 		{
 			base.Draw(gameTime, renderer);
 
-			if(IconMain != null)
+			if (IconMain != null)
 				IconMain.Draw(gameTime, renderer);
-			if(LabelMain != null)
+			if (LabelMain != null)
 				LabelMain.Draw(gameTime, renderer);
-			if(IconMoney != null)
+			if (IconMoney != null)
 				IconMoney.Draw(gameTime, renderer);
-			if(LabelMoney != null)
+			if (LabelMoney != null)
 				LabelMoney.Draw(gameTime, renderer);
 		}
 
@@ -109,20 +109,20 @@ namespace MyThirdSDL.UserInterface
 
 		public override void Dispose()
 		{
- 			base.Dispose();
+			base.Dispose();
 			Dispose(true);
 			GC.SuppressFinalize(this);
 		}
 
 		private void Dispose(bool disposing)
 		{
-			if(IconMain != null)
+			if (IconMain != null)
 				IconMain.Dispose();
-			if(IconMoney != null)
+			if (IconMoney != null)
 				IconMoney.Dispose();
-			if(LabelMain != null)
+			if (LabelMain != null)
 				LabelMain.Dispose();
-			if(LabelMoney != null)
+			if (LabelMoney != null)
 				LabelMoney.Dispose();
 		}
 	}

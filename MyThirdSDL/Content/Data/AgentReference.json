@@ -2,26 +2,31 @@
 	"equipment": [
 		{ 
 			"key": "OfficeDesk", "name": "Office Desk", "price": "50", "icon": "IconDesk", 
+				"description": "Required for an employee to do any work. Without desks, employees will be upset.",
 				"necessityEffect": [ { "health":  "0", "hygiene": "0", "sleep": "-2", "thirst": "0", "hunger": "0" } ],
 				"skillEffect": [ { "intelligence": "0", "creativity": "0", "communication": "0", "leadership": "0" } ]
 		},
 		{ 
-			"key": "SnackMachine", "name": "Snack Machine", "price": "50", "icon": "IconPizza", 
+			"key": "SnackMachine", "name": "Snack Machine", "price": "50", "icon": "IconPizza",
+				"description": "Provides basic food for employees. Without food, employees will be hungry and tired.", 
 				"necessityEffect": [ { "health":  "-1", "hygiene": "0", "sleep": "0", "thirst": "0", "hunger": "10" } ],
 				"skillEffect": [ { "intelligence": "1", "creativity": "0", "communication": "0", "leadership": "0" } ]
 		},
 		{ 
 			"key": "SodaMachine", "name": "Soda Machine", "price": "50", "icon": "IconSoda", 
+				"description": "Provides basic drinks for employees. Reduces health but also reduces the need for sleep.", 
 				"necessityEffect": [ { "health":  "-1", "hygiene": "0", "sleep": "10", "thirst": "10", "hunger": "0" } ],
 				"skillEffect": [ { "intelligence": "0", "creativity": "0", "communication": "0", "leadership": "0" } ]
 		},
 		{ 
 			"key": "WaterFountain", "name": "Water Fountain", "price": "25", "icon": "IconWater", 
+				"description": "Provides a basic drink for employees. Increases health.", 
 				"necessityEffect": [ { "health":  "10", "hygiene": "0", "sleep": "0", "thirst": "10", "hunger": "0" } ],
 				"skillEffect": [ { "intelligence": "0", "creativity": "0", "communication": "0", "leadership": "0" } ]
 		},
 		{ 
 			"key": "TrashBin", "name": "Trash Bin", "price": "10", "icon": "IconBin", 
+				"description": "Provides for a place to throw away trash. Don't let your employees get dirty!", 
 				"necessityEffect": [ { "health":  "0", "hygiene": "0", "sleep": "0", "thirst": "0", "hunger": "0" } ],
 				"skillEffect": [ { "intelligence": "0", "creativity": "0", "communication": "0", "leadership": "0" } ]
 		}
@@ -29,6 +34,7 @@
 	"rooms": [
 		{
 			"key": "Library", "name": "Library", "price": "500", "icon": "IconLibrary", "map": "Library", 
+				"description": "Employees need to keep up on their skills, and a library is a good place to do it.", 
 				"necessityEffect": [ { "health":  "0", "hygiene": "0", "sleep": "-1", "thirst": "0", "hunger": "0" } ],
 				"skillEffect": [ { "intelligence": "1", "creativity": "1", "communication": "0", "leadership": "0" } ]
 		}

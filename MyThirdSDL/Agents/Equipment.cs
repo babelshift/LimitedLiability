@@ -12,6 +12,8 @@ namespace MyThirdSDL.Agents
 	{
 		public int Price { get; private set; }
 
+		public string Description { get; private set; }
+
 		public NecessityEffect NecessityEffect { get; protected set; }
 
 		public SkillEffect SkillEffect { get; protected set; }
@@ -22,12 +24,13 @@ namespace MyThirdSDL.Agents
 
 		public int VerticalMapCellCount { get { return 1; } }
 
-		protected Equipment(TimeSpan birthTime, string agentName, Texture activeTexture, Vector startingPosition, int price, string iconTextureKey)
+		protected Equipment(TimeSpan birthTime, string agentName, Texture activeTexture, Vector startingPosition, int price, string description, string iconTextureKey)
 			: base(birthTime, agentName, startingPosition)
 		{
 			Price = price;
 			IconTextureKey = iconTextureKey;
 			ActiveTexture = activeTexture;
+			Description = description;
 		}
 
 		/// <summary>

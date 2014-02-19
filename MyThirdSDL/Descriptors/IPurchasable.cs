@@ -11,6 +11,8 @@ namespace MyThirdSDL.Descriptors
 
 		string Name { get; }
 
+		string Description { get; }
+
 		int Price { get; }
 
 		string IconTextureKey { get; }

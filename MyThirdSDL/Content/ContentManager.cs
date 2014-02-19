@@ -126,6 +126,7 @@ namespace MyThirdSDL.Content
 				string name = equipment["name"].ToString();
 				int price = Int32.Parse(equipment["price"].ToString());
 				string iconKey = equipment["icon"].ToString();
+				string description = equipment["description"].ToString();
 
 				foreach (var necessityEffect in equipment["necessityEffect"])
 				{
@@ -148,7 +149,7 @@ namespace MyThirdSDL.Content
 					skillEffectData = new SkillEffect(intelligence, creativity, communication, leadership);
 				}
 
-				AgentMetadata agentMetadata = new AgentMetadata(price, name, iconKey, necessityEffectData, skillEffectData);
+				AgentMetadata agentMetadata = new AgentMetadata(price, name, description, iconKey, necessityEffectData, skillEffectData);
 				agentMetadataDictionary.Add(key, agentMetadata);
 			}
 
@@ -162,6 +163,7 @@ namespace MyThirdSDL.Content
 				int price = Int32.Parse(room["price"].ToString());
 				string iconKey = room["icon"].ToString();
 				string mapPathKey = room["map"].ToString();
+				string description = room["description"].ToString();
 
 				foreach (var necessityEffect in room["necessityEffect"])
 				{
@@ -184,7 +186,7 @@ namespace MyThirdSDL.Content
 					skillEffectData = new SkillEffect(intelligence, creativity, communication, leadership);
 				}
 
-				RoomMetadata roomMetadata = new RoomMetadata(price, name, iconKey, necessityEffectData, skillEffectData, mapPathKey);
+				RoomMetadata roomMetadata = new RoomMetadata(price, name, description, iconKey, necessityEffectData, skillEffectData, mapPathKey);
 				roomMetadataDictionary.Add(key, roomMetadata);
 			}
 		}
@@ -251,7 +253,7 @@ namespace MyThirdSDL.Content
 			}
 		}
 
-		private JobLevelMetadata GetJobLevelMetadata(JToken t)
+		private static JobLevelMetadata GetJobLevelMetadata(JToken t)
 		{
 			string prefix = t["prefix"].ToString();
 			string salary = t["salary"].ToString();
@@ -333,22 +335,6 @@ namespace MyThirdSDL.Content
 			return new KeyValuePair<string, string>(key, value);
 		}
 
-		#region Random Methods
-
-		public string GetRandomFirstName()
-		{
-			int index = random.Next(0, firstNames.Count() - 1);
-			return firstNames[index];
-		}
-
-		public string GetRandomLastName()
-		{
-			int index = random.Next(0, lastNames.Count() - 1);
-			return lastNames[index];
-		}
-
-		#endregion
-
 		private void LoadThoughtData(string json)
 		{
 			if (json == null) throw new ArgumentNullException("json");
@@ -397,5 +383,21 @@ namespace MyThirdSDL.Content
 			ThoughtMetadata thoughtMetadata = new ThoughtMetadata(type, idea);
 			thoughtPool.Add(thoughtMetadata);
 		}
+
+		#region Random Methods
+
+		public string GetRandomFirstName()
+		{
+			int index = random.Next(0, firstNames.Count() - 1);
+			return firstNames[index];
+		}
+
+		public string GetRandomLastName()
+		{
+			int index = random.Next(0, lastNames.Count() - 1);
+			return lastNames[index];
+		}
+
+		#endregion
 	}
 }

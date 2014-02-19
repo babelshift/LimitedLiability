@@ -1,9 +1,8 @@
-﻿using System;
-using System.Runtime.InteropServices;
-using MyThirdSDL.Content;
+﻿using MyThirdSDL.Content;
 using MyThirdSDL.Descriptors;
 using SharpDL;
 using SharpDL.Graphics;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -18,6 +17,8 @@ namespace MyThirdSDL.Agents
 		public SkillEffect SkillEffect { get; protected set; }
 
 		public string Name { get; private set; }
+
+		public string Description { get; private set; }
 
 		public int Price { get; private set; }
 
@@ -51,12 +52,13 @@ namespace MyThirdSDL.Agents
 
 		public MapCell OriginMapCell { get { return tiledMap.OriginMapCell; } }
 
-		public Room(string name, int price, string iconTextureKey, TiledMap tiledMap)
+		public Room(string name, int price, string description, string iconTextureKey, TiledMap tiledMap)
 		{
 			Name = name;
 			Price = price;
 			IconTextureKey = iconTextureKey;
 			this.tiledMap = tiledMap;
+			Description = description;
 		}
 
 		public void Draw(GameTime gameTime, Renderer renderer, int x, int y, bool isOverlappingDeadZone)
@@ -92,7 +94,5 @@ namespace MyThirdSDL.Agents
 
 			return false;
 		}
-
-
 	}
 }
