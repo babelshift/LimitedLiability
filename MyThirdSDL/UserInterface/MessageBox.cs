@@ -38,8 +38,13 @@ namespace MyThirdSDL.UserInterface
 			}
 		}
 
-		public MessageBox(ContentManager contentManager, MessageBoxType type)
+		public MessageBox(ContentManager contentManager, MessageBoxType type, string title, string content)
 		{
+			if (String.IsNullOrEmpty(title))
+				title = StringReferenceKeys.DEFAULT_TEXT;
+			if (String.IsNullOrEmpty(content))
+				content = StringReferenceKeys.DEFAULT_TEXT;
+
 			iconFrame = ControlFactory.CreateIcon(contentManager, "MessageBoxFrame");
 			Width = iconFrame.Width;
 			Height = iconFrame.Height;
@@ -50,8 +55,9 @@ namespace MyThirdSDL.UserInterface
 			int fontSizeTitle = Styles.FontSizes.Title;
 			int fontSizeContent = Styles.FontSizes.Content;
 
-			labelTextTitle = ControlFactory.CreateLabel(contentManager, fontPath, fontSizeTitle, fontColorTitle, StringReferenceKeys.DEFAULT_TEXT);
-			labelTextContent = ControlFactory.CreateLabel(contentManager, fontPath, fontSizeContent, fontColorLabelValue, StringReferenceKeys.DEFAULT_TEXT);
+			labelTextTitle = ControlFactory.CreateLabel(contentManager, fontPath, fontSizeTitle, fontColorTitle, title);
+			labelTextTitle.EnableShadow(contentManager, 2, 2);
+			labelTextContent = ControlFactory.CreateLabel(contentManager, fontPath, fontSizeContent, fontColorLabelValue, content, 325);
 
 			if (type == MessageBoxType.Information)
 				iconMain = ControlFactory.CreateIcon(contentManager, "IconInfo");
@@ -62,23 +68,6 @@ namespace MyThirdSDL.UserInterface
 			controls.Add(labelTextContent);
 			
 			Hide();
-		}
-
-		public void UpdateLabels(ContentManager contentManager, string title, string text)
-		{
-			labelTextContent.TrueTypeText.WrapLength = 325;
-
-			if (String.IsNullOrEmpty(title))
-				labelTextTitle.Text = StringReferenceKeys.DEFAULT_TEXT;
-			else
-				labelTextTitle.Text = title;
-
-			if (String.IsNullOrEmpty(text))
-				labelTextContent.Text = StringReferenceKeys.DEFAULT_TEXT;
-			else
-				labelTextContent.Text = text;
-
-			labelTextTitle.EnableShadow(contentManager, 2, 2);
 		}
 
 		public void Show(TimeSpan simulationTime)

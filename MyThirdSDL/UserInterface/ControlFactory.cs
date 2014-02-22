@@ -23,10 +23,10 @@ namespace MyThirdSDL.UserInterface
 		//	return new SimulationLabel(position, trueTypeText, simulationMessage);
 		//}
 
-		public static MessageBox CreateMessageBox(ContentManager content, MessageBoxType type)
+		public static MessageBox CreateMessageBox(ContentManager contentManager, MessageBoxType type, string title, string content)
 		{
-			if (content == null) throw new ArgumentNullException("content");
-			MessageBox messageBox = new MessageBox(content, type);
+			if (contentManager == null) throw new ArgumentNullException("content");
+			MessageBox messageBox = new MessageBox(contentManager, type, title, content);
 			return messageBox;
 		}
 

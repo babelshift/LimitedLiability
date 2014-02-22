@@ -10,6 +10,8 @@ namespace MyThirdSDL.Content
 {
 	public class ContentManager
 	{
+		private static readonly ContentManager instance;
+
 		private readonly Random random = new Random();
 
 		private readonly Renderer renderer;
@@ -268,7 +270,7 @@ namespace MyThirdSDL.Content
 		{
 			if (String.IsNullOrEmpty(key)) throw new ArgumentNullException("key");
 
-			string returnKey = String.Empty;
+			string returnKey;
 			stringReference.TryGetValue(key, out returnKey);
 
 			if (String.IsNullOrEmpty(returnKey))

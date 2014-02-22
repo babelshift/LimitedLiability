@@ -2,5 +2,11 @@
 	"LABEL_DEFAULT": "N/A",
 	"TOOLTIP_BUTTON_FIRE_EMPLOYEE": "Fire this employee (permanent)",
 	"TOOLTIP_BUTTON_PROMOTE_EMPLOYEE": "Promote this employee (increases salary and happiness)",
-	"TOOLTIP_BUTTON_DISCIPLINE_EMPLOYEE": "Discipline this employee (increases productivity but reduces happiness)"
+	"TOOLTIP_BUTTON_DISCIPLINE_EMPLOYEE": "Demote this employee (decreases salary and happiness)",
+	"TOOLTIP_BUTTON_CLOSE_WINDOW": "Close the window and cancel any pending actions",
+	"TOOLTIP_BUTTON_OPEN_MAIL": "Open the selected mail for viewing",
+	"TOOLTIP_BUTTON_ARCHIVE_MAIL": "Move the selected mail to the archive folder",
+	"TOOLTIP_BUTTON_OPEN_ATTACHMENT": "Open the attachment for viewing",
+	"TOOLTIP_BUTTON_ACCEPT_RESUME": "Accept this candidate's resume (adds a new employee to your staff)",
+	"TOOLTIP_BUTTON_REJECT_RESUME": "Reject this candidate's resume"
 }

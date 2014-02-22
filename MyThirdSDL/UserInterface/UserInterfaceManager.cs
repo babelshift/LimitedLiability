@@ -878,8 +878,7 @@ namespace MyThirdSDL.UserInterface
 		{
 			menuMailbox.Visible = true;
 
-			messageBox = ControlFactory.CreateMessageBox(contentManager, MessageBoxType.Information);
-			messageBox.UpdateLabels(contentManager, "Resume Accepted!", "Your new employee will begin working in the next 7 to 10 business days.");
+			messageBox = ControlFactory.CreateMessageBox(contentManager, MessageBoxType.Information, "Resume Accepted!", "Your new employee will begin working in the next 7 to 10 business days.");
 			messageBox.Position = new Vector(MainGame.SCREEN_WIDTH_LOGICAL - messageBox.Width - 5, topToolboxTray.Height + 5);
 			messageBox.Show(SimulationManager.SimulationTime);
 
