@@ -14,6 +14,7 @@ namespace MyThirdSDL.UserInterface
 {
 	public class UserInterfaceManager : IDisposable
 	{
+
 		#region Members
 
 		private readonly ContentManager contentManager;
@@ -21,7 +22,6 @@ namespace MyThirdSDL.UserInterface
 		private TimeSpan timeOfStatusChange = TimeSpan.Zero;
 		private Control focusedControl;
 		private IReadOnlyList<MapCell> hoveredMapCells;
-
 		private bool isSelectedPurchasableOverlappingDeadZone;
 
 		#region Controls
@@ -101,7 +101,6 @@ namespace MyThirdSDL.UserInterface
 
 		private readonly Dictionary<Guid, Dictionary<SimulationMessageType, SimulationLabel>> labelMessagesForMultipleAgents
 			= new Dictionary<Guid, Dictionary<SimulationMessageType, SimulationLabel>>();
-
 		private List<Label> labels = new List<Label>();
 
 		#endregion Message List
@@ -109,18 +108,13 @@ namespace MyThirdSDL.UserInterface
 		#region Public Events
 
 		public event EventHandler MainMenuButtonClicked;
-
 		public event EventHandler<SelectedMailItemActionEventArgs> MailArchived;
-
 		public event EventHandler<PurchasableItemPlacedEventArgs> PurchasableItemPlaced;
-
 		public event EventHandler<PurchasableItemSelectedEventArgs> PurchasableItemSelected;
-
 		public event EventHandler<ResumeAcceptedEventArgs> ResumeAccepted;
-
 		public event EventHandler<UserInterfaceEmployeeEventArgs> EmployeeFired;
-
 		public event EventHandler<UserInterfaceEmployeeEventArgs> EmployeePromoted;
+		public event EventHandler<UserInterfaceEmployeeEventArgs> EmployeeDisciplined;
 
 		#endregion Public Events
 
@@ -137,7 +131,8 @@ namespace MyThirdSDL.UserInterface
 
 		public void SetHoveredMapCells(IReadOnlyList<MapCell> hoveredMapCells)
 		{
-			if (hoveredMapCells == null) throw new ArgumentNullException("hoveredMapCells");
+			if (hoveredMapCells == null)
+				throw new ArgumentNullException("hoveredMapCells");
 
 			this.hoveredMapCells = hoveredMapCells;
 
@@ -168,7 +163,8 @@ namespace MyThirdSDL.UserInterface
 
 		public void SetEmployeeBeingInspected(Employee employee)
 		{
-			if (employee == null) throw new ArgumentNullException("employee");
+			if (employee == null)
+				throw new ArgumentNullException("employee");
 
 			ClearMenusOpen();
 			ShowMenuInspectEmployee();
@@ -213,21 +209,26 @@ namespace MyThirdSDL.UserInterface
 		/// <param name="money"></param>
 		/// <param name="employeeCount"></param>
 		public UserInterfaceManager(ContentManager contentManager,
-			Point bottomRightPointOfWindow,
-			IEnumerable<IPurchasable> purchasableEquipment,
-			IEnumerable<IPurchasable> purchasableRooms,
-			IEnumerable<MailItem> inbox,
-			IEnumerable<MailItem> outbox,
-			IEnumerable<MailItem> archive,
-			int unreadMailCount,
-			int money,
-			int employeeCount)
+		                            Point bottomRightPointOfWindow,
+		                            IEnumerable<IPurchasable> purchasableEquipment,
+		                            IEnumerable<IPurchasable> purchasableRooms,
+		                            IEnumerable<MailItem> inbox,
+		                            IEnumerable<MailItem> outbox,
+		                            IEnumerable<MailItem> archive,
+		                            int unreadMailCount,
+		                            int money,
+		                            int employeeCount)
 		{
-			if (purchasableEquipment == null) throw new ArgumentNullException("purchasableEquipment");
-			if (purchasableRooms == null) throw new ArgumentNullException("purchasableRooms");
-			if (inbox == null) throw new ArgumentNullException("inbox");
-			if (outbox == null) throw new ArgumentNullException("outbox");
-			if (archive == null) throw new ArgumentNullException("archive");
+			if (purchasableEquipment == null)
+				throw new ArgumentNullException("purchasableEquipment");
+			if (purchasableRooms == null)
+				throw new ArgumentNullException("purchasableRooms");
+			if (inbox == null)
+				throw new ArgumentNullException("inbox");
+			if (outbox == null)
+				throw new ArgumentNullException("outbox");
+			if (archive == null)
+				throw new ArgumentNullException("archive");
 
 			this.bottomRightPointOfWindow = bottomRightPointOfWindow;
 			this.contentManager = contentManager;
@@ -320,7 +321,8 @@ namespace MyThirdSDL.UserInterface
 			SimulationLabel labelToRemove;
 			bool success = labelMessagesForSingleAgent.TryGetValue(messageType, out labelToRemove);
 
-			if (!success) return;
+			if (!success)
+				return;
 
 			labelToRemove.Dispose();
 			labelMessagesForSingleAgent.Remove(messageType);
@@ -482,18 +484,25 @@ namespace MyThirdSDL.UserInterface
 			menuInspectEmployee.ButtonCloseWindowClicked += MenuInspectEmployeeOnButtonCloseWindowClicked;
 			menuInspectEmployee.ButtonFireEmployeeClicked += MenuInspectEmployeeOnButtonFireEmployeeClicked;
 			menuInspectEmployee.ButtonPromoteEmployeeClicked += MenuInspectEmployeeOnButtonPromoteEmployeeClicked;
+			menuInspectEmployee.ButtonDisciplineEmployeeClicked += MenuInspectEmployeeOnButtonDisciplineEmployeeClicked;
 		}
 
-		private void MenuInspectEmployeeOnButtonPromoteEmployeeClicked(object sender, UserInterfaceEmployeeEventArgs userInterfaceEmployeeEventArgs)
+		private void MenuInspectEmployeeOnButtonPromoteEmployeeClicked(object sender, UserInterfaceEmployeeEventArgs e)
 		{
 			if (EmployeePromoted != null)
-				EmployeePromoted(sender, userInterfaceEmployeeEventArgs);
+				EmployeePromoted(sender, e);
 		}
 
-		private void MenuInspectEmployeeOnButtonFireEmployeeClicked(object sender, UserInterfaceEmployeeEventArgs userInterfaceEmployeeEventArgs)
+		private void MenuInspectEmployeeOnButtonDisciplineEmployeeClicked(object sender, UserInterfaceEmployeeEventArgs e)
+		{
+			if (EmployeeDisciplined != null)
+				EmployeeDisciplined(sender, e);
+		}
+
+		private void MenuInspectEmployeeOnButtonFireEmployeeClicked(object sender, UserInterfaceEmployeeEventArgs e)
 		{
 			if (EmployeeFired != null)
-				EmployeeFired(sender, userInterfaceEmployeeEventArgs);
+				EmployeeFired(sender, e);
 		}
 
 		private void ShowMenuInspectEmployee()
@@ -630,7 +639,7 @@ namespace MyThirdSDL.UserInterface
 		public void Update(GameTime gameTime, DateTime worldDateTime)
 		{
 			string simulationTimeDisplay = String.Format("{0} minutes, {1} seconds, {2} milliseconds",
-				SimulationManager.SimulationTime.Minutes, SimulationManager.SimulationTime.Seconds, SimulationManager.SimulationTime.Milliseconds);
+				                               SimulationManager.SimulationTime.Minutes, SimulationManager.SimulationTime.Seconds, SimulationManager.SimulationTime.Milliseconds);
 			labelSimulationTime.Text = String.Format("Simulation Time: {0}", simulationTimeDisplay);
 
 			toolboxTray.Update(gameTime);
@@ -777,9 +786,12 @@ namespace MyThirdSDL.UserInterface
 
 		private void TryToPlacePurchasableItem(MouseButtonEventArgs e)
 		{
-			if (CurrentState != UserInterfaceState.PlaceEquipmentActive && CurrentState != UserInterfaceState.PlaceRoomActive) return;
-			if (e.MouseButton != MouseButtonCode.Left) return;
-			if (isSelectedPurchasableOverlappingDeadZone) return;
+			if (CurrentState != UserInterfaceState.PlaceEquipmentActive && CurrentState != UserInterfaceState.PlaceRoomActive)
+				return;
+			if (e.MouseButton != MouseButtonCode.Left)
+				return;
+			if (isSelectedPurchasableOverlappingDeadZone)
+				return;
 			if (PurchasableItemPlaced != null)
 			{
 				PurchasableItemPlaced(this, new PurchasableItemPlacedEventArgs(SelectedPurchasableItem, hoveredMapCells));
@@ -791,7 +803,7 @@ namespace MyThirdSDL.UserInterface
 		{
 			var mousePositionAbsolute = new Vector(e.RelativeToWindowX, e.RelativeToWindowY);
 			var mousePositionIsometric = CoordinateHelper.ScreenSpaceToWorldSpace(e.RelativeToWindowX, e.RelativeToWindowY,
-				CoordinateHelper.ScreenOffset, CoordinateHelper.ScreenProjectionType.Orthogonal);
+				                             CoordinateHelper.ScreenOffset, CoordinateHelper.ScreenProjectionType.Orthogonal);
 
 			labelMousePositionAbsolute.Text = String.Format("Mouse Position (Absolute): ({0}, {1})", mousePositionAbsolute.X,
 				mousePositionAbsolute.Y);

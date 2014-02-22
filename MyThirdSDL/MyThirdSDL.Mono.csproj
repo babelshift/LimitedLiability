@@ -198,6 +198,10 @@
     <Compile Include="Content\TilePosition.cs" />
     <Compile Include="Agents\RoomFactory.cs" />
     <Compile Include="Content\MapCellType.cs" />
+    <Compile Include="Content\Data\StringReferencekeys.cs" />
+    <Compile Include="Agents\JobLevel.cs" />
+    <Compile Include="Content\JobLevelMetadata.cs" />
+    <Compile Include="Content\JobMetadata.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -583,6 +587,24 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\Fonts\DroidSans-Bold.ttf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Data\JobReference.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Data\StringReference.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Images\User Interface\IconAttachment.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Images\User Interface\IconDisciplineEmployee.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Images\User Interface\IconFireEmployee.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Images\User Interface\IconPromoteEmployee.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>

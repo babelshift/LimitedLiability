@@ -130,6 +130,11 @@ namespace MyThirdSDL.Agents
 			Job.Promote();
 		}
 
+		public void Demote()
+		{
+			Job.Demote();
+		}
+
 		public override void Update(GameTime gameTime)
 		{
 			base.Update(gameTime);

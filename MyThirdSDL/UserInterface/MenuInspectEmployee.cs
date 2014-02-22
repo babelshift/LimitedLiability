@@ -70,6 +70,7 @@ namespace MyThirdSDL.UserInterface
 
 		public event EventHandler<UserInterfaceEmployeeEventArgs> ButtonFireEmployeeClicked;
 		public event EventHandler<UserInterfaceEmployeeEventArgs> ButtonPromoteEmployeeClicked;
+		public event EventHandler<UserInterfaceEmployeeEventArgs> ButtonDisciplineEmployeeClicked;
 
 		public override Vector Position
 		{
@@ -280,10 +281,13 @@ namespace MyThirdSDL.UserInterface
 
 		private void ButtonDisciplineEmployeeOnClicked(object sender, EventArgs eventArgs)
 		{
+			if (ButtonDisciplineEmployeeClicked != null)
+				ButtonDisciplineEmployeeClicked(sender, new UserInterfaceEmployeeEventArgs(selectedEmployeeId));
 		}
 
 		private void ButtonFireEmployeeOnClicked(object sender, EventArgs eventArgs)
 		{
+			Visible = false;
 			if (ButtonFireEmployeeClicked != null)
 				ButtonFireEmployeeClicked(sender, new UserInterfaceEmployeeEventArgs(selectedEmployeeId));
 		}

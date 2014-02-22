@@ -230,16 +230,22 @@ namespace MyThirdSDL.Screens
 			userInterfaceManager.ResumeAccepted += (sender, e) => simulationManager.AddAgent(e.Employee);
 			userInterfaceManager.EmployeeFired += UserInterfaceManagerOnEmployeeFired;
 			userInterfaceManager.EmployeePromoted += UserInterfaceManagerOnEmployeePromoted;
+			userInterfaceManager.EmployeeDisciplined += UserInterfaceManagerOnEmployeeDisciplined;
 		}
 
-		private void UserInterfaceManagerOnEmployeePromoted(object sender, UserInterfaceEmployeeEventArgs userInterfaceEmployeeEventArgs)
+		private void UserInterfaceManagerOnEmployeePromoted(object sender, UserInterfaceEmployeeEventArgs e)
 		{
-			simulationManager.PromoteEmployee(userInterfaceEmployeeEventArgs.EmployeeId);
+			simulationManager.PromoteEmployee(e.EmployeeId);
 		}
 
-		private void UserInterfaceManagerOnEmployeeFired(object sender, UserInterfaceEmployeeEventArgs userInterfaceEmployeeEventArgs)
+		private void UserInterfaceManagerOnEmployeeDisciplined (object sender, UserInterfaceEmployeeEventArgs e)
 		{
-			simulationManager.RemoveAgent<Employee>(userInterfaceEmployeeEventArgs.EmployeeId);
+			simulationManager.DemoteEmployee(e.EmployeeId);
+		}
+
+		private void UserInterfaceManagerOnEmployeeFired(object sender, UserInterfaceEmployeeEventArgs e)
+		{
+			simulationManager.RemoveAgent<Employee>(e.EmployeeId);
 		}
 
 		private Vector GetRandomEmployeePosition()

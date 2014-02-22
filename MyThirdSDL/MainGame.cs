@@ -54,10 +54,10 @@ namespace MyThirdSDL
 			MouseMoving += HandleMouseMoving;
 			MouseButtonPressed += HandleMouseButtonClicked;
 			MouseButtonReleased += HandleMouseButtonReleased;
-			WindowEntered += (object sender, WindowEventArgs e) => isMouseInsideWindowBounds = true;
-			WindowLeave += (object sender, WindowEventArgs e) => isMouseInsideWindowBounds = false;
-			WindowFocusLost += (object sender, WindowEventArgs e) => isWindowFocused = false;
-			WindowFocusGained += (object sender, WindowEventArgs e) => isWindowFocused = true;
+			WindowEntered += (sender, e) => isMouseInsideWindowBounds = true;
+			WindowLeave += (sender, e) => isMouseInsideWindowBounds = false;
+			WindowFocusLost += (sender, e) => isWindowFocused = false;
+			WindowFocusGained += (sender, e) => isWindowFocused = true;
 			TextInputting += HandleTextInputting;
 			KeyPressed += HandleKeyPressed;
 			KeyReleased += HandleKeyReleased;

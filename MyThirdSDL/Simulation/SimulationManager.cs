@@ -374,6 +374,11 @@ namespace MyThirdSDL.Simulation
 			employee.Promote();
 		}
 
+		public void DemoteEmployee(Guid employeeId)
+		{
+			Employee employee = GetTrackedAgent<Employee>(employeeId);
+			employee.Demote();
+		}
 
 		#endregion Agent Tracking
 
