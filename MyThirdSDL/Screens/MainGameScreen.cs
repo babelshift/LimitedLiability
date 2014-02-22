@@ -16,20 +16,18 @@ namespace MyThirdSDL.Screens
 {
 	public class MainGameScreen : Screen
 	{
+
 		#region Members
 
 		private JobFactory jobFactory;
 		private AgentFactory agentFactory;
 		private RoomFactory roomFactory;
-
 		private SimulationManager simulationManager;
 		private UserInterfaceManager userInterfaceManager;
 		private MailManager mailManager;
-
 		private BankAccount bankAccount;
 		private TiledMap tiledMap;
 		private string mapPathToLoad;
-
 		private IReadOnlyList<MapCell> hoveredMapCells;
 
 		#endregion Members
@@ -51,9 +49,12 @@ namespace MyThirdSDL.Screens
 		public MainGameScreen(Renderer renderer, ContentManager contentManager, string mapPathToLoad)
 			: base(contentManager)
 		{
-			if (renderer == null) throw new ArgumentNullException("renderer");
-			if (contentManager == null) throw new ArgumentNullException("contentManager");
-			if (String.IsNullOrEmpty(mapPathToLoad)) throw new ArgumentNullException("mapPathToLoad");
+			if (renderer == null)
+				throw new ArgumentNullException("renderer");
+			if (contentManager == null)
+				throw new ArgumentNullException("contentManager");
+			if (String.IsNullOrEmpty(mapPathToLoad))
+				throw new ArgumentNullException("mapPathToLoad");
 
 			simulationManager = new SimulationManager(DateTime.Now, contentManager.ThoughtPool);
 			jobFactory = new JobFactory(contentManager);
@@ -84,8 +85,8 @@ namespace MyThirdSDL.Screens
 			// we can use this event to react to the user interacting with the employees to do things like display their inspection information
 			foreach (var employee in simulationManager.TrackedEmployees)
 				if (IsEmployeeClicked(employee, e))
-					if (userInterfaceManager.CurrentState == UserInterfaceState.Default)
-						userInterfaceManager.SetEmployeeBeingInspected(employee);
+				if (userInterfaceManager.CurrentState == UserInterfaceState.Default)
+					userInterfaceManager.SetEmployeeBeingInspected(employee);
 
 			userInterfaceManager.HandleMouseButtonPressedEvent(sender, e);
 		}
@@ -97,14 +98,15 @@ namespace MyThirdSDL.Screens
 		/// <param name="employee">Employee.</param>
 		private bool IsEmployeeClicked(Employee employee, MouseButtonEventArgs e)
 		{
-			if (employee == null) throw new ArgumentNullException("employee");
+			if (employee == null)
+				throw new ArgumentNullException("employee");
 
 			if (e.MouseButton == MouseButtonCode.Left)
 			{
 				Vector worldPositionAtMousePosition = CoordinateHelper.ScreenSpaceToWorldSpace(
-				   e.RelativeToWindowX, e.RelativeToWindowY,
-				   CoordinateHelper.ScreenOffset,
-				   CoordinateHelper.ScreenProjectionType.Orthogonal);
+					                                      e.RelativeToWindowX, e.RelativeToWindowY,
+					                                      CoordinateHelper.ScreenOffset,
+					                                      CoordinateHelper.ScreenProjectionType.Orthogonal);
 				return employee.CollisionBox.Contains(new Point((int)worldPositionAtMousePosition.X, (int)worldPositionAtMousePosition.Y));
 			}
 
@@ -151,7 +153,8 @@ namespace MyThirdSDL.Screens
 		private void UserInterfaceManagerOnPurchasableItemPlaced(object sender, PurchasableItemPlacedEventArgs e)
 		{
 			// place equipment active only if we have been in this state for more than a second to prevent super fast action being taken
-			if (!IsUserInterfaceStateChangeDelayPassed) return;
+			if (!IsUserInterfaceStateChangeDelayPassed)
+				return;
 
 			if (e.PurchasableItem is SodaMachine)
 			{
@@ -181,7 +184,8 @@ namespace MyThirdSDL.Screens
 
 		public override void Activate(Renderer renderer)
 		{
-			if (renderer == null) throw new ArgumentNullException("renderer");
+			if (renderer == null)
+				throw new ArgumentNullException("renderer");
 
 			Point bottomRightPointOfScreen = new Point(MainGame.SCREEN_WIDTH_LOGICAL, MainGame.SCREEN_HEIGHT_LOGICAL);
 
@@ -238,7 +242,7 @@ namespace MyThirdSDL.Screens
 			simulationManager.PromoteEmployee(e.EmployeeId);
 		}
 
-		private void UserInterfaceManagerOnEmployeeDisciplined (object sender, UserInterfaceEmployeeEventArgs e)
+		private void UserInterfaceManagerOnEmployeeDisciplined(object sender, UserInterfaceEmployeeEventArgs e)
 		{
 			simulationManager.DemoteEmployee(e.EmployeeId);
 		}
@@ -357,9 +361,9 @@ namespace MyThirdSDL.Screens
 		private IReadOnlyList<MapCell> GetHoveredMapCellAndNeighbors(int mapCellPositionX, int mapCellPositionY, int tileCountRight, int tileCountDown)
 		{
 			Vector worldPositionAtMousePosition = CoordinateHelper.ScreenSpaceToWorldSpace(
-				mapCellPositionX, mapCellPositionY,
-				CoordinateHelper.ScreenOffset,
-				CoordinateHelper.ScreenProjectionType.Orthogonal);
+				                                      mapCellPositionX, mapCellPositionY,
+				                                      CoordinateHelper.ScreenOffset,
+				                                      CoordinateHelper.ScreenProjectionType.Orthogonal);
 
 			return tiledMap.GetMapCellAtWorldPositionAndNeighbors(worldPositionAtMousePosition, tileCountRight, tileCountDown);
 		}
@@ -373,8 +377,10 @@ namespace MyThirdSDL.Screens
 		private void AddEquipmentToSimulationAndHoveredMapCell<T>(T equipment, MapCell hoveredMapCell)
 			where T : Equipment
 		{
-			if (equipment == null) throw new ArgumentNullException("equipment");
-			if (hoveredMapCell == null) throw new ArgumentNullException("hoveredMapCell");
+			if (equipment == null)
+				throw new ArgumentNullException("equipment");
+			if (hoveredMapCell == null)
+				throw new ArgumentNullException("hoveredMapCell");
 
 			simulationManager.AddAgent(equipment);
 			hoveredMapCell.OccupantEquipment = equipment;
@@ -384,10 +390,12 @@ namespace MyThirdSDL.Screens
 		private void AddRoomToSimulationAndHoveredMapCells<T>(T room, IReadOnlyList<MapCell> hoveredMapCells)
 			where T : Room
 		{
-			if (room == null) throw new ArgumentNullException("room");
-			if (hoveredMapCells == null) throw new ArgumentNullException("hoveredMapCells");
+			if (room == null)
+				throw new ArgumentNullException("room");
+			if (hoveredMapCells == null)
+				throw new ArgumentNullException("hoveredMapCells");
 
-			foreach(var equipmentOccupant in room.EquipmentOccupants)
+			foreach (var equipmentOccupant in room.EquipmentOccupants)
 				simulationManager.AddAgent(equipmentOccupant);
 
 			// for each map cell in the room that's being placed, replace whatever map cell it's hovering in the main tile map
@@ -496,7 +504,8 @@ namespace MyThirdSDL.Screens
 
 		private Employee GetEmployeeFromEventSender(object sender)
 		{
-			if (sender == null) throw new ArgumentNullException("sender");
+			if (sender == null)
+				throw new ArgumentNullException("sender");
 
 			var employee = sender as Employee;
 			if (employee == null)
@@ -576,5 +585,6 @@ namespace MyThirdSDL.Screens
 		}
 
 		#endregion Dispose
+
 	}
 }

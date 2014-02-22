@@ -881,8 +881,9 @@ namespace MyThirdSDL.UserInterface
 			messageBox = ControlFactory.CreateMessageBox(contentManager, MessageBoxType.Information);
 			messageBox.UpdateLabels(contentManager, "Resume Accepted!", "Your new employee will begin working in the next 7 to 10 business days.");
 			messageBox.Position = new Vector(MainGame.SCREEN_WIDTH_LOGICAL - messageBox.Width - 5, topToolboxTray.Height + 5);
-			messageBox.Show();
+			messageBox.Show(SimulationManager.SimulationTime);
 
+			// TODO: change this to an event instead of calling a method which just fires an event?
 			menuMailbox.ArchiveSelectedMailItem(sender);
 
 			if (ResumeAccepted != null)

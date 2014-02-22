@@ -11,6 +11,7 @@ namespace MyThirdSDL.UserInterface
 {
 	public class MenuMailbox : Menu
 	{
+
 		#region Members
 
 		private Icon iconFrame;
@@ -27,11 +28,9 @@ namespace MyThirdSDL.UserInterface
 		private int currentDisplayedPageInbox = 1;
 		private int currentDisplayedPageOutbox = 1;
 		private int currentDisplayedPageArchive = 1;
-
 		private MailItem selectedMailItemInbox;
 		private MailItem selectedMailItemOutbox;
 		private MailItem selectedMailItemArchive;
-
 		private MenuEmail menuEmail;
 
 		#endregion Members
@@ -197,9 +196,7 @@ namespace MyThirdSDL.UserInterface
 		#region Public Events
 
 		public event EventHandler<SelectedMailItemActionEventArgs> ViewButtonClicked;
-
 		public event EventHandler<SelectedMailItemActionEventArgs> ArchiveMailButtonClicked;
-
 		public event EventHandler<EventArgs> CloseButtonClicked;
 
 		#endregion Public Events
@@ -391,8 +388,8 @@ namespace MyThirdSDL.UserInterface
 		private void OnArchive(object sender)
 		{
 			if (SelectedMailItem != null)
-				if (ArchiveMailButtonClicked != null)
-					ArchiveMailButtonClicked(sender, new SelectedMailItemActionEventArgs(SelectedMailItem));
+			if (ArchiveMailButtonClicked != null)
+				ArchiveMailButtonClicked(sender, new SelectedMailItemActionEventArgs(SelectedMailItem));
 		}
 
 		public void ArchiveSelectedMailItem(object sender)
@@ -796,6 +793,7 @@ namespace MyThirdSDL.UserInterface
 		}
 
 		#endregion Dispose
+
 	}
 
 	public class SelectedMailItemActionEventArgs : EventArgs
