@@ -218,6 +218,7 @@ namespace MyThirdSDL.UserInterface
 
 		private void HandleButtonSellEquipmentClicked (object sender, EventArgs e)
 		{
+			Visible = false;
 			EventHelper.FireEvent(ButtonSellEquipmentClicked, sender, new UserInterfaceEquipmentEventArgs(selectedEquipmentId));
 		}
 

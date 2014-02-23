@@ -1,11 +1,10 @@
-﻿using MyThirdSDL.Agents;
-using MyThirdSDL.Content;
-using SharpDL;
-using SharpDL.Graphics;
-using SharpDL.Input;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using SharpDL;
+using SharpDL.Graphics;
+using MyThirdSDL.Agents;
+using MyThirdSDL.Content;
 
 namespace MyThirdSDL.Simulation
 {
@@ -18,12 +17,11 @@ namespace MyThirdSDL.Simulation
 
 	public class SimulationManager
 	{
-
 		#region Members
 
 		public static readonly int SimulationTimeToWorldTimeMultiplier = 540;
 		private readonly IEnumerable<ThoughtMetadata> thoughtPool;
-		private readonly Dictionary<System.Type, List<Agent>> trackedAgents = new Dictionary<Type, List<Agent>>();
+		private readonly List<Agent> trackedAgents = new List<Agent>();
 		private DateTime startingWorldDateTime;
 		private readonly Random random = new Random();
 		private TiledMap currentMap;
@@ -75,17 +73,7 @@ namespace MyThirdSDL.Simulation
 		/// Returns an enumerable of all tracked agents in the simulation.
 		/// </summary>
 		/// <value>The tracked agents.</value>
-		public IEnumerable<Agent> TrackedAgents
-		{
-			get
-			{
-				IEnumerable<List<Agent>> agentLists = trackedAgents.Values.AsEnumerable();
-				List<Agent> agents = new List<Agent>();
-				foreach (var agentList in agentLists)
-					agents.AddRange(agentList);
-				return agents;
-			}
-		}
+		public IEnumerable<Agent> TrackedAgents { get { return trackedAgents; } }
 
 		public IEnumerable<Employee> TrackedEmployees
 		{
@@ -129,32 +117,19 @@ namespace MyThirdSDL.Simulation
 
 			SimulationTime += gameTime.ElapsedGameTime;
 
-			foreach (var agentList in trackedAgents.Values)
+			foreach (var trackedAgent in trackedAgents)
 			{
-				foreach (var agent in agentList)
+				trackedAgent.Update(gameTime);
+
+				var employee = trackedAgent as Employee;
+				if (employee != null)
 				{
-					agent.Update(gameTime);
+					// TODO: delay updating this until 1-2 seconds has passed? we don't really need to update this often
+					foreach (var unsatisfiedThought in employee.UnsatisfiedThoughts)
+						TakeActionBasedOnThought(employee, unsatisfiedThought.Type);
 
-					// handle employee specific update logic
-					var employee = agent as Employee;
-					if (employee != null)
-					{
-						// TODO: delay updating this until 1-2 seconds has passed? we don't really need to update this often
-						foreach (var unsatisfiedThought in employee.UnsatisfiedThoughts)
-							TakeActionBasedOnThought(employee, unsatisfiedThought.Type);
-
-						// update the employee's age based on the updated world date time
-						employee.UpdateAge(WorldDateTime);
-
-						// remove ourselves from the employee's currently occupied map cell
-						//if (employee.OccupiedMapCell != null)
-						//	employee.OccupiedMapCell.RemoveDrawable(employee, (int)TileType.Object);
-
-						// get the map cell that the employee occupies and add it as a drawable to that map cell
-						//MapCell mapCellToOccupy = GetMapCellOccupiedByEmployee(employee);
-						//mapCellToOccupy.AddDrawable(employee, (int)TileType.Object);
-						//employee.OccupiedMapCell = mapCellToOccupy;
-					}
+					// update the employee's age based on the updated world date time
+					employee.UpdateAge(WorldDateTime);
 				}
 			}
 		}
@@ -240,10 +215,10 @@ namespace MyThirdSDL.Simulation
 				employee.HadThought += HandleHadThought;
 				employee.ThoughtSatisfied += HandleThoughtSatisfied;
 
-				StartTrackingAgent<T>(employee);
+				StartTrackingAgent(employee);
 			}
 			else
-				StartTrackingAgent<T>(agent);
+				StartTrackingAgent(agent);
 		}
 
 		private void HandleThoughtSatisfied(object sender, ThoughtEventArgs e)
@@ -259,18 +234,10 @@ namespace MyThirdSDL.Simulation
 		/// </summary>
 		/// <param name="agent">Agent.</param>
 		/// <typeparam name="T">The 1st type parameter.</typeparam>
-		private void StartTrackingAgent<T>(Agent agent)
-			where T : Agent
+		private void StartTrackingAgent(Agent agent)
 		{
-			List<Agent> agentsForType;
-			bool success = trackedAgents.TryGetValue(typeof(T), out agentsForType);
-			if (success)
-				agentsForType.Add(agent);
-			else
-			{
-				agentsForType = new List<Agent> { agent };
-				trackedAgents.Add(typeof(T), agentsForType);
-			}
+			if (!trackedAgents.Any(a => a.ID == agent.ID))
+				trackedAgents.Add(agent);
 		}
 
 		/// <summary>
@@ -278,19 +245,13 @@ namespace MyThirdSDL.Simulation
 		/// </summary>
 		/// <param name="agentId">Agent identifier.</param>
 		/// <typeparam name="T">The 1st type parameter.</typeparam>
-		private void StopTrackingAgent<T>(Guid agentId)
+		private void StopTrackingAgent(Guid agentId)
 		{
-			foreach (var key in trackedAgents.Keys)
+			Agent agentToRemove = trackedAgents.FirstOrDefault(ta => ta.ID == agentId);
+			if (agentToRemove != null)
 			{
-				if (trackedAgents[key].Any(t => t.ID == agentId))
-				{
-					var matchingAgent = trackedAgents[key].FirstOrDefault(a => a.ID == agentId);
-					if (matchingAgent != null)
-					{
-						trackedAgents[key].Remove(matchingAgent);
-						matchingAgent.Dispose();
-					}
-				}
+				trackedAgents.Remove(agentToRemove);
+				agentToRemove.Dispose();
 			}
 		}
 
@@ -314,7 +275,7 @@ namespace MyThirdSDL.Simulation
 				employee.ThoughtSatisfied -= HandleThoughtSatisfied;
 			}
 
-			StopTrackingAgent<T>(agentId);
+			StopTrackingAgent(agentId);
 		}
 
 		/// <summary>
@@ -327,28 +288,19 @@ namespace MyThirdSDL.Simulation
 		public T GetTrackedAgent<T>(Guid agentId)
 			where T : Agent
 		{
-			foreach (var key in trackedAgents.Keys)
-				foreach (var trackedAgent in trackedAgents[key])
-					if (trackedAgent.ID == agentId)
-						return (T)trackedAgent;
-
-			return null;
+			return (T)trackedAgents.FirstOrDefault(ta => ta.ID == agentId);
 		}
 
 		private IEnumerable<T> GetTrackedAgentsByType<T>()
 			where T : Agent
 		{
-			List<T> equipmentResults = new List<T>();
-			foreach (var key in trackedAgents.Keys)
-			{
-				foreach (var trackedAgent in trackedAgents[key])
-				{
-					var equipment = trackedAgent as T;
-					if (equipment != null)
-						equipmentResults.Add(equipment);
-				}
-			}
-			return equipmentResults;
+			// return all agents that are exactly of the generic T or a sub class of the generic T
+			IEnumerable<Agent> agentsByType = trackedAgents
+				.Where(ta => 
+					ta is T 
+					|| ta.GetType().IsSubclassOf(typeof(T)));
+
+			return agentsByType.Cast<T>();
 		}
 
 		public void PromoteEmployee(Guid employeeId)

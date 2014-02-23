@@ -643,11 +643,11 @@ namespace MyThirdSDL.UserInterface
 		private void HandleButtonSellEquipmentClicked (object sender, UserInterfaceEquipmentEventArgs e)
 		{
 			EventHelper.FireEvent(EquipmentSold, sender, e);
+			ChangeState(UserInterfaceState.Default);
 		}
 
 		private void HandleButtonRepairEquipmentClicked (object sender, UserInterfaceEquipmentEventArgs e)
 		{
-
 			EventHelper.FireEvent(EquipmentRepaired, sender, e);
 		}
 
