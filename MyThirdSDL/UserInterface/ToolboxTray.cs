@@ -10,6 +10,7 @@ namespace MyThirdSDL.UserInterface
 
 		//private Button buttonSelectGeneral;
 		private Button buttonSelectEquipment;
+
 		private Button buttonSelectRoom;
 		private Button buttonFinances;
 		private Button buttonCompany;
