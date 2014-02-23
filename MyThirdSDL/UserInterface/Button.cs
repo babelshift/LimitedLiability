@@ -1,4 +1,4 @@
-﻿using MyThirdSDL.Content;
+using MyThirdSDL.Content;
 using SharpDL;
 using SharpDL.Graphics;
 using System;

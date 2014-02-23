@@ -1,14 +1,6 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="MyThirdSDL/Agents/Equipment.cs">
-    <Files>
-      <File FileName="MyThirdSDL/UserInterface/ManeInspectEquipment.cs" Line="92" Column="68" />
-      <File FileName="MyThirdSDL/Agents/Equipment.cs" Line="28" Column="57" />
-      <File FileName="MyThirdSDL/Agents/Employee.cs" Line="91" Column="4" />
-      <File FileName="MyThirdSDL/Screens/MainGameScreen.cs" Line="185" Column="23" />
-      <File FileName="MyThirdSDL/Agents/EquipmentCondition.cs" Line="7" Column="11" />
-    </Files>
-  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.Workbench />
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
     <BreakpointStore>
       <Breakpoint file="/home/justin/Documents/git/SharpDL/SharpDL.Graphics/Texture.cs" line="121" column="1" />
