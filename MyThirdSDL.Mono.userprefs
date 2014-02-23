@@ -2,17 +2,17 @@
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
   <MonoDevelop.Ide.Workbench ActiveDocument="MyThirdSDL/Content/TiledMap.cs">
     <Files>
-      <File FileName="MyThirdSDL/UserInterface/ManeInspectEquipment.cs" Line="108" Column="28" />
-      <File FileName="MyThirdSDL/Screens/MainGameScreen.cs" Line="261" Column="52" />
-      <File FileName="MyThirdSDL/UserInterface/UserInterfaceManager.cs" Line="651" Column="43" />
-      <File FileName="MyThirdSDL/UserInterface/MenuInspectEmployee.cs" Line="279" Column="4" />
-      <File FileName="MyThirdSDL/Simulation/SimulationManager.cs" Line="295" Column="4" />
-      <File FileName="MyThirdSDL/Agents/Equipment.cs" Line="54" Column="1" />
-      <File FileName="MyThirdSDL/Content/MapCell.cs" Line="105" Column="1" />
-      <File FileName="MyThirdSDL/Content/TiledMap.cs" Line="654" Column="1" />
-      <File FileName="MyThirdSDL/Screens/ScreenManager.cs" Line="173" Column="1" />
-      <File FileName="MyThirdSDL/MainGame.cs" Line="237" Column="30" />
-      <File FileName="MyThirdSDL/Agents/Room.cs" Line="96" Column="4" />
+      <File FileName="MyThirdSDL/UserInterface/ManeInspectEquipment.cs" Line="1" Column="1" />
+      <File FileName="MyThirdSDL/Screens/MainGameScreen.cs" Line="1" Column="1" />
+      <File FileName="MyThirdSDL/UserInterface/UserInterfaceManager.cs" Line="1" Column="1" />
+      <File FileName="MyThirdSDL/UserInterface/MenuInspectEmployee.cs" Line="1" Column="1" />
+      <File FileName="MyThirdSDL/Simulation/SimulationManager.cs" Line="1" Column="1" />
+      <File FileName="MyThirdSDL/Agents/Equipment.cs" Line="1" Column="1" />
+      <File FileName="MyThirdSDL/Content/MapCell.cs" Line="1" Column="1" />
+      <File FileName="MyThirdSDL/Content/TiledMap.cs" Line="638" Column="5" />
+      <File FileName="MyThirdSDL/Screens/ScreenManager.cs" Line="1" Column="1" />
+      <File FileName="MyThirdSDL/MainGame.cs" Line="1" Column="1" />
+      <File FileName="MyThirdSDL/Agents/Room.cs" Line="1" Column="1" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>

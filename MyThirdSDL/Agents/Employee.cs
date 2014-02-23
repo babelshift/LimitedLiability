@@ -57,8 +57,6 @@ namespace MyThirdSDL.Agents
 			}
 		}
 
-		public MapCell OccupiedMapCell { get; set; }
-
 		public event EventHandler<ThoughtEventArgs> HadThought;
 
 		public event EventHandler<ThoughtEventArgs> ThoughtSatisfied;
@@ -144,15 +142,16 @@ namespace MyThirdSDL.Agents
 			if (HasCurrentIntention && IsAtFinalWalkToDestination)
 			{
 				// if we are walking towards something triggerable, then trigger it now that we are at it
-				if (CurrentIntention.WalkToAgent is ITriggerable)
+				var iTriggerable = CurrentIntention.WalkToAgent as ITriggerable;
+				if (iTriggerable != null)
 				{
-					var triggerable = CurrentIntention.WalkToAgent as ITriggerable;
+					var triggerable = iTriggerable;
 					triggerable.ExecuteTrigger();
 				}
 
 				// if we are walking towards something that affects our necessities (such as a soda machine or water fountain, get its effectiveness
 				// and adjust our necessities accordingly
-				if (CurrentIntention.WalkToAgent is SodaMachine)
+				if (!(CurrentIntention.WalkToAgent is SodaMachine))
 				{
 					var sodaMachine = CurrentIntention.WalkToAgent as SodaMachine;
 
@@ -178,14 +177,14 @@ namespace MyThirdSDL.Agents
 
 					// if we are going to a desk and we are not assigned to a desk and our target desk is not already assigned, assign this desk to ourself
 					if (CurrentIntention.Type == IntentionType.GoToDesk)
-						if (!IsAssignedAnOfficeDesk)
-							if (!officeDesk.IsAssignedToAnEmployee)
-								AssignOfficeDesk(officeDesk);
+					if (!IsAssignedAnOfficeDesk)
+					if (!officeDesk.IsAssignedToAnEmployee)
+						AssignOfficeDesk(officeDesk);
 
 					// if we are assigned an office desk, we are now at our office desk
 					if (IsAssignedAnOfficeDesk)
-						if (officeDesk.ID == AssignedOfficeDesk.ID)
-							IsAtOfficeDesk = true;
+					if (officeDesk.ID == AssignedOfficeDesk.ID)
+						IsAtOfficeDesk = true;
 				}
 
 				// we are done walking towards the intended agent

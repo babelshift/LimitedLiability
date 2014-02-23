@@ -649,7 +649,7 @@ namespace MyThirdSDL.Content
 					.ToList();
 		}
 
-		public void RemoveEquipmentOccupant(Guid equipmentId)
+		public void RemoveEquipment(Guid equipmentId)
 		{
 			MapCell mapCell = mapCells.FirstOrDefault(mc => mc.OccupantEquipment != null && mc.OccupantEquipment.ID == equipmentId);
 			if (mapCell != null)

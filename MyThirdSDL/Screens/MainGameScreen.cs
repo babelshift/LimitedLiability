@@ -172,22 +172,22 @@ namespace MyThirdSDL.Screens
 			if (e.PurchasableItem is SodaMachine)
 			{
 				var agentToAdd = agentFactory.CreateSodaMachine(SimulationManager.SimulationTime, new Vector(e.HoveredMapCells[0].WorldPosition.X, e.HoveredMapCells[0].WorldPosition.Y));
-				AddEquipmentToSimulationAndHoveredMapCell(agentToAdd, e.HoveredMapCells[0]);
+				AddEquipmentToGame(agentToAdd, e.HoveredMapCells[0]);
 			}
 			else if (e.PurchasableItem is SnackMachine)
 			{
 				var agentToAdd = agentFactory.CreateSnackMachine(SimulationManager.SimulationTime, new Vector(e.HoveredMapCells[0].WorldPosition.X, e.HoveredMapCells[0].WorldPosition.Y));
-				AddEquipmentToSimulationAndHoveredMapCell(agentToAdd, e.HoveredMapCells[0]);
+				AddEquipmentToGame(agentToAdd, e.HoveredMapCells[0]);
 			}
 			else if (e.PurchasableItem is OfficeDesk)
 			{
 				var agentToAdd = agentFactory.CreateOfficeDesk(SimulationManager.SimulationTime, new Vector(e.HoveredMapCells[0].WorldPosition.X, e.HoveredMapCells[0].WorldPosition.Y));
-				AddEquipmentToSimulationAndHoveredMapCell(agentToAdd, e.HoveredMapCells[0]);
+				AddEquipmentToGame(agentToAdd, e.HoveredMapCells[0]);
 			}
 			else if (e.PurchasableItem is Library)
 			{
 				var agentToAdd = roomFactory.CreateLibrary(agentFactory);
-				AddRoomToSimulationAndHoveredMapCells(agentToAdd, e.HoveredMapCells);
+				AddRoomToGame(agentToAdd, e.HoveredMapCells);
 			}
 		}
 
@@ -252,13 +252,77 @@ namespace MyThirdSDL.Screens
 			userInterfaceManager.EquipmentRepaired += HandleEquipmentRepaired;
 		}
 
+		/// <summary>
+		/// Adds the room to game.
+		/// </summary>
+		/// <param name="room">Room.</param>
+		/// <param name="hoveredMapCells">Hovered map cells.</param>
+		/// <typeparam name="T">The 1st type parameter.</typeparam>
+		private void AddRoomToGame<T>(T room, IReadOnlyList<MapCell> hoveredMapCells)
+			where T : Room
+		{
+			if (room == null)
+				throw new ArgumentNullException("room");
+			if (hoveredMapCells == null)
+				throw new ArgumentNullException("hoveredMapCells");
+
+			foreach (var equipmentOccupant in room.EquipmentOccupants)
+				simulationManager.AddAgent(equipmentOccupant);
+
+			// for each map cell in the room that's being placed, replace whatever map cell it's hovering in the main tile map
+			Vector origin = hoveredMapCells[0].WorldPosition;
+			foreach (var roomMapCell in room.MapCells)
+			{
+				Vector offsetPosition = new Vector(roomMapCell.WorldPosition.X + origin.X, roomMapCell.WorldPosition.Y + origin.Y);
+				tiledMap.ReplaceMapCellAtPosition(roomMapCell, offsetPosition);
+			}
+
+			bankAccount.Withdraw(room.Price);
+		}
+
+		/// <summary>
+		/// Adds the passed equipment to the simulation by registering it with the simulation manager and adding it as a drawable object on the clicked map cell. Does nothing if
+		/// the passed equipment is null.
+		/// </summary>
+		/// <param name="equipment">Equipment.</param>
+		/// <param name="hoveredMapCell">Hovered map cell.</param>
+		/// <typeparam name="T">The 1st type parameter.</typeparam>
+		private void AddEquipmentToGame<T>(T equipment, MapCell hoveredMapCell)
+			where T : Equipment
+		{
+			if (equipment == null)
+				throw new ArgumentNullException("equipment");
+			if (hoveredMapCell == null)
+				throw new ArgumentNullException("hoveredMapCell");
+
+			simulationManager.AddAgent(equipment);
+			hoveredMapCell.OccupantEquipment = equipment;
+			bankAccount.Withdraw(equipment.Price);
+		}
+
+		/// <summary>
+		/// Removes the equipment from game.
+		/// </summary>
+		/// <param name="equipment">Equipment.</param>
+		private void RemoveEquipmentFromGame(Equipment equipment)
+		{
+			int salePrice = equipment.Price / 2;
+			bankAccount.Deposit(salePrice);
+			simulationManager.RemoveAgent<Equipment>(equipment.ID);
+			tiledMap.RemoveEquipment(equipment.ID);
+			equipment.Dispose();
+		}
+
+		/// <summary>
+		/// When the user interface manager tells us that the user has clicked to sell an equipment, get that equipment object from
+		/// the simulation manager and remove it from the game.
+		/// </summary>
+		/// <param name="sender">Sender.</param>
+		/// <param name="e">E.</param>
 		private void HandleEquipmentSold(object sender, UserInterfaceEquipmentEventArgs e)
 		{
 			Equipment equipment = simulationManager.GetTrackedAgent<Equipment>(e.EquipmentId);
-			int salePrice = equipment.Price / 2;
-			bankAccount.Deposit(salePrice);
-			simulationManager.RemoveAgent<Equipment>(e.EquipmentId);
-			tiledMap.RemoveEquipmentOccupant(e.EquipmentId);
+			RemoveEquipmentFromGame(equipment);
 		}
 
 		private void HandleEquipmentRepaired(object sender, UserInterfaceEquipmentEventArgs e)
@@ -395,47 +459,6 @@ namespace MyThirdSDL.Screens
 				                                      CoordinateHelper.ScreenProjectionType.Orthogonal);
 
 			return tiledMap.GetMapCellAtWorldPositionAndNeighbors(worldPositionAtMousePosition, tileCountRight, tileCountDown);
-		}
-
-		/// <summary>
-		/// Adds the passed equipment to the simulation by registering it with the simulation manager and adding it as a drawable object on the clicked map cell. Does nothing if
-		/// the passed equipment is null.
-		/// </summary>
-		/// <param name="equipment">Agent.</param>
-		/// <param name="hoveredMapCell"></param>
-		private void AddEquipmentToSimulationAndHoveredMapCell<T>(T equipment, MapCell hoveredMapCell)
-			where T : Equipment
-		{
-			if (equipment == null)
-				throw new ArgumentNullException("equipment");
-			if (hoveredMapCell == null)
-				throw new ArgumentNullException("hoveredMapCell");
-
-			simulationManager.AddAgent(equipment);
-			hoveredMapCell.OccupantEquipment = equipment;
-			bankAccount.Withdraw(equipment.Price);
-		}
-
-		private void AddRoomToSimulationAndHoveredMapCells<T>(T room, IReadOnlyList<MapCell> hoveredMapCells)
-			where T : Room
-		{
-			if (room == null)
-				throw new ArgumentNullException("room");
-			if (hoveredMapCells == null)
-				throw new ArgumentNullException("hoveredMapCells");
-
-			foreach (var equipmentOccupant in room.EquipmentOccupants)
-				simulationManager.AddAgent(equipmentOccupant);
-
-			// for each map cell in the room that's being placed, replace whatever map cell it's hovering in the main tile map
-			Vector origin = hoveredMapCells[0].WorldPosition;
-			foreach (var roomMapCell in room.MapCells)
-			{
-				Vector offsetPosition = new Vector(roomMapCell.WorldPosition.X + origin.X, roomMapCell.WorldPosition.Y + origin.Y);
-				tiledMap.ReplaceMapCellAtPosition(roomMapCell, offsetPosition);
-			}
-
-			bankAccount.Withdraw(room.Price);
 		}
 
 		/// <summary>

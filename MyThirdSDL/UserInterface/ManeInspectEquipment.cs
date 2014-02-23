@@ -1,11 +1,9 @@
 ﻿using System;
-using System.Globalization;
 using SharpDL;
 using SharpDL.Graphics;
 using MyThirdSDL.Agents;
 using MyThirdSDL.Content;
 using MyThirdSDL.Content.Data;
-using MyThirdSDL.Descriptors;
 
 namespace MyThirdSDL.UserInterface
 {
@@ -91,7 +89,7 @@ namespace MyThirdSDL.UserInterface
 				labelCondition.Position = new Vector(base.Position.X + 15, base.Position.Y + 150);
 				labelNameValue.Position = new Vector(base.Position.X + 110, base.Position.Y + 60);
 				labelAgeValue.Position = new Vector(base.Position.X + 110, base.Position.Y + 90);
-				labelConditionValue.Position = new Vector(base.Position.X + 110, base.Position.Y + 150);
+				labelConditionValue.Position = new Vector(base.Position.X + 135, base.Position.Y + 150);
 				buttonCloseWindow.Position = new Vector(base.Position.X + Width - buttonCloseWindow.Width, base.Position.Y + Height + 5);
 				buttonSellEquipment.Position = buttonCloseWindow.Position - new Vector(buttonSellEquipment.Width + 5, 0);
 				buttonRepairEquipment.Position = buttonSellEquipment.Position - new Vector(buttonRepairEquipment.Width + 5, 0);

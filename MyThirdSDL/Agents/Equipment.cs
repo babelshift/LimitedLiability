@@ -10,6 +10,9 @@ namespace MyThirdSDL.Agents
 {
 	public abstract class Equipment : Agent, IPurchasable
 	{
+		private double conditionDecayRate = -0.005;
+		private double condition = 10;
+
 		public int Price { get; private set; }
 
 		public string Description { get; private set; }
@@ -24,7 +27,19 @@ namespace MyThirdSDL.Agents
 
 		public int VerticalMapCellCount { get { return 1; } }
 
-		public EquipmentCondition Condition { get; private set; }
+		public EquipmentCondition Condition 
+		{ 
+			get
+			{
+				if (condition >= 0 && condition <= 3)
+					return EquipmentCondition.Broken;
+				if (condition > 3 && condition <= 7)
+					return EquipmentCondition.Used;
+				if (condition > 7 && condition <= 10)
+					return EquipmentCondition.New;
+				return EquipmentCondition.Unknown;
+			}
+		}
 
 		protected Equipment(TimeSpan birthTime, string agentName, Texture activeTexture, Vector startingPosition, int price, string description, string iconTextureKey)
 			: base(birthTime, agentName, startingPosition)
@@ -33,7 +48,13 @@ namespace MyThirdSDL.Agents
 			IconTextureKey = iconTextureKey;
 			ActiveTexture = activeTexture;
 			Description = description;
-			Condition = EquipmentCondition.New;
+		}
+
+		public override void Update(GameTime gameTime)
+		{
+			base.Update(gameTime);
+
+			UpdateCondition(conditionDecayRate);
 		}
 
 		/// <summary>
@@ -92,6 +113,12 @@ namespace MyThirdSDL.Agents
 			return mapCells
 					.Where(mc => mc.Type == MapCellType.DeadZone)
 					.Any(mc => mc.Bounds.Contains(offsetPosition));
+		}
+
+		private void UpdateCondition(double conditionDecayRate)
+		{
+			if (condition + conditionDecayRate >= 0)
+				condition += conditionDecayRate;
 		}
 	}
 }
