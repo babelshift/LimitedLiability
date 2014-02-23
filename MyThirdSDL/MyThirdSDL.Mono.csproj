@@ -202,6 +202,8 @@
     <Compile Include="Content\JobMetadata.cs" />
     <Compile Include="UserInterface\ManeInspectEquipment.cs" />
     <Compile Include="Agents\EquipmentCondition.cs" />
+    <Compile Include="Content\Data\StringReferenceKeys.cs" />
+    <Compile Include="Agents\AgentMetadata.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
