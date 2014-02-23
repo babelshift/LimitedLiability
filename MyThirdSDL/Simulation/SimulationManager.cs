@@ -89,28 +89,12 @@ namespace MyThirdSDL.Simulation
 
 		public IEnumerable<Employee> TrackedEmployees
 		{
-			get { return GetTrackedAgentByType<Employee>(); }
+			get { return GetTrackedAgentsByType<Employee>(); }
 		}
 
 		public IEnumerable<Equipment> TrackedEquipment
 		{
-			get { return GetTrackedAgentByType<Equipment>(); }
-		}
-
-		private IEnumerable<T> GetTrackedAgentByType<T>()
-			where T : Agent
-		{
-			List<T> equipmentResults = new List<T>();
-			foreach (var key in trackedAgents.Keys)
-			{
-				foreach (var trackedAgent in trackedAgents[key])
-				{
-					var equipment = trackedAgent as T;
-					if (equipment != null)
-						equipmentResults.Add(equipment);
-				}
-			}
-			return equipmentResults;
+			get { return GetTrackedAgentsByType<Equipment>(); }
 		}
 
 		#endregion Properties
@@ -296,15 +280,16 @@ namespace MyThirdSDL.Simulation
 		/// <typeparam name="T">The 1st type parameter.</typeparam>
 		private void StopTrackingAgent<T>(Guid agentId)
 		{
-			List<Agent> agentsForType;
-			bool success = trackedAgents.TryGetValue(typeof(T), out agentsForType);
-			if (success)
+			foreach (var key in trackedAgents.Keys)
 			{
-				var matchingAgent = agentsForType.FirstOrDefault(a => a.ID == agentId);
-				if (matchingAgent != null)
+				if (trackedAgents[key].Any(t => t.ID == agentId))
 				{
-					agentsForType.Remove(matchingAgent);
-					matchingAgent.Dispose();
+					var matchingAgent = trackedAgents[key].FirstOrDefault(a => a.ID == agentId);
+					if (matchingAgent != null)
+					{
+						trackedAgents[key].Remove(matchingAgent);
+						matchingAgent.Dispose();
+					}
 				}
 			}
 		}
@@ -322,10 +307,9 @@ namespace MyThirdSDL.Simulation
 			
 			agent.Deactivate();
 
-			if (agent is Employee)
+			var employee = agent as Employee;
+			if (employee != null)
 			{
-				var employee = agent as Employee;
-
 				employee.HadThought -= HandleHadThought;
 				employee.ThoughtSatisfied -= HandleThoughtSatisfied;
 			}
@@ -340,44 +324,31 @@ namespace MyThirdSDL.Simulation
 		/// <returns>The tracked agent.</returns>
 		/// <param name="agentId">Agent identifier.</param>
 		/// <typeparam name="T">The 1st type parameter.</typeparam>
-		private T GetTrackedAgent<T>(Guid agentId)
+		public T GetTrackedAgent<T>(Guid agentId)
 			where T : Agent
 		{
-			IEnumerable<T> agentsForType = GetTrackedAgentsByType<T>();
-			var agent = agentsForType.FirstOrDefault(a => a.ID == agentId);
-
-			if (agent != null)
-				return agent;
+			foreach (var key in trackedAgents.Keys)
+				foreach (var trackedAgent in trackedAgents[key])
+					if (trackedAgent.ID == agentId)
+						return (T)trackedAgent;
 
 			return null;
 		}
 
-		/// <summary>
-		/// Gets all tracked agents in the simulation identified by the type T (used as a key). If no agents exist in the simulation with type T, an empty
-		/// list is returned.
-		/// </summary>
-		/// <returns>The tracked agents by type.</returns>
-		/// <typeparam name="T">The 1st type parameter.</typeparam>
 		private IEnumerable<T> GetTrackedAgentsByType<T>()
 			where T : Agent
 		{
-			List<Agent> agentsForType;
-			bool success = trackedAgents.TryGetValue(typeof(T), out agentsForType);
-			if (success)
+			List<T> equipmentResults = new List<T>();
+			foreach (var key in trackedAgents.Keys)
 			{
-				// TODO: this is ugly as hell, i'm switching on a type in a generic method and double casting a list
-				// we want to remove assigned office desks from the list of get tracked agents because they should be considered taken
-				//				if (typeof(T).Equals(typeof(OfficeDesk)))
-				//				{
-				//					var officeDesks = agentsForType.Cast<OfficeDesk>().ToList();
-				//					officeDesks.RemoveAll(o => o.IsAssignedToAnEmployee == true);
-				//					return officeDesks.Cast<T>();
-				//				}
-				//				else
-				return agentsForType.Cast<T>();
+				foreach (var trackedAgent in trackedAgents[key])
+				{
+					var equipment = trackedAgent as T;
+					if (equipment != null)
+						equipmentResults.Add(equipment);
+				}
 			}
-			
-			return new List<T>();
+			return equipmentResults;
 		}
 
 		public void PromoteEmployee(Guid employeeId)

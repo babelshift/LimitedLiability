@@ -94,9 +94,9 @@ namespace MyThirdSDL.Screens
 				}
 			}
 
-			foreach(var equipment in simulationManager.TrackedEquipment)
-				if(IsAgentClicked(equipment, e))
-					if (userInterfaceManager.CurrentState == UserInterfaceState.Default)
+			foreach (var equipment in simulationManager.TrackedEquipment)
+				if (IsAgentClicked(equipment, e))
+				if (userInterfaceManager.CurrentState == UserInterfaceState.Default)
 					userInterfaceManager.SetEquipmentBeingInspected(equipment);
 
 			userInterfaceManager.HandleMouseButtonPressedEvent(sender, e);
@@ -248,21 +248,37 @@ namespace MyThirdSDL.Screens
 			userInterfaceManager.EmployeeFired += UserInterfaceManagerOnEmployeeFired;
 			userInterfaceManager.EmployeePromoted += UserInterfaceManagerOnEmployeePromoted;
 			userInterfaceManager.EmployeeDisciplined += UserInterfaceManagerOnEmployeeDisciplined;
+			userInterfaceManager.EquipmentSold += HandleEquipmentSold;
+			userInterfaceManager.EquipmentRepaired += HandleEquipmentRepaired;
 		}
 
-		private void UserInterfaceManagerOnEmployeePromoted(object sender, UserInterfaceEquipmentEventArgs e)
+		private void HandleEquipmentSold(object sender, UserInterfaceEquipmentEventArgs e)
 		{
-			simulationManager.PromoteEmployee(e.EquipmentId);
+			Equipment equipment = simulationManager.GetTrackedAgent<Equipment>(e.EquipmentId);
+			int salePrice = equipment.Price / 2;
+			bankAccount.Deposit(salePrice);
+			simulationManager.RemoveAgent<Equipment>(e.EquipmentId);
+			tiledMap.RemoveEquipmentOccupant(e.EquipmentId);
 		}
 
-		private void UserInterfaceManagerOnEmployeeDisciplined(object sender, UserInterfaceEquipmentEventArgs e)
+		private void HandleEquipmentRepaired(object sender, UserInterfaceEquipmentEventArgs e)
 		{
-			simulationManager.DemoteEmployee(e.EquipmentId);
+
 		}
 
-		private void UserInterfaceManagerOnEmployeeFired(object sender, UserInterfaceEquipmentEventArgs e)
+		private void UserInterfaceManagerOnEmployeePromoted(object sender, UserInterfaceEmployeeEventArgs e)
 		{
-			simulationManager.RemoveAgent<Employee>(e.EquipmentId);
+			simulationManager.PromoteEmployee(e.EmployeeId);
+		}
+
+		private void UserInterfaceManagerOnEmployeeDisciplined(object sender, UserInterfaceEmployeeEventArgs e)
+		{
+			simulationManager.DemoteEmployee(e.EmployeeId);
+		}
+
+		private void UserInterfaceManagerOnEmployeeFired(object sender, UserInterfaceEmployeeEventArgs e)
+		{
+			simulationManager.RemoveAgent<Employee>(e.EmployeeId);
 		}
 
 		private Vector GetRandomEmployeePosition()

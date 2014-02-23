@@ -115,9 +115,11 @@ namespace MyThirdSDL.UserInterface
 		public event EventHandler<PurchasableItemPlacedEventArgs> PurchasableItemPlaced;
 		public event EventHandler<PurchasableItemSelectedEventArgs> PurchasableItemSelected;
 		public event EventHandler<ResumeAcceptedEventArgs> ResumeAccepted;
-		public event EventHandler<UserInterfaceEquipmentEventArgs> EmployeeFired;
-		public event EventHandler<UserInterfaceEquipmentEventArgs> EmployeePromoted;
-		public event EventHandler<UserInterfaceEquipmentEventArgs> EmployeeDisciplined;
+		public event EventHandler<UserInterfaceEmployeeEventArgs> EmployeeFired;
+		public event EventHandler<UserInterfaceEmployeeEventArgs> EmployeePromoted;
+		public event EventHandler<UserInterfaceEmployeeEventArgs> EmployeeDisciplined;
+		public event EventHandler<UserInterfaceEquipmentEventArgs> EquipmentSold;
+		public event EventHandler<UserInterfaceEquipmentEventArgs> EquipmentRepaired;
 
 		#endregion Public Events
 
@@ -510,22 +512,19 @@ namespace MyThirdSDL.UserInterface
 			menuInspectEmployee.ButtonDisciplineEmployeeClicked += MenuInspectEmployeeOnButtonDisciplineEmployeeClicked;
 		}
 
-		private void MenuInspectEmployeeOnButtonPromoteEmployeeClicked(object sender, UserInterfaceEquipmentEventArgs e)
+		private void MenuInspectEmployeeOnButtonPromoteEmployeeClicked(object sender, UserInterfaceEmployeeEventArgs e)
 		{
-			if (EmployeePromoted != null)
-				EmployeePromoted(sender, e);
+			EventHelper.FireEvent(EmployeePromoted, sender, e);
 		}
 
-		private void MenuInspectEmployeeOnButtonDisciplineEmployeeClicked(object sender, UserInterfaceEquipmentEventArgs e)
+		private void MenuInspectEmployeeOnButtonDisciplineEmployeeClicked(object sender, UserInterfaceEmployeeEventArgs e)
 		{
-			if (EmployeeDisciplined != null)
-				EmployeeDisciplined(sender, e);
+			EventHelper.FireEvent(EmployeeDisciplined, sender, e);
 		}
 
-		private void MenuInspectEmployeeOnButtonFireEmployeeClicked(object sender, UserInterfaceEquipmentEventArgs e)
+		private void MenuInspectEmployeeOnButtonFireEmployeeClicked(object sender, UserInterfaceEmployeeEventArgs e)
 		{
-			if (EmployeeFired != null)
-				EmployeeFired(sender, e);
+			EventHelper.FireEvent(EmployeeFired, sender, e);
 			ChangeState(UserInterfaceState.Default);
 		}
 
@@ -643,12 +642,13 @@ namespace MyThirdSDL.UserInterface
 
 		private void HandleButtonSellEquipmentClicked (object sender, UserInterfaceEquipmentEventArgs e)
 		{
-			
+			EventHelper.FireEvent(EquipmentSold, sender, e);
 		}
 
 		private void HandleButtonRepairEquipmentClicked (object sender, UserInterfaceEquipmentEventArgs e)
 		{
-			
+
+			EventHelper.FireEvent(EquipmentRepaired, sender, e);
 		}
 
 		private void HandleButtonCloseWindowClicked (object sender, EventArgs e)

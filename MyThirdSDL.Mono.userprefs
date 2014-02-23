@@ -1,14 +1,18 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="MyThirdSDL/Agents/Job.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="MyThirdSDL/Content/TiledMap.cs">
     <Files>
-      <File FileName="MyThirdSDL/UserInterface/UserInterfaceManager.cs" Line="499" Column="36" />
-      <File FileName="MyThirdSDL/Screens/MainGameScreen.cs" Line="246" Column="99" />
-      <File FileName="MyThirdSDL/Simulation/SimulationManager.cs" Line="374" Column="16" />
-      <File FileName="MyThirdSDL/Agents/Employee.cs" Line="133" Column="23" />
-      <File FileName="MyThirdSDL/Agents/Job.cs" Line="41" Column="24" />
-      <File FileName="MyThirdSDL/UserInterface/MenuInspectEmployee.cs" Line="285" Column="101" />
-      <File FileName="MyThirdSDL/MainGame.cs" Line="122" Column="115" />
+      <File FileName="MyThirdSDL/UserInterface/ManeInspectEquipment.cs" Line="108" Column="28" />
+      <File FileName="MyThirdSDL/Screens/MainGameScreen.cs" Line="261" Column="52" />
+      <File FileName="MyThirdSDL/UserInterface/UserInterfaceManager.cs" Line="651" Column="43" />
+      <File FileName="MyThirdSDL/UserInterface/MenuInspectEmployee.cs" Line="279" Column="4" />
+      <File FileName="MyThirdSDL/Simulation/SimulationManager.cs" Line="295" Column="4" />
+      <File FileName="MyThirdSDL/Agents/Equipment.cs" Line="54" Column="1" />
+      <File FileName="MyThirdSDL/Content/MapCell.cs" Line="105" Column="1" />
+      <File FileName="MyThirdSDL/Content/TiledMap.cs" Line="654" Column="1" />
+      <File FileName="MyThirdSDL/Screens/ScreenManager.cs" Line="173" Column="1" />
+      <File FileName="MyThirdSDL/MainGame.cs" Line="237" Column="30" />
+      <File FileName="MyThirdSDL/Agents/Room.cs" Line="96" Column="4" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>

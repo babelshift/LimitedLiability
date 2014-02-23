@@ -649,6 +649,13 @@ namespace MyThirdSDL.Content
 					.ToList();
 		}
 
+		public void RemoveEquipmentOccupant(Guid equipmentId)
+		{
+			MapCell mapCell = mapCells.FirstOrDefault(mc => mc.OccupantEquipment != null && mc.OccupantEquipment.ID == equipmentId);
+			if (mapCell != null)
+				mapCell.OccupantEquipment = null;
+		}
+
 		#endregion Finder Methods
 
 		public void Draw(GameTime gameTime, Renderer renderer)
