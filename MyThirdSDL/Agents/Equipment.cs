@@ -25,7 +25,7 @@ namespace MyThirdSDL.Agents
 
 		public int HorizontalMapCellCount { get { return 1; } }
 
-		public int VerticalMapCellCount { get { return 1; } }
+		public int VerticalMapCellCount { get { return 1; } }	
 
 		public EquipmentCondition Condition 
 		{ 
