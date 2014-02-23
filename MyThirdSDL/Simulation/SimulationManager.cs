@@ -89,16 +89,28 @@ namespace MyThirdSDL.Simulation
 
 		public IEnumerable<Employee> TrackedEmployees
 		{
-			get
+			get { return GetTrackedAgentByType<Employee>(); }
+		}
+
+		public IEnumerable<Equipment> TrackedEquipment
+		{
+			get { return GetTrackedAgentByType<Equipment>(); }
+		}
+
+		private IEnumerable<T> GetTrackedAgentByType<T>()
+			where T : Agent
+		{
+			List<T> equipmentResults = new List<T>();
+			foreach (var key in trackedAgents.Keys)
 			{
-				IEnumerable<List<Agent>> agentLists = trackedAgents.Values.AsEnumerable();
-				List<Employee> agents = new List<Employee>();
-				foreach (var agentList in agentLists)
-					foreach (var agent in agentList)
-						if (agent is Employee)
-							agents.Add(agent as Employee);
-				return agents;
+				foreach (var trackedAgent in trackedAgents[key])
+				{
+					var equipment = trackedAgent as T;
+					if (equipment != null)
+						equipmentResults.Add(equipment);
+				}
 			}
+			return equipmentResults;
 		}
 
 		#endregion Properties

@@ -1,16 +1,16 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using SharpDL;
+using SharpDL.Events;
+using SharpDL.Graphics;
+using SharpDL.Input;
 using MyThirdSDL.Agents;
 using MyThirdSDL.Content;
 using MyThirdSDL.Descriptors;
 using MyThirdSDL.Mail;
 using MyThirdSDL.Simulation;
 using MyThirdSDL.UserInterface;
-using SharpDL;
-using SharpDL.Events;
-using SharpDL.Graphics;
-using SharpDL.Input;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace MyThirdSDL.Screens
 {
@@ -84,9 +84,20 @@ namespace MyThirdSDL.Screens
 			// if the equipment being updated is an employee and that equipment is being clicked on by the user, fire the event telling subscribers of such
 			// we can use this event to react to the user interacting with the employees to do things like display their inspection information
 			foreach (var employee in simulationManager.TrackedEmployees)
-				if (IsEmployeeClicked(employee, e))
-				if (userInterfaceManager.CurrentState == UserInterfaceState.Default)
-					userInterfaceManager.SetEmployeeBeingInspected(employee);
+			{
+				if (IsAgentClicked(employee, e))
+				{
+					if (userInterfaceManager.CurrentState == UserInterfaceState.Default)
+					{
+						userInterfaceManager.SetEmployeeBeingInspected(employee);
+					}
+				}
+			}
+
+			foreach(var equipment in simulationManager.TrackedEquipment)
+				if(IsAgentClicked(equipment, e))
+					if (userInterfaceManager.CurrentState == UserInterfaceState.Default)
+					userInterfaceManager.SetEquipmentBeingInspected(equipment);
 
 			userInterfaceManager.HandleMouseButtonPressedEvent(sender, e);
 		}
@@ -95,11 +106,12 @@ namespace MyThirdSDL.Screens
 		/// Determines whether this employee is clicked based on the passed mouse state by translating the screen coordinates to world space and checking the equipment's collision box.
 		/// </summary>
 		/// <returns><c>true</c> if this the passed employee is clicked based on the passed mouse state; otherwise, <c>false</c>.</returns>
-		/// <param name="employee">Employee.</param>
-		private bool IsEmployeeClicked(Employee employee, MouseButtonEventArgs e)
+		/// <param name="agent"></param>
+		private static bool IsAgentClicked<T>(T agent, MouseButtonEventArgs e)
+					where T : Agent
 		{
-			if (employee == null)
-				throw new ArgumentNullException("employee");
+			if (agent == null)
+				throw new ArgumentNullException("agent");
 
 			if (e.MouseButton == MouseButtonCode.Left)
 			{
@@ -107,7 +119,8 @@ namespace MyThirdSDL.Screens
 					                                      e.RelativeToWindowX, e.RelativeToWindowY,
 					                                      CoordinateHelper.ScreenOffset,
 					                                      CoordinateHelper.ScreenProjectionType.Orthogonal);
-				return employee.CollisionBox.Contains(new Point((int)worldPositionAtMousePosition.X, (int)worldPositionAtMousePosition.Y));
+
+				return agent.CollisionBox.Contains(new Point((int)worldPositionAtMousePosition.X, (int)worldPositionAtMousePosition.Y));
 			}
 
 			return false;
@@ -237,19 +250,19 @@ namespace MyThirdSDL.Screens
 			userInterfaceManager.EmployeeDisciplined += UserInterfaceManagerOnEmployeeDisciplined;
 		}
 
-		private void UserInterfaceManagerOnEmployeePromoted(object sender, UserInterfaceEmployeeEventArgs e)
+		private void UserInterfaceManagerOnEmployeePromoted(object sender, UserInterfaceEquipmentEventArgs e)
 		{
-			simulationManager.PromoteEmployee(e.EmployeeId);
+			simulationManager.PromoteEmployee(e.EquipmentId);
 		}
 
-		private void UserInterfaceManagerOnEmployeeDisciplined(object sender, UserInterfaceEmployeeEventArgs e)
+		private void UserInterfaceManagerOnEmployeeDisciplined(object sender, UserInterfaceEquipmentEventArgs e)
 		{
-			simulationManager.DemoteEmployee(e.EmployeeId);
+			simulationManager.DemoteEmployee(e.EquipmentId);
 		}
 
-		private void UserInterfaceManagerOnEmployeeFired(object sender, UserInterfaceEmployeeEventArgs e)
+		private void UserInterfaceManagerOnEmployeeFired(object sender, UserInterfaceEquipmentEventArgs e)
 		{
-			simulationManager.RemoveAgent<Employee>(e.EmployeeId);
+			simulationManager.RemoveAgent<Employee>(e.EquipmentId);
 		}
 
 		private Vector GetRandomEmployeePosition()

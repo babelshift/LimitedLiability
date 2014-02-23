@@ -9,6 +9,7 @@ using SharpDL.Graphics;
 using SharpDL.Input;
 using System;
 using System.Collections.Generic;
+using System.Collections.Concurrent;
 
 namespace MyThirdSDL.UserInterface
 {
@@ -36,7 +37,9 @@ namespace MyThirdSDL.UserInterface
 		private MenuPurchase menuPurchaseEquipment;
 		private MenuPurchase menuPurchaseRooms;
 		private MenuInspectEmployee menuInspectEmployee;
+		private MenuInspectEquipment menuInspectEquipment;
 		private MenuResume menuResume;
+		private ConcurrentBag<Menu> menus = new ConcurrentBag<Menu>();
 
 		#endregion Controls
 
@@ -112,9 +115,9 @@ namespace MyThirdSDL.UserInterface
 		public event EventHandler<PurchasableItemPlacedEventArgs> PurchasableItemPlaced;
 		public event EventHandler<PurchasableItemSelectedEventArgs> PurchasableItemSelected;
 		public event EventHandler<ResumeAcceptedEventArgs> ResumeAccepted;
-		public event EventHandler<UserInterfaceEmployeeEventArgs> EmployeeFired;
-		public event EventHandler<UserInterfaceEmployeeEventArgs> EmployeePromoted;
-		public event EventHandler<UserInterfaceEmployeeEventArgs> EmployeeDisciplined;
+		public event EventHandler<UserInterfaceEquipmentEventArgs> EmployeeFired;
+		public event EventHandler<UserInterfaceEquipmentEventArgs> EmployeePromoted;
+		public event EventHandler<UserInterfaceEquipmentEventArgs> EmployeeDisciplined;
 
 		#endregion Public Events
 
@@ -171,6 +174,18 @@ namespace MyThirdSDL.UserInterface
 			menuInspectEmployee.SetInfoValues(employee);
 			menuInspectEmployee.SetNeedsValues(employee.Necessities);
 			menuInspectEmployee.SetSkillsValues(employee.Skills);
+		}
+
+		public void SetEquipmentBeingInspected(Equipment equipment)
+		{
+			if (equipment == null)
+				throw new ArgumentNullException("equipment");
+
+			ClearMenusOpen();
+			ShowMenuInspectEquipment();
+			menuInspectEquipment.SetInfoValues(equipment);
+			menuInspectEquipment.SetNeedsValues(equipment.NecessityEffect);
+			menuInspectEquipment.SetSkillsValues(equipment.SkillEffect);
 		}
 
 		public void UpdateTrackedEmployeeCount(int trackedEmployeeCount)
@@ -276,6 +291,14 @@ namespace MyThirdSDL.UserInterface
 			CreateMenuInspectEmployee();
 			CreateMenuMailbox(inbox, outbox, archive);
 			CreateMenuCompany(employeeCount);
+			CreateMenuInspectEquipment();
+
+			menus.Add(menuPurchaseRooms);
+			menus.Add(menuPurchaseEquipment);
+			menus.Add(menuInspectEmployee);
+			menus.Add(menuMailbox);
+			menus.Add(menuCompany);
+			menus.Add(menuInspectEquipment);
 
 			ChangeState(UserInterfaceState.Default);
 		}
@@ -487,22 +510,23 @@ namespace MyThirdSDL.UserInterface
 			menuInspectEmployee.ButtonDisciplineEmployeeClicked += MenuInspectEmployeeOnButtonDisciplineEmployeeClicked;
 		}
 
-		private void MenuInspectEmployeeOnButtonPromoteEmployeeClicked(object sender, UserInterfaceEmployeeEventArgs e)
+		private void MenuInspectEmployeeOnButtonPromoteEmployeeClicked(object sender, UserInterfaceEquipmentEventArgs e)
 		{
 			if (EmployeePromoted != null)
 				EmployeePromoted(sender, e);
 		}
 
-		private void MenuInspectEmployeeOnButtonDisciplineEmployeeClicked(object sender, UserInterfaceEmployeeEventArgs e)
+		private void MenuInspectEmployeeOnButtonDisciplineEmployeeClicked(object sender, UserInterfaceEquipmentEventArgs e)
 		{
 			if (EmployeeDisciplined != null)
 				EmployeeDisciplined(sender, e);
 		}
 
-		private void MenuInspectEmployeeOnButtonFireEmployeeClicked(object sender, UserInterfaceEmployeeEventArgs e)
+		private void MenuInspectEmployeeOnButtonFireEmployeeClicked(object sender, UserInterfaceEquipmentEventArgs e)
 		{
 			if (EmployeeFired != null)
 				EmployeeFired(sender, e);
+			ChangeState(UserInterfaceState.Default);
 		}
 
 		private void ShowMenuInspectEmployee()
@@ -606,6 +630,44 @@ namespace MyThirdSDL.UserInterface
 
 		#endregion Menu Equipment Events
 
+		#region Menu Inspect Equipment
+
+		private void CreateMenuInspectEquipment()
+		{
+			menuInspectEquipment = new MenuInspectEquipment(contentManager);
+			menuInspectEquipment.Position = new Vector(bottomRightPointOfWindow.X / 2 - menuInspectEquipment.Width / 2, bottomRightPointOfWindow.Y / 2 - menuInspectEquipment.Height / 2);
+			menuInspectEquipment.ButtonCloseWindowClicked += HandleButtonCloseWindowClicked;
+			menuInspectEquipment.ButtonRepairEquipmentClicked += HandleButtonRepairEquipmentClicked;
+			menuInspectEquipment.ButtonSellEquipmentClicked += HandleButtonSellEquipmentClicked;
+		}
+
+		private void HandleButtonSellEquipmentClicked (object sender, UserInterfaceEquipmentEventArgs e)
+		{
+			
+		}
+
+		private void HandleButtonRepairEquipmentClicked (object sender, UserInterfaceEquipmentEventArgs e)
+		{
+			
+		}
+
+		private void HandleButtonCloseWindowClicked (object sender, EventArgs e)
+		{
+			HideMenuInspectEquipment();
+		}
+
+		private void ShowMenuInspectEquipment()
+		{
+			menuInspectEquipment.Visible = true;
+		}
+
+		private void HideMenuInspectEquipment()
+		{
+			menuInspectEquipment.Visible = false;
+		}
+
+		#endregion Menu Inspect Equipment
+
 		#region Menu Company
 
 		private void CreateMenuCompany(int employeeCount)
@@ -645,17 +707,12 @@ namespace MyThirdSDL.UserInterface
 			toolboxTray.Update(gameTime);
 			topToolboxTray.Update(gameTime);
 
-			menuPurchaseEquipment.Update(gameTime);
-			menuInspectEmployee.Update(gameTime);
-			menuMailbox.Update(gameTime);
-			menuPurchaseRooms.Update(gameTime);
-			menuCompany.Update(gameTime);
+			foreach (var menu in menus)
+				if (menu != null)
+					menu.Update(gameTime);
 
 			if (messageBox != null)
 				messageBox.Update(gameTime);
-
-			if (menuResume != null)
-				menuResume.Update(gameTime);
 
 			TimeSpentInCurrentState = SimulationManager.SimulationTime.Subtract(timeOfStatusChange);
 
@@ -671,22 +728,12 @@ namespace MyThirdSDL.UserInterface
 			toolboxTray.Draw(gameTime, renderer);
 			topToolboxTray.Draw(gameTime, renderer);
 
-			DrawMenus(gameTime, renderer);
-
-			if (menuResume != null)
-				menuResume.Draw(gameTime, renderer);
+			foreach (var menu in menus)
+				if (menu != null)
+					menu.Draw(gameTime, renderer);
 
 			if (messageBox != null)
 				messageBox.Draw(gameTime, renderer);
-		}
-
-		private void DrawMenus(GameTime gameTime, Renderer renderer)
-		{
-			menuPurchaseEquipment.Draw(gameTime, renderer);
-			menuInspectEmployee.Draw(gameTime, renderer);
-			menuMailbox.Draw(gameTime, renderer);
-			menuPurchaseRooms.Draw(gameTime, renderer);
-			menuCompany.Draw(gameTime, renderer);
 		}
 
 		private void DrawDiagnosticLabels(GameTime gameTime, Renderer renderer)
@@ -739,29 +786,20 @@ namespace MyThirdSDL.UserInterface
 		public void HandleMouseButtonPressedEvent(object sender, MouseButtonEventArgs e)
 		{
 			if (CurrentState == UserInterfaceState.PlaceEquipmentActive || CurrentState == UserInterfaceState.PlaceRoomActive)
-			{
-				if (e.MouseButton == MouseButtonCode.Right)
-				{
-					ChangeState(UserInterfaceState.Default);
-				}
-			}
+			if (e.MouseButton == MouseButtonCode.Right)
+				ChangeState(UserInterfaceState.Default);
 
 			TryToPlacePurchasableItem(e);
 
 			toolboxTray.HandleMouseButtonPressedEvent(sender, e);
 			topToolboxTray.HandleMouseButtonPressedEvent(sender, e);
 
-			menuPurchaseEquipment.HandleMouseButtonPressedEvent(sender, e);
-			menuInspectEmployee.HandleMouseButtonPressedEvent(sender, e);
-			menuMailbox.HandleMouseButtonPressedEvent(sender, e);
-			menuPurchaseRooms.HandleMouseButtonPressedEvent(sender, e);
-			menuCompany.HandleMouseButtonPressedEvent(sender, e);
+			foreach (var menu in menus)
+				if (menu != null)
+					menu.HandleMouseButtonPressedEvent(sender, e);
 
 			if (messageBox != null)
 				messageBox.HandleMouseButtonPressedEvent(sender, e);
-
-			if (menuResume != null)
-				menuResume.HandleMouseButtonPressedEvent(sender, e);
 		}
 
 		public void HandleMouseMovingEvent(object sender, MouseMotionEventArgs e)
@@ -771,17 +809,12 @@ namespace MyThirdSDL.UserInterface
 			toolboxTray.HandleMouseMovingEvent(sender, e);
 			topToolboxTray.HandleMouseMovingEvent(sender, e);
 
-			menuPurchaseEquipment.HandleMouseMovingEvent(sender, e);
-			menuInspectEmployee.HandleMouseMovingEvent(sender, e);
-			menuMailbox.HandleMouseMovingEvent(sender, e);
-			menuPurchaseRooms.HandleMouseMovingEvent(sender, e);
-			menuCompany.HandleMouseMovingEvent(sender, e);
+			foreach (var menu in menus)
+				if (menu != null)
+					menu.HandleMouseMovingEvent(sender, e);
 
 			if (messageBox != null)
 				messageBox.HandleMouseMovingEvent(sender, e);
-
-			if (menuResume != null)
-				menuResume.HandleMouseMovingEvent(sender, e);
 		}
 
 		private void TryToPlacePurchasableItem(MouseButtonEventArgs e)
@@ -835,11 +868,12 @@ namespace MyThirdSDL.UserInterface
 			labelSimulationTime.Dispose();
 			labelState.Dispose();
 
-			menuCompany.Dispose();
-			menuInspectEmployee.Dispose();
-			menuMailbox.Dispose();
-			menuPurchaseEquipment.Dispose();
-			menuPurchaseRooms.Dispose();
+			foreach (var menu in menus)
+				if (menu != null)
+					menu.Dispose();
+
+			if(messageBox != null)
+				messageBox.Dispose();
 		}
 
 		#endregion Dispose
@@ -856,6 +890,7 @@ namespace MyThirdSDL.UserInterface
 			menuResume.Rejected += MenuResumeOnRejected;
 			menuResume.Position = menuMailbox.Position;
 			menuResume.Visible = true;
+			menus.Add(menuResume);
 		}
 
 		/// <summary>

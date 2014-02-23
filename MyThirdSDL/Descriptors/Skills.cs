@@ -51,12 +51,11 @@ namespace MyThirdSDL.Descriptors
 			int ratingRaw = (int)rating;
 			if (ratingRaw < 4)
 				return "Bad";
-			else if (ratingRaw >= 4 && ratingRaw <= 6)
+			if (ratingRaw >= 4 && ratingRaw <= 6)
 				return "OK";
-			else if (ratingRaw > 6)
+			if (ratingRaw > 6)
 				return "Good";
-			else
-				return "???";
+			return "???";
 		}
 
 		public string IntelligenceToString()

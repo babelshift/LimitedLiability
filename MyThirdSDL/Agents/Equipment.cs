@@ -1,10 +1,10 @@
-﻿using MyThirdSDL.Content;
-using MyThirdSDL.Descriptors;
-using SharpDL;
-using SharpDL.Graphics;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using SharpDL;
+using SharpDL.Graphics;
+using MyThirdSDL.Content;
+using MyThirdSDL.Descriptors;
 
 namespace MyThirdSDL.Agents
 {
@@ -24,6 +24,8 @@ namespace MyThirdSDL.Agents
 
 		public int VerticalMapCellCount { get { return 1; } }
 
+		public EquipmentCondition Condition { get; private set; }
+
 		protected Equipment(TimeSpan birthTime, string agentName, Texture activeTexture, Vector startingPosition, int price, string description, string iconTextureKey)
 			: base(birthTime, agentName, startingPosition)
 		{
@@ -31,6 +33,7 @@ namespace MyThirdSDL.Agents
 			IconTextureKey = iconTextureKey;
 			ActiveTexture = activeTexture;
 			Description = description;
+			Condition = EquipmentCondition.New;
 		}
 
 		/// <summary>

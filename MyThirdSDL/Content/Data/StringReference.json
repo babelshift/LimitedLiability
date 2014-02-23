@@ -8,5 +8,7 @@
 	"TOOLTIP_BUTTON_ARCHIVE_MAIL": "Move the selected mail to the archive folder",
 	"TOOLTIP_BUTTON_OPEN_ATTACHMENT": "Open the attachment for viewing",
 	"TOOLTIP_BUTTON_ACCEPT_RESUME": "Accept this candidate's resume (adds a new employee to your staff)",
-	"TOOLTIP_BUTTON_REJECT_RESUME": "Reject this candidate's resume"
+	"TOOLTIP_BUTTON_REJECT_RESUME": "Reject this candidate's resume",
+	"TOOLTIP_BUTTON_SELL_EQUIPMENT": "Sell this equipment for half the purchase price",
+	"TOOLTIP_BUTTON_REPAIR_EQUIPMENT": "Repair this equipment (improves condition)"
 }

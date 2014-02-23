@@ -124,6 +124,8 @@
 		{ "key": "IconAccept",					"value": "Images/User Interface/IconAccept.png" },
 		{ "key": "IconInfo",					"value": "Images/User Interface/IconInfo.png" },
 		{ "key": "IconAttachment",				"value": "Images/User Interface/IconAttachment.png" },
+		{ "key": "IconSellEquipment",			"value": "Images/User Interface/IconSellEquipment.png" },
+		{ "key": "IconRepairEquipment",			"value": "Images/User Interface/IconRepairEquipment.png" },
 		{ "key": "IconFireEmployee",			"value": "Images/User Interface/IconFireEmployee.png" },
 		{ "key": "IconDisciplineEmployee",		"value": "Images/User Interface/IconDisciplineEmployee.png" },
 		{ "key": "IconPromoteEmployee",			"value": "Images/User Interface/IconPromoteEmployee.png" },

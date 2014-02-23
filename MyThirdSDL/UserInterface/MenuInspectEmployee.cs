@@ -11,7 +11,7 @@ namespace MyThirdSDL.UserInterface
 {
 	public class MenuInspectEmployee : Menu
 	{
-		private Guid selectedEmployeeId;
+		private Guid selectedEquipmentId;
 
 		private Icon iconFrame;
 
@@ -68,9 +68,9 @@ namespace MyThirdSDL.UserInterface
 
 		public event EventHandler<EventArgs> ButtonCloseWindowClicked;
 
-		public event EventHandler<UserInterfaceEmployeeEventArgs> ButtonFireEmployeeClicked;
-		public event EventHandler<UserInterfaceEmployeeEventArgs> ButtonPromoteEmployeeClicked;
-		public event EventHandler<UserInterfaceEmployeeEventArgs> ButtonDisciplineEmployeeClicked;
+		public event EventHandler<UserInterfaceEquipmentEventArgs> ButtonFireEmployeeClicked;
+		public event EventHandler<UserInterfaceEquipmentEventArgs> ButtonPromoteEmployeeClicked;
+		public event EventHandler<UserInterfaceEquipmentEventArgs> ButtonDisciplineEmployeeClicked;
 
 		public override Vector Position
 		{
@@ -275,21 +275,18 @@ namespace MyThirdSDL.UserInterface
 
 		private void ButtonPromoteEmployeeOnClicked(object sender, EventArgs eventArgs)
 		{
-			if (ButtonPromoteEmployeeClicked != null)
-				ButtonPromoteEmployeeClicked(sender, new UserInterfaceEmployeeEventArgs(selectedEmployeeId));
+			EventHelper.FireEvent(ButtonPromoteEmployeeClicked, sender, new UserInterfaceEquipmentEventArgs(selectedEquipmentId));
 		}
 
 		private void ButtonDisciplineEmployeeOnClicked(object sender, EventArgs eventArgs)
 		{
-			if (ButtonDisciplineEmployeeClicked != null)
-				ButtonDisciplineEmployeeClicked(sender, new UserInterfaceEmployeeEventArgs(selectedEmployeeId));
+			EventHelper.FireEvent(ButtonDisciplineEmployeeClicked, sender, new UserInterfaceEquipmentEventArgs(selectedEquipmentId));
 		}
 
 		private void ButtonFireEmployeeOnClicked(object sender, EventArgs eventArgs)
 		{
 			Visible = false;
-			if (ButtonFireEmployeeClicked != null)
-				ButtonFireEmployeeClicked(sender, new UserInterfaceEmployeeEventArgs(selectedEmployeeId));
+			EventHelper.FireEvent(ButtonFireEmployeeClicked, sender, new UserInterfaceEquipmentEventArgs(selectedEquipmentId));
 		}
 
 		private void OnButtonCloseWindowOnClicked(object sender, EventArgs e)
@@ -313,7 +310,7 @@ namespace MyThirdSDL.UserInterface
 			else
 				iconMoodActive = iconMoodAngry;
 
-			selectedEmployeeId = employee.ID;
+			selectedEquipmentId = employee.ID;
 		}
 
 		public void SetNeedsValues(Necessities necessities)

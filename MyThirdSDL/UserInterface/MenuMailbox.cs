@@ -186,8 +186,8 @@ namespace MyThirdSDL.UserInterface
 				iconArchiveFolder.Position = new Vector(base.Position.X + 150, base.Position.Y + 5);
 				iconTopSeparator.Position = new Vector(base.Position.X + 156, base.Position.Y + 65);
 				buttonCloseWindow.Position = new Vector(base.Position.X + Width - buttonCloseWindow.Width, base.Position.Y + Height + 5);
-				buttonMailOpen.Position = new Vector(base.Position.X + Width - buttonCloseWindow.Width - 5 - buttonMailOpen.Width, base.Position.Y + Height + 5);
-				buttonMailArchive.Position = new Vector(base.Position.X + Width - buttonCloseWindow.Width - 5 - buttonMailOpen.Width - 5 - buttonMailArchive.Width, base.Position.Y + Height + 5);
+				buttonMailArchive.Position = new Vector(base.Position.X + Width - buttonCloseWindow.Width - 5 - buttonMailArchive.Width, base.Position.Y + Height + 5);
+				buttonMailOpen.Position = new Vector(base.Position.X + Width - buttonCloseWindow.Width - 5 - buttonMailArchive.Width - 5 - buttonMailOpen.Width, base.Position.Y + Height + 5);
 				buttonCloseWindow.Tooltip.Position = new Vector(Position.X, buttonCloseWindow.Position.Y + buttonCloseWindow.Height + 5);
 				buttonMailOpen.Tooltip.Position = new Vector(Position.X, buttonCloseWindow.Position.Y + buttonCloseWindow.Height + 5);
 				buttonMailArchive.Tooltip.Position = new Vector(Position.X, buttonCloseWindow.Position.Y + buttonCloseWindow.Height + 5);
