@@ -6,11 +6,13 @@ using SharpDL.Graphics;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using MyThirdSDL.Content.Data;
 
 namespace MyThirdSDL.UserInterface
 {
 	public class MenuMailbox : Menu
 	{
+
 		#region Members
 
 		private Icon iconFrame;
@@ -27,11 +29,9 @@ namespace MyThirdSDL.UserInterface
 		private int currentDisplayedPageInbox = 1;
 		private int currentDisplayedPageOutbox = 1;
 		private int currentDisplayedPageArchive = 1;
-
 		private MailItem selectedMailItemInbox;
 		private MailItem selectedMailItemOutbox;
 		private MailItem selectedMailItemArchive;
-
 		private MenuEmail menuEmail;
 
 		#endregion Members
@@ -65,8 +65,8 @@ namespace MyThirdSDL.UserInterface
 		private Button buttonArchiveFolder;
 		private Button buttonArrowLeft;
 		private Button buttonArrowRight;
-		private Button buttonView;
-		private Button buttonArchive;
+		private Button buttonMailOpen;
+		private Button buttonMailArchive;
 		private Button buttonCloseWindow;
 
 		#endregion Buttons
@@ -184,10 +184,14 @@ namespace MyThirdSDL.UserInterface
 				iconInboxFolder.Position = new Vector(base.Position.X + 150, base.Position.Y + 5);
 				iconOutboxFolder.Position = new Vector(base.Position.X + 150, base.Position.Y + 5);
 				iconArchiveFolder.Position = new Vector(base.Position.X + 150, base.Position.Y + 5);
-				buttonView.Position = new Vector(base.Position.X + 155, base.Position.Y + 272);
-				buttonArchive.Position = new Vector(base.Position.X + 255, base.Position.Y + 272);
 				iconTopSeparator.Position = new Vector(base.Position.X + 156, base.Position.Y + 65);
-				buttonCloseWindow.Position = new Vector(base.Position.X + 656, base.Position.Y - 47);
+				buttonCloseWindow.Position = new Vector(base.Position.X + Width - buttonCloseWindow.Width, base.Position.Y + Height + 5);
+				buttonMailArchive.Position = new Vector(base.Position.X + Width - buttonCloseWindow.Width - 5 - buttonMailArchive.Width, base.Position.Y + Height + 5);
+				buttonMailOpen.Position = new Vector(base.Position.X + Width - buttonCloseWindow.Width - 5 - buttonMailArchive.Width - 5 - buttonMailOpen.Width, base.Position.Y + Height + 5);
+				buttonCloseWindow.Tooltip.Position = new Vector(Position.X, buttonCloseWindow.Position.Y + buttonCloseWindow.Height + 5);
+				buttonMailOpen.Tooltip.Position = new Vector(Position.X, buttonCloseWindow.Position.Y + buttonCloseWindow.Height + 5);
+				buttonMailArchive.Tooltip.Position = new Vector(Position.X, buttonCloseWindow.Position.Y + buttonCloseWindow.Height + 5);
+
 				SetMailItemButtonPositions();
 			}
 		}
@@ -196,10 +200,7 @@ namespace MyThirdSDL.UserInterface
 
 		#region Public Events
 
-		public event EventHandler<SelectedMailItemActionEventArgs> ViewButtonClicked;
-
 		public event EventHandler<SelectedMailItemActionEventArgs> ArchiveMailButtonClicked;
-
 		public event EventHandler<EventArgs> CloseButtonClicked;
 
 		#endregion Public Events
@@ -216,8 +217,9 @@ namespace MyThirdSDL.UserInterface
 			string fontPath = contentManager.GetContentPath("Arcade");
 			Color fontColorWhite = Styles.Colors.White;
 			Color fontColorPaleYellow = Styles.Colors.PaleYellow;
-			int fontSizeTitle = 14;
-			int fontSizeContent = 12;
+			int fontSizeTitle = Styles.FontSizes.Title;
+			int fontSizeContent = Styles.FontSizes.Content;
+			int fontSizeTooltip = Styles.FontSizes.Tooltip;
 
 			iconFolderHeader = ControlFactory.CreateIcon(contentManager, "IconFolderOpen");
 			labelFolderHeader = ControlFactory.CreateLabel(contentManager, fontPath, fontSizeTitle, fontColorWhite, "Folder");
@@ -227,17 +229,17 @@ namespace MyThirdSDL.UserInterface
 			labelSubject = ControlFactory.CreateLabel(contentManager, fontPath, fontSizeContent, fontColorWhite, "Subject");
 
 			buttonInboxFolder = ControlFactory.CreateButton(contentManager, "ButtonMailFolder", "ButtonMailFolderHover");
-			buttonInboxFolder.Icon = ControlFactory.CreateIcon(contentManager, "IconMailInbox");
+			buttonInboxFolder.Icon = ControlFactory.CreateIcon(contentManager, "IconFolderInbox");
 			buttonInboxFolder.Label = ControlFactory.CreateLabel(contentManager, fontPath, fontSizeContent, fontColorPaleYellow, "Inbox");
 			buttonInboxFolder.ButtonType = ButtonType.IconAndText;
 
 			buttonOutboxFolder = ControlFactory.CreateButton(contentManager, "ButtonMailFolder", "ButtonMailFolderHover");
-			buttonOutboxFolder.Icon = ControlFactory.CreateIcon(contentManager, "IconMailOutbox");
+			buttonOutboxFolder.Icon = ControlFactory.CreateIcon(contentManager, "IconFolderOutbox");
 			buttonOutboxFolder.Label = ControlFactory.CreateLabel(contentManager, fontPath, fontSizeContent, fontColorPaleYellow, "Outbox");
 			buttonOutboxFolder.ButtonType = ButtonType.IconAndText;
 
 			buttonArchiveFolder = ControlFactory.CreateButton(contentManager, "ButtonMailFolder", "ButtonMailFolderHover");
-			buttonArchiveFolder.Icon = ControlFactory.CreateIcon(contentManager, "IconMailArchive");
+			buttonArchiveFolder.Icon = ControlFactory.CreateIcon(contentManager, "IconFolderArchive");
 			buttonArchiveFolder.Label = ControlFactory.CreateLabel(contentManager, fontPath, fontSizeContent, fontColorPaleYellow, "Archive");
 			buttonArchiveFolder.ButtonType = ButtonType.IconAndText;
 
@@ -258,19 +260,23 @@ namespace MyThirdSDL.UserInterface
 			labelArchiveFolder = ControlFactory.CreateLabel(contentManager, fontPath, fontSizeTitle, fontColorWhite, "Archive");
 			labelArchiveFolder.EnableShadow(contentManager, 2, 2);
 
-			iconInboxFolder = ControlFactory.CreateIcon(contentManager, "IconMailInbox");
-			iconOutboxFolder = ControlFactory.CreateIcon(contentManager, "IconMailOutbox");
-			iconArchiveFolder = ControlFactory.CreateIcon(contentManager, "IconMailArchive");
+			iconInboxFolder = ControlFactory.CreateIcon(contentManager, "IconFolderInbox");
+			iconOutboxFolder = ControlFactory.CreateIcon(contentManager, "IconFolderOutbox");
+			iconArchiveFolder = ControlFactory.CreateIcon(contentManager, "IconFolderArchive");
 
-			buttonView = ControlFactory.CreateButton(contentManager, "ButtonMailAction", "ButtonMailActionHover");
-			buttonView.Label = ControlFactory.CreateLabel(contentManager, fontPath, fontSizeContent, fontColorWhite, "View");
-			buttonView.ButtonType = ButtonType.TextOnly;
-			buttonView.Visible = false;
+			buttonMailOpen = ControlFactory.CreateButton(contentManager, "ButtonSquare", "ButtonSquareHover");
+			buttonMailOpen.Icon = ControlFactory.CreateIcon(contentManager, "IconMailOpen");
+			buttonMailOpen.ButtonType = ButtonType.IconOnly;
+			buttonMailOpen.Visible = false;
+			buttonMailOpen.Tooltip = ControlFactory.CreateTooltip(contentManager, "TooltipFrame", fontPath, fontSizeTooltip,
+				fontColorWhite, contentManager.GetString(StringReferenceKeys.TOOLTIP_BUTTON_OPEN_MAIL));
 
-			buttonArchive = ControlFactory.CreateButton(contentManager, "ButtonMailAction", "ButtonMailActionHover");
-			buttonArchive.Label = ControlFactory.CreateLabel(contentManager, fontPath, fontSizeContent, fontColorWhite, "Archive");
-			buttonArchive.ButtonType = ButtonType.TextOnly;
-			buttonArchive.Visible = true;
+			buttonMailArchive = ControlFactory.CreateButton(contentManager, "ButtonSquare", "ButtonSquareHover");
+			buttonMailArchive.Icon = ControlFactory.CreateIcon(contentManager, "IconMailArchive");
+			buttonMailArchive.ButtonType = ButtonType.IconOnly;
+			buttonMailArchive.Visible = true;
+			buttonMailArchive.Tooltip = ControlFactory.CreateTooltip(contentManager, "TooltipFrame", fontPath, fontSizeTooltip,
+				fontColorWhite, contentManager.GetString(StringReferenceKeys.TOOLTIP_BUTTON_ARCHIVE_MAIL));
 
 			iconTopSeparator = ControlFactory.CreateIcon(contentManager, "IconSeparator");
 
@@ -278,6 +284,8 @@ namespace MyThirdSDL.UserInterface
 			buttonCloseWindow.Icon = ControlFactory.CreateIcon(contentManager, "IconWindowClose");
 			buttonCloseWindow.IconHovered = ControlFactory.CreateIcon(contentManager, "IconWindowClose");
 			buttonCloseWindow.ButtonType = ButtonType.IconOnly;
+			buttonCloseWindow.Tooltip = ControlFactory.CreateTooltip(contentManager, "TooltipFrame", fontPath, fontSizeTooltip,
+				fontColorWhite, contentManager.GetString(StringReferenceKeys.TOOLTIP_BUTTON_CLOSE_WINDOW));
 
 			menuEmail = new MenuEmail(contentManager);
 			menuEmail.Closed += MenuEmailOnClosed;
@@ -295,8 +303,8 @@ namespace MyThirdSDL.UserInterface
 			Controls.Add(buttonArchiveFolder);
 			Controls.Add(buttonArrowLeft);
 			Controls.Add(buttonArrowRight);
-			Controls.Add(buttonView);
-			Controls.Add(buttonArchive);
+			Controls.Add(buttonMailOpen);
+			Controls.Add(buttonMailArchive);
 			Controls.Add(iconTopSeparator);
 			Controls.Add(buttonCloseWindow);
 
@@ -305,8 +313,8 @@ namespace MyThirdSDL.UserInterface
 			buttonArchiveFolder.Clicked += buttonArchiveFolder_Clicked;
 			buttonArrowLeft.Clicked += buttonArrowLeft_Clicked;
 			buttonArrowRight.Clicked += buttonArrowRight_Clicked;
-			buttonView.Clicked += buttonView_Clicked;
-			buttonArchive.Clicked += buttonArchive_Clicked;
+			buttonMailOpen.Clicked += buttonView_Clicked;
+			buttonMailArchive.Clicked += buttonArchive_Clicked;
 			buttonCloseWindow.Clicked += buttonCloseWindow_Clicked;
 
 			currentDisplayedPageInbox = 1;
@@ -368,8 +376,8 @@ namespace MyThirdSDL.UserInterface
 						button.ToggleOff();
 				clickedButtonMailItem.ToggleOn();
 				SelectedMailItem = clickedButtonMailItem.MailItem;
-				buttonView.Visible = true;
-				buttonArchive.Visible = true;
+				buttonMailOpen.Visible = true;
+				buttonMailArchive.Visible = true;
 			}
 		}
 
@@ -391,8 +399,8 @@ namespace MyThirdSDL.UserInterface
 		private void OnArchive(object sender)
 		{
 			if (SelectedMailItem != null)
-				if (ArchiveMailButtonClicked != null)
-					ArchiveMailButtonClicked(sender, new SelectedMailItemActionEventArgs(SelectedMailItem));
+			if (ArchiveMailButtonClicked != null)
+				ArchiveMailButtonClicked(sender, new SelectedMailItemActionEventArgs(SelectedMailItem));
 		}
 
 		public void ArchiveSelectedMailItem(object sender)
@@ -542,8 +550,8 @@ namespace MyThirdSDL.UserInterface
 				AddButtonMailItemArchive(buttonMailItem, iconSeparator);
 			}
 
-			buttonView.Visible = false;
-			buttonArchive.Visible = false;
+			buttonMailOpen.Visible = false;
+			buttonMailArchive.Visible = false;
 		}
 
 		public void AddButtonMailItemInbox(ButtonMailItem buttonMailItem, Icon iconSeparator)
@@ -796,6 +804,7 @@ namespace MyThirdSDL.UserInterface
 		}
 
 		#endregion Dispose
+
 	}
 
 	public class SelectedMailItemActionEventArgs : EventArgs

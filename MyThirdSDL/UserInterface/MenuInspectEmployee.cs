@@ -11,7 +11,7 @@ namespace MyThirdSDL.UserInterface
 {
 	public class MenuInspectEmployee : Menu
 	{
-		private Guid selectedEmployeeId;
+		private Guid selectedEquipmentId;
 
 		private Icon iconFrame;
 
@@ -70,6 +70,7 @@ namespace MyThirdSDL.UserInterface
 
 		public event EventHandler<UserInterfaceEmployeeEventArgs> ButtonFireEmployeeClicked;
 		public event EventHandler<UserInterfaceEmployeeEventArgs> ButtonPromoteEmployeeClicked;
+		public event EventHandler<UserInterfaceEmployeeEventArgs> ButtonDisciplineEmployeeClicked;
 
 		public override Vector Position
 		{
@@ -274,18 +275,18 @@ namespace MyThirdSDL.UserInterface
 
 		private void ButtonPromoteEmployeeOnClicked(object sender, EventArgs eventArgs)
 		{
-			if (ButtonPromoteEmployeeClicked != null)
-				ButtonPromoteEmployeeClicked(sender, new UserInterfaceEmployeeEventArgs(selectedEmployeeId));
+			EventHelper.FireEvent(ButtonPromoteEmployeeClicked, sender, new UserInterfaceEmployeeEventArgs(selectedEquipmentId));
 		}
 
 		private void ButtonDisciplineEmployeeOnClicked(object sender, EventArgs eventArgs)
 		{
+			EventHelper.FireEvent(ButtonDisciplineEmployeeClicked, sender, new UserInterfaceEmployeeEventArgs(selectedEquipmentId));
 		}
 
 		private void ButtonFireEmployeeOnClicked(object sender, EventArgs eventArgs)
 		{
-			if (ButtonFireEmployeeClicked != null)
-				ButtonFireEmployeeClicked(sender, new UserInterfaceEmployeeEventArgs(selectedEmployeeId));
+			Visible = false;
+			EventHelper.FireEvent(ButtonFireEmployeeClicked, sender, new UserInterfaceEmployeeEventArgs(selectedEquipmentId));
 		}
 
 		private void OnButtonCloseWindowOnClicked(object sender, EventArgs e)
@@ -309,7 +310,7 @@ namespace MyThirdSDL.UserInterface
 			else
 				iconMoodActive = iconMoodAngry;
 
-			selectedEmployeeId = employee.ID;
+			selectedEquipmentId = employee.ID;
 		}
 
 		public void SetNeedsValues(Necessities necessities)

@@ -1,8 +1,10 @@
-﻿using System.Collections.Generic;
-using MyThirdSDL.Content;
+﻿using System;
+using System.Collections.Generic;
 using SharpDL;
 using SharpDL.Graphics;
-using System;
+using MyThirdSDL.Content;
+using MyThirdSDL.Content.Data;
+using MyThirdSDL.Simulation;
 
 namespace MyThirdSDL.UserInterface
 {
@@ -15,15 +17,12 @@ namespace MyThirdSDL.UserInterface
 
 	public class MessageBox : Control
 	{
-		private const string defaultText = "NO TEXT DEFINED";
-
-		private readonly List<Control> controls = new List<Control>(); 
-
-		private Button buttonOK;
-		private Icon iconFrame;
-		private Icon iconMain;
-		private Label labelTextTitle;
-		private Label labelTextContent;
+		private readonly List<Control> controls = new List<Control>();
+		private readonly Icon iconFrame;
+		private readonly Icon iconMain;
+		private readonly Label labelTextTitle;
+		private readonly Label labelTextContent;
+		private TimeSpan simulationTimeShown;
 
 		public override Vector Position
 		{
@@ -36,12 +35,16 @@ namespace MyThirdSDL.UserInterface
 				iconMain.Position = base.Position + new Vector(10, 10);
 				labelTextTitle.Position = base.Position + new Vector(40, 15);
 				labelTextContent.Position = base.Position + new Vector(10, 45);
-				buttonOK.Position = base.Position + new Vector(iconFrame.Width - buttonOK.Width, iconFrame.Height + 5);
 			}
 		}
 
-		public MessageBox(ContentManager contentManager, MessageBoxType type)
+		public MessageBox(ContentManager contentManager, MessageBoxType type, string title, string content)
 		{
+			if (String.IsNullOrEmpty(title))
+				title = StringReferenceKeys.DEFAULT_TEXT;
+			if (String.IsNullOrEmpty(content))
+				content = StringReferenceKeys.DEFAULT_TEXT;
+
 			iconFrame = ControlFactory.CreateIcon(contentManager, "MessageBoxFrame");
 			Width = iconFrame.Width;
 			Height = iconFrame.Height;
@@ -52,13 +55,9 @@ namespace MyThirdSDL.UserInterface
 			int fontSizeTitle = Styles.FontSizes.Title;
 			int fontSizeContent = Styles.FontSizes.Content;
 
-			labelTextTitle = ControlFactory.CreateLabel(contentManager, fontPath, fontSizeTitle, fontColorTitle, defaultText);
-			labelTextContent = ControlFactory.CreateLabel(contentManager, fontPath, fontSizeContent, fontColorLabelValue,
-				defaultText);
-
-			buttonOK = ControlFactory.CreateButton(contentManager, "ButtonSquare", "ButtonSquareHover");
-			buttonOK.Icon = ControlFactory.CreateIcon(contentManager, "IconAccept");
-			buttonOK.ButtonType = ButtonType.IconOnly;
+			labelTextTitle = ControlFactory.CreateLabel(contentManager, fontPath, fontSizeTitle, fontColorTitle, title);
+			labelTextTitle.EnableShadow(contentManager, 2, 2);
+			labelTextContent = ControlFactory.CreateLabel(contentManager, fontPath, fontSizeContent, fontColorLabelValue, content, 325);
 
 			if (type == MessageBoxType.Information)
 				iconMain = ControlFactory.CreateIcon(contentManager, "IconInfo");
@@ -67,33 +66,14 @@ namespace MyThirdSDL.UserInterface
 			controls.Add(iconMain);
 			controls.Add(labelTextTitle);
 			controls.Add(labelTextContent);
-			controls.Add(buttonOK);
-
-			buttonOK.Clicked += ButtonOK_Clicked;
 			
 			Hide();
 		}
 
-		public void UpdateLabels(ContentManager contentManager, string title, string text)
-		{
-			labelTextContent.TrueTypeText.WrapLength = 325;
-
-			if (String.IsNullOrEmpty(title))
-				labelTextTitle.Text = defaultText;
-			else
-				labelTextTitle.Text = title;
-
-			if (String.IsNullOrEmpty(text))
-				labelTextContent.Text = defaultText;
-			else
-				labelTextContent.Text = text;
-
-			labelTextTitle.EnableShadow(contentManager, 2, 2);
-		}
-
-		public void Show()
+		public void Show(TimeSpan simulationTime)
 		{
 			Visible = true;
+			simulationTimeShown = simulationTime;
 		}
 
 		public void Hide()
@@ -103,40 +83,44 @@ namespace MyThirdSDL.UserInterface
 
 		public override void Update(GameTime gameTime)
 		{
-			if (Visible)
-			{
-				base.Update(gameTime);
+			// stop showing the message box after 5 seconds
+			if (SimulationManager.SimulationTime.Subtract(simulationTimeShown) > TimeSpan.FromSeconds(5.0))
+				Visible = false;
 
-				foreach(var control in controls)
-					control.Update(gameTime);
-			}
+			if (!Visible)
+				return;
+
+			base.Update(gameTime);
+
+			foreach (var control in controls)
+				control.Update(gameTime);
 		}
 
 		public override void Draw(GameTime gameTime, Renderer renderer)
 		{
-			if (Visible)
-			{
-				foreach (var control in controls)
-					control.Draw(gameTime, renderer);
-			}
+			if (!Visible)
+				return;
+
+			foreach (var control in controls)
+				control.Draw(gameTime, renderer);
 		}
 
 		public override void HandleMouseButtonPressedEvent(object sender, SharpDL.Events.MouseButtonEventArgs e)
 		{
-			if (Visible)
-			{
-				foreach (var control in controls)
-					control.HandleMouseButtonPressedEvent(sender, e);
-			}
+			if (!Visible)
+				return;
+
+			foreach (var control in controls)
+				control.HandleMouseButtonPressedEvent(sender, e);
 		}
 
 		public override void HandleMouseMovingEvent(object sender, SharpDL.Events.MouseMotionEventArgs e)
 		{
-			if (Visible)
-			{
-				foreach (var control in controls)
-					control.HandleMouseMovingEvent(sender, e);
-			}
+			if (!Visible)
+				return;
+
+			foreach (var control in controls)
+				control.HandleMouseMovingEvent(sender, e);
 		}
 
 		private void ButtonOK_Clicked(object sender, EventArgs e)

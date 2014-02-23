@@ -198,6 +198,12 @@
     <Compile Include="Content\TilePosition.cs" />
     <Compile Include="Agents\RoomFactory.cs" />
     <Compile Include="Content\MapCellType.cs" />
+    <Compile Include="Content\Data\StringReferencekeys.cs" />
+    <Compile Include="Agents\JobLevel.cs" />
+    <Compile Include="Content\JobLevelMetadata.cs" />
+    <Compile Include="Content\JobMetadata.cs" />
+    <Compile Include="UserInterface\ManeInspectEquipment.cs" />
+    <Compile Include="Agents\EquipmentCondition.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -393,12 +399,6 @@
     <Content Include="Content\Images\User Interface\IconMailArchive.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Images\User Interface\IconMailInbox.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Content\Images\User Interface\IconMailOutbox.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
     <Content Include="Content\Images\User Interface\IconMailRead.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -583,6 +583,42 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\Fonts\DroidSans-Bold.ttf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Data\JobReference.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Data\StringReference.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Images\User Interface\IconAttachment.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Images\User Interface\IconDisciplineEmployee.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Images\User Interface\IconFireEmployee.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Images\User Interface\IconPromoteEmployee.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Images\User Interface\IconMailOpen.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Images\User Interface\IconFolderArchive.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Images\User Interface\IconFolderInbox.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Images\User Interface\IconFolderOutbox.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Images\User Interface\IconRepairEquipment.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Images\User Interface\IconSellEquipment.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>

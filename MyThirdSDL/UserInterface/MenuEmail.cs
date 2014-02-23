@@ -2,24 +2,20 @@
 using MyThirdSDL.Mail;
 using SharpDL.Graphics;
 using System;
+using MyThirdSDL.Content.Data;
 
 namespace MyThirdSDL.UserInterface
 {
 	public class MenuEmail : Menu
 	{
-		private string defaultText = "N/A";
-
 		private Icon iconFrame;
 		private Icon iconMainMenu;
-
 		private Label labelMainMenu;
 		private Label labelFrom;
 		private Label labelSubject;
 		private Label labelContent;
-
-		private Button buttonClose;
-		private Button buttonAttachment;
-
+		private Button buttonCloseWindow;
+		private Button buttonOpenAttachment;
 		private MailItem mailItem;
 
 		public event EventHandler Closed;
@@ -38,8 +34,10 @@ namespace MyThirdSDL.UserInterface
 				labelSubject.Position = base.Position + new Vector(5, 70);
 				labelContent.Position = base.Position + new Vector(5, 110);
 
-				buttonAttachment.Position = base.Position + new Vector(500, 50);
-				buttonClose.Position = base.Position + new Vector(Width - buttonClose.Width, Height + 5);
+				buttonCloseWindow.Position = base.Position + new Vector(Width - buttonCloseWindow.Width, Height + 5);
+				buttonCloseWindow.Tooltip.Position = new Vector(Position.X, buttonCloseWindow.Position.Y + buttonCloseWindow.Height + 5);
+				buttonOpenAttachment.Position = base.Position + new Vector(Width - buttonCloseWindow.Width - 5 - buttonOpenAttachment.Width, Height + 5);
+				buttonOpenAttachment.Tooltip.Position = new Vector(Position.X, buttonCloseWindow.Position.Y + buttonCloseWindow.Height + 5);
 			}
 		}
 
@@ -51,31 +49,34 @@ namespace MyThirdSDL.UserInterface
 			Height = iconFrame.Height;
 
 			string fontPath = contentManager.GetContentPath("Arcade");
-			Color fontColor = Styles.Colors.White;
-			Color fontColorValue = Styles.Colors.PaleYellow;
-			int fontSizeTitle = 14;
-			int fontSizeContent = 12;
+			Color fontColorWhite = Styles.Colors.White;
+			int fontSizeTitle = Styles.FontSizes.Title;
+			int fontSizeTooltip = Styles.FontSizes.Tooltip;
 
-			buttonClose = ControlFactory.CreateButton(contentManager, "ButtonSquare", "ButtonSquareHover");
-			buttonClose.Icon = ControlFactory.CreateIcon(contentManager, "IconAccept");
-			buttonClose.IconHovered = ControlFactory.CreateIcon(contentManager, "IconAccept");
-			buttonClose.ButtonType = ButtonType.IconOnly;
-			buttonClose.Clicked += ButtonCloseOnClicked;
+			buttonCloseWindow = ControlFactory.CreateButton(contentManager, "ButtonSquare", "ButtonSquareHover");
+			buttonCloseWindow.Icon = ControlFactory.CreateIcon(contentManager, "IconWindowClose");
+			buttonCloseWindow.IconHovered = ControlFactory.CreateIcon(contentManager, "IconWindowClose");
+			buttonCloseWindow.ButtonType = ButtonType.IconOnly;
+			buttonCloseWindow.Clicked += ButtonCloseOnClicked;
+			buttonCloseWindow.Tooltip = ControlFactory.CreateTooltip(contentManager, "TooltipFrame", fontPath, fontSizeTooltip,
+				fontColorWhite, contentManager.GetString(StringReferenceKeys.TOOLTIP_BUTTON_CLOSE_WINDOW));
 
-			buttonAttachment = ControlFactory.CreateButton(contentManager, "ButtonSquare", "ButtonSquareHover");
-			buttonAttachment.Icon = ControlFactory.CreateIcon(contentManager, "IconAttachment");
-			buttonAttachment.IconHovered = ControlFactory.CreateIcon(contentManager, "IconAttachment");
-			buttonAttachment.ButtonType = ButtonType.IconOnly;
-			buttonAttachment.Clicked += ButtonAttachmentOnClicked;
+			buttonOpenAttachment = ControlFactory.CreateButton(contentManager, "ButtonSquare", "ButtonSquareHover");
+			buttonOpenAttachment.Icon = ControlFactory.CreateIcon(contentManager, "IconAttachment");
+			buttonOpenAttachment.IconHovered = ControlFactory.CreateIcon(contentManager, "IconAttachment");
+			buttonOpenAttachment.ButtonType = ButtonType.IconOnly;
+			buttonOpenAttachment.Clicked += ButtonAttachmentOnClicked;
+			buttonOpenAttachment.Tooltip = ControlFactory.CreateTooltip(contentManager, "TooltipFrame", fontPath, fontSizeTooltip,
+				fontColorWhite, contentManager.GetString(StringReferenceKeys.TOOLTIP_BUTTON_OPEN_ATTACHMENT));
 
 			iconMainMenu = ControlFactory.CreateIcon(contentManager, "IconMailUnread");
 
-			labelMainMenu = ControlFactory.CreateLabel(contentManager, fontPath, fontSizeTitle, fontColor, "Read Email");
+			labelMainMenu = ControlFactory.CreateLabel(contentManager, fontPath, fontSizeTitle, fontColorWhite, "Read Email");
 			labelMainMenu.EnableShadow(contentManager, 2, 2);
 
-			labelFrom = ControlFactory.CreateLabel(contentManager, fontPath, fontSizeTitle, fontColor, defaultText);
-			labelSubject = ControlFactory.CreateLabel(contentManager, fontPath, fontSizeTitle, fontColor, defaultText);
-			labelContent = ControlFactory.CreateLabel(contentManager, fontPath, fontSizeTitle, fontColor, defaultText, 550);
+			labelFrom = ControlFactory.CreateLabel(contentManager, fontPath, fontSizeTitle, fontColorWhite, defaultText);
+			labelSubject = ControlFactory.CreateLabel(contentManager, fontPath, fontSizeTitle, fontColorWhite, defaultText);
+			labelContent = ControlFactory.CreateLabel(contentManager, fontPath, fontSizeTitle, fontColorWhite, defaultText, 550);
 
 			Controls.Add(iconFrame);
 			Controls.Add(iconMainMenu);
@@ -83,17 +84,19 @@ namespace MyThirdSDL.UserInterface
 			Controls.Add(labelMainMenu);
 			Controls.Add(labelFrom);
 			Controls.Add(labelSubject);
-			Controls.Add(buttonClose);
-			Controls.Add(buttonAttachment);
+			Controls.Add(buttonCloseWindow);
+			Controls.Add(buttonOpenAttachment);
 
 			Visible = false;
 		}
 
 		private void ButtonAttachmentOnClicked(object sender, EventArgs eventArgs)
 		{
-			if (mailItem == null) return;
+			if (mailItem == null)
+				return;
 
-			if (mailItem.Attachment == null) return;
+			if (mailItem.Attachment == null)
+				return;
 			
 			Visible = false;
 			mailItem.Attachment.Open();

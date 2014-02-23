@@ -14,10 +14,11 @@ namespace MyThirdSDL.UserInterface
 	{
 		private const int itemsPerPage = 4;
 		private int currentDisplayedPage = 1;
-		private string defaultInfoAndSkillsText = "N/A";
 
 		private Icon iconFrame;
 		private Tooltip tooltipHoveredItem;
+
+		private string defaultText;
 
 		#region Header Controls
 
@@ -111,10 +112,12 @@ namespace MyThirdSDL.UserInterface
 				labelLeadership.Position = new Vector(base.Position.X + 540, base.Position.Y + 90);
 				labelCreativity.Position = new Vector(base.Position.X + 540, base.Position.Y + 120);
 				labelIntelligence.Position = new Vector(base.Position.X + 540, base.Position.Y + 150);
-				buttonCloseWindow.Position = new Vector(base.Position.X + 600, base.Position.Y - 47);
+				buttonCloseWindow.Position = new Vector(base.Position.X + Width - buttonCloseWindow.Width, base.Position.Y + Height + 5);
 				buttonArrowCircleLeft.Position = new Vector(base.Position.X + 9, base.Position.Y + 248);
 				buttonArrowCircleRight.Position = new Vector(base.Position.X + 296, base.Position.Y + 248);
 				tooltipHoveredItem.Position = new Vector(base.Position.X, base.Position.Y + Height + 40);
+				buttonCloseWindow.Tooltip.Position = new Vector(Position.X, buttonCloseWindow.Position.Y + buttonCloseWindow.Height + 5);
+
 				SetMenuItemButtonPositions();
 			}
 		}
@@ -127,21 +130,24 @@ namespace MyThirdSDL.UserInterface
 			Width = iconFrame.Width;
 			Height = iconFrame.Height;
 
+			defaultText = contentManager.GetString(StringReferenceKeys.DEFAULT_TEXT);
+
 			string fontPath = contentManager.GetContentPath(Styles.Fonts.Arcade);
-			Color fontColorTitle = Styles.Colors.White;
-			Color fontColorLabelValue = Styles.Colors.PaleYellow;
+			Color fontColorWhite = Styles.Colors.White;
+			Color fontColorYellow = Styles.Colors.PaleYellow;
 			int fontSizeTitle = Styles.FontSizes.Title;
 			int fontSizeContent = Styles.FontSizes.Content;
+			int fontSizeTooltip = Styles.FontSizes.Tooltip;
 
 			iconMainMenuHeader = ControlFactory.CreateIcon(contentManager, iconMainMenuContentPathKey);
 			iconInfoMenuHeader = ControlFactory.CreateIcon(contentManager, "IconStatistics");
 			iconSkillsMenuHeader = ControlFactory.CreateIcon(contentManager, "IconPenPaper");
 
-			labelMainMenuHeader = ControlFactory.CreateLabel(contentManager, fontPath, fontSizeTitle, fontColorTitle, menuTitle);
+			labelMainMenuHeader = ControlFactory.CreateLabel(contentManager, fontPath, fontSizeTitle, fontColorWhite, menuTitle);
 			labelMainMenuHeader.EnableShadow(contentManager, 2, 2);
-			labelInfoMenuHeader = ControlFactory.CreateLabel(contentManager, fontPath, fontSizeTitle, fontColorTitle, "Needs");
+			labelInfoMenuHeader = ControlFactory.CreateLabel(contentManager, fontPath, fontSizeTitle, fontColorWhite, "Needs");
 			labelInfoMenuHeader.EnableShadow(contentManager, 2, 2);
-			labelSkillsMenuHeader = ControlFactory.CreateLabel(contentManager, fontPath, fontSizeTitle, fontColorTitle, "Skills");
+			labelSkillsMenuHeader = ControlFactory.CreateLabel(contentManager, fontPath, fontSizeTitle, fontColorWhite, "Skills");
 			labelSkillsMenuHeader.EnableShadow(contentManager, 2, 2);
 
 			iconMoney = ControlFactory.CreateIcon(contentManager, "IconMoney");
@@ -152,27 +158,29 @@ namespace MyThirdSDL.UserInterface
 			iconThirst = ControlFactory.CreateIcon(contentManager, "IconSoda");
 			iconHunger = ControlFactory.CreateIcon(contentManager, "IconChicken");
 
-			labelMoney = ControlFactory.CreateLabel(contentManager, fontPath, fontSizeContent, fontColorLabelValue, defaultInfoAndSkillsText);
-			labelHealth = ControlFactory.CreateLabel(contentManager, fontPath, fontSizeContent, fontColorLabelValue, defaultInfoAndSkillsText);
-			labelHygiene = ControlFactory.CreateLabel(contentManager, fontPath, fontSizeContent, fontColorLabelValue, defaultInfoAndSkillsText);
-			labelSleep = ControlFactory.CreateLabel(contentManager, fontPath, fontSizeContent, fontColorLabelValue, defaultInfoAndSkillsText);
-			labelThirst = ControlFactory.CreateLabel(contentManager, fontPath, fontSizeContent, fontColorLabelValue, defaultInfoAndSkillsText);
-			labelHunger = ControlFactory.CreateLabel(contentManager, fontPath, fontSizeContent, fontColorLabelValue, defaultInfoAndSkillsText);
+			labelMoney = ControlFactory.CreateLabel(contentManager, fontPath, fontSizeContent, fontColorYellow, defaultText);
+			labelHealth = ControlFactory.CreateLabel(contentManager, fontPath, fontSizeContent, fontColorYellow, defaultText);
+			labelHygiene = ControlFactory.CreateLabel(contentManager, fontPath, fontSizeContent, fontColorYellow, defaultText);
+			labelSleep = ControlFactory.CreateLabel(contentManager, fontPath, fontSizeContent, fontColorYellow, defaultText);
+			labelThirst = ControlFactory.CreateLabel(contentManager, fontPath, fontSizeContent, fontColorYellow, defaultText);
+			labelHunger = ControlFactory.CreateLabel(contentManager, fontPath, fontSizeContent, fontColorYellow, defaultText);
 
 			iconCommunication = ControlFactory.CreateIcon(contentManager, "IconCommunication");
 			iconLeadership = ControlFactory.CreateIcon(contentManager, "IconLeadership");
 			iconCreativity = ControlFactory.CreateIcon(contentManager, "IconCreativity");
 			iconIntelligence = ControlFactory.CreateIcon(contentManager, "IconIntelligence");
 
-			labelCommunication = ControlFactory.CreateLabel(contentManager, fontPath, fontSizeContent, fontColorLabelValue, defaultInfoAndSkillsText);
-			labelLeadership = ControlFactory.CreateLabel(contentManager, fontPath, fontSizeContent, fontColorLabelValue, defaultInfoAndSkillsText);
-			labelCreativity = ControlFactory.CreateLabel(contentManager, fontPath, fontSizeContent, fontColorLabelValue, defaultInfoAndSkillsText);
-			labelIntelligence = ControlFactory.CreateLabel(contentManager, fontPath, fontSizeContent, fontColorLabelValue, defaultInfoAndSkillsText);
+			labelCommunication = ControlFactory.CreateLabel(contentManager, fontPath, fontSizeContent, fontColorYellow, defaultText);
+			labelLeadership = ControlFactory.CreateLabel(contentManager, fontPath, fontSizeContent, fontColorYellow, defaultText);
+			labelCreativity = ControlFactory.CreateLabel(contentManager, fontPath, fontSizeContent, fontColorYellow, defaultText);
+			labelIntelligence = ControlFactory.CreateLabel(contentManager, fontPath, fontSizeContent, fontColorYellow, defaultText);
 
 			buttonCloseWindow = ControlFactory.CreateButton(contentManager, "ButtonSquare", "ButtonSquareHover");
 			buttonCloseWindow.Icon = ControlFactory.CreateIcon(contentManager, "IconWindowClose");
 			buttonCloseWindow.IconHovered = ControlFactory.CreateIcon(contentManager, "IconWindowClose");
 			buttonCloseWindow.ButtonType = ButtonType.IconOnly;
+			buttonCloseWindow.Tooltip = ControlFactory.CreateTooltip(contentManager, "TooltipFrame", fontPath, fontSizeTooltip,
+				fontColorWhite, contentManager.GetString(StringReferenceKeys.TOOLTIP_BUTTON_CLOSE_WINDOW));
 
 			buttonArrowCircleLeft = ControlFactory.CreateButton(contentManager, "ButtonSquare", "ButtonSquareHover");
 			buttonArrowCircleLeft.Icon = ControlFactory.CreateIcon(contentManager, "IconArrowCircleLeft");
@@ -185,7 +193,7 @@ namespace MyThirdSDL.UserInterface
 			buttonArrowCircleRight.ButtonType = ButtonType.IconOnly;
 
 			tooltipHoveredItem = ControlFactory.CreateTooltip(contentManager, "TooltipFrame", fontPath,
-				Styles.FontSizes.Tooltip, Styles.Colors.White, contentManager.GetString(StringReferenceKeys.DEFAULT_TEXT));
+				Styles.FontSizes.Tooltip, Styles.Colors.White, defaultText);
 
 			foreach (var purchasableItem in purchasableItems)
 			{
@@ -194,8 +202,8 @@ namespace MyThirdSDL.UserInterface
 				buttonMenuItem.TextureFrameHovered = contentManager.GetTexture("ButtonMenuItemHover");
 				buttonMenuItem.IconMain = ControlFactory.CreateIcon(contentManager, purchasableItem.IconTextureKey);
 				buttonMenuItem.IconMoney = ControlFactory.CreateIcon(contentManager, "IconMoney");
-				buttonMenuItem.LabelMain = ControlFactory.CreateLabel(contentManager, fontPath, fontSizeContent, fontColorLabelValue, purchasableItem.Name);
-				buttonMenuItem.LabelMoney = ControlFactory.CreateLabel(contentManager, fontPath, fontSizeContent, fontColorLabelValue, purchasableItem.Price.ToString());
+				buttonMenuItem.LabelMain = ControlFactory.CreateLabel(contentManager, fontPath, fontSizeContent, fontColorYellow, purchasableItem.Name);
+				buttonMenuItem.LabelMoney = ControlFactory.CreateLabel(contentManager, fontPath, fontSizeContent, fontColorYellow, purchasableItem.Price.ToString());
 				AddButtonMenuItem(buttonMenuItem);
 			}
 
@@ -421,26 +429,26 @@ namespace MyThirdSDL.UserInterface
 		/// </summary>
 		private void ClearInfoAndSkillsText()
 		{
-			if (labelMoney.Text != defaultInfoAndSkillsText)
-				labelMoney.Text = defaultInfoAndSkillsText;
-			if (labelHealth.Text != defaultInfoAndSkillsText)
-				labelHealth.Text = defaultInfoAndSkillsText;
-			if (labelHunger.Text != defaultInfoAndSkillsText)
-				labelHunger.Text = defaultInfoAndSkillsText;
-			if (labelHygiene.Text != defaultInfoAndSkillsText)
-				labelHygiene.Text = defaultInfoAndSkillsText;
-			if (labelSleep.Text != defaultInfoAndSkillsText)
-				labelSleep.Text = defaultInfoAndSkillsText;
-			if (labelThirst.Text != defaultInfoAndSkillsText)
-				labelThirst.Text = defaultInfoAndSkillsText;
-			if (labelCommunication.Text != defaultInfoAndSkillsText)
-				labelCommunication.Text = defaultInfoAndSkillsText;
-			if (labelCreativity.Text != defaultInfoAndSkillsText)
-				labelCreativity.Text = defaultInfoAndSkillsText;
-			if (labelIntelligence.Text != defaultInfoAndSkillsText)
-				labelIntelligence.Text = defaultInfoAndSkillsText;
-			if (labelLeadership.Text != defaultInfoAndSkillsText)
-				labelLeadership.Text = defaultInfoAndSkillsText;
+			if (labelMoney.Text != defaultText)
+				labelMoney.Text = defaultText;
+			if (labelHealth.Text != defaultText)
+				labelHealth.Text = defaultText;
+			if (labelHunger.Text != defaultText)
+				labelHunger.Text = defaultText;
+			if (labelHygiene.Text != defaultText)
+				labelHygiene.Text = defaultText;
+			if (labelSleep.Text != defaultText)
+				labelSleep.Text = defaultText;
+			if (labelThirst.Text != defaultText)
+				labelThirst.Text = defaultText;
+			if (labelCommunication.Text != defaultText)
+				labelCommunication.Text = defaultText;
+			if (labelCreativity.Text != defaultText)
+				labelCreativity.Text = defaultText;
+			if (labelIntelligence.Text != defaultText)
+				labelIntelligence.Text = defaultText;
+			if (labelLeadership.Text != defaultText)
+				labelLeadership.Text = defaultText;
 		}
 
 		#endregion Helper Methods

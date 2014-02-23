@@ -3,7 +3,7 @@
 		{ 
 			"key": "OfficeDesk", "name": "Office Desk", "price": "50", "icon": "IconDesk", 
 				"description": "Required for an employee to do any work. Without desks, employees will be upset.",
-				"necessityEffect": [ { "health":  "0", "hygiene": "0", "sleep": "-2", "thirst": "0", "hunger": "0" } ],
+				"necessityEffect": [ { "health":  "0", "hygiene": "0", "sleep": "-2", "thirst": "-1", "hunger": "-1" } ],
 				"skillEffect": [ { "intelligence": "0", "creativity": "0", "communication": "0", "leadership": "0" } ]
 		},
 		{ 

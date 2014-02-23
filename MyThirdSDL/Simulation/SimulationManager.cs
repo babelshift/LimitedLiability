@@ -18,10 +18,10 @@ namespace MyThirdSDL.Simulation
 
 	public class SimulationManager
 	{
+
 		#region Members
 
 		public static readonly int SimulationTimeToWorldTimeMultiplier = 540;
-
 		private readonly IEnumerable<ThoughtMetadata> thoughtPool;
 		private readonly Dictionary<System.Type, List<Agent>> trackedAgents = new Dictionary<Type, List<Agent>>();
 		private DateTime startingWorldDateTime;
@@ -89,16 +89,12 @@ namespace MyThirdSDL.Simulation
 
 		public IEnumerable<Employee> TrackedEmployees
 		{
-			get
-			{
-				IEnumerable<List<Agent>> agentLists = trackedAgents.Values.AsEnumerable();
-				List<Employee> agents = new List<Employee>();
-				foreach (var agentList in agentLists)
-					foreach (var agent in agentList)
-						if (agent is Employee)
-							agents.Add(agent as Employee);
-				return agents;
-			}
+			get { return GetTrackedAgentsByType<Employee>(); }
+		}
+
+		public IEnumerable<Equipment> TrackedEquipment
+		{
+			get { return GetTrackedAgentsByType<Equipment>(); }
 		}
 
 		#endregion Properties
@@ -106,9 +102,7 @@ namespace MyThirdSDL.Simulation
 		#region Public Simulation Events
 
 		public event EventHandler<ThoughtEventArgs> HadThought;
-
 		public event EventHandler<EventArgs> EmployeeThirstSatisfied;
-
 		public event EventHandler<EventArgs> EmployeeHungerSatisfied;
 
 		#endregion Public Simulation Events
@@ -130,7 +124,8 @@ namespace MyThirdSDL.Simulation
 		public void Update(GameTime gameTime)
 		{
 			// only update if the simulation isn't paused
-			if (state == SimulationState.Paused) return;
+			if (state == SimulationState.Paused)
+				return;
 
 			SimulationTime += gameTime.ElapsedGameTime;
 
@@ -141,10 +136,9 @@ namespace MyThirdSDL.Simulation
 					agent.Update(gameTime);
 
 					// handle employee specific update logic
-					if (agent is Employee)
+					var employee = agent as Employee;
+					if (employee != null)
 					{
-						var employee = agent as Employee;
-
 						// TODO: delay updating this until 1-2 seconds has passed? we don't really need to update this often
 						foreach (var unsatisfiedThought in employee.UnsatisfiedThoughts)
 							TakeActionBasedOnThought(employee, unsatisfiedThought.Type);
@@ -234,7 +228,8 @@ namespace MyThirdSDL.Simulation
 		public void AddAgent<T>(T agent)
 			where T : Agent
 		{
-			if (IsAgentAlreadyTracked(agent)) return;
+			if (IsAgentAlreadyTracked(agent))
+				return;
 
 			agent.Activate();
 
@@ -285,15 +280,16 @@ namespace MyThirdSDL.Simulation
 		/// <typeparam name="T">The 1st type parameter.</typeparam>
 		private void StopTrackingAgent<T>(Guid agentId)
 		{
-			List<Agent> agentsForType;
-			bool success = trackedAgents.TryGetValue(typeof(T), out agentsForType);
-			if (success)
+			foreach (var key in trackedAgents.Keys)
 			{
-				var matchingAgent = agentsForType.FirstOrDefault(a => a.ID == agentId);
-				if (matchingAgent != null)
+				if (trackedAgents[key].Any(t => t.ID == agentId))
 				{
-					agentsForType.Remove(matchingAgent);
-					matchingAgent.Dispose();
+					var matchingAgent = trackedAgents[key].FirstOrDefault(a => a.ID == agentId);
+					if (matchingAgent != null)
+					{
+						trackedAgents[key].Remove(matchingAgent);
+						matchingAgent.Dispose();
+					}
 				}
 			}
 		}
@@ -306,14 +302,14 @@ namespace MyThirdSDL.Simulation
 			where T : Agent
 		{
 			var agent = GetTrackedAgent<T>(agentId);
-			if (agent == null) return;
+			if (agent == null)
+				return;
 			
 			agent.Deactivate();
 
-			if (agent is Employee)
+			var employee = agent as Employee;
+			if (employee != null)
 			{
-				var employee = agent as Employee;
-
 				employee.HadThought -= HandleHadThought;
 				employee.ThoughtSatisfied -= HandleThoughtSatisfied;
 			}
@@ -328,44 +324,31 @@ namespace MyThirdSDL.Simulation
 		/// <returns>The tracked agent.</returns>
 		/// <param name="agentId">Agent identifier.</param>
 		/// <typeparam name="T">The 1st type parameter.</typeparam>
-		private T GetTrackedAgent<T>(Guid agentId)
+		public T GetTrackedAgent<T>(Guid agentId)
 			where T : Agent
 		{
-			IEnumerable<T> agentsForType = GetTrackedAgentsByType<T>();
-			var agent = agentsForType.FirstOrDefault(a => a.ID == agentId);
-
-			if (agent != null)
-				return agent;
+			foreach (var key in trackedAgents.Keys)
+				foreach (var trackedAgent in trackedAgents[key])
+					if (trackedAgent.ID == agentId)
+						return (T)trackedAgent;
 
 			return null;
 		}
 
-		/// <summary>
-		/// Gets all tracked agents in the simulation identified by the type T (used as a key). If no agents exist in the simulation with type T, an empty
-		/// list is returned.
-		/// </summary>
-		/// <returns>The tracked agents by type.</returns>
-		/// <typeparam name="T">The 1st type parameter.</typeparam>
 		private IEnumerable<T> GetTrackedAgentsByType<T>()
 			where T : Agent
 		{
-			List<Agent> agentsForType;
-			bool success = trackedAgents.TryGetValue(typeof(T), out agentsForType);
-			if (success)
+			List<T> equipmentResults = new List<T>();
+			foreach (var key in trackedAgents.Keys)
 			{
-				// TODO: this is ugly as hell, i'm switching on a type in a generic method and double casting a list
-				// we want to remove assigned office desks from the list of get tracked agents because they should be considered taken
-				//				if (typeof(T).Equals(typeof(OfficeDesk)))
-				//				{
-				//					var officeDesks = agentsForType.Cast<OfficeDesk>().ToList();
-				//					officeDesks.RemoveAll(o => o.IsAssignedToAnEmployee == true);
-				//					return officeDesks.Cast<T>();
-				//				}
-				//				else
-				return agentsForType.Cast<T>();
+				foreach (var trackedAgent in trackedAgents[key])
+				{
+					var equipment = trackedAgent as T;
+					if (equipment != null)
+						equipmentResults.Add(equipment);
+				}
 			}
-			
-			return new List<T>();
+			return equipmentResults;
 		}
 
 		public void PromoteEmployee(Guid employeeId)
@@ -374,6 +357,11 @@ namespace MyThirdSDL.Simulation
 			employee.Promote();
 		}
 
+		public void DemoteEmployee(Guid employeeId)
+		{
+			Employee employee = GetTrackedAgent<Employee>(employeeId);
+			employee.Demote();
+		}
 
 		#endregion Agent Tracking
 
@@ -406,18 +394,21 @@ namespace MyThirdSDL.Simulation
 				intentionType = IntentionType.GoToDesk;
 
 			// if we don't already intend to perform that intention, proceed
-			if (mobileAgent.IsAlreadyIntention(intentionType)) return;
+			if (mobileAgent.IsAlreadyIntention(intentionType))
+				return;
 			
 			var agentsToCheck = GetTrackedAgentsByType<T>();
 
 			// if there are agents by that type to head towards, proceed
-			if (agentsToCheck.Count() == 0) return;
+			if (agentsToCheck.Count() == 0)
+				return;
 			
 			// find the closest agent by the type T to the employee and set the employee on his way towards that agent if any exists
 			var closestAgent = GetClosestAgentByType(mobileAgent, agentsToCheck);
 
 			// if there is an actual closest agent in the simulation, proceed
-			if (closestAgent == null) return;
+			if (closestAgent == null)
+				return;
 			
 			// if this is a triggerable, subscribe to the trigger now that we intend to go to it
 			//						if (closestAgent is ITriggerable)
@@ -541,7 +532,8 @@ namespace MyThirdSDL.Simulation
 		private T GetClosestAgentByType<T>(MobileAgent mobileAgent, IEnumerable<T> agentsToCheck)
 			where T : Agent
 		{
-			if (mobileAgent == null) throw new ArgumentNullException("mobileAgent");
+			if (mobileAgent == null)
+				throw new ArgumentNullException("mobileAgent");
 
 			if (agentsToCheck.Count() > 0)
 			{
@@ -587,8 +579,8 @@ namespace MyThirdSDL.Simulation
 		{
 			// find the best path from the mobile agent's center to the target agent's center
 			Queue<PathNode> bestPath = FindBestPath(
-				new Vector(mobileAgent.CollisionBox.Center.X, mobileAgent.CollisionBox.Center.Y),
-				new Vector(agent.CollisionBox.Center.X, agent.CollisionBox.Center.Y));
+				                           new Vector(mobileAgent.CollisionBox.Center.X, mobileAgent.CollisionBox.Center.Y),
+				                           new Vector(agent.CollisionBox.Center.X, agent.CollisionBox.Center.Y));
 
 			return bestPath;
 		}
@@ -635,7 +627,7 @@ namespace MyThirdSDL.Simulation
 			
 			foreach (var mapEquipmentOccupent in mapEquipmentOccupents)
 			{
-				if(mapEquipmentOccupent is SnackMachine)
+				if (mapEquipmentOccupent is SnackMachine)
 					AddAgent(mapEquipmentOccupent as SnackMachine);
 				else if (mapEquipmentOccupent is SodaMachine)
 					AddAgent(mapEquipmentOccupent as SodaMachine);
