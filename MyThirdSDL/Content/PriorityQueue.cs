@@ -1,27 +1,24 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace MyThirdSDL
+namespace MyThirdSDL.Content
 {
-	public class PriorityQueue<P, V>
+	public class PriorityQueue<TP, TV>
 	{
-		private SortedDictionary<P, Queue<V>> list = new SortedDictionary<P, Queue<V>>();
+		private readonly SortedDictionary<TP, Queue<TV>> list = new SortedDictionary<TP, Queue<TV>>();
 
-		public void Enqueue(P priority, V value)
+		public void Enqueue(TP priority, TV value)
 		{
-			Queue<V> q;
+			Queue<TV> q;
 			if (!list.TryGetValue(priority, out q))
 			{
-				q = new Queue<V>();
+				q = new Queue<TV>();
 				list.Add(priority, q);
 			}
 			q.Enqueue(value);
 		}
 
-		public V Dequeue()
+		public TV Dequeue()
 		{
 			// will throw if there is not any first element
 			var pair = list.First();

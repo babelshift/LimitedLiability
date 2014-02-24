@@ -82,9 +82,7 @@
     <Compile Include="GridManager.cs" />
     <Compile Include="ICollidable.cs" />
     <Compile Include="IDrawable.cs" />
-    <Compile Include="INode.cs" />
     <Compile Include="MainGame.cs" />
-    <Compile Include="PriorityQueue.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="UserInterface\Button.cs" />
@@ -204,10 +202,19 @@
     <Compile Include="Agents\EquipmentCondition.cs" />
     <Compile Include="Content\Data\StringReferenceKeys.cs" />
     <Compile Include="Agents\AgentMetadata.cs" />
+    <Compile Include="Content\IHasNeighbors.cs" />
+    <Compile Include="Content\INode.cs" />
+    <Compile Include="Content\PriorityQueue.cs" />
+    <Compile Include="Business\BusinessProject.cs" />
+    <Compile Include="Business\ResearchLevel.cs" />
+    <Compile Include="Business\BusinessProjectType.cs" />
+    <Compile Include="Business\BusinessProjectMetadata.cs" />
+    <Compile Include="Business\BusinessProjectActionType.cs" />
+    <Compile Include="Business\BusinessProjectState.cs" />
+    <Compile Include="Business\BusinessManager.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
-    <Compile Include="IHasNeighbors.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\Images\Equipment\SodaMachine.png">
@@ -637,5 +644,6 @@
     <Folder Include="Content\Maps\" />
     <Folder Include="Content\Data\" />
     <Folder Include="Mail\" />
+    <Folder Include="Business\" />
   </ItemGroup>
 </Project>

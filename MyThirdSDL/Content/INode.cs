@@ -1,6 +1,6 @@
 ﻿using SharpDL.Graphics;
 
-namespace MyThirdSDL
+namespace MyThirdSDL.Content
 {
 	public interface INode
 	{

@@ -19,16 +19,17 @@ namespace MyThirdSDL.Screens
 
 		#region Members
 
-		private JobFactory jobFactory;
-		private AgentFactory agentFactory;
-		private RoomFactory roomFactory;
-		private SimulationManager simulationManager;
+		private readonly JobFactory jobFactory;
+		private readonly AgentFactory agentFactory;
+		private readonly RoomFactory roomFactory;
+		private readonly SimulationManager simulationManager;
 		private UserInterfaceManager userInterfaceManager;
 		private MailManager mailManager;
 		private BankAccount bankAccount;
 		private TiledMap tiledMap;
-		private string mapPathToLoad;
+		private readonly string mapPathToLoad;
 		private IReadOnlyList<MapCell> hoveredMapCells;
+		private BusinessManager business;
 
 		#endregion Members
 
@@ -250,6 +251,8 @@ namespace MyThirdSDL.Screens
 			userInterfaceManager.EmployeeDisciplined += UserInterfaceManagerOnEmployeeDisciplined;
 			userInterfaceManager.EquipmentSold += HandleEquipmentSold;
 			userInterfaceManager.EquipmentRepaired += HandleEquipmentRepaired;
+
+			business = new BusinessManager();
 		}
 
 		/// <summary>
