@@ -80,6 +80,7 @@
     <Compile Include="Agents\AgentState.cs" />
     <Compile Include="Agents\Employee.cs" />
     <Compile Include="Agents\Equipment.cs" />
+    <Compile Include="Agents\EquipmentCondition.cs" />
     <Compile Include="Agents\Job.cs" />
     <Compile Include="Agents\JobFactory.cs" />
     <Compile Include="Agents\JobLevel.cs" />
@@ -98,6 +99,13 @@
     <Compile Include="Agents\Wall.cs" />
     <Compile Include="Agents\WaterFountain.cs" />
     <Compile Include="BankAccount.cs" />
+    <Compile Include="Business\BusinessManager.cs" />
+    <Compile Include="Business\BusinessProject.cs" />
+    <Compile Include="Business\BusinessProjectActionType.cs" />
+    <Compile Include="Business\BusinessProjectMetadata.cs" />
+    <Compile Include="Business\BusinessProjectState.cs" />
+    <Compile Include="Business\BusinessProjectType.cs" />
+    <Compile Include="Business\ResearchLevel.cs" />
     <Compile Include="Camera.cs" />
     <Compile Include="Content\CompanyMetadata.cs" />
     <Compile Include="Content\ContentManager.cs" />
@@ -110,6 +118,8 @@
     <Compile Include="Content\Data\StringReferenceKeys.cs" />
     <Compile Include="Content\EquipmentObject.cs" />
     <Compile Include="Content\EquipmentObjectType.cs" />
+    <Compile Include="Content\IHasNeighbors.cs" />
+    <Compile Include="Content\INode.cs" />
     <Compile Include="Content\JobLevelMetadata.cs" />
     <Compile Include="Content\JobMetadata.cs" />
     <Compile Include="Content\MapCell.cs">
@@ -120,6 +130,7 @@
     <Compile Include="Content\MapObjectLayer.cs" />
     <Compile Include="Content\MapObjectLayerType.cs" />
     <Compile Include="Content\MapObjectType.cs" />
+    <Compile Include="Content\PriorityQueue.cs" />
     <Compile Include="Content\TextureBook.cs" />
     <Compile Include="Content\TextureStore.cs" />
     <Compile Include="Content\ThoughtMetadata.cs" />
@@ -153,7 +164,6 @@
     <Compile Include="GridManager.cs" />
     <Compile Include="ICollidable.cs" />
     <Compile Include="IDrawable.cs" />
-    <Compile Include="INode.cs" />
     <Compile Include="Mail\Resume.cs" />
     <Compile Include="Mail\AttachmentType.cs" />
     <Compile Include="Mail\IAttachment.cs" />
@@ -170,7 +180,6 @@
     <Compile Include="Screens\SaveGameScreen.cs" />
     <Compile Include="Screens\ScenarioScreen.cs" />
     <Compile Include="Simulation\Path.cs" />
-    <Compile Include="PriorityQueue.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Screens\LoadingScreen.cs" />
@@ -213,6 +222,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="UserInterface\MailItemPage.cs" />
+    <Compile Include="UserInterface\ManeInspectEquipment.cs" />
     <Compile Include="UserInterface\Menu.cs" />
     <Compile Include="UserInterface\MenuCompany.cs" />
     <Compile Include="UserInterface\MenuEmail.cs" />
@@ -285,28 +295,10 @@
     <Content Include="Content\Images\User Interface\BottomBar.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Images\User Interface\ButtonEmployees.png">
+    <Content Include="Content\Images\User Interface\ButtonBottomBar.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Images\User Interface\ButtonEmployeesHover.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Content\Images\User Interface\ButtonFinances.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Content\Images\User Interface\ButtonFinancesHover.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Content\Images\User Interface\ButtonGameMenu.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Content\Images\User Interface\ButtonGameMenuHover.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Content\Images\User Interface\ButtonItems.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Content\Images\User Interface\ButtonItemsHover.png">
+    <Content Include="Content\Images\User Interface\ButtonBottomBarHover.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\Images\User Interface\ButtonMailAction.png">
@@ -331,24 +323,6 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\Images\User Interface\ButtonMainMenuItemHover.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Content\Images\User Interface\ButtonProducts.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Content\Images\User Interface\ButtonProductsHover.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Content\Images\User Interface\ButtonRooms.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Content\Images\User Interface\ButtonRoomsHover.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Content\Images\User Interface\ButtonStatistics.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Content\Images\User Interface\ButtonStatisticsHover.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\Images\User Interface\ButtonTopBar.png">
@@ -387,13 +361,10 @@
     <Content Include="Content\Images\User Interface\IconMailArchive.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Images\User Interface\IconMailInbox.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
     <Content Include="Content\Images\User Interface\IconMailNotification.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Images\User Interface\IconMailOutbox.png">
+    <Content Include="Content\Images\User Interface\IconMailOpen.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\Images\User Interface\IconMailRead.png">
@@ -487,7 +458,6 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <None Include="App.config" />
-    <Compile Include="IHasNeighbors.cs" />
     <Content Include="Content\Data\ContentReference.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

@@ -46,15 +46,15 @@ namespace MyThirdSDL.UserInterface
 				base.Position = value;
 
 				iconFrame.Position = base.Position;
-				iconMainHeader.Position = base.Position + new Vector(3, 5);
-				labelMainHeader.Position = base.Position + new Vector(35, 15);
-				labelCompanyName.Position = base.Position + new Vector(8, 50);
+				iconMainHeader.Position = base.Position + new Vector(10, 10);
+				labelMainHeader.Position = base.Position + new Vector(40, 17);
+				labelCompanyName.Position = base.Position + new Vector(15, 52);
 				labelNumberOfEmployees.Position = base.Position + new Vector(8, 80);
 				labelNumberOfCompetitors.Position = base.Position + new Vector(8, 110);
 				labelNumberOfProducts.Position = base.Position + new Vector(8, 140);
 				labelIndustryType.Position = base.Position + new Vector(8, 170);
 				labelGrossIncome.Position = base.Position + new Vector(8, 200);
-				labelCompanyNameValue.Position = base.Position + new Vector(220, 50);
+				labelCompanyNameValue.Position = labelCompanyName.Position + new Vector(labelCompanyName.Width + 5, 0);
 				labelNumberOfEmployeesValue.Position = base.Position + new Vector(220, 80);
 				labelNumberOfCompetitorsValue.Position = base.Position + new Vector(220, 110);
 				labelNumberOfProductsValue.Position = base.Position + new Vector(220, 140);
@@ -72,18 +72,18 @@ namespace MyThirdSDL.UserInterface
 			Width = iconFrame.Width;
 			Height = iconFrame.Height;
 
-			string fontPath = contentManager.GetContentPath(Styles.Fonts.Arcade);
+			string fontPath = contentManager.GetContentPath(Styles.Fonts.DroidSansBold);
 			Color fontColorWhite = Styles.Colors.White;
 			Color fontColorPaleYellow = Styles.Colors.PaleYellow;
-			int fontSizeTitle = Styles.FontSizes.Title;
-			int fontSizeContent = Styles.FontSizes.Content;
+			int fontSizeTitle = 16;
+			int fontSizeContent = 14;
 			int fontSizeTooltip = Styles.FontSizes.Tooltip;
 
 			iconMainHeader = ControlFactory.CreateIcon(contentManager, "IconPenPaper");
-			labelMainHeader = ControlFactory.CreateLabel(contentManager, fontPath, fontSizeTitle, fontColorWhite, "Company Statistics");
+			labelMainHeader = ControlFactory.CreateLabel(contentManager, fontPath, fontSizeTitle, fontColorPaleYellow, "Company Statistics");
 			labelMainHeader.EnableShadow(contentManager, 2, 2);
 
-			labelCompanyName = ControlFactory.CreateLabel(contentManager, fontPath, fontSizeContent, fontColorWhite, "Company Name:");
+			labelCompanyName = ControlFactory.CreateLabel(contentManager, fontPath, fontSizeContent, fontColorWhite, "Name:");
 			labelNumberOfEmployees = ControlFactory.CreateLabel(contentManager, fontPath, fontSizeContent, fontColorWhite, "# of Employees:");
 			labelNumberOfCompetitors = ControlFactory.CreateLabel(contentManager, fontPath, fontSizeContent, fontColorWhite, "# of Competitors:");
 			labelNumberOfProducts = ControlFactory.CreateLabel(contentManager, fontPath, fontSizeContent, fontColorWhite, "# of Products:");

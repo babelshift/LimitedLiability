@@ -8,7 +8,6 @@ namespace MyThirdSDL.UserInterface
 	{
 		private Icon iconFrame;
 
-		//private Button buttonSelectGeneral;
 		private Button buttonSelectEquipment;
 
 		private Button buttonSelectRoom;
@@ -16,15 +15,6 @@ namespace MyThirdSDL.UserInterface
 		private Button buttonCompany;
 		private Button buttonEmployees;
 		private Button buttonProducts;
-		private Button buttonMainMenu;
-		//private Button buttonMailMenu;
-
-		//private Icon iconMoney;
-		//private Icon iconTime;
-
-		//private Label labelMoney;
-		//private Label labelDate;
-		//private Label labelTime;
 
 		public event EventHandler ButtonSelectGeneralClicked;
 
@@ -40,10 +30,6 @@ namespace MyThirdSDL.UserInterface
 
 		public event EventHandler ButtonProductsClicked;
 
-		//public event EventHandler ButtonMainMenuClicked;
-
-		//public event EventHandler ButtonMailMenuClicked;
-
 		public override Vector Position
 		{
 			get
@@ -54,32 +40,18 @@ namespace MyThirdSDL.UserInterface
 			{
 				base.Position = value;
 
-				int spacerWidth = 14;
-				int spacerHeight = 15;
+				int spacerWidth = 10;
+				int spacerHeight = 20;
+
+				int totalButtonWidth = buttonSelectEquipment.Width * 6 + spacerWidth * 5;
 
 				iconFrame.Position = base.Position;
-				buttonSelectEquipment.Position = new Vector(iconFrame.Position.X + spacerWidth, iconFrame.Position.Y - spacerHeight);
+				buttonSelectEquipment.Position = new Vector(iconFrame.Position.X + iconFrame.Width / 2 - totalButtonWidth / 2, iconFrame.Position.Y - spacerHeight);
 				buttonSelectRoom.Position = new Vector(buttonSelectEquipment.Position.X + buttonSelectEquipment.Width + spacerWidth, iconFrame.Position.Y - spacerHeight);
 				buttonFinances.Position = new Vector(buttonSelectRoom.Position.X + buttonSelectRoom.Width + spacerWidth, iconFrame.Position.Y - spacerHeight);
 				buttonCompany.Position = new Vector(buttonFinances.Position.X + buttonFinances.Width + spacerWidth, iconFrame.Position.Y - spacerHeight);
 				buttonEmployees.Position = new Vector(buttonCompany.Position.X + buttonCompany.Width + spacerWidth, iconFrame.Position.Y - spacerHeight);
 				buttonProducts.Position = new Vector(buttonEmployees.Position.X + buttonEmployees.Width + spacerWidth, iconFrame.Position.Y - spacerHeight);
-				buttonMainMenu.Position = new Vector(buttonProducts.Position.X + buttonProducts.Width + spacerWidth, iconFrame.Position.Y - spacerHeight);
-				//buttonMailMenu.Position = buttonNinePosition;
-				//iconMoney.Position = iconOnePosition;
-				//iconTime.Position = iconTwoPosition;
-				//labelMoney.Position = iconOnePosition + new Vector(35, 10);
-				//labelDate.Position = iconTwoPosition + new Vector(32, 3);
-				//labelTime.Position = iconTwoPosition + new Vector(55, 18);
-
-				//buttonSelectEquipment.Tooltip.Position = new Vector(base.Position.X, base.Position.Y - 25);
-				//buttonSelectRoom.Tooltip.Position = new Vector(base.Position.X, base.Position.Y - 25);
-				//buttonFinances.Tooltip.Position = new Vector(base.Position.X, base.Position.Y - 25);
-				//buttonCompany.Tooltip.Position = new Vector(base.Position.X, base.Position.Y - 25);
-				//buttonEmployees.Tooltip.Position = new Vector(base.Position.X, base.Position.Y - 25);
-				//buttonProducts.Tooltip.Position = new Vector(base.Position.X, base.Position.Y - 25);
-				//buttonMainMenu.Tooltip.Position = new Vector(base.Position.X, base.Position.Y - 25);
-				//buttonMailMenu.Tooltip.Position = new Vector(base.Position.X, base.Position.Y - 25);
 			}
 		}
 
@@ -89,54 +61,40 @@ namespace MyThirdSDL.UserInterface
 			Width = iconFrame.Width;
 			Height = iconFrame.Height;
 
-			string fontPath = content.GetContentPath("Arcade");
-			Color fontColor = Styles.Colors.PaleYellow;
-			int fontSizeContent = 12;
+			string fontPathDroid = content.GetContentPath("DroidSans Bold");
+			Color fontColorWhite = Styles.Colors.White;
+			int fontSizeContent = 16;
 			int fontSizeTooltipText = 8;
 
-			//buttonSelectGeneral = ControlFactory.CreateButton(contentManager, buttonTexturePathKey, buttonHoverTexturePathKey);
-			//buttonSelectGeneral.Icon = ControlFactory.CreateIcon(contentManager, "IconArrowsInward");
-			//buttonSelectGeneral.IconHovered = ControlFactory.CreateIcon(contentManager, "IconArrowsInward");
-			//buttonSelectGeneral.Tooltip = ControlFactory.CreateTooltip(contentManager, tooltipTexturePathKey, fontPath, fontSizeTooltipText, fontColor, "Select objects to inspect them");
-			//buttonSelectGeneral.ButtonType = ButtonType.IconOnly;
+			buttonSelectEquipment = ControlFactory.CreateButton(content, "ButtonBottomBar", "ButtonBottomBarHover");
+			buttonSelectEquipment.Icon = ControlFactory.CreateIcon(content, "IconHandTruck");
+			buttonSelectEquipment.Label = ControlFactory.CreateLabel(content, fontPathDroid, fontSizeContent, fontColorWhite, "Equipment");
+			buttonSelectEquipment.ButtonType = ButtonType.IconAndText;
 
-			buttonSelectEquipment = ControlFactory.CreateButton(content, "ButtonItems", "ButtonItemsHover");
-			buttonSelectEquipment.ButtonType = ButtonType.FrameOnly;
+			buttonSelectRoom = ControlFactory.CreateButton(content, "ButtonBottomBar", "ButtonBottomBarHover");
+			buttonSelectRoom.Icon = ControlFactory.CreateIcon(content, "IconForklift");
+			buttonSelectRoom.Label = ControlFactory.CreateLabel(content, fontPathDroid, fontSizeContent, fontColorWhite, "Rooms");
+			buttonSelectRoom.ButtonType = ButtonType.IconAndText;
 
-			buttonSelectRoom = ControlFactory.CreateButton(content, "ButtonRooms", "ButtonRoomsHover");
-			buttonSelectRoom.ButtonType = ButtonType.FrameOnly;
+			buttonFinances = ControlFactory.CreateButton(content, "ButtonBottomBar", "ButtonBottomBarHover");
+			buttonFinances.Icon = ControlFactory.CreateIcon(content, "IconMoney");
+			buttonFinances.Label = ControlFactory.CreateLabel(content, fontPathDroid, fontSizeContent, fontColorWhite, "Finances");
+			buttonFinances.ButtonType = ButtonType.IconAndText;
 
-			buttonFinances = ControlFactory.CreateButton(content, "ButtonFinances", "ButtonFinancesHover");
-			buttonFinances.ButtonType = ButtonType.FrameOnly;
+			buttonCompany = ControlFactory.CreateButton(content, "ButtonBottomBar", "ButtonBottomBarHover");
+			buttonCompany.Icon = ControlFactory.CreateIcon(content, "IconBarChartUp");
+			buttonCompany.Label = ControlFactory.CreateLabel(content, fontPathDroid, fontSizeContent, fontColorWhite, "Company");
+			buttonCompany.ButtonType = ButtonType.IconAndText;
 
-			buttonCompany = ControlFactory.CreateButton(content, "ButtonStatistics", "ButtonStatisticsHover");
-			buttonCompany.ButtonType = ButtonType.FrameOnly;
+			buttonEmployees = ControlFactory.CreateButton(content, "ButtonBottomBar", "ButtonBottomBarHover");
+			buttonEmployees.Icon = ControlFactory.CreateIcon(content, "IconNametag");
+			buttonEmployees.Label = ControlFactory.CreateLabel(content, fontPathDroid, fontSizeContent, fontColorWhite, "Employees");
+			buttonEmployees.ButtonType = ButtonType.IconAndText;
 
-			buttonEmployees = ControlFactory.CreateButton(content, "ButtonEmployees", "ButtonEmployeesHover");
-			buttonEmployees.ButtonType = ButtonType.FrameOnly;
-
-			buttonProducts = ControlFactory.CreateButton(content, "ButtonProducts", "ButtonProductsHover");
-			buttonProducts.ButtonType = ButtonType.FrameOnly;
-
-			buttonMainMenu = ControlFactory.CreateButton(content, "ButtonGameMenu", "ButtonGameMenuHover");
-			buttonMainMenu.ButtonType = ButtonType.FrameOnly;
-
-			//buttonMailMenu = ControlFactory.CreateButton(contentManager, "ToolboxTrayButtonMail", "ToolboxTrayButtonMailHover");
-			//buttonMailMenu.Icon = ControlFactory.CreateIcon(contentManager, "IconMailUnread");
-			//buttonMailMenu.IconHovered = ControlFactory.CreateIcon(contentManager, "IconMailUnread");
-			//buttonMailMenu.Tooltip = ControlFactory.CreateTooltip(contentManager, tooltipTexturePathKey, fontPath, fontSizeTooltipText, fontColor, "View your e-mail messages");
-			//buttonMailMenu.Label = ControlFactory.CreateLabel(contentManager, fontPath, fontSizeContent, fontColor, unreadMailCount.ToString());
-			//buttonMailMenu.ButtonType = ButtonType.IconAndText;
-
-			//iconMoney = ControlFactory.CreateIcon(contentManager, "IconMoney");
-
-			//iconTime = ControlFactory.CreateIcon(contentManager, "IconTime");
-
-			//labelMoney = ControlFactory.CreateLabel(contentManager, fontPath, fontSizeContent, fontColor, money.ToString());
-
-			//labelDate = ControlFactory.CreateLabel(contentManager, fontPath, fontSizeContent, fontColor, DateTime.Now.ToShortDateString());
-
-			//labelTime = ControlFactory.CreateLabel(contentManager, fontPath, fontSizeContent, fontColor, DateTime.Now.ToShortTimeString());
+			buttonProducts = ControlFactory.CreateButton(content, "ButtonBottomBar", "ButtonBottomBarHover");
+			buttonProducts.Icon = ControlFactory.CreateIcon(content, "IconOpenBox");
+			buttonProducts.Label = ControlFactory.CreateLabel(content, fontPathDroid, fontSizeContent, fontColorWhite, "Products");
+			buttonProducts.ButtonType = ButtonType.IconAndText;
 
 			Controls.Add(iconFrame);
 			Controls.Add(buttonSelectEquipment);
@@ -145,13 +103,6 @@ namespace MyThirdSDL.UserInterface
 			Controls.Add(buttonCompany);
 			Controls.Add(buttonEmployees);
 			Controls.Add(buttonProducts);
-			Controls.Add(buttonMainMenu);
-			//Controls.Add(buttonMailMenu);
-			//Controls.Add(iconMoney);
-			//Controls.Add(iconTime);
-			//Controls.Add(labelMoney);
-			//Controls.Add(labelDate);
-			//Controls.Add(labelTime);
 
 			buttonSelectEquipment.Clicked += ButtonSelectEquipment_Clicked;
 			buttonSelectRoom.Clicked += ButtonSelectRoom_Clicked;
@@ -159,8 +110,6 @@ namespace MyThirdSDL.UserInterface
 			buttonCompany.Clicked += ButtonCompany_Clicked;
 			buttonEmployees.Clicked += ButtonEmployees_Clicked;
 			buttonProducts.Clicked += ButtonProducts_Clicked;
-			//buttonMainMenu.Clicked += ButtonMainMenu_Clicked;
-			//buttonMailMenu.Clicked += ButtonMailMenu_Clicked;
 		}
 
 		private void ButtonProducts_Clicked(object sender, EventArgs e)

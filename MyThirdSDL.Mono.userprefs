@@ -1,16 +1,15 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="MyThirdSDL/Simulation/SimulationManager.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="MyThirdSDL/Content/Data/StringReferenceKeys.cs">
     <Files>
-      <File FileName="MyThirdSDL/Screens/MainGameScreen.cs" Line="25" Column="21" />
-      <File FileName="MyThirdSDL/Simulation/SimulationManager.cs" Line="300" Column="1" />
+      <File FileName="MyThirdSDL/Screens/MainGameScreen.cs" Line="217" Column="4" />
+      <File FileName="MyThirdSDL/Content/Data/StringReferenceKeys.cs" Line="18" Column="2" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
     <BreakpointStore>
       <Breakpoint file="/home/justin/Documents/git/SharpDL/SharpDL.Graphics/Texture.cs" line="121" column="1" />
       <Breakpoint file="/home/justin/Documents/git/SharpDL/SharpDL.Graphics/TrueTypeText.cs" line="41" column="1" />
-      <Breakpoint file="/media/justin/Media/Documents/Programming/GitHub/MyThirdSDL/MyThirdSDL/Simulation/SimulationManager.cs" line="300" column="1" />
     </BreakpointStore>
   </MonoDevelop.Ide.DebuggingService.Breakpoints>
   <MonoDevelop.Ide.DebuggingService.PinnedWatches>
