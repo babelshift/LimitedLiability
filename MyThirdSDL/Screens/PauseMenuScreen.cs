@@ -13,7 +13,6 @@ namespace MyThirdSDL.Screens
 	{
 		private Texture textureBackgroundStripeTile;
 		private Icon iconFrame;
-		private Label labelTitle;
 		private Button buttonResumeGame;
 		private Button buttonNewGame;
 		private Button buttonLoadGame;
@@ -48,42 +47,38 @@ namespace MyThirdSDL.Screens
 			iconFrame = ControlFactory.CreateIcon(ContentManager, "MenuPauseFrame");
 			iconFrame.Position = new Vector(MainGame.SCREEN_WIDTH_LOGICAL / 2 - iconFrame.Height / 2, MainGame.SCREEN_HEIGHT_LOGICAL / 2 - iconFrame.Height / 2);
 
-			labelTitle = ControlFactory.CreateLabel(ContentManager, fontPath, fontSizeTitle, fontColorTitle, "Paused");
-			labelTitle.Position = iconFrame.Position + new Vector(iconFrame.Width / 2 - labelTitle.Width / 2, 11);
-			labelTitle.EnableShadow(ContentManager, 3, 3);
-
 			buttonResumeGame = ControlFactory.CreateButton(ContentManager, "ButtonLongRectangle", "ButtonLongRectangleHover");
 			buttonResumeGame.Label = ControlFactory.CreateLabel(ContentManager, fontPath, fontSizeContent, fontColorLabelValue, "Resume");
 			buttonResumeGame.ButtonType = ButtonType.TextOnly;
-			buttonResumeGame.Position = iconFrame.Position + new Vector(iconFrame.Width / 2 - buttonResumeGame.Width / 2, 72);
+			buttonResumeGame.Position = iconFrame.Position + new Vector(iconFrame.Width / 2 - buttonResumeGame.Width / 2, 16);
 			buttonResumeGame.Clicked += (sender, e) => ExitScreen();
 			buttonResumeGame.EnableLabelShadow(ContentManager, 2, 2);
 
 			buttonNewGame = ControlFactory.CreateButton(ContentManager, "ButtonLongRectangle", "ButtonLongRectangleHover");
 			buttonNewGame.Label = ControlFactory.CreateLabel(ContentManager, fontPath, fontSizeContent, fontColorLabelValue, "New Game");
 			buttonNewGame.ButtonType = ButtonType.TextOnly;
-			buttonNewGame.Position = iconFrame.Position + new Vector(iconFrame.Width / 2 - buttonNewGame.Width / 2, 106);
+			buttonNewGame.Position = iconFrame.Position + new Vector(iconFrame.Width / 2 - buttonNewGame.Width / 2, 50);
 			buttonNewGame.Clicked += buttonNewGame_Clicked;
 			buttonNewGame.EnableLabelShadow(ContentManager, 2, 2);
 
 			buttonLoadGame = ControlFactory.CreateButton(ContentManager, "ButtonLongRectangle", "ButtonLongRectangleHover");
 			buttonLoadGame.Label = ControlFactory.CreateLabel(ContentManager, fontPath, fontSizeContent, fontColorLabelValue, "Load Game");
 			buttonLoadGame.ButtonType = ButtonType.TextOnly;
-			buttonLoadGame.Position = iconFrame.Position + new Vector(iconFrame.Width / 2 - buttonLoadGame.Width / 2, 140);
+			buttonLoadGame.Position = iconFrame.Position + new Vector(iconFrame.Width / 2 - buttonLoadGame.Width / 2, 84);
 			buttonLoadGame.Clicked += buttonLoadGame_Clicked;
 			buttonLoadGame.EnableLabelShadow(ContentManager, 2, 2);
 
 			buttonOptions = ControlFactory.CreateButton(ContentManager, "ButtonLongRectangle", "ButtonLongRectangleHover");
 			buttonOptions.Label = ControlFactory.CreateLabel(ContentManager, fontPath, fontSizeContent, fontColorLabelValue, "Options");
 			buttonOptions.ButtonType = ButtonType.TextOnly;
-			buttonOptions.Position = iconFrame.Position + new Vector(iconFrame.Width / 2 - buttonOptions.Width / 2, 174);
+			buttonOptions.Position = iconFrame.Position + new Vector(iconFrame.Width / 2 - buttonOptions.Width / 2, 118);
 			buttonOptions.Clicked += buttonOptions_Clicked;
 			buttonOptions.EnableLabelShadow(ContentManager, 2, 2);
 
 			buttonQuit = ControlFactory.CreateButton(ContentManager, "ButtonLongRectangle", "ButtonLongRectangleHover");
 			buttonQuit.Label = ControlFactory.CreateLabel(ContentManager, fontPath, fontSizeContent, fontColorLabelValue, "Quit");
 			buttonQuit.ButtonType = ButtonType.TextOnly;
-			buttonQuit.Position = iconFrame.Position + new Vector(iconFrame.Width / 2 - buttonQuit.Width / 2, 208);
+			buttonQuit.Position = iconFrame.Position + new Vector(iconFrame.Width / 2 - buttonQuit.Width / 2, 152);
 			buttonQuit.Clicked += buttonQuit_Clicked;
 			buttonQuit.EnableLabelShadow(ContentManager, 2, 2);
 		}
@@ -97,7 +92,6 @@ namespace MyThirdSDL.Screens
 					renderer.RenderTexture(textureBackgroundStripeTile, x * textureBackgroundStripeTile.Width, y * textureBackgroundStripeTile.Height);
 
 			iconFrame.Draw(gameTime, renderer);
-			labelTitle.Draw(gameTime, renderer);
 			buttonResumeGame.Draw(gameTime, renderer);
 			buttonNewGame.Draw(gameTime, renderer);
 			buttonLoadGame.Draw(gameTime, renderer);
@@ -110,7 +104,6 @@ namespace MyThirdSDL.Screens
 			base.Update(gameTime, otherWindowHasFocus, coveredByOtherScreen);
 
 			iconFrame.Update(gameTime);
-			labelTitle.Update(gameTime);
 			buttonResumeGame.Update(gameTime);
 			buttonNewGame.Update(gameTime);
 			buttonLoadGame.Update(gameTime);
@@ -175,7 +168,8 @@ namespace MyThirdSDL.Screens
 
 		private void Dispose(bool disposing)
 		{
-			labelTitle.Dispose();
+			textureBackgroundStripeTile.Dispose();
+			iconFrame.Dispose();
 			buttonNewGame.Dispose();
 			buttonLoadGame.Dispose();
 			buttonQuit.Dispose();
