@@ -39,9 +39,9 @@ namespace MyThirdSDL.Screens
 
 			textureBackgroundStripeTile = ContentManager.GetTexture("BackgroundStripeTileFaded");
 
-			string fontPath = ContentManager.GetContentPath(Styles.Fonts.Arcade);
-			Color fontColorTitle = Styles.Colors.PaleGreen;
-			Color fontColorLabelValue = Styles.Colors.PaleYellow;
+			string fontPath = ContentManager.GetContentPath(Styles.Fonts.DroidSansBold);
+			Color fontColorTitle = Styles.Colors.PaleYellow;
+			Color fontColorLabelValue = Styles.Colors.White;
 			int fontSizeTitle = Styles.FontSizes.MainMenuTitle;
 			int fontSizeContent = Styles.FontSizes.Content;
 
@@ -49,41 +49,41 @@ namespace MyThirdSDL.Screens
 			iconFrame.Position = new Vector(MainGame.SCREEN_WIDTH_LOGICAL / 2 - iconFrame.Height / 2, MainGame.SCREEN_HEIGHT_LOGICAL / 2 - iconFrame.Height / 2);
 
 			labelTitle = ControlFactory.CreateLabel(ContentManager, fontPath, fontSizeTitle, fontColorTitle, "Paused");
-			labelTitle.Position = iconFrame.Position + new Vector(iconFrame.Width / 2 - labelTitle.Width / 2, 15);
+			labelTitle.Position = iconFrame.Position + new Vector(iconFrame.Width / 2 - labelTitle.Width / 2, 11);
 			labelTitle.EnableShadow(ContentManager, 3, 3);
 
-			buttonResumeGame = ControlFactory.CreateButton(ContentManager, "ButtonMainMenuItem", "ButtonMainMenuItemHover");
+			buttonResumeGame = ControlFactory.CreateButton(ContentManager, "ButtonLongRectangle", "ButtonLongRectangleHover");
 			buttonResumeGame.Label = ControlFactory.CreateLabel(ContentManager, fontPath, fontSizeContent, fontColorLabelValue, "Resume");
 			buttonResumeGame.ButtonType = ButtonType.TextOnly;
-			buttonResumeGame.Position = iconFrame.Position + new Vector(iconFrame.Width / 2 - buttonResumeGame.Width / 2, 75);
+			buttonResumeGame.Position = iconFrame.Position + new Vector(iconFrame.Width / 2 - buttonResumeGame.Width / 2, 72);
 			buttonResumeGame.Clicked += (sender, e) => ExitScreen();
 			buttonResumeGame.EnableLabelShadow(ContentManager, 2, 2);
 
-			buttonNewGame = ControlFactory.CreateButton(ContentManager, "ButtonMainMenuItem", "ButtonMainMenuItemHover");
+			buttonNewGame = ControlFactory.CreateButton(ContentManager, "ButtonLongRectangle", "ButtonLongRectangleHover");
 			buttonNewGame.Label = ControlFactory.CreateLabel(ContentManager, fontPath, fontSizeContent, fontColorLabelValue, "New Game");
 			buttonNewGame.ButtonType = ButtonType.TextOnly;
-			buttonNewGame.Position = iconFrame.Position + new Vector(iconFrame.Width / 2 - buttonNewGame.Width / 2, 110);
+			buttonNewGame.Position = iconFrame.Position + new Vector(iconFrame.Width / 2 - buttonNewGame.Width / 2, 106);
 			buttonNewGame.Clicked += buttonNewGame_Clicked;
 			buttonNewGame.EnableLabelShadow(ContentManager, 2, 2);
 
-			buttonLoadGame = ControlFactory.CreateButton(ContentManager, "ButtonMainMenuItem", "ButtonMainMenuItemHover");
+			buttonLoadGame = ControlFactory.CreateButton(ContentManager, "ButtonLongRectangle", "ButtonLongRectangleHover");
 			buttonLoadGame.Label = ControlFactory.CreateLabel(ContentManager, fontPath, fontSizeContent, fontColorLabelValue, "Load Game");
 			buttonLoadGame.ButtonType = ButtonType.TextOnly;
-			buttonLoadGame.Position = iconFrame.Position + new Vector(iconFrame.Width / 2 - buttonLoadGame.Width / 2, 145);
+			buttonLoadGame.Position = iconFrame.Position + new Vector(iconFrame.Width / 2 - buttonLoadGame.Width / 2, 140);
 			buttonLoadGame.Clicked += buttonLoadGame_Clicked;
 			buttonLoadGame.EnableLabelShadow(ContentManager, 2, 2);
 
-			buttonOptions = ControlFactory.CreateButton(ContentManager, "ButtonMainMenuItem", "ButtonMainMenuItemHover");
+			buttonOptions = ControlFactory.CreateButton(ContentManager, "ButtonLongRectangle", "ButtonLongRectangleHover");
 			buttonOptions.Label = ControlFactory.CreateLabel(ContentManager, fontPath, fontSizeContent, fontColorLabelValue, "Options");
 			buttonOptions.ButtonType = ButtonType.TextOnly;
-			buttonOptions.Position = iconFrame.Position + new Vector(iconFrame.Width / 2 - buttonOptions.Width / 2, 180);
+			buttonOptions.Position = iconFrame.Position + new Vector(iconFrame.Width / 2 - buttonOptions.Width / 2, 174);
 			buttonOptions.Clicked += buttonOptions_Clicked;
 			buttonOptions.EnableLabelShadow(ContentManager, 2, 2);
 
-			buttonQuit = ControlFactory.CreateButton(ContentManager, "ButtonMainMenuItem", "ButtonMainMenuItemHover");
+			buttonQuit = ControlFactory.CreateButton(ContentManager, "ButtonLongRectangle", "ButtonLongRectangleHover");
 			buttonQuit.Label = ControlFactory.CreateLabel(ContentManager, fontPath, fontSizeContent, fontColorLabelValue, "Quit");
 			buttonQuit.ButtonType = ButtonType.TextOnly;
-			buttonQuit.Position = iconFrame.Position + new Vector(iconFrame.Width / 2 - buttonQuit.Width / 2, 215);
+			buttonQuit.Position = iconFrame.Position + new Vector(iconFrame.Width / 2 - buttonQuit.Width / 2, 208);
 			buttonQuit.Clicked += buttonQuit_Clicked;
 			buttonQuit.EnableLabelShadow(ContentManager, 2, 2);
 		}

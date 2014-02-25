@@ -672,7 +672,7 @@ namespace MyThirdSDL.UserInterface
 
 		private void CreateMenuCompany(int employeeCount)
 		{
-			menuCompany = new MenuCompany(contentManager, "Skiles Inc.", employeeCount, 10, 15, "Energy", 500000);
+			menuCompany = new MenuCompany(contentManager, "Skiles Inc.", employeeCount, 10, 15, 500000);
 			menuCompany.Position = new Vector(bottomRightPointOfWindow.X / 2 - menuCompany.Width / 2, bottomRightPointOfWindow.Y / 2 - menuCompany.Height / 2);
 			menuCompany.CloseButtonClicked += menuCompany_CloseButtonClicked;
 		}

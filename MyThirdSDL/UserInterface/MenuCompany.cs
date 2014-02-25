@@ -18,14 +18,12 @@ namespace MyThirdSDL.UserInterface
 		private Label labelMainHeader;
 
 		private Label labelCompanyName;
-		private Label labelIndustryType;
 		private Label labelNumberOfEmployees;
 		private Label labelNumberOfCompetitors;
 		private Label labelNumberOfProducts;
 		private Label labelGrossIncome;
 
 		private Label labelCompanyNameValue;
-		private Label labelIndustryTypeValue;
 		private Label labelNumberOfEmployeesValue;
 		private Label labelNumberOfCompetitorsValue;
 		private Label labelNumberOfProductsValue;
@@ -49,24 +47,21 @@ namespace MyThirdSDL.UserInterface
 				iconMainHeader.Position = base.Position + new Vector(10, 10);
 				labelMainHeader.Position = base.Position + new Vector(40, 17);
 				labelCompanyName.Position = base.Position + new Vector(15, 52);
-				labelNumberOfEmployees.Position = base.Position + new Vector(8, 80);
-				labelNumberOfCompetitors.Position = base.Position + new Vector(8, 110);
-				labelNumberOfProducts.Position = base.Position + new Vector(8, 140);
-				labelIndustryType.Position = base.Position + new Vector(8, 170);
-				labelGrossIncome.Position = base.Position + new Vector(8, 200);
+				labelNumberOfEmployees.Position = base.Position + new Vector(15, 80);
+				labelNumberOfCompetitors.Position = base.Position + new Vector(15, 110);
+				labelNumberOfProducts.Position = base.Position + new Vector(235, 80);
+				labelGrossIncome.Position = base.Position + new Vector(235, 110);
 				labelCompanyNameValue.Position = labelCompanyName.Position + new Vector(labelCompanyName.Width + 5, 0);
-				labelNumberOfEmployeesValue.Position = base.Position + new Vector(220, 80);
-				labelNumberOfCompetitorsValue.Position = base.Position + new Vector(220, 110);
-				labelNumberOfProductsValue.Position = base.Position + new Vector(220, 140);
-				labelIndustryTypeValue.Position = base.Position + new Vector(220, 170);
-				labelGrossIncomeValue.Position = base.Position + new Vector(220, 200);
+				labelNumberOfEmployeesValue.Position = labelNumberOfEmployees.Position + new Vector(labelNumberOfEmployees.Width + 5, 0);
+				labelNumberOfCompetitorsValue.Position = labelNumberOfCompetitors.Position + new Vector(labelNumberOfCompetitors.Width + 5, 0);
+				labelNumberOfProductsValue.Position = labelNumberOfProducts.Position + new Vector(labelNumberOfProducts.Width + 5, 0);
+				labelGrossIncomeValue.Position = labelGrossIncome.Position + new Vector(labelGrossIncome.Width + 5, 0);
 
-				buttonCloseWindow.Position = new Vector(base.Position.X + Width - buttonCloseWindow.Width, base.Position.Y + Height + 5);
-				buttonCloseWindow.Tooltip.Position = new Vector(Position.X, buttonCloseWindow.Position.Y + buttonCloseWindow.Height + 5);
+				buttonCloseWindow.Position = new Vector(base.Position.X + Width - buttonCloseWindow.Width - 14, base.Position.Y + Height - buttonCloseWindow.Height - 15);
 			}
 		}
 
-		public MenuCompany(ContentManager contentManager, string companyName, int numberOfEmployees, int numberOfCompetitors, int numberOfProducts, string industryTypeName, int yearlyGrossIncome)
+		public MenuCompany(ContentManager contentManager, string companyName, int numberOfEmployees, int numberOfCompetitors, int numberOfProducts, int yearlyGrossIncome)
 		{
 			iconFrame = new Icon(contentManager.GetTexture("MenuCompanyFrame"));
 			Width = iconFrame.Width;
@@ -75,8 +70,9 @@ namespace MyThirdSDL.UserInterface
 			string fontPath = contentManager.GetContentPath(Styles.Fonts.DroidSansBold);
 			Color fontColorWhite = Styles.Colors.White;
 			Color fontColorPaleYellow = Styles.Colors.PaleYellow;
-			int fontSizeTitle = 16;
-			int fontSizeContent = 14;
+			int fontSizeTitle = Styles.FontSizes.Title;
+			int fontSizeContent = Styles.FontSizes.Content;
+			int fontSizeContent2 = 12;
 			int fontSizeTooltip = Styles.FontSizes.Tooltip;
 
 			iconMainHeader = ControlFactory.CreateIcon(contentManager, "IconPenPaper");
@@ -84,37 +80,31 @@ namespace MyThirdSDL.UserInterface
 			labelMainHeader.EnableShadow(contentManager, 2, 2);
 
 			labelCompanyName = ControlFactory.CreateLabel(contentManager, fontPath, fontSizeContent, fontColorWhite, "Name:");
-			labelNumberOfEmployees = ControlFactory.CreateLabel(contentManager, fontPath, fontSizeContent, fontColorWhite, "# of Employees:");
-			labelNumberOfCompetitors = ControlFactory.CreateLabel(contentManager, fontPath, fontSizeContent, fontColorWhite, "# of Competitors:");
-			labelNumberOfProducts = ControlFactory.CreateLabel(contentManager, fontPath, fontSizeContent, fontColorWhite, "# of Products:");
-			labelIndustryType = ControlFactory.CreateLabel(contentManager, fontPath, fontSizeContent, fontColorWhite, "Industry:");
-			labelGrossIncome = ControlFactory.CreateLabel(contentManager, fontPath, fontSizeContent, fontColorWhite, "Gross Income:");
+			labelNumberOfEmployees = ControlFactory.CreateLabel(contentManager, fontPath, fontSizeContent2, fontColorWhite, "Employees:");
+			labelNumberOfCompetitors = ControlFactory.CreateLabel(contentManager, fontPath, fontSizeContent2, fontColorWhite, "Competitors:");
+			labelNumberOfProducts = ControlFactory.CreateLabel(contentManager, fontPath, fontSizeContent2, fontColorWhite, "Products:");
+			labelGrossIncome = ControlFactory.CreateLabel(contentManager, fontPath, fontSizeContent2, fontColorWhite, "Income:");
 
 			labelCompanyNameValue = ControlFactory.CreateLabel(contentManager, fontPath, fontSizeContent, fontColorPaleYellow, companyName);
-			labelNumberOfEmployeesValue = ControlFactory.CreateLabel(contentManager, fontPath, fontSizeContent, fontColorPaleYellow, numberOfEmployees.ToString());
-			labelNumberOfCompetitorsValue = ControlFactory.CreateLabel(contentManager, fontPath, fontSizeContent, fontColorPaleYellow, numberOfCompetitors.ToString());
-			labelNumberOfProductsValue = ControlFactory.CreateLabel(contentManager, fontPath, fontSizeContent, fontColorPaleYellow, numberOfProducts.ToString());
-			labelIndustryTypeValue = ControlFactory.CreateLabel(contentManager, fontPath, fontSizeContent, fontColorPaleYellow, industryTypeName);
-			labelGrossIncomeValue = ControlFactory.CreateLabel(contentManager, fontPath, fontSizeContent, fontColorPaleYellow, "$" + yearlyGrossIncome.ToString());
+			labelNumberOfEmployeesValue = ControlFactory.CreateLabel(contentManager, fontPath, fontSizeContent2, fontColorPaleYellow, numberOfEmployees.ToString());
+			labelNumberOfCompetitorsValue = ControlFactory.CreateLabel(contentManager, fontPath, fontSizeContent2, fontColorPaleYellow, numberOfCompetitors.ToString());
+			labelNumberOfProductsValue = ControlFactory.CreateLabel(contentManager, fontPath, fontSizeContent2, fontColorPaleYellow, numberOfProducts.ToString());
+			labelGrossIncomeValue = ControlFactory.CreateLabel(contentManager, fontPath, fontSizeContent2, fontColorPaleYellow, "$" + yearlyGrossIncome.ToString());
 
 			buttonCloseWindow = ControlFactory.CreateButton(contentManager, "ButtonSquare", "ButtonSquareHover");
 			buttonCloseWindow.Icon = ControlFactory.CreateIcon(contentManager, "IconWindowClose");
 			buttonCloseWindow.IconHovered = ControlFactory.CreateIcon(contentManager, "IconWindowClose");
 			buttonCloseWindow.ButtonType = ButtonType.IconOnly;
-			buttonCloseWindow.Tooltip = ControlFactory.CreateTooltip(contentManager, "TooltipFrame", fontPath, fontSizeTooltip,
-				fontColorWhite, contentManager.GetString(StringReferenceKeys.TOOLTIP_BUTTON_CLOSE_WINDOW));
 
 			Controls.Add(iconFrame);
 			Controls.Add(iconMainHeader);
 			Controls.Add(labelMainHeader);
 			Controls.Add(labelCompanyName);
-			Controls.Add(labelIndustryType);
 			Controls.Add(labelNumberOfEmployees);
 			Controls.Add(labelNumberOfCompetitors);
 			Controls.Add(labelNumberOfProducts);
 			Controls.Add(labelGrossIncome);
 			Controls.Add(labelCompanyNameValue);
-			Controls.Add(labelIndustryTypeValue);
 			Controls.Add(labelNumberOfEmployeesValue);
 			Controls.Add(labelNumberOfCompetitorsValue);
 			Controls.Add(labelNumberOfProductsValue);
