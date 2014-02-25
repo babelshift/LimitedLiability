@@ -45,7 +45,7 @@ namespace MyThirdSDL.Screens
 			int fontSizeContent = Styles.FontSizes.Content;
 
 			iconFrame = ControlFactory.CreateIcon(ContentManager, "MenuPauseFrame");
-			iconFrame.Position = new Vector(MainGame.SCREEN_WIDTH_LOGICAL / 2 - iconFrame.Height / 2, MainGame.SCREEN_HEIGHT_LOGICAL / 2 - iconFrame.Height / 2);
+			iconFrame.Position = new Vector(MainGame.SCREEN_WIDTH_LOGICAL / 2 - iconFrame.Width / 2, MainGame.SCREEN_HEIGHT_LOGICAL / 2 - iconFrame.Height / 2);
 
 			buttonResumeGame = ControlFactory.CreateButton(ContentManager, "ButtonLongRectangle", "ButtonLongRectangleHover");
 			buttonResumeGame.Label = ControlFactory.CreateLabel(ContentManager, fontPath, fontSizeContent, fontColorLabelValue, "Resume");

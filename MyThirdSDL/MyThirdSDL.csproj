@@ -415,6 +415,9 @@
     <Content Include="Content\Images\User Interface\MenuEmailFrame.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Content\Images\User Interface\MenuMainFrame.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Content\Images\User Interface\MenuResumeFrame.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

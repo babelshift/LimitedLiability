@@ -2,12 +2,16 @@ using System;
 using MyThirdSDL.Content;
 using SharpDL.Graphics;
 using MyThirdSDL.UserInterface;
+using System.Reflection;
+using System.Diagnostics;
 
 namespace MyThirdSDL.Screens
 {
 	public class MainMenuScreen : Screen
 	{
 		private Label labelTitle;
+		private Label labelVersion;
+		private Icon iconFrame;
 		private Button buttonNewGame;
 		private Button buttonLoadGame;
 		private Button buttonQuit;
@@ -31,48 +35,54 @@ namespace MyThirdSDL.Screens
 		{
 			base.Activate(renderer);
 
-			string fontPath = ContentManager.GetContentPath(Styles.Fonts.Arcade);
+			string fontPath = ContentManager.GetContentPath(Styles.Fonts.DroidSansBold);
 			Color fontColorTitle = Styles.Colors.PaleGreen;
-			Color fontColorLabelValue = Styles.Colors.PaleYellow;
+			Color fontColorLabelValue = Styles.Colors.White;
 			int fontSizeTitle = Styles.FontSizes.MainMenuTitle;
 			int fontSizeContent = Styles.FontSizes.Content;
 
+			iconFrame = ControlFactory.CreateIcon(ContentManager, "MenuPauseFrame");
+			iconFrame.Position = new Vector(MainGame.SCREEN_WIDTH_LOGICAL / 2 - iconFrame.Width / 2, MainGame.SCREEN_HEIGHT_LOGICAL / 2 - iconFrame.Height / 2);
+
 			labelTitle = ControlFactory.CreateLabel(ContentManager, fontPath, fontSizeTitle, fontColorTitle, "Limited Liability");
-			labelTitle.Position = new Vector(MainGame.SCREEN_WIDTH_LOGICAL / 2 - labelTitle.Width / 2, 300);
+			labelTitle.Position = new Vector(MainGame.SCREEN_WIDTH_LOGICAL / 2 - labelTitle.Width / 2, iconFrame.Position.Y - labelTitle.Height - 15);
 			labelTitle.EnableShadow(ContentManager, 3, 3);
 
-			buttonNewGame = ControlFactory.CreateButton(ContentManager, "ButtonMainMenuItem", "ButtonMainMenuItemHover");
+			labelVersion = ControlFactory.CreateLabel(ContentManager, fontPath, 12, Styles.Colors.PaleGreen, String.Format("Build {0}", GetAssemblyFileVersion()));
+			labelVersion.Position = new Vector(7, MainGame.SCREEN_HEIGHT_LOGICAL - labelVersion.Height - 5);
+
+			buttonNewGame = ControlFactory.CreateButton(ContentManager, "ButtonLongRectangle", "ButtonLongRectangleHover");
 			buttonNewGame.Label = ControlFactory.CreateLabel(ContentManager, fontPath, fontSizeContent, fontColorLabelValue, "New Game");
 			buttonNewGame.ButtonType = ButtonType.TextOnly;
-			buttonNewGame.Position = new Vector(MainGame.SCREEN_WIDTH_LOGICAL / 2 - buttonNewGame.Width / 2, 400);
+			buttonNewGame.Position = iconFrame.Position + new Vector(iconFrame.Width / 2 - buttonNewGame.Width / 2, 16);
 			buttonNewGame.Clicked += buttonNewGame_Clicked;
 			buttonNewGame.EnableLabelShadow(ContentManager, 2, 2);
 
-			buttonLoadGame = ControlFactory.CreateButton(ContentManager, "ButtonMainMenuItem", "ButtonMainMenuItemHover");
+			buttonLoadGame = ControlFactory.CreateButton(ContentManager, "ButtonLongRectangle", "ButtonLongRectangleHover");
 			buttonLoadGame.Label = ControlFactory.CreateLabel(ContentManager, fontPath, fontSizeContent, fontColorLabelValue, "Load Game");
 			buttonLoadGame.ButtonType = ButtonType.TextOnly;
-			buttonLoadGame.Position = new Vector(MainGame.SCREEN_WIDTH_LOGICAL / 2 - buttonNewGame.Width / 2, 435);
+			buttonLoadGame.Position = iconFrame.Position + new Vector(iconFrame.Width / 2 - buttonLoadGame.Width / 2, 50);
 			buttonLoadGame.Clicked += buttonLoadGame_Clicked;
 			buttonLoadGame.EnableLabelShadow(ContentManager, 2, 2);
 
-			buttonOptions = ControlFactory.CreateButton(ContentManager, "ButtonMainMenuItem", "ButtonMainMenuItemHover");
+			buttonOptions = ControlFactory.CreateButton(ContentManager, "ButtonLongRectangle", "ButtonLongRectangleHover");
 			buttonOptions.Label = ControlFactory.CreateLabel(ContentManager, fontPath, fontSizeContent, fontColorLabelValue, "Options");
 			buttonOptions.ButtonType = ButtonType.TextOnly;
-			buttonOptions.Position = new Vector(MainGame.SCREEN_WIDTH_LOGICAL / 2 - buttonNewGame.Width / 2, 470);
+			buttonOptions.Position = iconFrame.Position + new Vector(iconFrame.Width / 2 - buttonOptions.Width / 2, 84);
 			buttonOptions.Clicked += buttonOptions_Clicked;
 			buttonOptions.EnableLabelShadow(ContentManager, 2, 2);
 
-			buttonCredits = ControlFactory.CreateButton(ContentManager, "ButtonMainMenuItem", "ButtonMainMenuItemHover");
+			buttonCredits = ControlFactory.CreateButton(ContentManager, "ButtonLongRectangle", "ButtonLongRectangleHover");
 			buttonCredits.Label = ControlFactory.CreateLabel(ContentManager, fontPath, fontSizeContent, fontColorLabelValue, "Credits");
 			buttonCredits.ButtonType = ButtonType.TextOnly;
-			buttonCredits.Position = new Vector(MainGame.SCREEN_WIDTH_LOGICAL / 2 - buttonNewGame.Width / 2, 505);
+			buttonCredits.Position = iconFrame.Position + new Vector(iconFrame.Width / 2 - buttonCredits.Width / 2, 118);
 			buttonCredits.Clicked += buttonCredits_Clicked;
 			buttonCredits.EnableLabelShadow(ContentManager, 2, 2);
 
-			buttonQuit = ControlFactory.CreateButton(ContentManager, "ButtonMainMenuItem", "ButtonMainMenuItemHover");
+			buttonQuit = ControlFactory.CreateButton(ContentManager, "ButtonLongRectangle", "ButtonLongRectangleHover");
 			buttonQuit.Label = ControlFactory.CreateLabel(ContentManager, fontPath, fontSizeContent, fontColorLabelValue, "Quit");
 			buttonQuit.ButtonType = ButtonType.TextOnly;
-			buttonQuit.Position = new Vector(MainGame.SCREEN_WIDTH_LOGICAL / 2 - buttonNewGame.Width / 2, 540);
+			buttonQuit.Position = iconFrame.Position + new Vector(iconFrame.Width / 2 - buttonQuit.Width / 2, 152);
 			buttonQuit.Clicked += buttonQuit_Clicked;
 			buttonQuit.EnableLabelShadow(ContentManager, 2, 2);
 
@@ -109,12 +119,14 @@ namespace MyThirdSDL.Screens
 		{
 			base.Update(gameTime, otherWindowHasFocus, coveredByOtherScreen);
 
+			iconFrame.Update(gameTime);
 			labelTitle.Update(gameTime);
 			buttonNewGame.Update(gameTime);
 			buttonLoadGame.Update(gameTime);
 			buttonQuit.Update(gameTime);
 			buttonCredits.Update(gameTime);
 			buttonOptions.Update(gameTime);
+			labelVersion.Update(gameTime);
 		}
 
 		public override void Draw(SharpDL.GameTime gameTime, Renderer renderer)
@@ -125,12 +137,14 @@ namespace MyThirdSDL.Screens
 				for (int y = 0; y <= MainGame.SCREEN_HEIGHT_LOGICAL / textureBackgroundStripeTile.Height; y++)
 					renderer.RenderTexture(textureBackgroundStripeTile, x * textureBackgroundStripeTile.Width, y * textureBackgroundStripeTile.Height);
 
+			iconFrame.Draw(gameTime, renderer);
 			labelTitle.Draw(gameTime, renderer);
 			buttonNewGame.Draw(gameTime, renderer);
 			buttonLoadGame.Draw(gameTime, renderer);
 			buttonQuit.Draw(gameTime, renderer);
 			buttonCredits.Draw(gameTime, renderer);
 			buttonOptions.Draw(gameTime, renderer);
+			labelVersion.Draw(gameTime, renderer);
 		}
 
 		public override void HandleKeyStates(System.Collections.Generic.IEnumerable<SharpDL.Input.KeyInformation> keysPressed, System.Collections.Generic.IEnumerable<SharpDL.Input.KeyInformation> keysReleased)
@@ -181,6 +195,14 @@ namespace MyThirdSDL.Screens
 			buttonCredits.Dispose();
 			buttonOptions.Dispose();
 			textureBackgroundStripeTile.Dispose();
+		}
+
+		private string GetAssemblyFileVersion()
+		{
+			Assembly assembly = Assembly.GetExecutingAssembly();
+			FileVersionInfo fvi = FileVersionInfo.GetVersionInfo(assembly.Location);
+			string version = fvi.FileVersion;
+			return version;
 		}
 	}
 }

@@ -13,7 +13,7 @@ namespace MyThirdSDL.UserInterface
 
 		public static class FontSizes
 		{
-			public static int MainMenuTitle = 24;
+			public static int MainMenuTitle = 34;
 			public static int Title = 16;
 			public static int Content = 14;
 			public static int Tooltip = 10;
