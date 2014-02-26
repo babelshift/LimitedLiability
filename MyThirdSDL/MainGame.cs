@@ -120,7 +120,7 @@ namespace MyThirdSDL
 			base.Initialize();
 
 			CreateWindow("My Third SDL", 100, 100, SCREEN_WIDTH_LOGICAL, SCREEN_HEIGHT_LOGICAL, WindowFlags.Shown);// | WindowFlags.GrabbedInputFocus);
-			CreateRenderer(RendererFlags.RendererAccelerated | RendererFlags.RendererPresentVSync);
+			CreateRenderer(RendererFlags.RendererAccelerated | RendererFlags.RendererPresentVSync | RendererFlags.SupportRenderTargets);
 			Renderer.SetRenderLogicalSize(SCREEN_WIDTH_LOGICAL, SCREEN_HEIGHT_LOGICAL);
 
 			content = new ContentManager(Renderer);

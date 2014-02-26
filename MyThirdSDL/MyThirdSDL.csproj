@@ -221,6 +221,8 @@
     <Compile Include="UserInterface\Label.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="UserInterface\ListBox.cs" />
+    <Compile Include="UserInterface\ListItem.cs" />
     <Compile Include="UserInterface\MailItemPage.cs" />
     <Compile Include="UserInterface\ManeInspectEquipment.cs" />
     <Compile Include="UserInterface\Menu.cs" />
@@ -409,6 +411,12 @@
     <Content Include="Content\Images\User Interface\IconRepairEquipment.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Content\Images\User Interface\IconScrollbarMenuPurchase.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Images\User Interface\IconScroller.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Content\Images\User Interface\IconSellEquipment.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -416,6 +424,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\Images\User Interface\MenuMainFrame.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Images\User Interface\MenuPurchaseListBoxTarget.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\Images\User Interface\MenuResumeFrame.png">

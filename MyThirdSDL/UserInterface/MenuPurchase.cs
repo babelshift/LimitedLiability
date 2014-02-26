@@ -65,6 +65,8 @@ namespace MyThirdSDL.UserInterface
 
 		#endregion Buttons
 
+		private ListBox listBox;
+
 		private IPurchasable selectedPurchasableItem;
 
 		#region Events
@@ -117,6 +119,8 @@ namespace MyThirdSDL.UserInterface
 				buttonArrowCircleRight.Position = new Vector(base.Position.X + 296, base.Position.Y + 248);
 				tooltipHoveredItem.Position = new Vector(base.Position.X, base.Position.Y + Height + 40);
 				buttonCloseWindow.Tooltip.Position = new Vector(Position.X, buttonCloseWindow.Position.Y + buttonCloseWindow.Height + 5);
+
+				listBox.Position = Position;
 
 				SetMenuItemButtonPositions();
 			}
@@ -207,6 +211,9 @@ namespace MyThirdSDL.UserInterface
 				AddButtonMenuItem(buttonMenuItem);
 			}
 
+			Texture textureListBoxTargetFrame = contentManager.GetTexture("MenuPurchaseListBoxTarget");
+			listBox = new ListBox(contentManager, textureListBoxTargetFrame);
+
 			Controls.Add(iconFrame);
 			Controls.Add(iconMainMenuHeader);
 			Controls.Add(iconInfoMenuHeader);
@@ -214,30 +221,31 @@ namespace MyThirdSDL.UserInterface
 			Controls.Add(labelMainMenuHeader);
 			Controls.Add(labelInfoMenuHeader);
 			Controls.Add(labelSkillsMenuHeader);
-			Controls.Add(iconMoney);
-			Controls.Add(iconHealth);
-			Controls.Add(iconHygiene);
-			Controls.Add(iconSleep);
-			Controls.Add(iconThirst);
-			Controls.Add(iconHunger);
-			Controls.Add(labelMoney);
-			Controls.Add(labelHealth);
-			Controls.Add(labelSleep);
-			Controls.Add(labelThirst);
-			Controls.Add(labelHunger);
-			Controls.Add(labelHygiene);
-			Controls.Add(iconCommunication);
-			Controls.Add(iconCreativity);
-			Controls.Add(iconIntelligence);
-			Controls.Add(iconLeadership);
-			Controls.Add(labelCommunication);
-			Controls.Add(labelCreativity);
-			Controls.Add(labelIntelligence);
-			Controls.Add(labelLeadership);
+			//Controls.Add(iconMoney);
+			//Controls.Add(iconHealth);
+			//Controls.Add(iconHygiene);
+			//Controls.Add(iconSleep);
+			//Controls.Add(iconThirst);
+			//Controls.Add(iconHunger);
+			//Controls.Add(labelMoney);
+			//Controls.Add(labelHealth);
+			//Controls.Add(labelSleep);
+			//Controls.Add(labelThirst);
+			//Controls.Add(labelHunger);
+			//Controls.Add(labelHygiene);
+			//Controls.Add(iconCommunication);
+			//Controls.Add(iconCreativity);
+			//Controls.Add(iconIntelligence);
+			//Controls.Add(iconLeadership);
+			//Controls.Add(labelCommunication);
+			//Controls.Add(labelCreativity);
+			//Controls.Add(labelIntelligence);
+			//Controls.Add(labelLeadership);
 			Controls.Add(buttonArrowCircleLeft);
 			Controls.Add(buttonArrowCircleRight);
 			Controls.Add(buttonCloseWindow);
-			Controls.Add(tooltipHoveredItem);
+			//Controls.Add(tooltipHoveredItem);
+			Controls.Add(listBox);
 
 			buttonArrowCircleLeft.Clicked += buttonArrowCircleLeft_Clicked;
 			buttonArrowCircleRight.Clicked += buttonArrowCircleRight_Clicked;

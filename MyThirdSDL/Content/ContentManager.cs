@@ -76,6 +76,12 @@ namespace MyThirdSDL.Content
 			return texture;
 		}
 
+		public Texture GetTextureTarget(int width, int height)
+		{
+			Texture texture = new Texture(renderer, TextureAccessMode.Target, width, height);
+			return texture;
+		}
+
 		public TrueTypeText GetTrueTypeText(string fontPath, int fontSize, Color color, string text, int wrapLength)
 		{
 			if (fontPath == null) throw new ArgumentNullException("fontPath");

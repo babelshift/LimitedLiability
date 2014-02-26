@@ -24,6 +24,7 @@
 		{ "key": "TooltipFrame",				"value": "Images/User Interface/TooltipFrame.png" },
 		{ "key": "MenuMainFrame",				"value": "Images/User Interface/MenuMainFrame.png" },
 		{ "key": "MenuPurchaseFrame",			"value": "Images/User Interface/MenuPurchaseFrame.png" },
+		{ "key": "MenuPurchaseListBoxTarget",	"value": "Images/User Interface/MenuPurchaseListBoxTarget.png" },
 		{ "key": "MenuInspectEmployeeFrame",	"value": "Images/User Interface/MenuInspectEmployeeFrame.png" },
 		{ "key": "MenuMailboxFrame",			"value": "Images/User Interface/MenuMailboxFrame.png" },
 		{ "key": "MenuCompanyFrame",			"value": "Images/User Interface/MenuCompanyFrame.png" },
@@ -120,6 +121,8 @@
 		{ "key": "IconFireEmployee",			"value": "Images/User Interface/IconFireEmployee.png" },
 		{ "key": "IconDisciplineEmployee",		"value": "Images/User Interface/IconDisciplineEmployee.png" },
 		{ "key": "IconPromoteEmployee",			"value": "Images/User Interface/IconPromoteEmployee.png" },
+		{ "key": "IconScroller",				"value": "Images/User Interface/IconScroller.png" },
+		{ "key": "IconScrollbarMenuPurchase",	"value": "Images/User Interface/IconScrollbarMenuPurchase.png" },
 
 		{ "key": "ScenarioThumbnail1",			"value": "Images/User Interface/ScenarioThumbnail1.png" },
 		{ "key": "ScenarioThumbnail1Selected",	"value": "Images/User Interface/ScenarioThumbnail1Selected.png" },
