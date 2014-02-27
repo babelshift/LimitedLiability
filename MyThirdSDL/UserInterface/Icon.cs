@@ -30,8 +30,8 @@ namespace MyThirdSDL.UserInterface
 
 		public override void Draw(GameTime gameTime, Renderer renderer)
 		{
-			if(Visible)
-				renderer.RenderTexture(textureFrame, Position.X, Position.Y);
+			if (Visible)
+				textureFrame.Draw(Position.X, Position.Y);
 		}
 
 		public override void Dispose()

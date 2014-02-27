@@ -53,9 +53,9 @@ namespace MyThirdSDL.UserInterface
 				if (TrueTypeText != null)
 				{
 					if (trueTypeTextShadow != null)
-						renderer.RenderTexture(trueTypeTextShadow.Texture, Position.X + shadowOffsetX, Position.Y + shadowOffsetY);
+						trueTypeTextShadow.Texture.Draw(Position.X + shadowOffsetX, Position.Y + shadowOffsetY);
 
-					renderer.RenderTexture(TrueTypeText.Texture, Position.X, Position.Y);
+					TrueTypeText.Texture.Draw(Position.X, Position.Y);
 				}
 			}
 		}

@@ -25,10 +25,10 @@ namespace MyThirdSDL.Agents
 
 		public int HorizontalMapCellCount { get { return 1; } }
 
-		public int VerticalMapCellCount { get { return 1; } }	
+		public int VerticalMapCellCount { get { return 1; } }
 
-		public EquipmentCondition Condition 
-		{ 
+		public EquipmentCondition Condition
+		{
 			get
 			{
 				if (condition >= 0 && condition <= 3)
@@ -72,11 +72,7 @@ namespace MyThirdSDL.Agents
 
 			drawPosition -= offset;
 
-			renderer.RenderTexture(
-				ActiveTexture,
-				drawPosition.X,
-				drawPosition.Y
-			);
+			ActiveTexture.Draw(drawPosition.X, drawPosition.Y);
 		}
 
 		/// <summary>
@@ -91,13 +87,11 @@ namespace MyThirdSDL.Agents
 		{
 			// overlapping a deadzone shades the texture red
 			if (isOverlappingDeadZone)
-				renderer.SetTextureColorMod(ActiveTexture, 255, 0, 0);
+				ActiveTexture.SetColorMod(255, 0, 0);
 			else
-				renderer.SetTextureColorMod(ActiveTexture, 255, 255, 255);
+				ActiveTexture.SetColorMod(255, 255, 255);
 
-			renderer.RenderTexture(
-				ActiveTexture,
-				x, y);
+				ActiveTexture.Draw(x, y);
 		}
 
 		public bool IsOverlappingDeadZone(IReadOnlyList<MapCell> mapCells)

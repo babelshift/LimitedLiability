@@ -104,19 +104,12 @@ namespace MyThirdSDL.Agents
 
 		public virtual void Draw(GameTime gameTime, Renderer renderer)
 		{
-			renderer.RenderTexture(
-				ActiveTexture,
-				ProjectedPosition.X - Camera.Position.X,
-				ProjectedPosition.Y - Camera.Position.Y
-			);
+			ActiveTexture.Draw(ProjectedPosition.X - Camera.Position.X, ProjectedPosition.Y - Camera.Position.Y);
 		}
 
 		public virtual void Draw(GameTime gameTime, Renderer renderer, int x, int y, bool isOverlappingDeadZone)
 		{
-			renderer.RenderTexture(
-				ActiveTexture,
-				x, y
-			);
+			ActiveTexture.Draw(x, y);
 		}
 
 		#endregion Game Loop
@@ -129,7 +122,7 @@ namespace MyThirdSDL.Agents
 
 		private void Dispose(bool isDisposing)
 		{
-			if(ActiveTexture != null)
+			if (ActiveTexture != null)
 				ActiveTexture.Dispose();
 		}
 	}

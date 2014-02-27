@@ -46,7 +46,7 @@ namespace MyThirdSDL.UserInterface
 			if (!Visible) return;
 
 			if (textureFrame != null)
-				renderer.RenderTexture(textureFrame, Position.X, Position.Y);
+				textureFrame.Draw(Position.X, Position.Y);
 			if (Label != null)
 				Label.Draw(gameTime, renderer);
 		}

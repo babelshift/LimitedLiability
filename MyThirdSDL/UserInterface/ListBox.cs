@@ -10,7 +10,7 @@ namespace MyThirdSDL.UserInterface
 {
 	public class ListBox : Control
 	{
-		private Texture textureTarget;
+		private RenderTarget textureTarget;
 		private Texture textureFrame;
 		private Icon iconScrollbar;
 		private Icon iconScroller;
@@ -36,7 +36,7 @@ namespace MyThirdSDL.UserInterface
 
 		public ListBox(ContentManager contentManager, Texture textureFrame)
 		{
-			this.textureTarget = contentManager.GetTextureTarget(textureFrame.Width, textureFrame.Height);
+			this.textureTarget = contentManager.CreateRenderTarget(textureFrame.Width, textureFrame.Height);
 			this.textureTarget.SetBlendMode(BlendMode.Blend);
 			this.textureFrame = textureFrame;
 
@@ -51,11 +51,11 @@ namespace MyThirdSDL.UserInterface
 			foreach (var item in items)
 				item.Draw(gameTime, renderer);
 
-			renderer.RenderTexture(textureFrame, 0, 0);
+			textureFrame.Draw(0, 0);
 
 			renderer.ResetRenderTarget();
 
-			renderer.RenderTexture(textureTarget, Position.X, Position.Y);
+			textureTarget.Draw(Position.X, Position.Y);
 
 			iconScrollbar.Draw(gameTime, renderer);
 			iconScroller.Draw(gameTime, renderer);

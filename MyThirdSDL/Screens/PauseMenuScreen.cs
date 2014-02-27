@@ -89,7 +89,7 @@ namespace MyThirdSDL.Screens
 
 			for (int x = 0; x <= MainGame.SCREEN_WIDTH_LOGICAL / textureBackgroundStripeTile.Width; x++)
 				for (int y = 0; y <= MainGame.SCREEN_HEIGHT_LOGICAL / textureBackgroundStripeTile.Height; y++)
-					renderer.RenderTexture(textureBackgroundStripeTile, x * textureBackgroundStripeTile.Width, y * textureBackgroundStripeTile.Height);
+					textureBackgroundStripeTile.Draw(x * textureBackgroundStripeTile.Width, y * textureBackgroundStripeTile.Height);
 
 			iconFrame.Draw(gameTime, renderer);
 			buttonResumeGame.Draw(gameTime, renderer);

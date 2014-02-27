@@ -225,7 +225,7 @@ namespace MyThirdSDL.Screens
 
 			for (int x = 0; x <= MainGame.SCREEN_WIDTH_LOGICAL / textureBackgroundTile.Width; x++)
 				for (int y = 0; y <= MainGame.SCREEN_HEIGHT_LOGICAL / textureBackgroundTile.Height; y++)
-					renderer.RenderTexture(textureBackgroundTile, x * textureBackgroundTile.Width, y * textureBackgroundTile.Height);
+					textureBackgroundTile.Draw(x * textureBackgroundTile.Width, y * textureBackgroundTile.Height);
 
 			if (CurrentSelectState == ScenarioSelectState.FirstScreen)
 			{

@@ -109,11 +109,10 @@ namespace MyThirdSDL.Content
 		{
 			if (IsEmpty) return;
 
-			renderer.RenderTexture(
-				Texture,
-				ProjectedPosition.X - Camera.Position.X,
-				ProjectedPosition.Y - Camera.Position.Y,
-				SourceTextureBounds);
+				Texture.Draw(
+					ProjectedPosition.X - Camera.Position.X,
+					ProjectedPosition.Y - Camera.Position.Y,
+					SourceTextureBounds); 
 		}
 
 		public void Draw(GameTime gameTime, Renderer renderer, int x, int y, bool isOverlappingDeadZoneOverride)
@@ -121,11 +120,11 @@ namespace MyThirdSDL.Content
 			if (IsEmpty) return;
 
 			if (isOverlappingDeadZoneOverride)
-				renderer.SetTextureColorMod(Texture, 255, 0, 0);
+				Texture.SetColorMod(255, 0, 0);
 			else
-				renderer.SetTextureColorMod(Texture, 255, 255, 255);
+				Texture.SetColorMod(255, 255, 255);
 
-			renderer.RenderTexture(Texture, x, y, SourceTextureBounds);
+			Texture.Draw(x, y, SourceTextureBounds);
 		}
 
 		public void UpdateTile(Tile tile)

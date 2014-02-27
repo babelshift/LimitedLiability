@@ -165,7 +165,7 @@ namespace MyThirdSDL.UserInterface
 		{
 			if (Visible)
 			{
-				renderer.RenderTexture(TextureFrame, (int)Position.X, (int)Position.Y);
+				TextureFrame.Draw(Position.X, Position.Y);
 
 				if (IsPressed || IsHovered)
 				{
@@ -174,16 +174,16 @@ namespace MyThirdSDL.UserInterface
 						if (Tooltip != null)
 							Tooltip.Draw(gameTime, renderer);
 						if (TextureFrameHovered != null)
-							renderer.RenderTexture(TextureFrameHovered, (int)Position.X, (int)Position.Y);
+							TextureFrameHovered.Draw(Position.X, Position.Y);
 						if (IconHovered != null)
 							IconHovered.Draw(gameTime, renderer);
 					}
 					else if (IsPressed)
 					{
 						if (TextureFrameSelected != null)
-							renderer.RenderTexture(TextureFrameSelected, (int)Position.X, (int)Position.Y);
+							TextureFrameSelected.Draw(Position.X, Position.Y);
 						else if (TextureFrameHovered != null)
-							renderer.RenderTexture(TextureFrameHovered, (int)Position.X, (int)Position.Y);
+							TextureFrameHovered.Draw(Position.X, Position.Y);
 					}
 
 					if (Icon != null)
