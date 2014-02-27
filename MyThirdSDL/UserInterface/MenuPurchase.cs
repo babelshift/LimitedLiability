@@ -58,8 +58,6 @@ namespace MyThirdSDL.UserInterface
 
 		#region Buttons
 
-		private Button buttonArrowCircleLeft;
-		private Button buttonArrowCircleRight;
 		private Button buttonCloseWindow;
 		private Dictionary<int, List<ButtonMenuItem>> buttonMenuItemPages = new Dictionary<int, List<ButtonMenuItem>>();
 
@@ -110,17 +108,15 @@ namespace MyThirdSDL.UserInterface
 				iconLeadership.Position = new Vector(base.Position.X + 508, base.Position.Y + 80);
 				iconCreativity.Position = new Vector(base.Position.X + 508, base.Position.Y + 110);
 				iconIntelligence.Position = new Vector(base.Position.X + 508, base.Position.Y + 140);
-				labelCommunication.Position = new Vector(base.Position.X + 540, base.Position.Y + 60);
+				//labelCommunication.Position = new Vector(base.Position.X + 540, base.Position.Y + 60);
 				labelLeadership.Position = new Vector(base.Position.X + 540, base.Position.Y + 90);
 				labelCreativity.Position = new Vector(base.Position.X + 540, base.Position.Y + 120);
 				labelIntelligence.Position = new Vector(base.Position.X + 540, base.Position.Y + 150);
 				buttonCloseWindow.Position = new Vector(base.Position.X + Width - buttonCloseWindow.Width, base.Position.Y + Height + 5);
-				buttonArrowCircleLeft.Position = new Vector(base.Position.X + 9, base.Position.Y + 248);
-				buttonArrowCircleRight.Position = new Vector(base.Position.X + 296, base.Position.Y + 248);
 				tooltipHoveredItem.Position = new Vector(base.Position.X, base.Position.Y + Height + 40);
 				buttonCloseWindow.Tooltip.Position = new Vector(Position.X, buttonCloseWindow.Position.Y + buttonCloseWindow.Height + 5);
 
-				listBox.Position = Position;
+				listBox.Position = base.Position + new Vector(12, 47);
 
 				SetMenuItemButtonPositions();
 			}
@@ -136,7 +132,7 @@ namespace MyThirdSDL.UserInterface
 
 			defaultText = contentManager.GetString(StringReferenceKeys.DEFAULT_TEXT);
 
-			string fontPath = contentManager.GetContentPath(Styles.Fonts.Arcade);
+			string fontPath = contentManager.GetContentPath(Styles.Fonts.DroidSansBold);
 			Color fontColorWhite = Styles.Colors.White;
 			Color fontColorYellow = Styles.Colors.PaleYellow;
 			int fontSizeTitle = Styles.FontSizes.Title;
@@ -186,16 +182,6 @@ namespace MyThirdSDL.UserInterface
 			buttonCloseWindow.Tooltip = ControlFactory.CreateTooltip(contentManager, "TooltipFrame", fontPath, fontSizeTooltip,
 				fontColorWhite, contentManager.GetString(StringReferenceKeys.TOOLTIP_BUTTON_CLOSE_WINDOW));
 
-			buttonArrowCircleLeft = ControlFactory.CreateButton(contentManager, "ButtonSquare", "ButtonSquareHover");
-			buttonArrowCircleLeft.Icon = ControlFactory.CreateIcon(contentManager, "IconArrowCircleLeft");
-			buttonArrowCircleLeft.IconHovered = ControlFactory.CreateIcon(contentManager, "IconArrowCircleLeft");
-			buttonArrowCircleLeft.ButtonType = ButtonType.IconOnly;
-
-			buttonArrowCircleRight = ControlFactory.CreateButton(contentManager, "ButtonSquare", "ButtonSquareHover");
-			buttonArrowCircleRight.Icon = ControlFactory.CreateIcon(contentManager, "IconArrowCircleRight");
-			buttonArrowCircleRight.IconHovered = ControlFactory.CreateIcon(contentManager, "IconArrowCircleRight");
-			buttonArrowCircleRight.ButtonType = ButtonType.IconOnly;
-
 			tooltipHoveredItem = ControlFactory.CreateTooltip(contentManager, "TooltipFrame", fontPath,
 				Styles.FontSizes.Tooltip, Styles.Colors.White, defaultText);
 
@@ -213,6 +199,13 @@ namespace MyThirdSDL.UserInterface
 
 			Texture textureListBoxTargetFrame = contentManager.GetTexture("MenuPurchaseListBoxTarget");
 			listBox = new ListBox(contentManager, textureListBoxTargetFrame);
+			ListItem listItem = new ListItem();
+			listItem.AddColumn(labelCommunication);
+			listItem.AddColumn(labelCreativity);
+			listBox.AddItem(listItem);
+			ListItem listItem2 = new ListItem();
+			listItem2.AddColumn(labelHealth);
+			listBox.AddItem(listItem2);
 
 			Controls.Add(iconFrame);
 			Controls.Add(iconMainMenuHeader);
@@ -221,34 +214,10 @@ namespace MyThirdSDL.UserInterface
 			Controls.Add(labelMainMenuHeader);
 			Controls.Add(labelInfoMenuHeader);
 			Controls.Add(labelSkillsMenuHeader);
-			//Controls.Add(iconMoney);
-			//Controls.Add(iconHealth);
-			//Controls.Add(iconHygiene);
-			//Controls.Add(iconSleep);
-			//Controls.Add(iconThirst);
-			//Controls.Add(iconHunger);
-			//Controls.Add(labelMoney);
-			//Controls.Add(labelHealth);
-			//Controls.Add(labelSleep);
-			//Controls.Add(labelThirst);
-			//Controls.Add(labelHunger);
-			//Controls.Add(labelHygiene);
-			//Controls.Add(iconCommunication);
-			//Controls.Add(iconCreativity);
-			//Controls.Add(iconIntelligence);
-			//Controls.Add(iconLeadership);
-			//Controls.Add(labelCommunication);
-			//Controls.Add(labelCreativity);
-			//Controls.Add(labelIntelligence);
-			//Controls.Add(labelLeadership);
-			Controls.Add(buttonArrowCircleLeft);
-			Controls.Add(buttonArrowCircleRight);
 			Controls.Add(buttonCloseWindow);
 			//Controls.Add(tooltipHoveredItem);
 			Controls.Add(listBox);
 
-			buttonArrowCircleLeft.Clicked += buttonArrowCircleLeft_Clicked;
-			buttonArrowCircleRight.Clicked += buttonArrowCircleRight_Clicked;
 			buttonCloseWindow.Clicked += buttonCloseWindow_Clicked;
 
 			Visible = false;
@@ -292,11 +261,11 @@ namespace MyThirdSDL.UserInterface
 
 			base.Draw(gameTime, renderer);
 
-			List<ButtonMenuItem> buttonMenuItemsOnCurrentPage;
-			bool success = buttonMenuItemPages.TryGetValue(currentDisplayedPage, out buttonMenuItemsOnCurrentPage);
-			if (success)
-				foreach (var buttonMenuItem in buttonMenuItemsOnCurrentPage)
-					buttonMenuItem.Draw(gameTime, renderer);
+			//List<ButtonMenuItem> buttonMenuItemsOnCurrentPage;
+			//bool success = buttonMenuItemPages.TryGetValue(currentDisplayedPage, out buttonMenuItemsOnCurrentPage);
+			//if (success)
+			//	foreach (var buttonMenuItem in buttonMenuItemsOnCurrentPage)
+			//		buttonMenuItem.Draw(gameTime, renderer);
 		}
 
 		public override void HandleMouseButtonPressedEvent(object sender, MouseButtonEventArgs e)
