@@ -244,6 +244,8 @@ namespace MyThirdSDL.Screens
 		{
 		}
 
+		public abstract void HandleMouseButtonReleasedEvent(object sender, MouseButtonEventArgs e);
+
 		public abstract void HandleMouseButtonPressedEvent(object sender, MouseButtonEventArgs e);
 
 		public abstract void HandleMouseMovingEvent(object sender, MouseMotionEventArgs e);

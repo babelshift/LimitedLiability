@@ -174,6 +174,10 @@ namespace MyThirdSDL.Screens
 			buttonOptions.HandleMouseMovingEvent(sender, e);
 		}
 
+		public override void HandleMouseButtonReleasedEvent(object sender, SharpDL.Events.MouseButtonEventArgs e)
+		{
+		}
+
 		private void OnQuitButtonClicked(object sender, EventArgs e)
 		{
 			if (QuitButtonClicked != null)

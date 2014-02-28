@@ -186,6 +186,14 @@ namespace MyThirdSDL.Screens
 				ActiveScreen.HandleTextInputtingEvent(sender, e);
 		}
 
+		public void PassMouseButtonReleasedEventToActiveScreen(object sender, MouseButtonEventArgs e)
+		{
+			if (IsActivePopupAvailable)
+				ActivePopup.HandleMouseButtonReleasedEvent(sender, e);
+			else if (IsActiveScreenAvailable)
+				ActiveScreen.HandleMouseButtonReleasedEvent(sender, e);
+		}
+
 		public void PassMouseButtonPressedEventToActiveScreen(object sender, MouseButtonEventArgs e)
 		{
 			if (IsActivePopupAvailable)

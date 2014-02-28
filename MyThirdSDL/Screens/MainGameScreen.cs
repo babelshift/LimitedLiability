@@ -16,7 +16,6 @@ namespace MyThirdSDL.Screens
 {
 	public class MainGameScreen : Screen
 	{
-
 		#region Members
 
 		private readonly JobFactory jobFactory;
@@ -72,6 +71,11 @@ namespace MyThirdSDL.Screens
 		#endregion Constructor
 
 		#region User Input
+
+		public override void HandleMouseButtonReleasedEvent(object sender, MouseButtonEventArgs e)
+		{
+			userInterfaceManager.HandleMouseButtonReleasedEvent(sender, e);
+		}
 
 		public override void HandleTextInputtingEvent(object sender, TextInputEventArgs e)
 		{

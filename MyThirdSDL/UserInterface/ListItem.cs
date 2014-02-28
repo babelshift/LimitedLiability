@@ -25,9 +25,11 @@ namespace MyThirdSDL.UserInterface
 				base.Position = value;
 
 				for (int i = 0; i < columns.Count; i++)
-					columns[i].Position = base.Position + new Vector(i * 50, 0);
+					columns[i].Position = base.Position + new Vector(i * ColumnSpacing, 0);
 			}
 		}
+
+		public int ColumnSpacing { get; set; }
 
 		public ListItem()
 		{
@@ -41,7 +43,7 @@ namespace MyThirdSDL.UserInterface
 
 		public void AddColumn(Control column)
 		{
-			column.Position = new Vector(columns.Count * 50, 0);
+			column.Position = new Vector(columns.Count * ColumnSpacing, 0);
 			columns.Add(column);
 		}
 

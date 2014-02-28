@@ -155,6 +155,10 @@ namespace MyThirdSDL.Screens
 		{
 		}
 
+		public override void HandleMouseButtonReleasedEvent(object sender, SharpDL.Events.MouseButtonEventArgs e)
+		{
+		}
+
 		#endregion
 
 		public override void Dispose()

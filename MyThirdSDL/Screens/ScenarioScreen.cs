@@ -257,6 +257,10 @@ namespace MyThirdSDL.Screens
 
 		#region Handle Input
 
+		public override void HandleMouseButtonReleasedEvent(object sender, SharpDL.Events.MouseButtonEventArgs e)
+		{
+		}
+
 		public override void HandleKeyStates(System.Collections.Generic.IEnumerable<SharpDL.Input.KeyInformation> keysPressed, System.Collections.Generic.IEnumerable<SharpDL.Input.KeyInformation> keysReleased)
 		{
 			base.HandleKeyStates(keysPressed, keysReleased);

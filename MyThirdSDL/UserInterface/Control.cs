@@ -42,6 +42,8 @@ namespace MyThirdSDL.UserInterface
 
 		public bool IsHovered { get; private set; }
 
+		public bool IsClicked { get; private set; }
+
 		public event EventHandler Hovered;
 
 		public event EventHandler Clicked;
@@ -53,6 +55,8 @@ namespace MyThirdSDL.UserInterface
 		public event EventHandler Blurring;
 
 		public event EventHandler Blurred;
+
+		public event EventHandler Released;
 
 		protected Control()
 		{
@@ -90,10 +94,18 @@ namespace MyThirdSDL.UserInterface
 			{
 				IsHovered = GetHovered(e.RelativeToWindowX, e.RelativeToWindowY);
 
-				bool isClicked = GetClicked(e);
+				IsClicked = GetClicked(e);
 
-				if (isClicked)
+				if (IsClicked)
 					OnClicked(EventArgs.Empty);
+			}
+		}
+
+		public virtual void HandleMouseButtonReleasedEvent(object sender, MouseButtonEventArgs e)
+		{
+			if (Visible)
+			{
+				GetReleased(e);
 			}
 		}
 
@@ -140,6 +152,21 @@ namespace MyThirdSDL.UserInterface
 			if (!IsHovered) return false;
 
 			return e.MouseButton == MouseButtonCode.Left;
+		}
+
+		private void GetReleased(MouseButtonEventArgs e)
+		{
+			if (IsClicked && e.State == MouseButtonState.Released && e.MouseButton == MouseButtonCode.Left)
+			{
+				OnReleased(EventArgs.Empty);
+			}
+		}
+
+		private void OnReleased(EventArgs e)
+		{
+			IsClicked = false;
+			if (Released != null)
+				Released(this, e);
 		}
 
 		private void OnClicked(EventArgs e)

@@ -111,6 +111,10 @@ namespace MyThirdSDL.Screens
 			buttonQuit.Update(gameTime);
 		}
 
+		public override void HandleMouseButtonReleasedEvent(object sender, SharpDL.Events.MouseButtonEventArgs e)
+		{
+		}
+
 		public override void HandleMouseButtonPressedEvent(object sender, SharpDL.Events.MouseButtonEventArgs e)
 		{
 			buttonResumeGame.HandleMouseButtonPressedEvent(sender, e);

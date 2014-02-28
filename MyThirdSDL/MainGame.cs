@@ -72,6 +72,7 @@ namespace MyThirdSDL
 
 		private void HandleMouseButtonReleased(object sender, MouseButtonEventArgs e)
 		{
+			screenManager.PassMouseButtonReleasedEventToActiveScreen(sender, e);
 		}
 
 		private void HandleTextInputting(object sender, TextInputEventArgs e)

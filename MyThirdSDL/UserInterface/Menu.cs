@@ -47,6 +47,16 @@ namespace MyThirdSDL.UserInterface
 			}
 		}
 
+		public override void HandleMouseButtonReleasedEvent(object sender, SharpDL.Events.MouseButtonEventArgs e)
+		{
+			if (Visible)
+			{
+				foreach (var control in controls)
+					if (control != null)
+						control.HandleMouseButtonReleasedEvent(sender, e);
+			}
+		}
+
 		public override void HandleMouseMovingEvent(object sender, SharpDL.Events.MouseMotionEventArgs e)
 		{
 			if (Visible)

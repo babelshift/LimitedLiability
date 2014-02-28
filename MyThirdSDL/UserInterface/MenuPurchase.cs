@@ -86,12 +86,12 @@ namespace MyThirdSDL.UserInterface
 				base.Position = value;
 
 				iconFrame.Position = base.Position;
-				iconMainMenuHeader.Position = new Vector(base.Position.X + 3, base.Position.Y + 5);
-				iconInfoMenuHeader.Position = new Vector(base.Position.X + 365, base.Position.Y + 5);
-				iconSkillsMenuHeader.Position = new Vector(base.Position.X + 505, base.Position.Y + 5);
-				labelMainMenuHeader.Position = new Vector(base.Position.X + 38, base.Position.Y + 15);
-				labelInfoMenuHeader.Position = new Vector(base.Position.X + 400, base.Position.Y + 15);
-				labelSkillsMenuHeader.Position = new Vector(base.Position.X + 535, base.Position.Y + 15);
+				iconMainMenuHeader.Position = base.Position + new Vector(10, 10);
+				iconInfoMenuHeader.Position = base.Position + new Vector(250, 10);
+				iconSkillsMenuHeader.Position = base.Position + new Vector(425, 10);
+				labelMainMenuHeader.Position = iconMainMenuHeader.Position + new Vector(iconMainMenuHeader.Width + 10, 5);
+				labelInfoMenuHeader.Position = iconInfoMenuHeader.Position + new Vector(iconInfoMenuHeader.Width + 10, 8);
+				labelSkillsMenuHeader.Position = iconSkillsMenuHeader.Position + new Vector(iconSkillsMenuHeader.Width + 8, 8);
 				iconMoney.Position = new Vector(base.Position.X + 365, base.Position.Y + 50);
 				iconHealth.Position = new Vector(base.Position.X + 365, base.Position.Y + 80);
 				iconHygiene.Position = new Vector(base.Position.X + 365, base.Position.Y + 110);
@@ -143,11 +143,11 @@ namespace MyThirdSDL.UserInterface
 			iconInfoMenuHeader = ControlFactory.CreateIcon(contentManager, "IconStatistics");
 			iconSkillsMenuHeader = ControlFactory.CreateIcon(contentManager, "IconPenPaper");
 
-			labelMainMenuHeader = ControlFactory.CreateLabel(contentManager, fontPath, fontSizeTitle, fontColorWhite, menuTitle);
+			labelMainMenuHeader = ControlFactory.CreateLabel(contentManager, fontPath, fontSizeTitle, fontColorYellow, menuTitle);
 			labelMainMenuHeader.EnableShadow(contentManager, 2, 2);
-			labelInfoMenuHeader = ControlFactory.CreateLabel(contentManager, fontPath, fontSizeTitle, fontColorWhite, "Needs");
+			labelInfoMenuHeader = ControlFactory.CreateLabel(contentManager, fontPath, fontSizeTitle, fontColorYellow, "Needs");
 			labelInfoMenuHeader.EnableShadow(contentManager, 2, 2);
-			labelSkillsMenuHeader = ControlFactory.CreateLabel(contentManager, fontPath, fontSizeTitle, fontColorWhite, "Skills");
+			labelSkillsMenuHeader = ControlFactory.CreateLabel(contentManager, fontPath, fontSizeTitle, fontColorYellow, "Skills");
 			labelSkillsMenuHeader.EnableShadow(contentManager, 2, 2);
 
 			iconMoney = ControlFactory.CreateIcon(contentManager, "IconMoney");
@@ -185,27 +185,35 @@ namespace MyThirdSDL.UserInterface
 			tooltipHoveredItem = ControlFactory.CreateTooltip(contentManager, "TooltipFrame", fontPath,
 				Styles.FontSizes.Tooltip, Styles.Colors.White, defaultText);
 
-			foreach (var purchasableItem in purchasableItems)
-			{
-				ButtonMenuItem buttonMenuItem = new ButtonMenuItem(purchasableItem);
-				buttonMenuItem.TextureFrame = contentManager.GetTexture("ButtonMenuItem");
-				buttonMenuItem.TextureFrameHovered = contentManager.GetTexture("ButtonMenuItemHover");
-				buttonMenuItem.IconMain = ControlFactory.CreateIcon(contentManager, purchasableItem.IconTextureKey);
-				buttonMenuItem.IconMoney = ControlFactory.CreateIcon(contentManager, "IconMoney");
-				buttonMenuItem.LabelMain = ControlFactory.CreateLabel(contentManager, fontPath, fontSizeContent, fontColorYellow, purchasableItem.Name);
-				buttonMenuItem.LabelMoney = ControlFactory.CreateLabel(contentManager, fontPath, fontSizeContent, fontColorYellow, purchasableItem.Price.ToString());
-				AddButtonMenuItem(buttonMenuItem);
-			}
+			//foreach (var purchasableItem in purchasableItems)
+			//{
+			//	ButtonMenuItem buttonMenuItem = new ButtonMenuItem(purchasableItem);
+			//	buttonMenuItem.TextureFrame = contentManager.GetTexture("ButtonMenuItem");
+			//	buttonMenuItem.TextureFrameHovered = contentManager.GetTexture("ButtonMenuItemHover");
+			//	buttonMenuItem.IconMain = ControlFactory.CreateIcon(contentManager, purchasableItem.IconTextureKey);
+			//	buttonMenuItem.IconMoney = ControlFactory.CreateIcon(contentManager, "IconMoney");
+			//	buttonMenuItem.LabelMain = ControlFactory.CreateLabel(contentManager, fontPath, fontSizeContent, fontColorYellow, purchasableItem.Name);
+			//	buttonMenuItem.LabelMoney = ControlFactory.CreateLabel(contentManager, fontPath, fontSizeContent, fontColorYellow, purchasableItem.Price.ToString());
+			//	AddButtonMenuItem(buttonMenuItem);
+			//}
 
 			Texture textureListBoxTargetFrame = contentManager.GetTexture("MenuPurchaseListBoxTarget");
-			listBox = new ListBox(contentManager, textureListBoxTargetFrame);
-			ListItem listItem = new ListItem();
-			listItem.AddColumn(labelCommunication);
-			listItem.AddColumn(labelCreativity);
-			listBox.AddItem(listItem);
-			ListItem listItem2 = new ListItem();
-			listItem2.AddColumn(labelHealth);
-			listBox.AddItem(listItem2);
+			Icon iconScrollbar = ControlFactory.CreateIcon(contentManager, "IconScrollbarMenuPurchase");
+			listBox = new ListBox(contentManager, textureListBoxTargetFrame, iconScrollbar);
+
+			foreach (var purchasableItem in purchasableItems)
+			{
+				ListItem listItem = new ListItem();
+				Icon iconItem = ControlFactory.CreateIcon(contentManager, purchasableItem.IconTextureKey);
+				Label labelPurchasableItemName = ControlFactory.CreateLabel(contentManager, fontPath, 13, Styles.Colors.White, purchasableItem.Name);
+				Label labelPurchasableItemPrice = ControlFactory.CreateLabel(contentManager, fontPath, 13, Styles.Colors.White, "$" + purchasableItem.Price);
+				Label labelPurchasableItemHealth = ControlFactory.CreateLabel(contentManager, fontPath, 13, Styles.Colors.White, purchasableItem.NecessityEffect.HealthEffectiveness.ToString());
+				listItem.AddColumn(iconItem);
+				listItem.AddColumn(labelPurchasableItemName);
+				listItem.AddColumn(labelPurchasableItemPrice);
+				listItem.AddColumn(labelPurchasableItemHealth);
+				listBox.AddItem(listItem);
+			}
 
 			Controls.Add(iconFrame);
 			Controls.Add(iconMainMenuHeader);
@@ -215,7 +223,7 @@ namespace MyThirdSDL.UserInterface
 			Controls.Add(labelInfoMenuHeader);
 			Controls.Add(labelSkillsMenuHeader);
 			Controls.Add(buttonCloseWindow);
-			//Controls.Add(tooltipHoveredItem);
+			Controls.Add(tooltipHoveredItem);
 			Controls.Add(listBox);
 
 			buttonCloseWindow.Clicked += buttonCloseWindow_Clicked;
@@ -266,6 +274,15 @@ namespace MyThirdSDL.UserInterface
 			//if (success)
 			//	foreach (var buttonMenuItem in buttonMenuItemsOnCurrentPage)
 			//		buttonMenuItem.Draw(gameTime, renderer);
+		}
+
+		public override void HandleMouseButtonReleasedEvent(object sender, MouseButtonEventArgs e)
+		{
+			if (!Visible) return;
+
+			base.HandleMouseButtonReleasedEvent(sender, e);
+
+			listBox.HandleMouseButtonReleasedEvent(sender, e);
 		}
 
 		public override void HandleMouseButtonPressedEvent(object sender, MouseButtonEventArgs e)

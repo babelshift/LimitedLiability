@@ -778,6 +778,13 @@ namespace MyThirdSDL.UserInterface
 
 		#region User Input Events
 
+		public void HandleMouseButtonReleasedEvent(object sender, MouseButtonEventArgs e)
+		{
+			foreach (var menu in menus)
+				if (menu != null)
+					menu.HandleMouseButtonReleasedEvent(sender, e);
+		}
+
 		public void HandleTextInputtingEvent(object sender, TextInputEventArgs e)
 		{
 			//focusedControl.HandleTextInput(e.Text);
