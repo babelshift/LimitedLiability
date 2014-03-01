@@ -23,12 +23,14 @@ namespace MyThirdSDL.UserInterface
 
 		public IReadOnlyList<ListItem> Items { get { return items; } }
 
+		/// <summary>
+		/// Vertical spacing between each item
+		/// </summary>
+		public int ItemSpacing { get; set; }
+
 		public override Vector Position
 		{
-			get
-			{
-				return base.Position;
-			}
+			get { return base.Position; }
 			set
 			{
 				base.Position = value;
@@ -36,32 +38,67 @@ namespace MyThirdSDL.UserInterface
 				iconScrollbar.Position = base.Position + new Vector(Width + 5, 0);
 				iconScroller.Position = base.Position + new Vector(Width + 6, 2);
 
+				// find the max column count of our list items
+				int maxColumnCount = GetMaxColumnCount();
+
+				// set the column widths for all items in the listbox to be equal to the greatest control width in each column
+				// this normalizes the columns so that they are aligned properly
+				SetColumnWidths(maxColumnCount);
+
+				// set the position of each item with a vertical spacing between each item
 				for (int i = 0; i < items.Count; i++)
-					items[i].Position = new Vector(5, i * ItemSpacing);
+					items[i].Position = new Vector(0, i * ItemSpacing);
 
 				iconScrollerMinPosition = base.Position + new Vector(Width + 6, 1);
 				iconScrollerMaxPosition = new Vector(iconScroller.Position.X, iconScrollerMinPosition.Y + iconScrollbar.Height - iconScroller.Height - 2);
 			}
 		}
 
-		public int ItemSpacing { get; set; }
-
-		public int ColumnSpacing { get; set; }
-
-		public ListBox(ContentManager contentManager, Texture textureFrame, Icon iconScrollbar)
+		/// <summary>
+		/// Default constructor to create a scrollable listbox that uses the passed textures to form a background and scrollbar visual.
+		/// </summary>
+		/// <param name="contentManager"></param>
+		/// <param name="textureFrame"></param>
+		/// <param name="iconScrollbar"></param>
+		public ListBox(ContentManager contentManager, Texture textureFrame, Icon iconScrollbar, Icon iconScroller)
 		{
 			this.textureFrame = textureFrame;
 			Width = textureFrame.Width;
 			Height = textureFrame.Height;
 
+			// the render target is used to render the contents of the listbox to be contained within the frame of the listbox
+			// this allows scrolling objects up and down while containing their rendering to the frame
 			this.renderTarget = contentManager.CreateRenderTarget(this.textureFrame.Width, this.textureFrame.Height);
 			this.renderTarget.SetBlendMode(BlendMode.Blend);
 
-			iconScroller = ControlFactory.CreateIcon(contentManager, "IconScroller");
+			this.iconScroller = iconScroller;
 			this.iconScrollbar = iconScrollbar;
 
 			ItemSpacing = 30;
-			ColumnSpacing = 75;
+		}
+
+		public override void Draw(SharpDL.GameTime gameTime, Renderer renderer)
+		{
+			if (!Visible)
+				return;
+
+			renderer.SetRenderTarget(renderTarget);
+
+			// draw our frame at 0,0 in the render target
+			textureFrame.Draw(0, 0);
+
+			// draw all the items of the listbox on top of the frame
+			foreach (var item in items)
+				item.Draw(gameTime, renderer);
+
+			// reset our render target so that we render to the full screen now
+			renderer.ResetRenderTarget();
+
+			// render our final render target texture
+			renderTarget.Draw(Position.X, Position.Y);
+
+			iconScrollbar.Draw(gameTime, renderer);
+			iconScroller.Draw(gameTime, renderer);
 		}
 
 		public override void Update(SharpDL.GameTime gameTime)
@@ -197,43 +234,82 @@ namespace MyThirdSDL.UserInterface
 			return iconScrollerPosition;
 		}
 
-		public override void Draw(SharpDL.GameTime gameTime, Renderer renderer)
+		/// <summary>
+		/// Loops through all columns in the listbox, calculates the maximum width of all items the column and then sets the width of all controls in the column to be equal to that maximum width.
+		/// This normalizes the width of each column so that everything is aligned properly. Without adjusting to the maximum width of items in the columns, it is possible to get a jagged, misaligned
+		/// grid effect.
+		/// </summary>
+		/// <param name="maxColumnCount"></param>
+		private void SetColumnWidths(int maxColumnCount)
 		{
-			if (!Visible)
-				return;
+			for (int i = 0; i < maxColumnCount; i++)
+			{
+				int maxItemWidthInColumn = GetMaximumColumnWidth(i);
 
-			renderer.SetRenderTarget(renderTarget);
-
-			// draw our frame at 0,0 in the render target
-			textureFrame.Draw(0, 0);
-
-			// draw all the items of the listbox on top of the frame
-			foreach (var item in items)
-				item.Draw(gameTime, renderer);
-
-			// reset our render target so that we render to the full screen now
-			renderer.ResetRenderTarget();
-
-			// render our final render target texture
-			renderTarget.Draw(Position.X, Position.Y);
-
-			iconScrollbar.Draw(gameTime, renderer);
-			iconScroller.Draw(gameTime, renderer);
+				SetMaxColumnWidth(i, maxItemWidthInColumn);
+			}
 		}
 
+		/// <summary>
+		/// Loops through all items in the listbox and sets the width of the column at index i to the passed value
+		/// </summary>
+		/// <param name="i"></param>
+		/// <param name="maxItemWidthInColumn"></param>
+		private void SetMaxColumnWidth(int i, int maxItemWidthInColumn)
+		{
+			foreach (var item in items)
+				item.SetColumnWidth(i, maxItemWidthInColumn);
+		}
+
+		/// <summary>
+		/// Calculates and returns the maximum width of items in the column i.
+		/// </summary>
+		/// <param name="i"></param>
+		/// <returns></returns>
+		private int GetMaximumColumnWidth(int i)
+		{
+			int maxItemWidthInColumn = 0;
+			foreach (var item in items)
+			{
+				int itemWidthInColumn = item.Columns[i].Width;
+				if (itemWidthInColumn > maxItemWidthInColumn)
+					maxItemWidthInColumn = itemWidthInColumn;
+			}
+			return maxItemWidthInColumn;
+		}
+
+		/// <summary>
+		/// Returns the maximum number of columns found in all listitems.
+		/// </summary>
+		/// <returns></returns>
+		private int GetMaxColumnCount()
+		{
+			int maxColumnCount = 0;
+			foreach (var item in items)
+			{
+				int columnCount = item.Columns.Count;
+				if (columnCount > maxColumnCount)
+					maxColumnCount = columnCount;
+			}
+			return maxColumnCount;
+		}
+
+		/// <summary>
+		/// Adds a new list item to the list box. Note that this will not adjust the positions and widths until the position of the entire control is reset.
+		/// </summary>
+		/// <param name="item"></param>
 		public void AddItem(ListItem item)
 		{
-			item.Position = new Vector(5, items.Count * ItemSpacing);
-			item.ColumnSpacing = ColumnSpacing;
 			items.Add(item);
 		}
 
-		public void RemoveItem(ListItem item)
+		public override void Dispose()
 		{
-			items.Remove(item);
+			Dispose(true);
+			GC.SuppressFinalize(this);
 		}
 
-		public override void Dispose()
+		private void Dispose(bool disposing)
 		{
 			renderTarget.Dispose();
 			textureFrame.Dispose();

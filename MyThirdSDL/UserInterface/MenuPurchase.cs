@@ -199,7 +199,8 @@ namespace MyThirdSDL.UserInterface
 
 			Texture textureListBoxTargetFrame = contentManager.GetTexture("MenuPurchaseListBoxTarget");
 			Icon iconScrollbar = ControlFactory.CreateIcon(contentManager, "IconScrollbarMenuPurchase");
-			listBox = new ListBox(contentManager, textureListBoxTargetFrame, iconScrollbar);
+			Icon iconScroller = ControlFactory.CreateIcon(contentManager, "IconScroller");
+			listBox = new ListBox(contentManager, textureListBoxTargetFrame, iconScrollbar, iconScroller);
 
 			foreach (var purchasableItem in purchasableItems)
 			{

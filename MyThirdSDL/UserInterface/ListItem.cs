@@ -8,54 +8,89 @@ using System.Threading.Tasks;
 
 namespace MyThirdSDL.UserInterface
 {
+	/// <summary>
+	/// Represents a single ListItem to be added to a ListBox. Each ListItem is a single row of a ListBox containing many Columns of Controls.
+	/// </summary>
 	public class ListItem : Control
 	{
-		private List<Control> columns = new List<Control>();
+		private List<ListItemColumn> columns = new List<ListItemColumn>();
 
-		public IReadOnlyList<Control> Columns { get { return columns; } }
+		public IReadOnlyList<ListItemColumn> Columns { get { return columns; } }
 
-		public override SharpDL.Graphics.Vector Position
+		/// <summary>
+		/// Adjusts the position of all Columns contained within this ListItem.
+		/// </summary>
+		public override Vector Position
 		{
-			get
-			{
-				return base.Position;
-			}
+			get { return base.Position; }
 			set
 			{
 				base.Position = value;
 
-				for (int i = 0; i < columns.Count; i++)
-					columns[i].Position = base.Position + new Vector(i * ColumnSpacing, 0);
+				SetColumnPositions();
 			}
-		}
-
-		public int ColumnSpacing { get; set; }
-
-		public ListItem()
-		{
 		}
 
 		public override void Draw(GameTime gameTime, Renderer renderer)
 		{
-			foreach (var control in columns)
-				control.Draw(gameTime, renderer);
+			if (!Visible)
+				return;
+			foreach (var column in columns)
+				column.Control.Draw(gameTime, renderer);
 		}
 
-		public void AddColumn(Control column)
+		/// <summary>
+		/// Adjusts the positions of all columns in this list item.
+		/// </summary>
+		private void SetColumnPositions()
 		{
-			column.Position = new Vector(columns.Count * ColumnSpacing, 0);
-			columns.Add(column);
+			for (int i = 0; i < columns.Count; i++)
+				SetColumnPosition(i);
 		}
 
-		public void RemoveColumn(Control column)
+		/// <summary>
+		/// Adjusts the column position of a single column at index i. The position of a column is 0 when it is the first column or
+		/// separated by its left neighbor in an amount equal to the left neighbors width +25 pixels.
+		/// </summary>
+		/// <param name="i"></param>
+		private void SetColumnPosition(int i)
 		{
-			columns.Remove(column);
+			int widthOfLeftNeighbor = 0;
+			Vector positionOfLeftNeighbor = base.Position;
+			if (i > 0)
+			{
+				widthOfLeftNeighbor = columns[i - 1].Width + 25;
+				positionOfLeftNeighbor = columns[i - 1].Position;
+			}
+			columns[i].Position = positionOfLeftNeighbor + new Vector(widthOfLeftNeighbor, 0);
+		}
+
+		/// <summary>
+		/// Sets the column width at the passed columnIndex to the passed width value. Does nothing if the column doesn't exist.
+		/// </summary>
+		/// <param name="columnIndex"></param>
+		/// <param name="width"></param>
+		public void SetColumnWidth(int columnIndex, int width)
+		{
+			if (columnIndex < columns.Count)
+				columns[columnIndex].Width = width;
+		}
+
+		public void AddColumn(Control control)
+		{
+			columns.Add(new ListItemColumn(control));
 		}
 
 		public override void Dispose()
 		{
-			foreach (var control in columns)
-				control.Dispose();
+			Dispose(true);
+			GC.SuppressFinalize(this);
+		}
+
+		private void Dispose(bool disposing)
+		{
+			foreach (var column in columns)
+				column.Dispose();
 		}
 	}
 }

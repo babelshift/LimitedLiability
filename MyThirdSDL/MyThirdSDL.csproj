@@ -223,6 +223,7 @@
     </Compile>
     <Compile Include="UserInterface\ListBox.cs" />
     <Compile Include="UserInterface\ListItem.cs" />
+    <Compile Include="UserInterface\ListItemColumn.cs" />
     <Compile Include="UserInterface\MailItemPage.cs" />
     <Compile Include="UserInterface\ManeInspectEquipment.cs" />
     <Compile Include="UserInterface\Menu.cs" />
