@@ -1,10 +1,7 @@
 ﻿using SharpDL;
+using SharpDL.Events;
 using SharpDL.Graphics;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MyThirdSDL.UserInterface
 {
@@ -13,30 +10,49 @@ namespace MyThirdSDL.UserInterface
 	/// </summary>
 	public class ListItemColumn : Control
 	{
-		public Control Control { get; private set; }
+		private Control control;
 
-		/// <summary>
-		/// Used by the ListBox control to render the proper width between columns for proper spacing. Default is the Control width.
-		/// </summary>
-		public int Width { get; set; }
-
-		public Vector Position
+		public override Vector Position
 		{
-			get { return Control.Position; }
-			set { Control.Position = value; }
+			get { return control.Position; }
+			set 
+			{
+				base.Position = value;
+				control.Position = base.Position;
+			}
 		}
 
 		public ListItemColumn(Control control)
 		{
-			Control = control;
+			this.control = control;
+			Height = control.Height;
 			Width = control.Width;
+		}
+
+		public override void Update(GameTime gameTime)
+		{
+			if (!Visible)
+				return;
+			base.Update(gameTime);
+
+			control.Update(gameTime);
 		}
 
 		public override void Draw(GameTime gameTime, Renderer renderer)
 		{
 			if (!Visible)
 				return;
-			Control.Draw(gameTime, renderer);
+
+			control.Draw(gameTime, renderer);
+		}
+
+		/// <summary>
+		/// Used by the ListBox control to render the proper width between columns for proper spacing. Default is the Control width.
+		/// </summary>
+		/// <param name="width"></param>
+		public void SetWidth(int width)
+		{
+			Width = width;
 		}
 
 		public override void Dispose()
@@ -47,7 +63,7 @@ namespace MyThirdSDL.UserInterface
 
 		private void Dispose(bool disposing)
 		{
-			Control.Dispose();
+			control.Dispose();
 		}
 	}
 }

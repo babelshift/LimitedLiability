@@ -64,7 +64,7 @@ namespace MyThirdSDL.UserInterface
 			string fontPathDroid = content.GetContentPath("DroidSans Bold");
 			Color fontColorWhite = Styles.Colors.White;
 			int fontSizeContent = 16;
-			int fontSizeTooltipText = 8;
+			//int fontSizeTooltipText = 8;
 
 			buttonSelectEquipment = ControlFactory.CreateButton(content, "ButtonBottomBar", "ButtonBottomBarHover");
 			buttonSelectEquipment.Icon = ControlFactory.CreateIcon(content, "IconHandTruck");

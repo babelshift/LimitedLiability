@@ -7,7 +7,7 @@ namespace MyThirdSDL.UserInterface
 {
 	public class Menu : Control
 	{
-		protected const string defaultText = "N/A";
+		protected readonly string defaultText = "N/A";
 		private List<Control> controls = new List<Control>();
 
 		protected IList<Control> Controls

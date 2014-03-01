@@ -39,6 +39,7 @@
 		{ "key": "MenuPauseFrame",				"value": "Images/User Interface/MenuPauseFrame.png" },
 		{ "key": "BottomBar",					"value": "Images/User Interface/BottomBar.png" },
 		{ "key": "TopBar",						"value": "Images/User Interface/TopBar.png" },
+		{ "key": "ListItemHighlight",			"value": "Images/User Interface/ListItemHighlight.png" },
 		
 		{ "key": "ButtonMenuItem",				"value": "Images/User Interface/ButtonMenuItem.png" },
 		{ "key": "ButtonMenuItemHover",			"value": "Images/User Interface/ButtonMenuItemHover.png" },

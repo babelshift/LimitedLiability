@@ -16,9 +16,7 @@ namespace MyThirdSDL.UserInterface
 		private int currentDisplayedPage = 1;
 
 		private Icon iconFrame;
-		private Tooltip tooltipHoveredItem;
-
-		private string defaultText;
+		//private Tooltip tooltipHoveredItem;
 
 		#region Header Controls
 
@@ -53,17 +51,17 @@ namespace MyThirdSDL.UserInterface
 		private Label labelCreativity;
 		private Label labelIntelligence;
 		private Label labelLeadership;
+		private Label labelDescription;
 
 		#endregion Info Controls
 
 		#region Buttons
 
 		private Button buttonCloseWindow;
-		private Dictionary<int, List<ButtonMenuItem>> buttonMenuItemPages = new Dictionary<int, List<ButtonMenuItem>>();
 
 		#endregion Buttons
 
-		private ListBox listBox;
+		private ListBox<IPurchasable> listBox;
 
 		private IPurchasable selectedPurchasableItem;
 
@@ -112,13 +110,12 @@ namespace MyThirdSDL.UserInterface
 				labelLeadership.Position = new Vector(base.Position.X + 540, base.Position.Y + 90);
 				labelCreativity.Position = new Vector(base.Position.X + 540, base.Position.Y + 120);
 				labelIntelligence.Position = new Vector(base.Position.X + 540, base.Position.Y + 150);
-				buttonCloseWindow.Position = new Vector(base.Position.X + Width - buttonCloseWindow.Width, base.Position.Y + Height + 5);
-				tooltipHoveredItem.Position = new Vector(base.Position.X, base.Position.Y + Height + 40);
-				buttonCloseWindow.Tooltip.Position = new Vector(Position.X, buttonCloseWindow.Position.Y + buttonCloseWindow.Height + 5);
+				buttonCloseWindow.Position = base.Position + new Vector(Width - buttonCloseWindow.Width - 15, Height - buttonCloseWindow.Height - 15);
+				//tooltipHoveredItem.Position = new Vector(base.Position.X, base.Position.Y + Height + 40);
+				//buttonCloseWindow.Tooltip.Position = new Vector(Position.X, buttonCloseWindow.Position.Y + buttonCloseWindow.Height + 5);
+				labelDescription.Position = base.Position + new Vector(15, 295);
 
 				listBox.Position = base.Position + new Vector(12, 47);
-
-				SetMenuItemButtonPositions();
 			}
 		}
 
@@ -130,7 +127,7 @@ namespace MyThirdSDL.UserInterface
 			Width = iconFrame.Width;
 			Height = iconFrame.Height;
 
-			defaultText = contentManager.GetString(StringReferenceKeys.DEFAULT_TEXT);
+			//defaultText = contentManager.GetString(StringReferenceKeys.DEFAULT_TEXT);
 
 			string fontPath = contentManager.GetContentPath(Styles.Fonts.DroidSansBold);
 			Color fontColorWhite = Styles.Colors.White;
@@ -179,32 +176,26 @@ namespace MyThirdSDL.UserInterface
 			buttonCloseWindow.Icon = ControlFactory.CreateIcon(contentManager, "IconWindowClose");
 			buttonCloseWindow.IconHovered = ControlFactory.CreateIcon(contentManager, "IconWindowClose");
 			buttonCloseWindow.ButtonType = ButtonType.IconOnly;
-			buttonCloseWindow.Tooltip = ControlFactory.CreateTooltip(contentManager, "TooltipFrame", fontPath, fontSizeTooltip,
-				fontColorWhite, contentManager.GetString(StringReferenceKeys.TOOLTIP_BUTTON_CLOSE_WINDOW));
+			//buttonCloseWindow.Tooltip = ControlFactory.CreateTooltip(contentManager, "TooltipFrame", fontPath, fontSizeTooltip,
+			//	fontColorWhite, contentManager.GetString(StringReferenceKeys.TOOLTIP_BUTTON_CLOSE_WINDOW));
 
-			tooltipHoveredItem = ControlFactory.CreateTooltip(contentManager, "TooltipFrame", fontPath,
-				Styles.FontSizes.Tooltip, Styles.Colors.White, defaultText);
+			labelDescription = ControlFactory.CreateLabel(contentManager, fontPath, fontSizeContent, fontColorWhite, contentManager.GetString(StringReferenceKeys.DEFAULT_TEXT), 570);
 
-			//foreach (var purchasableItem in purchasableItems)
-			//{
-			//	ButtonMenuItem buttonMenuItem = new ButtonMenuItem(purchasableItem);
-			//	buttonMenuItem.TextureFrame = contentManager.GetTexture("ButtonMenuItem");
-			//	buttonMenuItem.TextureFrameHovered = contentManager.GetTexture("ButtonMenuItemHover");
-			//	buttonMenuItem.IconMain = ControlFactory.CreateIcon(contentManager, purchasableItem.IconTextureKey);
-			//	buttonMenuItem.IconMoney = ControlFactory.CreateIcon(contentManager, "IconMoney");
-			//	buttonMenuItem.LabelMain = ControlFactory.CreateLabel(contentManager, fontPath, fontSizeContent, fontColorYellow, purchasableItem.Name);
-			//	buttonMenuItem.LabelMoney = ControlFactory.CreateLabel(contentManager, fontPath, fontSizeContent, fontColorYellow, purchasableItem.Price.ToString());
-			//	AddButtonMenuItem(buttonMenuItem);
-			//}
+			//tooltipHoveredItem = ControlFactory.CreateTooltip(contentManager, "TooltipFrame", fontPath,
+			//	Styles.FontSizes.Tooltip, Styles.Colors.White, defaultText);
 
 			Texture textureListBoxTargetFrame = contentManager.GetTexture("MenuPurchaseListBoxTarget");
+			Texture textureListItemHighlight = contentManager.GetTexture("ListItemHighlight");
 			Icon iconScrollbar = ControlFactory.CreateIcon(contentManager, "IconScrollbarMenuPurchase");
 			Icon iconScroller = ControlFactory.CreateIcon(contentManager, "IconScroller");
-			listBox = new ListBox(contentManager, textureListBoxTargetFrame, iconScrollbar, iconScroller);
+
+			listBox = new ListBox<IPurchasable>(contentManager, textureListBoxTargetFrame, iconScrollbar, iconScroller);
+			listBox.ItemHovered += listBox_ItemHovered;
+			listBox.ItemSelected += listBox_ItemSelected;
 
 			foreach (var purchasableItem in purchasableItems)
 			{
-				ListItem listItem = new ListItem();
+				ListItem<IPurchasable> listItem = new ListItem<IPurchasable>(purchasableItem, textureListItemHighlight);
 				Icon iconItem = ControlFactory.CreateIcon(contentManager, purchasableItem.IconTextureKey);
 				Label labelPurchasableItemName = ControlFactory.CreateLabel(contentManager, fontPath, 13, Styles.Colors.White, purchasableItem.Name);
 				Label labelPurchasableItemPrice = ControlFactory.CreateLabel(contentManager, fontPath, 13, Styles.Colors.White, "$" + purchasableItem.Price);
@@ -224,12 +215,24 @@ namespace MyThirdSDL.UserInterface
 			Controls.Add(labelInfoMenuHeader);
 			Controls.Add(labelSkillsMenuHeader);
 			Controls.Add(buttonCloseWindow);
-			Controls.Add(tooltipHoveredItem);
+			Controls.Add(labelDescription);
+			//Controls.Add(tooltipHoveredItem);
 			Controls.Add(listBox);
 
 			buttonCloseWindow.Clicked += buttonCloseWindow_Clicked;
 
 			Visible = false;
+		}
+
+		private void listBox_ItemSelected(object sender, ListItemSelectedEventArgs<IPurchasable> e)
+		{
+			if (ButtonConfirmWindowClicked != null)
+				ButtonConfirmWindowClicked(sender, new ButtonConfirmWindowClickedEventArgs(e.Value));
+		}
+
+		private void listBox_ItemHovered(object sender, ListItemHoveredEventArgs<IPurchasable> e)
+		{
+			labelDescription.Text = e.Value.Description;
 		}
 
 		#endregion Constructor
@@ -238,223 +241,23 @@ namespace MyThirdSDL.UserInterface
 
 		public override void Update(GameTime gameTime)
 		{
-			if (!Visible) return;
-
-			bool isAnyButtonMenuItemHovered = false;
-			List<ButtonMenuItem> buttonMenuItemsOnCurrentPage;
-			bool success = buttonMenuItemPages.TryGetValue(currentDisplayedPage, out buttonMenuItemsOnCurrentPage);
-			if (success)
-			{
-				foreach (var buttonMenuItem in buttonMenuItemsOnCurrentPage)
-				{
-					buttonMenuItem.Update(gameTime);
-					if (buttonMenuItem.IsHovered)
-						isAnyButtonMenuItemHovered = true;
-				}
-			}
-
-			if (!isAnyButtonMenuItemHovered)
-			{
-				ClearInfoAndSkillsText();
-				tooltipHoveredItem.Visible = false;
-			}
-			else
-				tooltipHoveredItem.Visible = true;
-
+			if (!Visible)
+				return;
 			base.Update(gameTime);
-		}
 
-		public override void Draw(GameTime gameTime, Renderer renderer)
-		{
-			if (!Visible) return;
-
-			base.Draw(gameTime, renderer);
-
-			//List<ButtonMenuItem> buttonMenuItemsOnCurrentPage;
-			//bool success = buttonMenuItemPages.TryGetValue(currentDisplayedPage, out buttonMenuItemsOnCurrentPage);
-			//if (success)
-			//	foreach (var buttonMenuItem in buttonMenuItemsOnCurrentPage)
-			//		buttonMenuItem.Draw(gameTime, renderer);
-		}
-
-		public override void HandleMouseButtonReleasedEvent(object sender, MouseButtonEventArgs e)
-		{
-			if (!Visible) return;
-
-			base.HandleMouseButtonReleasedEvent(sender, e);
-
-			listBox.HandleMouseButtonReleasedEvent(sender, e);
-		}
-
-		public override void HandleMouseButtonPressedEvent(object sender, MouseButtonEventArgs e)
-		{
-			if (!Visible) return;
-
-			base.HandleMouseButtonPressedEvent(sender, e);
-
-			List<ButtonMenuItem> buttonMenuItemsOnCurrentPage;
-			bool success = buttonMenuItemPages.TryGetValue(currentDisplayedPage, out buttonMenuItemsOnCurrentPage);
-			if (success)
-				foreach (var buttonMenuItem in buttonMenuItemsOnCurrentPage)
-					buttonMenuItem.HandleMouseButtonPressedEvent(sender, e);
-		}
-
-		public override void HandleMouseMovingEvent(object sender, MouseMotionEventArgs e)
-		{
-			if (!Visible) return;
-
-			base.HandleMouseMovingEvent(sender, e);
-
-			List<ButtonMenuItem> buttonMenuItemsOnCurrentPage;
-			bool success = buttonMenuItemPages.TryGetValue(currentDisplayedPage, out buttonMenuItemsOnCurrentPage);
-			if (success)
-				foreach (var buttonMenuItem in buttonMenuItemsOnCurrentPage)
-					buttonMenuItem.HandleMouseMovingEvent(sender, e);
+			if (!listBox.IsAnyItemHovered)
+				labelDescription.Visible = false;
+			else
+				labelDescription.Visible = true;
 		}
 
 		#endregion Game Loop
 
 		#region Helper Methods
 
-		public void AddButtonMenuItem(ButtonMenuItem buttonMenuItem)
-		{
-			if (buttonMenuItem == null) throw new ArgumentNullException("buttonMenuItem");
-
-			// the last page number will indicate the key in which we check for the next items to add
-			int lastPageNumber = buttonMenuItemPages.Keys.Count();
-			List<ButtonMenuItem> buttonMenuItemsOnLastPage;
-			bool success = buttonMenuItemPages.TryGetValue(lastPageNumber, out buttonMenuItemsOnLastPage);
-			if (success)
-			{
-				// if there are pages in this page collection and the last page contains less than 4 entries, add the new entry to that page
-				if (buttonMenuItemsOnLastPage.Count < itemsPerPage)
-					buttonMenuItemsOnLastPage.Add(buttonMenuItem);
-				// if there are 4 items on the last page, create a new page and add the item
-				else
-				{
-					buttonMenuItemsOnLastPage = new List<ButtonMenuItem>();
-					buttonMenuItemsOnLastPage.Add(buttonMenuItem);
-					buttonMenuItemPages.Add(lastPageNumber + 1, buttonMenuItemsOnLastPage);
-				}
-			}
-			else
-			{
-				// if there are no pages, create an entry and add the first page
-				buttonMenuItemsOnLastPage = new List<ButtonMenuItem> { buttonMenuItem };
-				buttonMenuItemPages.Add(1, buttonMenuItemsOnLastPage);
-			}
-
-			int itemsOnLastPageCount = buttonMenuItemsOnLastPage.Count;
-			Vector buttonMenuItemPosition = Vector.Zero;
-
-			switch (itemsOnLastPageCount)
-			{
-				case 1:
-					buttonMenuItemPosition = new Vector(Position.X + 10, Position.Y + 50);
-					break;
-
-				case 2:
-					buttonMenuItemPosition = new Vector(Position.X + 10, Position.Y + 100);
-					break;
-
-				case 3:
-					buttonMenuItemPosition = new Vector(Position.X + 10, Position.Y + 150);
-					break;
-
-				case 4:
-					buttonMenuItemPosition = new Vector(Position.X + 10, Position.Y + 200);
-					break;
-
-				default:
-					if (itemsOnLastPageCount >= itemsPerPage + 1)
-						return;
-					break;
-			}
-
-			buttonMenuItem.Position = buttonMenuItemPosition;
-			buttonMenuItem.Clicked += buttonMenuItem_Clicked;
-			buttonMenuItem.Hovered += buttonMenuItem_Hovered;
-		}
-
-		private void SetMenuItemButtonPositions()
-		{
-			foreach (int key in buttonMenuItemPages.Keys)
-			{
-				List<ButtonMenuItem> currentPage = null;
-				bool success = buttonMenuItemPages.TryGetValue(key, out currentPage);
-
-				if (!success) continue;
-
-				foreach (var buttonMenuItem in currentPage)
-				{
-					if (currentPage.IndexOf(buttonMenuItem) == 0)
-						buttonMenuItem.Position = new Vector(Position.X + 10, Position.Y + 50);
-					if (currentPage.IndexOf(buttonMenuItem) == 1)
-						buttonMenuItem.Position = new Vector(Position.X + 10, Position.Y + 100);
-					if (currentPage.IndexOf(buttonMenuItem) == 2)
-						buttonMenuItem.Position = new Vector(Position.X + 10, Position.Y + 150);
-					if (currentPage.IndexOf(buttonMenuItem) == 3)
-						buttonMenuItem.Position = new Vector(Position.X + 10, Position.Y + 200);
-				}
-			}
-		}
-
-		private void buttonMenuItem_Clicked(object sender, PurchasableItemSelectedEventArgs e)
-		{
-			OnButtonConfirmWindowClicked(sender, new ButtonConfirmWindowClickedEventArgs(e.PurchasableItem));
-		}
-
-		private void buttonMenuItem_Hovered(object sender, PurchasableItemSelectedEventArgs e)
-		{
-			labelMoney.Text = e.PurchasableItem.Price.ToString();
-			labelHealth.Text = e.PurchasableItem.NecessityEffect.HealthEffectiveness.ToString();
-			labelHunger.Text = e.PurchasableItem.NecessityEffect.HungerEffectiveness.ToString();
-			labelHygiene.Text = e.PurchasableItem.NecessityEffect.HygieneEffectiveness.ToString();
-			labelSleep.Text = e.PurchasableItem.NecessityEffect.SleepEffectiveness.ToString();
-			labelThirst.Text = e.PurchasableItem.NecessityEffect.ThirstEffectiveness.ToString();
-			labelCommunication.Text = e.PurchasableItem.SkillEffect.CommunicationEffectiveness.ToString();
-			labelCreativity.Text = e.PurchasableItem.SkillEffect.CreativityEffectiveness.ToString();
-			labelIntelligence.Text = e.PurchasableItem.SkillEffect.IntelligenceEffectiveness.ToString();
-			labelLeadership.Text = e.PurchasableItem.SkillEffect.LeadershipEffectiveness.ToString();
-			tooltipHoveredItem.Label.Text = e.PurchasableItem.Description;
-		}
-
-		/// <summary>
-		/// When the user is not hovering any button item, we should display default text for the info/skills labels.
-		/// </summary>
-		private void ClearInfoAndSkillsText()
-		{
-			if (labelMoney.Text != defaultText)
-				labelMoney.Text = defaultText;
-			if (labelHealth.Text != defaultText)
-				labelHealth.Text = defaultText;
-			if (labelHunger.Text != defaultText)
-				labelHunger.Text = defaultText;
-			if (labelHygiene.Text != defaultText)
-				labelHygiene.Text = defaultText;
-			if (labelSleep.Text != defaultText)
-				labelSleep.Text = defaultText;
-			if (labelThirst.Text != defaultText)
-				labelThirst.Text = defaultText;
-			if (labelCommunication.Text != defaultText)
-				labelCommunication.Text = defaultText;
-			if (labelCreativity.Text != defaultText)
-				labelCreativity.Text = defaultText;
-			if (labelIntelligence.Text != defaultText)
-				labelIntelligence.Text = defaultText;
-			if (labelLeadership.Text != defaultText)
-				labelLeadership.Text = defaultText;
-		}
-
 		#endregion Helper Methods
 
 		#region Event Subscriptions
-
-		private void OnButtonConfirmWindowClicked(object sender, ButtonConfirmWindowClickedEventArgs e)
-		{
-			if (ButtonConfirmWindowClicked != null)
-				ButtonConfirmWindowClicked(sender, e);
-		}
 
 		private void OnButtonCloseWindowClicked(object sender, EventArgs e)
 		{
@@ -467,36 +270,7 @@ namespace MyThirdSDL.UserInterface
 			OnButtonCloseWindowClicked(sender, e);
 		}
 
-		private void buttonArrowCircleRight_Clicked(object sender, EventArgs e)
-		{
-			if (currentDisplayedPage < buttonMenuItemPages.Keys.Count)
-				currentDisplayedPage++;
-		}
-
-		private void buttonArrowCircleLeft_Clicked(object sender, EventArgs e)
-		{
-			if (currentDisplayedPage > 1)
-				currentDisplayedPage--;
-		}
-
 		#endregion Event Subscriptions
-
-		public override void Dispose()
-		{
-			Dispose(true);
-			GC.SuppressFinalize(this);
-		}
-
-		private void Dispose(bool disposing)
-		{
-			base.Dispose();
-
-			foreach (var key in buttonMenuItemPages.Keys)
-				foreach (var buttonMenuItem in buttonMenuItemPages[key])
-					buttonMenuItem.Dispose();
-
-			buttonMenuItemPages.Clear();
-		}
 	}
 
 	public class ButtonConfirmWindowClickedEventArgs : EventArgs

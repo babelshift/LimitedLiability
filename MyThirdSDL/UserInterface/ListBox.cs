@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace MyThirdSDL.UserInterface
 {
-	public class ListBox : Control
+	public class ListBox<T> : Control
 	{
 		private Vector iconScrollerMinPosition;
 		private Vector iconScrollerMaxPosition;
@@ -19,14 +19,25 @@ namespace MyThirdSDL.UserInterface
 		private Icon iconScrollbar;
 		private Icon iconScroller;
 
-		private List<ListItem> items = new List<ListItem>();
+		private List<ListItem<T>> items = new List<ListItem<T>>();
 
-		public IReadOnlyList<ListItem> Items { get { return items; } }
+		public IReadOnlyList<ListItem<T>> Items { get { return items; } }
 
 		/// <summary>
 		/// Vertical spacing between each item
 		/// </summary>
 		public int ItemSpacing { get; set; }
+
+		public bool IsAnyItemHovered
+		{
+			get
+			{
+				foreach (var item in items)
+					if (item.IsHovered)
+						return true;
+				return false;
+			}
+		}
 
 		public override Vector Position
 		{
@@ -53,6 +64,9 @@ namespace MyThirdSDL.UserInterface
 				iconScrollerMaxPosition = new Vector(iconScroller.Position.X, iconScrollerMinPosition.Y + iconScrollbar.Height - iconScroller.Height - 2);
 			}
 		}
+
+		public event EventHandler<ListItemHoveredEventArgs<T>> ItemHovered;
+		public event EventHandler<ListItemSelectedEventArgs<T>> ItemSelected;
 
 		/// <summary>
 		/// Default constructor to create a scrollable listbox that uses the passed textures to form a background and scrollbar visual.
@@ -106,6 +120,12 @@ namespace MyThirdSDL.UserInterface
 			if (!Visible)
 				return;
 
+			foreach (var item in items)
+				item.Update(gameTime);
+
+			iconScrollbar.Update(gameTime);
+			iconScroller.Update(gameTime);
+
 			base.Update(gameTime);
 		}
 
@@ -125,6 +145,13 @@ namespace MyThirdSDL.UserInterface
 			base.HandleMouseButtonPressedEvent(sender, e);
 
 			iconScroller.HandleMouseButtonPressedEvent(sender, e);
+
+			// adjust our positioning to handle render target controls
+			e.RelativeToWindowX -= (int)Position.X;
+			e.RelativeToWindowY -= (int)Position.Y;
+
+			foreach (var item in items)
+				item.HandleMouseButtonPressedEvent(sender, e);
 		}
 
 		public override void HandleMouseMovingEvent(object sender, MouseMotionEventArgs e)
@@ -147,6 +174,13 @@ namespace MyThirdSDL.UserInterface
 					ScrollItemsAndScroller(iconScrollerPosition, scrollDistance);
 				}
 			}
+
+			// adjust our positioning to handle render target controls
+			e.RelativeToWindowX -= (int)Position.X;
+			e.RelativeToWindowY -= (int)Position.Y;
+
+			foreach (var item in items)
+				item.HandleMouseMovingEvent(sender, e);
 		}
 
 		/// <summary>
@@ -298,9 +332,25 @@ namespace MyThirdSDL.UserInterface
 		/// Adds a new list item to the list box. Note that this will not adjust the positions and widths until the position of the entire control is reset.
 		/// </summary>
 		/// <param name="item"></param>
-		public void AddItem(ListItem item)
+		public void AddItem(ListItem<T> item)
 		{
+			item.Hovered += item_Hovered;
+			item.Clicked += item_Selected;
+			item.SetWidth(renderTarget.Width);
+			item.SetHeight(ItemSpacing);
 			items.Add(item);
+		}
+
+		private void item_Selected(object sender, ListItemSelectedEventArgs<T> e)
+		{
+			if (ItemSelected != null)
+				ItemSelected(sender, e);
+		}
+
+		private void item_Hovered(object sender, ListItemHoveredEventArgs<T> e)
+		{
+			if (ItemHovered != null)
+				ItemHovered(sender, e);
 		}
 
 		public override void Dispose()

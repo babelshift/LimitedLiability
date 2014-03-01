@@ -109,6 +109,110 @@
     <Compile Include="Camera.cs" />
     <Compile Include="Content\CompanyMetadata.cs" />
     <Compile Include="Content\ContentManager.cs" />
+    <Compile Include="UserInterface\Button.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="UserInterface\ButtonMailItem.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="UserInterface\ButtonMenuItem.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="UserInterface\Control.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="UserInterface\ControlFactory.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="UserInterface\Icon.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="UserInterface\Label.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="UserInterface\ListBox.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="UserInterface\ListItem.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="UserInterface\ListItemColumn.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="UserInterface\ListItemHoveredEventArgs.cs" />
+    <Compile Include="UserInterface\ListItemSelectedEventArgs.cs" />
+    <Compile Include="UserInterface\MailItemPage.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="UserInterface\ManeInspectEquipment.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="UserInterface\Menu.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="UserInterface\MenuCompany.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="UserInterface\MenuEmail.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="UserInterface\MenuInspectEmployee.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="UserInterface\MenuMailbox.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="UserInterface\MenuPurchase.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="UserInterface\MenuResume.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="UserInterface\MenuScenarioDescription.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="UserInterface\MenuViewEmployees.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="UserInterface\MessageBox.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="UserInterface\MouseOverScreenEdge.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="UserInterface\PurchasableItemPlacedEventArgs.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="UserInterface\PurchasableItemSelectedEventArgs.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="UserInterface\ScenarioItem.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="UserInterface\SimulationLabel.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="UserInterface\Styles.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="UserInterface\Textbox.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="UserInterface\ToolboxTray.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="UserInterface\Tooltip.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="UserInterface\TopToolboxTray.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="UserInterface\UserInterfaceManager.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="UserInterface\UserInterfaceState.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Content Include="Content\Data\StringReference.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -202,64 +306,6 @@
     <Compile Include="Simulation\SimulationMessageFactory.cs" />
     <Compile Include="Simulation\Subscription.cs" />
     <Compile Include="Simulation\Trigger.cs" />
-    <Compile Include="UserInterface\Button.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="UserInterface\ButtonMailItem.cs" />
-    <Compile Include="UserInterface\ButtonMenuItem.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="UserInterface\Control.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="UserInterface\ControlFactory.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="UserInterface\Icon.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="UserInterface\Label.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="UserInterface\ListBox.cs" />
-    <Compile Include="UserInterface\ListItem.cs" />
-    <Compile Include="UserInterface\ListItemColumn.cs" />
-    <Compile Include="UserInterface\MailItemPage.cs" />
-    <Compile Include="UserInterface\ManeInspectEquipment.cs" />
-    <Compile Include="UserInterface\Menu.cs" />
-    <Compile Include="UserInterface\MenuCompany.cs" />
-    <Compile Include="UserInterface\MenuEmail.cs" />
-    <Compile Include="UserInterface\MenuPurchase.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="UserInterface\MenuInspectEmployee.cs" />
-    <Compile Include="UserInterface\MenuMailbox.cs" />
-    <Compile Include="UserInterface\MenuResume.cs" />
-    <Compile Include="UserInterface\MenuScenarioDescription.cs" />
-    <Compile Include="UserInterface\MenuViewEmployees.cs" />
-    <Compile Include="UserInterface\MessageBox.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="UserInterface\MouseOverScreenEdge.cs" />
-    <Compile Include="UserInterface\PurchasableItemPlacedEventArgs.cs" />
-    <Compile Include="UserInterface\PurchasableItemSelectedEventArgs.cs" />
-    <Compile Include="UserInterface\ScenarioItem.cs" />
-    <Compile Include="UserInterface\SimulationLabel.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="UserInterface\Styles.cs" />
-    <Compile Include="UserInterface\Textbox.cs" />
-    <Compile Include="UserInterface\ToolboxTray.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="UserInterface\Tooltip.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="UserInterface\TopToolboxTray.cs" />
-    <Compile Include="UserInterface\UserInterfaceManager.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="UserInterface\UserInterfaceState.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\Images\Equipment\OfficeDesk.png">
@@ -419,6 +465,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\Images\User Interface\IconSellEquipment.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Images\User Interface\ListItemHighlight.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\Images\User Interface\MenuEmailFrame.png">
