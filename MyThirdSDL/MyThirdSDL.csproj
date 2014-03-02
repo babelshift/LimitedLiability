@@ -195,6 +195,8 @@
     <Compile Include="UserInterface\Styles.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="UserInterface\TabPanel.cs" />
+    <Compile Include="UserInterface\TabContainer.cs" />
     <Compile Include="UserInterface\Textbox.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -380,6 +382,9 @@
     <Content Include="Content\Images\User Interface\ButtonMainMenuItemHover.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Content\Images\User Interface\ButtonSquarePushed.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Content\Images\User Interface\ButtonTopBar.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -465,6 +470,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\Images\User Interface\IconSellEquipment.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Images\User Interface\IconShoppingCart.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\Images\User Interface\ListItemHighlight.png">

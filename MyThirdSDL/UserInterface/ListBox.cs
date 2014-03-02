@@ -152,6 +152,9 @@ namespace MyThirdSDL.UserInterface
 
 			foreach (var item in items)
 				item.HandleMouseButtonPressedEvent(sender, e);
+
+			e.RelativeToWindowX += (int)Position.X;
+			e.RelativeToWindowY += (int)Position.Y;
 		}
 
 		public override void HandleMouseMovingEvent(object sender, MouseMotionEventArgs e)
@@ -181,6 +184,9 @@ namespace MyThirdSDL.UserInterface
 
 			foreach (var item in items)
 				item.HandleMouseMovingEvent(sender, e);
+
+			e.RelativeToWindowX += (int)Position.X;
+			e.RelativeToWindowY += (int)Position.Y;
 		}
 
 		/// <summary>

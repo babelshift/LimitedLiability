@@ -28,6 +28,8 @@ namespace MyThirdSDL.UserInterface
 
 		public Icon IconHovered { get; set; }
 
+		public Icon IconSelected { get; set; }
+
 		public Texture TextureFrame
 		{
 			get { return textureFrame; }
@@ -49,7 +51,7 @@ namespace MyThirdSDL.UserInterface
 
 		public string Text { get { return Label.Text; } set { Label.Text = value; } }
 
-		public bool IsPressed { get; private set; }
+		public bool IsSelected { get; set; }
 
 		public ButtonType ButtonType
 		{
@@ -71,16 +73,22 @@ namespace MyThirdSDL.UserInterface
 					if (Icon != null)
 						Icon.Position = new Vector(base.Position.X + (TextureFrame.Width / 2 - Icon.Width / 2), base.Position.Y + (TextureFrame.Height / 2 - Icon.Height / 2));
 
-					if (IconHovered != null)
-						IconHovered.Position = new Vector(base.Position.X + (TextureFrame.Width / 2 - IconHovered.Width / 2), base.Position.Y + (TextureFrame.Height / 2 - IconHovered.Height / 2));
+					//if (IconHovered != null)
+					//	IconHovered.Position = new Vector(base.Position.X + (TextureFrame.Width / 2 - IconHovered.Width / 2), base.Position.Y + (TextureFrame.Height / 2 - IconHovered.Height / 2));
+
+					//if (IconSelected != null)
+					//	IconSelected.Position = new Vector(base.Position.X + (TextureFrame.Width / 2 - IconSelected.Width / 2), base.Position.Y + (TextureFrame.Height / 2 - IconSelected.Height / 2));
 				}
 				else if (buttonType == ButtonType.IconAndText)
 				{
 					if (Icon != null)
 						Icon.Position = new Vector(base.Position.X + 5, base.Position.Y + (TextureFrame.Height / 2 - Icon.Height / 2));
 
-					if (IconHovered != null)
-						IconHovered.Position = new Vector(base.Position.X + 5, base.Position.Y + (TextureFrame.Height / 2 - IconHovered.Height / 2));
+					//if (IconHovered != null)
+					//	IconHovered.Position = new Vector(base.Position.X + 5, base.Position.Y + (TextureFrame.Height / 2 - IconHovered.Height / 2));
+
+					//if (IconSelected != null)
+					//	IconSelected.Position = new Vector(base.Position.X + (TextureFrame.Width / 2 - IconSelected.Width / 2), base.Position.Y + (TextureFrame.Height / 2 - IconSelected.Height / 2));
 
 					if (Label != null)
 						Label.Position = new Vector(Icon.Position.X + Icon.Width + 3, base.Position.Y + (TextureFrame.Height / 2 - Label.Height / 2));
@@ -108,16 +116,22 @@ namespace MyThirdSDL.UserInterface
 					if (Icon != null)
 						Icon.Position = new Vector(base.Position.X + (TextureFrame.Width / 2 - Icon.Width / 2), base.Position.Y + (TextureFrame.Height / 2 - Icon.Height / 2));
 
-					if (IconHovered != null)
-						IconHovered.Position = new Vector(base.Position.X + (TextureFrame.Width / 2 - IconHovered.Width / 2), base.Position.Y + (TextureFrame.Height / 2 - IconHovered.Height / 2));
+					//if (IconHovered != null)
+					//	IconHovered.Position = new Vector(base.Position.X + (TextureFrame.Width / 2 - IconHovered.Width / 2), base.Position.Y + (TextureFrame.Height / 2 - IconHovered.Height / 2));
+
+					//if (IconSelected != null)
+					//	IconSelected.Position = new Vector(base.Position.X + (TextureFrame.Width / 2 - IconSelected.Width / 2), base.Position.Y + (TextureFrame.Height / 2 - IconSelected.Height / 2));
 				}
 				else if (buttonType == ButtonType.IconAndText)
 				{
 					if (Icon != null)
 						Icon.Position = new Vector(base.Position.X + 5, base.Position.Y + (TextureFrame.Height / 2 - Icon.Height / 2));
 
-					if (IconHovered != null)
-						IconHovered.Position = new Vector(base.Position.X + 5, base.Position.Y + (TextureFrame.Height / 2 - IconHovered.Height / 2));
+					//if (IconHovered != null)
+					//	IconHovered.Position = new Vector(base.Position.X + 5, base.Position.Y + (TextureFrame.Height / 2 - IconHovered.Height / 2));
+
+					//if (IconSelected != null)
+					//	IconSelected.Position = new Vector(base.Position.X + (TextureFrame.Width / 2 - IconSelected.Width / 2), base.Position.Y + (TextureFrame.Height / 2 - IconSelected.Height / 2));
 
 					if (Label != null)
 						Label.Position = new Vector(Icon.Position.X + Icon.Width + 3, base.Position.Y + (TextureFrame.Height / 2 - Label.Height / 2));
@@ -138,6 +152,7 @@ namespace MyThirdSDL.UserInterface
 		public Button()
 		{
 			Visible = true;
+			IsSelected = false;
 		}
 
 		#endregion Constructors
@@ -146,13 +161,19 @@ namespace MyThirdSDL.UserInterface
 
 		public override void Update(GameTime gameTime)
 		{
+			if (!Visible)
+				return;
+
 			base.Update(gameTime);
 
 			if (Icon != null)
 				Icon.Update(gameTime);
 
-			if (IconHovered != null)
-				IconHovered.Update(gameTime);
+			//if (IconHovered != null)
+			//	IconHovered.Update(gameTime);
+
+			//if (IconSelected != null)
+			//	IconSelected.Update(gameTime);
 
 			if (Label != null)
 				Label.Update(gameTime);
@@ -163,41 +184,31 @@ namespace MyThirdSDL.UserInterface
 
 		public override void Draw(GameTime gameTime, Renderer renderer)
 		{
-			if (Visible)
+			if (!Visible)
+				return;
+
+			if (IsHovered)
 			{
+				if (Tooltip != null)
+					Tooltip.Draw(gameTime, renderer);
+				if (TextureFrameHovered != null)
+					TextureFrameHovered.Draw(Position.X, Position.Y);
+			}
+
+			if (IsClicked || IsSelected)
+			{
+				if (TextureFrameSelected != null)
+					TextureFrameSelected.Draw(Position.X, Position.Y);
+			}
+
+			if(!IsHovered && !IsClicked && !IsSelected)
 				TextureFrame.Draw(Position.X, Position.Y);
 
-				if (IsPressed || IsHovered)
-				{
-					if (IsHovered)
-					{
-						if (Tooltip != null)
-							Tooltip.Draw(gameTime, renderer);
-						if (TextureFrameHovered != null)
-							TextureFrameHovered.Draw(Position.X, Position.Y);
-						if (IconHovered != null)
-							IconHovered.Draw(gameTime, renderer);
-					}
-					else if (IsPressed)
-					{
-						if (TextureFrameSelected != null)
-							TextureFrameSelected.Draw(Position.X, Position.Y);
-						else if (TextureFrameHovered != null)
-							TextureFrameHovered.Draw(Position.X, Position.Y);
-					}
+			if (Icon != null)
+				Icon.Draw(gameTime, renderer);
 
-					if (Icon != null)
-						Icon.Draw(gameTime, renderer);
-				}
-				else
-				{
-					if (Icon != null)
-						Icon.Draw(gameTime, renderer);
-				}
-
-				if (Label != null)
-					Label.Draw(gameTime, renderer);
-			}
+			if (Label != null)
+				Label.Draw(gameTime, renderer);
 		}
 
 		#endregion Game Loop
@@ -206,12 +217,12 @@ namespace MyThirdSDL.UserInterface
 
 		public void ToggleOn()
 		{
-			IsPressed = true;
+			IsSelected = true;
 		}
 
 		public void ToggleOff()
 		{
-			IsPressed = false;
+			IsSelected = false;
 		}
 
 		#endregion Behaviors
@@ -228,6 +239,8 @@ namespace MyThirdSDL.UserInterface
 				Icon.Dispose();
 			if (IconHovered != null)
 				IconHovered.Dispose();
+			if (IconSelected != null)
+				IconSelected.Dispose();
 			if (TextureFrameHovered != null)
 				TextureFrameHovered.Dispose();
 			if (TextureFrameSelected != null)

@@ -45,6 +45,7 @@
 		{ "key": "ButtonMenuItemHover",			"value": "Images/User Interface/ButtonMenuItemHover.png" },
 		{ "key": "ButtonSquare",				"value": "Images/User Interface/ButtonSquare.png" },
 		{ "key": "ButtonSquareHover",			"value": "Images/User Interface/ButtonSquareHover.png" },
+		{ "key": "ButtonSquareSelected",		"value": "Images/User Interface/ButtonSquarePushed.png" },
 		{ "key": "ButtonMailItem",				"value": "Images/User Interface/ButtonMailItem.png" },
 		{ "key": "ButtonMailItemHover",			"value": "Images/User Interface/ButtonMailItemHover.png" },
 		{ "key": "ButtonMailItemSelected",		"value": "Images/User Interface/ButtonMailItemSelected.png" },
@@ -124,6 +125,7 @@
 		{ "key": "IconPromoteEmployee",			"value": "Images/User Interface/IconPromoteEmployee.png" },
 		{ "key": "IconScroller",				"value": "Images/User Interface/IconScroller.png" },
 		{ "key": "IconScrollbarMenuPurchase",	"value": "Images/User Interface/IconScrollbarMenuPurchase.png" },
+		{ "key": "IconShoppingCart",			"value": "Images/User Interface/IconShoppingCart.png" },
 
 		{ "key": "ScenarioThumbnail1",			"value": "Images/User Interface/ScenarioThumbnail1.png" },
 		{ "key": "ScenarioThumbnail1Selected",	"value": "Images/User Interface/ScenarioThumbnail1Selected.png" },

@@ -371,10 +371,10 @@ namespace MyThirdSDL.UserInterface
 			ButtonMailItem clickedButtonMailItem = sender as ButtonMailItem;
 			if (clickedButtonMailItem != null)
 			{
-				foreach (var page in mailItemPages.Values)
-					foreach (var button in page.Buttons)
-						button.ToggleOff();
-				clickedButtonMailItem.ToggleOn();
+				//foreach (var page in mailItemPages.Values)
+				//	foreach (var button in page.Buttons)
+				//		button.ToggleOff();
+				//clickedButtonMailItem.ToggleOn();
 				SelectedMailItem = clickedButtonMailItem.MailItem;
 				buttonMailOpen.Visible = true;
 				buttonMailArchive.Visible = true;
@@ -512,8 +512,8 @@ namespace MyThirdSDL.UserInterface
 			{
 				ButtonMailItem buttonMailItem = new ButtonMailItem(mailItem);
 				buttonMailItem.TextureFrame = contentManager.GetTexture("ButtonMailItem");
-				buttonMailItem.TextureFrameHovered = contentManager.GetTexture("ButtonMailItemHover");
-				buttonMailItem.TextureFrameSelected = contentManager.GetTexture("ButtonMailItemSelected");
+				//buttonMailItem.TextureFrameHovered = contentManager.GetTexture("ButtonMailItemHover");
+				//buttonMailItem.TextureFrameSelected = contentManager.GetTexture("ButtonMailItemSelected");
 				buttonMailItem.IconMailUnread = ControlFactory.CreateIcon(contentManager, "IconMailUnread");
 				buttonMailItem.IconMailRead = ControlFactory.CreateIcon(contentManager, "IconMailRead");
 				buttonMailItem.LabelFrom = ControlFactory.CreateLabel(contentManager, fontPath, fontSizeContent, fontColorTitle, mailItem.From);
@@ -526,8 +526,8 @@ namespace MyThirdSDL.UserInterface
 			{
 				ButtonMailItem buttonMailItem = new ButtonMailItem(mailItem);
 				buttonMailItem.TextureFrame = contentManager.GetTexture("ButtonMailItem");
-				buttonMailItem.TextureFrameHovered = contentManager.GetTexture("ButtonMailItemHover");
-				buttonMailItem.TextureFrameSelected = contentManager.GetTexture("ButtonMailItemSelected");
+				//buttonMailItem.TextureFrameHovered = contentManager.GetTexture("ButtonMailItemHover");
+				//buttonMailItem.TextureFrameSelected = contentManager.GetTexture("ButtonMailItemSelected");
 				buttonMailItem.IconMailUnread = ControlFactory.CreateIcon(contentManager, "IconMailUnread");
 				buttonMailItem.IconMailRead = ControlFactory.CreateIcon(contentManager, "IconMailRead");
 				buttonMailItem.LabelFrom = ControlFactory.CreateLabel(contentManager, fontPath, fontSizeContent, fontColorTitle, mailItem.From);
@@ -540,8 +540,8 @@ namespace MyThirdSDL.UserInterface
 			{
 				ButtonMailItem buttonMailItem = new ButtonMailItem(mailItem);
 				buttonMailItem.TextureFrame = contentManager.GetTexture("ButtonMailItem");
-				buttonMailItem.TextureFrameHovered = contentManager.GetTexture("ButtonMailItemHover");
-				buttonMailItem.TextureFrameSelected = contentManager.GetTexture("ButtonMailItemSelected");
+				//buttonMailItem.TextureFrameHovered = contentManager.GetTexture("ButtonMailItemHover");
+				//buttonMailItem.TextureFrameSelected = contentManager.GetTexture("ButtonMailItemSelected");
 				buttonMailItem.IconMailUnread = ControlFactory.CreateIcon(contentManager, "IconMailUnread");
 				buttonMailItem.IconMailRead = ControlFactory.CreateIcon(contentManager, "IconMailRead");
 				buttonMailItem.LabelFrom = ControlFactory.CreateLabel(contentManager, fontPath, fontSizeContent, fontColorTitle, mailItem.From);

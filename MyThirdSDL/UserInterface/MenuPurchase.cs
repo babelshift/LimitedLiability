@@ -16,7 +16,6 @@ namespace MyThirdSDL.UserInterface
 		private int currentDisplayedPage = 1;
 
 		private Icon iconFrame;
-		//private Tooltip tooltipHoveredItem;
 
 		#region Header Controls
 
@@ -61,6 +60,7 @@ namespace MyThirdSDL.UserInterface
 
 		#endregion Buttons
 
+		private TabContainer tabContainer;
 		private ListBox<IPurchasable> listBox;
 
 		private IPurchasable selectedPurchasableItem;
@@ -87,7 +87,7 @@ namespace MyThirdSDL.UserInterface
 				iconMainMenuHeader.Position = base.Position + new Vector(10, 10);
 				iconInfoMenuHeader.Position = base.Position + new Vector(250, 10);
 				iconSkillsMenuHeader.Position = base.Position + new Vector(425, 10);
-				labelMainMenuHeader.Position = iconMainMenuHeader.Position + new Vector(iconMainMenuHeader.Width + 10, 5);
+				labelMainMenuHeader.Position = iconMainMenuHeader.Position + new Vector(iconMainMenuHeader.Width + 10, 8);
 				labelInfoMenuHeader.Position = iconInfoMenuHeader.Position + new Vector(iconInfoMenuHeader.Width + 10, 8);
 				labelSkillsMenuHeader.Position = iconSkillsMenuHeader.Position + new Vector(iconSkillsMenuHeader.Width + 8, 8);
 				iconMoney.Position = new Vector(base.Position.X + 365, base.Position.Y + 50);
@@ -106,28 +106,23 @@ namespace MyThirdSDL.UserInterface
 				iconLeadership.Position = new Vector(base.Position.X + 508, base.Position.Y + 80);
 				iconCreativity.Position = new Vector(base.Position.X + 508, base.Position.Y + 110);
 				iconIntelligence.Position = new Vector(base.Position.X + 508, base.Position.Y + 140);
-				//labelCommunication.Position = new Vector(base.Position.X + 540, base.Position.Y + 60);
 				labelLeadership.Position = new Vector(base.Position.X + 540, base.Position.Y + 90);
 				labelCreativity.Position = new Vector(base.Position.X + 540, base.Position.Y + 120);
 				labelIntelligence.Position = new Vector(base.Position.X + 540, base.Position.Y + 150);
-				buttonCloseWindow.Position = base.Position + new Vector(Width - buttonCloseWindow.Width - 15, Height - buttonCloseWindow.Height - 15);
-				//tooltipHoveredItem.Position = new Vector(base.Position.X, base.Position.Y + Height + 40);
-				//buttonCloseWindow.Tooltip.Position = new Vector(Position.X, buttonCloseWindow.Position.Y + buttonCloseWindow.Height + 5);
-				labelDescription.Position = base.Position + new Vector(15, 295);
+				buttonCloseWindow.Position = base.Position + new Vector(Width - buttonCloseWindow.Width - 15, Height - buttonCloseWindow.Height - 14);
+				labelDescription.Position = base.Position + new Vector(15, 353);
 
-				listBox.Position = base.Position + new Vector(12, 47);
+				tabContainer.Position = base.Position + new Vector(15, 51);
 			}
 		}
 
 		#region Constructor
 
-		public MenuPurchase(ContentManager contentManager, string iconMainMenuContentPathKey, string menuTitle, IEnumerable<IPurchasable> purchasableItems)
+		public MenuPurchase(ContentManager contentManager, IEnumerable<IPurchasable> purchasableItems)
 		{
 			iconFrame = new Icon(contentManager.GetTexture("MenuPurchaseFrame"));
 			Width = iconFrame.Width;
 			Height = iconFrame.Height;
-
-			//defaultText = contentManager.GetString(StringReferenceKeys.DEFAULT_TEXT);
 
 			string fontPath = contentManager.GetContentPath(Styles.Fonts.DroidSansBold);
 			Color fontColorWhite = Styles.Colors.White;
@@ -136,11 +131,11 @@ namespace MyThirdSDL.UserInterface
 			int fontSizeContent = Styles.FontSizes.Content;
 			int fontSizeTooltip = Styles.FontSizes.Tooltip;
 
-			iconMainMenuHeader = ControlFactory.CreateIcon(contentManager, iconMainMenuContentPathKey);
+			iconMainMenuHeader = ControlFactory.CreateIcon(contentManager, "IconShoppingCart");
 			iconInfoMenuHeader = ControlFactory.CreateIcon(contentManager, "IconStatistics");
 			iconSkillsMenuHeader = ControlFactory.CreateIcon(contentManager, "IconPenPaper");
 
-			labelMainMenuHeader = ControlFactory.CreateLabel(contentManager, fontPath, fontSizeTitle, fontColorYellow, menuTitle);
+			labelMainMenuHeader = ControlFactory.CreateLabel(contentManager, fontPath, fontSizeTitle, fontColorYellow, "Shopping");
 			labelMainMenuHeader.EnableShadow(contentManager, 2, 2);
 			labelInfoMenuHeader = ControlFactory.CreateLabel(contentManager, fontPath, fontSizeTitle, fontColorYellow, "Needs");
 			labelInfoMenuHeader.EnableShadow(contentManager, 2, 2);
@@ -176,13 +171,8 @@ namespace MyThirdSDL.UserInterface
 			buttonCloseWindow.Icon = ControlFactory.CreateIcon(contentManager, "IconWindowClose");
 			buttonCloseWindow.IconHovered = ControlFactory.CreateIcon(contentManager, "IconWindowClose");
 			buttonCloseWindow.ButtonType = ButtonType.IconOnly;
-			//buttonCloseWindow.Tooltip = ControlFactory.CreateTooltip(contentManager, "TooltipFrame", fontPath, fontSizeTooltip,
-			//	fontColorWhite, contentManager.GetString(StringReferenceKeys.TOOLTIP_BUTTON_CLOSE_WINDOW));
 
 			labelDescription = ControlFactory.CreateLabel(contentManager, fontPath, fontSizeContent, fontColorWhite, contentManager.GetString(StringReferenceKeys.DEFAULT_TEXT), 570);
-
-			//tooltipHoveredItem = ControlFactory.CreateTooltip(contentManager, "TooltipFrame", fontPath,
-			//	Styles.FontSizes.Tooltip, Styles.Colors.White, defaultText);
 
 			Texture textureListBoxTargetFrame = contentManager.GetTexture("MenuPurchaseListBoxTarget");
 			Texture textureListItemHighlight = contentManager.GetTexture("ListItemHighlight");
@@ -192,6 +182,20 @@ namespace MyThirdSDL.UserInterface
 			listBox = new ListBox<IPurchasable>(contentManager, textureListBoxTargetFrame, iconScrollbar, iconScroller);
 			listBox.ItemHovered += listBox_ItemHovered;
 			listBox.ItemSelected += listBox_ItemSelected;
+
+			Button buttonTab1 = ControlFactory.CreateButton(contentManager, "ButtonSquare", "ButtonSquareHover", "ButtonSquareSelected");
+			buttonTab1.Icon = ControlFactory.CreateIcon(contentManager, "IconHandTruck");
+			buttonTab1.ButtonType = ButtonType.IconOnly;
+			Button buttonTab2 = ControlFactory.CreateButton(contentManager, "ButtonSquare", "ButtonSquareHover", "ButtonSquareSelected");
+			buttonTab2.Icon = ControlFactory.CreateIcon(contentManager, "IconForklift");
+			buttonTab2.ButtonType = ButtonType.IconOnly;
+			tabContainer = new TabContainer();
+			TabPanel tab1 = new TabPanel(buttonTab1);
+			tab1.AddControl(listBox);
+			TabPanel tab2 = new TabPanel(buttonTab2);
+			tabContainer.AddTab(tab1);
+			tabContainer.AddTab(tab2);
+			tab1.IsActive = true;
 
 			foreach (var purchasableItem in purchasableItems)
 			{
@@ -215,9 +219,8 @@ namespace MyThirdSDL.UserInterface
 			Controls.Add(labelInfoMenuHeader);
 			Controls.Add(labelSkillsMenuHeader);
 			Controls.Add(buttonCloseWindow);
+			Controls.Add(tabContainer);
 			Controls.Add(labelDescription);
-			//Controls.Add(tooltipHoveredItem);
-			Controls.Add(listBox);
 
 			buttonCloseWindow.Clicked += buttonCloseWindow_Clicked;
 
