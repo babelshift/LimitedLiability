@@ -2,11 +2,9 @@
 using LimitedLiability.Content.Data;
 using LimitedLiability.Descriptors;
 using SharpDL;
-using SharpDL.Events;
 using SharpDL.Graphics;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace LimitedLiability.UserInterface
 {
@@ -61,7 +59,8 @@ namespace LimitedLiability.UserInterface
 		#endregion Buttons
 
 		private TabContainer tabContainer;
-		private ListBox<IPurchasable> listBox;
+		private ListBox<IPurchasable> listBoxEquipment;
+		private ListBox<IPurchasable> listBoxRooms;
 
 		private IPurchasable selectedPurchasableItem;
 
@@ -118,7 +117,7 @@ namespace LimitedLiability.UserInterface
 
 		#region Constructor
 
-		public MenuPurchase(ContentManager contentManager, IEnumerable<IPurchasable> purchasableItems)
+		public MenuPurchase(ContentManager contentManager, IEnumerable<IPurchasable> purchasableEquipment, IEnumerable<IPurchasable> purchasableRooms)
 		{
 			iconFrame = new Icon(contentManager.GetTexture("MenuPurchaseFrame"));
 			Width = iconFrame.Width;
@@ -180,11 +179,18 @@ namespace LimitedLiability.UserInterface
 			Icon iconScrollbar = ControlFactory.CreateIcon(contentManager, "IconScrollbarMenuPurchase");
 			Icon iconScroller = ControlFactory.CreateIcon(contentManager, "IconScroller");
 
-			CreateListBox(contentManager, textureListBoxTargetFrame, iconScrollbar, iconScroller);
+			listBoxEquipment = CreateListBox<IPurchasable>(contentManager, textureListBoxTargetFrame, iconScrollbar, iconScroller);
+			listBoxEquipment.ItemHovered += listBoxEquipment_ItemHovered;
+			listBoxEquipment.ItemSelected += listBoxEquipment_ItemSelected;
+
+			listBoxRooms = CreateListBox<IPurchasable>(contentManager, textureListBoxTargetFrame, iconScrollbar, iconScroller);
+			listBoxRooms.ItemHovered += listBoxRooms_ItemHovered;
+			listBoxRooms.ItemSelected += listBoxRooms_ItemSelected;
 
 			CreateTabContainer(contentManager);
 
-			PopulateListBox(contentManager, purchasableItems, fontPath, textureListItemHighlight);
+			PopulateListBox(contentManager, listBoxEquipment, purchasableEquipment, fontPath, textureListItemHighlight);
+			PopulateListBox(contentManager, listBoxRooms, purchasableRooms, fontPath, textureListItemHighlight);
 
 			Controls.Add(iconFrame);
 			Controls.Add(iconMainMenuHeader);
@@ -200,11 +206,12 @@ namespace LimitedLiability.UserInterface
 			Visible = false;
 		}
 
-		private void PopulateListBox(ContentManager contentManager, IEnumerable<IPurchasable> purchasableItems, string fontPath, Texture textureListItemHighlight)
+		private void PopulateListBox<T>(ContentManager contentManager, ListBox<T> listBox, IEnumerable<T> purchasableItems, string fontPath, Texture textureListItemHighlight)
+			where T : IPurchasable
 		{
 			foreach (var purchasableItem in purchasableItems)
 			{
-				ListItem<IPurchasable> listItem = new ListItem<IPurchasable>(purchasableItem, textureListItemHighlight);
+				ListItem<T> listItem = new ListItem<T>(purchasableItem, textureListItemHighlight);
 				Icon iconItem = ControlFactory.CreateIcon(contentManager, purchasableItem.IconTextureKey);
 				Label labelPurchasableItemName = ControlFactory.CreateLabel(contentManager, fontPath, 13, Styles.Colors.White, purchasableItem.Name);
 				Label labelPurchasableItemPrice = ControlFactory.CreateLabel(contentManager, fontPath, 13, Styles.Colors.White, "$" + purchasableItem.Price);
@@ -227,27 +234,38 @@ namespace LimitedLiability.UserInterface
 			buttonTab2.ButtonType = ButtonType.IconOnly;
 			tabContainer = new TabContainer();
 			TabPanel tab1 = new TabPanel(buttonTab1);
-			tab1.AddControl(listBox);
+			tab1.AddControl(listBoxEquipment);
 			TabPanel tab2 = new TabPanel(buttonTab2);
+			tab2.AddControl(listBoxRooms);
 			tabContainer.AddTab(tab1);
 			tabContainer.AddTab(tab2);
 			tab1.IsActive = true;
 		}
 
-		private void CreateListBox(ContentManager contentManager, Texture textureListBoxTargetFrame, Icon iconScrollbar, Icon iconScroller)
+		private ListBox<T> CreateListBox<T>(ContentManager contentManager, Texture textureListBoxTargetFrame, Icon iconScrollbar, Icon iconScroller)
 		{
-			listBox = new ListBox<IPurchasable>(contentManager, textureListBoxTargetFrame, iconScrollbar, iconScroller);
-			listBox.ItemHovered += listBox_ItemHovered;
-			listBox.ItemSelected += listBox_ItemSelected;
+			ListBox<T> listBox = new ListBox<T>(contentManager, textureListBoxTargetFrame, iconScrollbar, iconScroller);
+			return listBox;
 		}
 
-		private void listBox_ItemSelected(object sender, ListItemSelectedEventArgs<IPurchasable> e)
+		private void listBoxEquipment_ItemSelected(object sender, ListItemSelectedEventArgs<IPurchasable> e)
 		{
 			if (ButtonConfirmWindowClicked != null)
 				ButtonConfirmWindowClicked(sender, new ButtonConfirmWindowClickedEventArgs(e.Value));
 		}
 
-		private void listBox_ItemHovered(object sender, ListItemHoveredEventArgs<IPurchasable> e)
+		private void listBoxEquipment_ItemHovered(object sender, ListItemHoveredEventArgs<IPurchasable> e)
+		{
+			labelDescription.Text = e.Value.Description;
+		}
+
+		private void listBoxRooms_ItemSelected(object sender, ListItemSelectedEventArgs<IPurchasable> e)
+		{
+			if (ButtonConfirmWindowClicked != null)
+				ButtonConfirmWindowClicked(sender, new ButtonConfirmWindowClickedEventArgs(e.Value));
+		}
+
+		private void listBoxRooms_ItemHovered(object sender, ListItemHoveredEventArgs<IPurchasable> e)
 		{
 			labelDescription.Text = e.Value.Description;
 		}
@@ -262,7 +280,7 @@ namespace LimitedLiability.UserInterface
 				return;
 			base.Update(gameTime);
 
-			if (!listBox.IsAnyItemHovered)
+			if (!listBoxEquipment.IsAnyItemHovered)
 				labelDescription.Visible = false;
 			else
 				labelDescription.Visible = true;

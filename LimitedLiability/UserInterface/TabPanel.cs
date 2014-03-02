@@ -8,8 +8,9 @@ namespace LimitedLiability.UserInterface
 {
 	public class TabPanel : Control
 	{
-		private bool isActive = false;
+		private TabContainer parent;
 		private Button buttonHeader;
+		private bool isActive = false;
 
 		private List<Control> controls = new List<Control>();
 
@@ -120,7 +121,7 @@ namespace LimitedLiability.UserInterface
 		public override void HandleMouseMovingEvent(object sender, MouseMotionEventArgs e)
 		{
 			//if (!IsActive)
-				buttonHeader.HandleMouseMovingEvent(sender, e);
+			buttonHeader.HandleMouseMovingEvent(sender, e);
 
 			if (!Visible)
 				return;
@@ -135,8 +136,6 @@ namespace LimitedLiability.UserInterface
 		{
 			controls.Add(control);
 		}
-
-		private TabContainer parent;
 
 		public void SetParentTabContainer(TabContainer tabContainer)
 		{

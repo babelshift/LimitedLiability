@@ -35,7 +35,6 @@ namespace LimitedLiability.UserInterface
 		private MenuMailbox menuMailbox;
 		private MenuCompany menuCompany;
 		private MenuPurchase menuPurchaseEquipment;
-		private MenuPurchase menuPurchaseRooms;
 		private MenuInspectEmployee menuInspectEmployee;
 		private MenuInspectEquipment menuInspectEquipment;
 		private MenuResume menuResume;
@@ -85,7 +84,7 @@ namespace LimitedLiability.UserInterface
 		{
 			get
 			{
-				return menuCompany.Visible || menuPurchaseEquipment.Visible || menuInspectEmployee.Visible || menuMailbox.Visible || menuPurchaseRooms.Visible || menuInspectEmployee.Visible;
+				return menuCompany.Visible || menuPurchaseEquipment.Visible || menuInspectEmployee.Visible || menuMailbox.Visible || menuInspectEmployee.Visible;
 			}
 		}
 
@@ -130,7 +129,6 @@ namespace LimitedLiability.UserInterface
 			HideMenuInspectEmployee();
 			HideMenuEquipment();
 			HideMenuMailbox();
-			HideMenuRooms();
 			HideMenuCompany();
 		}
 
@@ -256,7 +254,6 @@ namespace LimitedLiability.UserInterface
 			toolboxTray.Position = new Vector(bottomRightPointOfWindow.X / 2 - toolboxTray.Width / 2, bottomRightPointOfWindow.Y - toolboxTray.Height);
 			toolboxTray.ButtonSelectGeneralClicked += ToolboxTray_ButtonSelectGeneralClicked;
 			toolboxTray.ButtonSelectEquipmentClicked += ToolboxTray_ButtonSelectEquipmentClicked;
-			toolboxTray.ButtonSelectRoomClicked += ToolboxTray_ButtonSelectRoomClicked;
 			toolboxTray.ButtonFinancesClicked += ToolboxTray_ButtonFinancesClicked;
 			toolboxTray.ButtonCompanyClicked += ToolboxTray_ButtonCompanyClicked;
 			toolboxTray.ButtonEmployeesClicked += ToolboxTray_ButtonEmployeesClicked;
@@ -288,14 +285,12 @@ namespace LimitedLiability.UserInterface
 			labels.Add(labelSimulationTime);
 			labels.Add(labelState);
 
-			CreateMenuRooms();
 			CreateMenuEquipment();
 			CreateMenuInspectEmployee();
 			CreateMenuMailbox(inbox, outbox, archive);
 			CreateMenuCompany(employeeCount);
 			CreateMenuInspectEquipment();
 
-			menus.Add(menuPurchaseRooms);
 			menus.Add(menuPurchaseEquipment);
 			menus.Add(menuInspectEmployee);
 			menus.Add(menuMailbox);
@@ -420,19 +415,6 @@ namespace LimitedLiability.UserInterface
 			// show finances menu
 		}
 
-		private void ToolboxTray_ButtonSelectRoomClicked(object sender, EventArgs e)
-		{
-			if (menuPurchaseRooms.Visible)
-				ClearMenusOpen();
-			else if (AnyMenusAreOpen)
-			{
-				ClearMenusOpen();
-				ShowMenuRooms();
-			}
-			else
-				ShowMenuRooms();
-		}
-
 		private void ToolboxTray_ButtonSelectEquipmentClicked(object sender, EventArgs e)
 		{
 			if (menuPurchaseEquipment.Visible)
@@ -547,52 +529,11 @@ namespace LimitedLiability.UserInterface
 
 		#endregion Menu Inspect Employee Events
 
-		#region Menu Rooms Events
-
-		private void CreateMenuRooms()
-		{
-			menuPurchaseRooms = new MenuPurchase(contentManager, purchasableRooms); // controlFactory.CreateMenuPurchase(menuPosition, "IconForklift", "Rooms", purchasableRooms);
-			menuPurchaseRooms.Position = new Vector(bottomRightPointOfWindow.X / 2 - menuPurchaseRooms.Width / 2, bottomRightPointOfWindow.Y / 2 - menuPurchaseRooms.Height / 2);
-			menuPurchaseRooms.ButtonCloseWindowClicked += menuPurchaseRooms_ButtonCloseWindowClicked;
-			menuPurchaseRooms.ButtonConfirmWindowClicked += menuPurchaseRooms_PurchasableItemSelected;
-		}
-
-		private void ShowMenuRooms()
-		{
-			menuPurchaseRooms.Visible = true;
-			ChangeState(UserInterfaceState.SelectRoomMenuActive);
-		}
-
-		private void HideMenuRooms()
-		{
-			menuPurchaseRooms.Visible = false;
-			ChangeState(UserInterfaceState.Default);
-		}
-
-		private void menuPurchaseRooms_PurchasableItemSelected(object sender, ButtonConfirmWindowClickedEventArgs e)
-		{
-			SelectedPurchasableItem = e.PurchasableItem;
-
-			HideMenuRooms();
-
-			ChangeState(UserInterfaceState.PlaceRoomActive);
-
-			if (PurchasableItemSelected != null)
-				PurchasableItemSelected(this, new PurchasableItemSelectedEventArgs(SelectedPurchasableItem));
-		}
-
-		private void menuPurchaseRooms_ButtonCloseWindowClicked(object sender, EventArgs e)
-		{
-			HideMenuRooms();
-		}
-
-		#endregion Menu Rooms Events
-
 		#region Menu Equipment Events
 
 		private void CreateMenuEquipment()
 		{
-			menuPurchaseEquipment = new MenuPurchase(contentManager, purchasableEquipment); // controlFactory.CreateMenuPurchase(menuPosition, "IconHandTruck", "Equipment", purchasableEquipment);
+			menuPurchaseEquipment = new MenuPurchase(contentManager, purchasableEquipment, purchasableRooms); // controlFactory.CreateMenuPurchase(menuPosition, "IconHandTruck", "Equipment", purchasableEquipment);
 			menuPurchaseEquipment.Position = new Vector(bottomRightPointOfWindow.X / 2 - menuPurchaseEquipment.Width / 2, bottomRightPointOfWindow.Y / 2 - menuPurchaseEquipment.Height / 2);
 			menuPurchaseEquipment.ButtonCloseWindowClicked += menuEquipment_ButtonCloseWindowClicked;
 			menuPurchaseEquipment.ButtonConfirmWindowClicked += menuEquipment_PurchasableItemSelected;

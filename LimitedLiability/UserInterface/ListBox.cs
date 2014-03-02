@@ -47,7 +47,7 @@ namespace LimitedLiability.UserInterface
 				base.Position = value;
 
 				iconScrollbar.Position = base.Position + new Vector(Width + 5, 0);
-				iconScroller.Position = base.Position + new Vector(Width + 6, 2);
+				iconScroller.Position = base.Position + new Vector(Width + 6, 1);
 
 				// find the max column count of our list items
 				int maxColumnCount = GetMaxColumnCount();
@@ -146,12 +146,22 @@ namespace LimitedLiability.UserInterface
 
 			iconScroller.HandleMouseButtonPressedEvent(sender, e);
 
+			HandleMouseButtonPressedEventForItems(sender, e);
+		}
+
+		private void HandleMouseButtonPressedEventForItems(object sender, MouseButtonEventArgs e)
+		{
 			// adjust our positioning to handle render target controls
 			e.RelativeToWindowX -= (int)Position.X;
 			e.RelativeToWindowY -= (int)Position.Y;
 
 			foreach (var item in items)
-				item.HandleMouseButtonPressedEvent(sender, e);
+			{
+				if (IsItemInsideRenderArea(item))
+				{
+					item.HandleMouseButtonPressedEvent(sender, e);
+				}
+			}
 
 			e.RelativeToWindowX += (int)Position.X;
 			e.RelativeToWindowY += (int)Position.Y;
@@ -178,15 +188,31 @@ namespace LimitedLiability.UserInterface
 				}
 			}
 
+			HandleMouseMovingEventForItems(sender, e);
+		}
+
+		private void HandleMouseMovingEventForItems(object sender, MouseMotionEventArgs e)
+		{
 			// adjust our positioning to handle render target controls
 			e.RelativeToWindowX -= (int)Position.X;
 			e.RelativeToWindowY -= (int)Position.Y;
 
 			foreach (var item in items)
-				item.HandleMouseMovingEvent(sender, e);
+			{
+				// if this item is fully outside the listbox's rendering area, don't render it
+				if (IsItemInsideRenderArea(item))
+				{
+					item.HandleMouseMovingEvent(sender, e);
+				}
+			}
 
 			e.RelativeToWindowX += (int)Position.X;
 			e.RelativeToWindowY += (int)Position.Y;
+		}
+
+		private bool IsItemInsideRenderArea(ListItem<T> item)
+		{
+			return (item.Bounds.Top + item.Height / 2) > 0 && (item.Bounds.Bottom - item.Height / 2) < Height;
 		}
 
 		/// <summary>
@@ -261,14 +287,20 @@ namespace LimitedLiability.UserInterface
 
 			foreach (var item in items)
 			{
+				// scroll the item appropriately
 				item.Position = item.Position - new Vector(0, scrollDistance);
 
-				if (item.Bounds.Bottom < 0 || item.Bounds.Top > Height)
+				// if this item is fully outside the listbox's rendering area, don't render it
+				if (IsItemOutsideRenderArea(item))
 					item.Visible = false;
 				else
 					item.Visible = true;
-
 			}
+		}
+
+		private bool IsItemOutsideRenderArea(ListItem<T> item)
+		{
+			return item.Bounds.Bottom < 0 || item.Bounds.Top > Height;
 		}
 
 		/// <summary>
