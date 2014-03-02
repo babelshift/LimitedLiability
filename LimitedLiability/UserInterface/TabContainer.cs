@@ -87,6 +87,11 @@ namespace LimitedLiability.UserInterface
 
 		public void AddTab(TabPanel tab)
 		{
+			// make our first tab active
+			if (tabs.Count == 0)
+				tab.IsActive = true;
+			else
+				tab.IsActive = false;
 			tab.SetParentTabContainer(this);
 			tab.HeaderClicked += tab_HeaderClicked;
 			tabs.Add(tab);

@@ -215,11 +215,19 @@ namespace LimitedLiability.UserInterface
 				Icon iconItem = ControlFactory.CreateIcon(contentManager, purchasableItem.IconTextureKey);
 				Label labelPurchasableItemName = ControlFactory.CreateLabel(contentManager, fontPath, 13, Styles.Colors.White, purchasableItem.Name);
 				Label labelPurchasableItemPrice = ControlFactory.CreateLabel(contentManager, fontPath, 13, Styles.Colors.White, "$" + purchasableItem.Price);
-				Label labelPurchasableItemHealth = ControlFactory.CreateLabel(contentManager, fontPath, 13, Styles.Colors.White, purchasableItem.NecessityEffect.HealthEffectiveness.ToString());
+				Label labelPurchasableItemHealth = ControlFactory.CreateLabel(contentManager, fontPath, 13, Styles.Colors.White, purchasableItem.NecessityEffect.HealthEffectivenessToString());
+				Label labelPurchasableItemHunger = ControlFactory.CreateLabel(contentManager, fontPath, 13, Styles.Colors.White, purchasableItem.NecessityEffect.HungerEffectivenessToString());
+				Label labelPurchasableItemThirst = ControlFactory.CreateLabel(contentManager, fontPath, 13, Styles.Colors.White, purchasableItem.NecessityEffect.ThirstEffectivenessToString());
+				Label labelPurchasableItemHygiene = ControlFactory.CreateLabel(contentManager, fontPath, 13, Styles.Colors.White, purchasableItem.NecessityEffect.HygieneEffectivenessToString());
+				Label labelPurchasableItemSleep = ControlFactory.CreateLabel(contentManager, fontPath, 13, Styles.Colors.White, purchasableItem.NecessityEffect.SleepEffectivenessToString());
+				
 				listItem.AddColumn(iconItem);
 				listItem.AddColumn(labelPurchasableItemName);
 				listItem.AddColumn(labelPurchasableItemPrice);
 				listItem.AddColumn(labelPurchasableItemHealth);
+				listItem.AddColumn(labelPurchasableItemHunger);
+				listItem.AddColumn(labelPurchasableItemThirst);
+				listItem.AddColumn(labelPurchasableItemSleep);
 				listBox.AddItem(listItem);
 			}
 		}
@@ -229,9 +237,11 @@ namespace LimitedLiability.UserInterface
 			Button buttonTab1 = ControlFactory.CreateButton(contentManager, "ButtonSquare", "ButtonSquareHover", "ButtonSquareSelected");
 			buttonTab1.Icon = ControlFactory.CreateIcon(contentManager, "IconHandTruck");
 			buttonTab1.ButtonType = ButtonType.IconOnly;
+			
 			Button buttonTab2 = ControlFactory.CreateButton(contentManager, "ButtonSquare", "ButtonSquareHover", "ButtonSquareSelected");
 			buttonTab2.Icon = ControlFactory.CreateIcon(contentManager, "IconForklift");
 			buttonTab2.ButtonType = ButtonType.IconOnly;
+			
 			tabContainer = new TabContainer();
 			TabPanel tab1 = new TabPanel(buttonTab1);
 			tab1.AddControl(listBoxEquipment);
@@ -239,7 +249,6 @@ namespace LimitedLiability.UserInterface
 			tab2.AddControl(listBoxRooms);
 			tabContainer.AddTab(tab1);
 			tabContainer.AddTab(tab2);
-			tab1.IsActive = true;
 		}
 
 		private ListBox<T> CreateListBox<T>(ContentManager contentManager, Texture textureListBoxTargetFrame, Icon iconScrollbar, Icon iconScroller)

@@ -8,14 +8,13 @@ using SharpDL.Events;
 using SharpDL.Graphics;
 using SharpDL.Input;
 using System;
-using System.Collections.Generic;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
 
 namespace LimitedLiability.UserInterface
 {
 	public class UserInterfaceManager : IDisposable
 	{
-
 		#region Members
 
 		private readonly ContentManager contentManager;
@@ -103,6 +102,7 @@ namespace LimitedLiability.UserInterface
 
 		private readonly Dictionary<Guid, Dictionary<SimulationMessageType, SimulationLabel>> labelMessagesForMultipleAgents
 			= new Dictionary<Guid, Dictionary<SimulationMessageType, SimulationLabel>>();
+
 		private List<Label> labels = new List<Label>();
 
 		#endregion Message List
@@ -110,14 +110,23 @@ namespace LimitedLiability.UserInterface
 		#region Public Events
 
 		public event EventHandler MainMenuButtonClicked;
+
 		public event EventHandler<SelectedMailItemActionEventArgs> MailArchived;
+
 		public event EventHandler<PurchasableItemPlacedEventArgs> PurchasableItemPlaced;
+
 		public event EventHandler<PurchasableItemSelectedEventArgs> PurchasableItemSelected;
+
 		public event EventHandler<ResumeAcceptedEventArgs> ResumeAccepted;
+
 		public event EventHandler<UserInterfaceEmployeeEventArgs> EmployeeFired;
+
 		public event EventHandler<UserInterfaceEmployeeEventArgs> EmployeePromoted;
+
 		public event EventHandler<UserInterfaceEmployeeEventArgs> EmployeeDisciplined;
+
 		public event EventHandler<UserInterfaceEquipmentEventArgs> EquipmentSold;
+
 		public event EventHandler<UserInterfaceEquipmentEventArgs> EquipmentRepaired;
 
 		#endregion Public Events
@@ -224,15 +233,15 @@ namespace LimitedLiability.UserInterface
 		/// <param name="money"></param>
 		/// <param name="employeeCount"></param>
 		public UserInterfaceManager(ContentManager contentManager,
-		                            Point bottomRightPointOfWindow,
-		                            IEnumerable<IPurchasable> purchasableEquipment,
-		                            IEnumerable<IPurchasable> purchasableRooms,
-		                            IEnumerable<MailItem> inbox,
-		                            IEnumerable<MailItem> outbox,
-		                            IEnumerable<MailItem> archive,
-		                            int unreadMailCount,
-		                            int money,
-		                            int employeeCount)
+									Point bottomRightPointOfWindow,
+									IEnumerable<IPurchasable> purchasableEquipment,
+									IEnumerable<IPurchasable> purchasableRooms,
+									IEnumerable<MailItem> inbox,
+									IEnumerable<MailItem> outbox,
+									IEnumerable<MailItem> archive,
+									int unreadMailCount,
+									int money,
+									int employeeCount)
 		{
 			if (purchasableEquipment == null)
 				throw new ArgumentNullException("purchasableEquipment");
@@ -581,18 +590,18 @@ namespace LimitedLiability.UserInterface
 			menuInspectEquipment.ButtonSellEquipmentClicked += HandleButtonSellEquipmentClicked;
 		}
 
-		private void HandleButtonSellEquipmentClicked (object sender, UserInterfaceEquipmentEventArgs e)
+		private void HandleButtonSellEquipmentClicked(object sender, UserInterfaceEquipmentEventArgs e)
 		{
 			EventHelper.FireEvent(EquipmentSold, sender, e);
 			ChangeState(UserInterfaceState.Default);
 		}
 
-		private void HandleButtonRepairEquipmentClicked (object sender, UserInterfaceEquipmentEventArgs e)
+		private void HandleButtonRepairEquipmentClicked(object sender, UserInterfaceEquipmentEventArgs e)
 		{
 			EventHelper.FireEvent(EquipmentRepaired, sender, e);
 		}
 
-		private void HandleButtonCloseWindowClicked (object sender, EventArgs e)
+		private void HandleButtonCloseWindowClicked(object sender, EventArgs e)
 		{
 			HideMenuInspectEquipment();
 		}
@@ -642,7 +651,7 @@ namespace LimitedLiability.UserInterface
 		public void Update(GameTime gameTime, DateTime worldDateTime)
 		{
 			string simulationTimeDisplay = String.Format("{0} minutes, {1} seconds, {2} milliseconds",
-				                               SimulationManager.SimulationTime.Minutes, SimulationManager.SimulationTime.Seconds, SimulationManager.SimulationTime.Milliseconds);
+											   SimulationManager.SimulationTime.Minutes, SimulationManager.SimulationTime.Seconds, SimulationManager.SimulationTime.Milliseconds);
 			labelSimulationTime.Text = String.Format("Simulation Time: {0}", simulationTimeDisplay);
 
 			toolboxTray.Update(gameTime);
@@ -724,6 +733,8 @@ namespace LimitedLiability.UserInterface
 			foreach (var menu in menus)
 				if (menu != null)
 					menu.HandleMouseButtonReleasedEvent(sender, e);
+
+			toolboxTray.HandleMouseButtonReleasedEvent(sender, e);
 		}
 
 		public void HandleTextInputtingEvent(object sender, TextInputEventArgs e)
@@ -734,8 +745,8 @@ namespace LimitedLiability.UserInterface
 		public void HandleMouseButtonPressedEvent(object sender, MouseButtonEventArgs e)
 		{
 			if (CurrentState == UserInterfaceState.PlaceEquipmentActive || CurrentState == UserInterfaceState.PlaceRoomActive)
-			if (e.MouseButton == MouseButtonCode.Right)
-				ChangeState(UserInterfaceState.Default);
+				if (e.MouseButton == MouseButtonCode.Right)
+					ChangeState(UserInterfaceState.Default);
 
 			TryToPlacePurchasableItem(e);
 
@@ -784,7 +795,7 @@ namespace LimitedLiability.UserInterface
 		{
 			var mousePositionAbsolute = new Vector(e.RelativeToWindowX, e.RelativeToWindowY);
 			var mousePositionIsometric = CoordinateHelper.ScreenSpaceToWorldSpace(e.RelativeToWindowX, e.RelativeToWindowY,
-				                             CoordinateHelper.ScreenOffset, CoordinateHelper.ScreenProjectionType.Orthogonal);
+											 CoordinateHelper.ScreenOffset, CoordinateHelper.ScreenProjectionType.Orthogonal);
 
 			labelMousePositionAbsolute.Text = String.Format("Mouse Position (Absolute): ({0}, {1})", mousePositionAbsolute.X,
 				mousePositionAbsolute.Y);
@@ -820,7 +831,7 @@ namespace LimitedLiability.UserInterface
 				if (menu != null)
 					menu.Dispose();
 
-			if(messageBox != null)
+			if (messageBox != null)
 				messageBox.Dispose();
 		}
 
