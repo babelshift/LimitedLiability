@@ -61,6 +61,7 @@
 		{ "key": "ButtonBottomBarHover",		"value": "Images/User Interface/ButtonBottomBarHover.png" },
 		{ "key": "ButtonLongRectangle",			"value": "Images/User Interface/ButtonLongRectangle.png" },
 		{ "key": "ButtonLongRectangleHover",	"value": "Images/User Interface/ButtonLongRectangleHover.png" },
+		{ "key": "ButtonLongRectangleSelected",	"value": "Images/User Interface/ButtonLongRectanglePushed.png" },
 		
 		{ "key": "IconPenPaper",				"value": "Images/User Interface/IconPenPaper.png" },
 		{ "key": "IconWindow",					"value": "Images/User Interface/IconWindow.png" },

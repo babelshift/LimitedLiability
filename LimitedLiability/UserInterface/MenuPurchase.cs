@@ -167,10 +167,11 @@ namespace LimitedLiability.UserInterface
 			labelCreativity = ControlFactory.CreateLabel(contentManager, fontPath, fontSizeContent, fontColorYellow, defaultText);
 			labelIntelligence = ControlFactory.CreateLabel(contentManager, fontPath, fontSizeContent, fontColorYellow, defaultText);
 
-			buttonCloseWindow = ControlFactory.CreateButton(contentManager, "ButtonSquare", "ButtonSquareHover");
+			buttonCloseWindow = ControlFactory.CreateButton(contentManager, "ButtonSquare", "ButtonSquareHover", "ButtonSquareSelected");
 			buttonCloseWindow.Icon = ControlFactory.CreateIcon(contentManager, "IconWindowClose");
 			buttonCloseWindow.IconHovered = ControlFactory.CreateIcon(contentManager, "IconWindowClose");
 			buttonCloseWindow.ButtonType = ButtonType.IconOnly;
+			buttonCloseWindow.Released += buttonCloseWindow_Clicked;
 
 			labelDescription = ControlFactory.CreateLabel(contentManager, fontPath, fontSizeContent, fontColorWhite, contentManager.GetString(StringReferenceKeys.DEFAULT_TEXT), 570);
 
@@ -179,24 +180,28 @@ namespace LimitedLiability.UserInterface
 			Icon iconScrollbar = ControlFactory.CreateIcon(contentManager, "IconScrollbarMenuPurchase");
 			Icon iconScroller = ControlFactory.CreateIcon(contentManager, "IconScroller");
 
-			listBox = new ListBox<IPurchasable>(contentManager, textureListBoxTargetFrame, iconScrollbar, iconScroller);
-			listBox.ItemHovered += listBox_ItemHovered;
-			listBox.ItemSelected += listBox_ItemSelected;
+			CreateListBox(contentManager, textureListBoxTargetFrame, iconScrollbar, iconScroller);
 
-			Button buttonTab1 = ControlFactory.CreateButton(contentManager, "ButtonSquare", "ButtonSquareHover", "ButtonSquareSelected");
-			buttonTab1.Icon = ControlFactory.CreateIcon(contentManager, "IconHandTruck");
-			buttonTab1.ButtonType = ButtonType.IconOnly;
-			Button buttonTab2 = ControlFactory.CreateButton(contentManager, "ButtonSquare", "ButtonSquareHover", "ButtonSquareSelected");
-			buttonTab2.Icon = ControlFactory.CreateIcon(contentManager, "IconForklift");
-			buttonTab2.ButtonType = ButtonType.IconOnly;
-			tabContainer = new TabContainer();
-			TabPanel tab1 = new TabPanel(buttonTab1);
-			tab1.AddControl(listBox);
-			TabPanel tab2 = new TabPanel(buttonTab2);
-			tabContainer.AddTab(tab1);
-			tabContainer.AddTab(tab2);
-			tab1.IsActive = true;
+			CreateTabContainer(contentManager);
 
+			PopulateListBox(contentManager, purchasableItems, fontPath, textureListItemHighlight);
+
+			Controls.Add(iconFrame);
+			Controls.Add(iconMainMenuHeader);
+			Controls.Add(iconInfoMenuHeader);
+			Controls.Add(iconSkillsMenuHeader);
+			Controls.Add(labelMainMenuHeader);
+			Controls.Add(labelInfoMenuHeader);
+			Controls.Add(labelSkillsMenuHeader);
+			Controls.Add(buttonCloseWindow);
+			Controls.Add(tabContainer);
+			Controls.Add(labelDescription);
+
+			Visible = false;
+		}
+
+		private void PopulateListBox(ContentManager contentManager, IEnumerable<IPurchasable> purchasableItems, string fontPath, Texture textureListItemHighlight)
+		{
 			foreach (var purchasableItem in purchasableItems)
 			{
 				ListItem<IPurchasable> listItem = new ListItem<IPurchasable>(purchasableItem, textureListItemHighlight);
@@ -210,21 +215,30 @@ namespace LimitedLiability.UserInterface
 				listItem.AddColumn(labelPurchasableItemHealth);
 				listBox.AddItem(listItem);
 			}
+		}
 
-			Controls.Add(iconFrame);
-			Controls.Add(iconMainMenuHeader);
-			Controls.Add(iconInfoMenuHeader);
-			Controls.Add(iconSkillsMenuHeader);
-			Controls.Add(labelMainMenuHeader);
-			Controls.Add(labelInfoMenuHeader);
-			Controls.Add(labelSkillsMenuHeader);
-			Controls.Add(buttonCloseWindow);
-			Controls.Add(tabContainer);
-			Controls.Add(labelDescription);
+		private void CreateTabContainer(ContentManager contentManager)
+		{
+			Button buttonTab1 = ControlFactory.CreateButton(contentManager, "ButtonSquare", "ButtonSquareHover", "ButtonSquareSelected");
+			buttonTab1.Icon = ControlFactory.CreateIcon(contentManager, "IconHandTruck");
+			buttonTab1.ButtonType = ButtonType.IconOnly;
+			Button buttonTab2 = ControlFactory.CreateButton(contentManager, "ButtonSquare", "ButtonSquareHover", "ButtonSquareSelected");
+			buttonTab2.Icon = ControlFactory.CreateIcon(contentManager, "IconForklift");
+			buttonTab2.ButtonType = ButtonType.IconOnly;
+			tabContainer = new TabContainer();
+			TabPanel tab1 = new TabPanel(buttonTab1);
+			tab1.AddControl(listBox);
+			TabPanel tab2 = new TabPanel(buttonTab2);
+			tabContainer.AddTab(tab1);
+			tabContainer.AddTab(tab2);
+			tab1.IsActive = true;
+		}
 
-			buttonCloseWindow.Clicked += buttonCloseWindow_Clicked;
-
-			Visible = false;
+		private void CreateListBox(ContentManager contentManager, Texture textureListBoxTargetFrame, Icon iconScrollbar, Icon iconScroller)
+		{
+			listBox = new ListBox<IPurchasable>(contentManager, textureListBoxTargetFrame, iconScrollbar, iconScroller);
+			listBox.ItemHovered += listBox_ItemHovered;
+			listBox.ItemSelected += listBox_ItemSelected;
 		}
 
 		private void listBox_ItemSelected(object sender, ListItemSelectedEventArgs<IPurchasable> e)

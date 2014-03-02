@@ -51,39 +51,39 @@ namespace LimitedLiability.Screens
 			labelVersion = ControlFactory.CreateLabel(ContentManager, fontPath, 12, Styles.Colors.PaleGreen, String.Format("Build {0}", GetAssemblyFileVersion()));
 			labelVersion.Position = new Vector(7, MainGame.SCREEN_HEIGHT_LOGICAL - labelVersion.Height - 5);
 
-			buttonNewGame = ControlFactory.CreateButton(ContentManager, "ButtonLongRectangle", "ButtonLongRectangleHover");
+			buttonNewGame = ControlFactory.CreateButton(ContentManager, "ButtonLongRectangle", "ButtonLongRectangleHover", "ButtonLongRectangleSelected");
 			buttonNewGame.Label = ControlFactory.CreateLabel(ContentManager, fontPath, fontSizeContent, fontColorLabelValue, "New Game");
 			buttonNewGame.ButtonType = ButtonType.TextOnly;
 			buttonNewGame.Position = iconFrame.Position + new Vector(iconFrame.Width / 2 - buttonNewGame.Width / 2, 16);
-			buttonNewGame.Clicked += buttonNewGame_Clicked;
+			buttonNewGame.Released += buttonNewGame_Clicked;
 			buttonNewGame.EnableLabelShadow(ContentManager, 2, 2);
 
-			buttonLoadGame = ControlFactory.CreateButton(ContentManager, "ButtonLongRectangle", "ButtonLongRectangleHover");
+			buttonLoadGame = ControlFactory.CreateButton(ContentManager, "ButtonLongRectangle", "ButtonLongRectangleHover", "ButtonLongRectangleSelected");
 			buttonLoadGame.Label = ControlFactory.CreateLabel(ContentManager, fontPath, fontSizeContent, fontColorLabelValue, "Load Game");
 			buttonLoadGame.ButtonType = ButtonType.TextOnly;
 			buttonLoadGame.Position = iconFrame.Position + new Vector(iconFrame.Width / 2 - buttonLoadGame.Width / 2, 50);
-			buttonLoadGame.Clicked += buttonLoadGame_Clicked;
+			buttonLoadGame.Released += buttonLoadGame_Clicked;
 			buttonLoadGame.EnableLabelShadow(ContentManager, 2, 2);
 
-			buttonOptions = ControlFactory.CreateButton(ContentManager, "ButtonLongRectangle", "ButtonLongRectangleHover");
+			buttonOptions = ControlFactory.CreateButton(ContentManager, "ButtonLongRectangle", "ButtonLongRectangleHover", "ButtonLongRectangleSelected");
 			buttonOptions.Label = ControlFactory.CreateLabel(ContentManager, fontPath, fontSizeContent, fontColorLabelValue, "Options");
 			buttonOptions.ButtonType = ButtonType.TextOnly;
 			buttonOptions.Position = iconFrame.Position + new Vector(iconFrame.Width / 2 - buttonOptions.Width / 2, 84);
-			buttonOptions.Clicked += buttonOptions_Clicked;
+			buttonOptions.Released += buttonOptions_Clicked;
 			buttonOptions.EnableLabelShadow(ContentManager, 2, 2);
 
-			buttonCredits = ControlFactory.CreateButton(ContentManager, "ButtonLongRectangle", "ButtonLongRectangleHover");
+			buttonCredits = ControlFactory.CreateButton(ContentManager, "ButtonLongRectangle", "ButtonLongRectangleHover", "ButtonLongRectangleSelected");
 			buttonCredits.Label = ControlFactory.CreateLabel(ContentManager, fontPath, fontSizeContent, fontColorLabelValue, "Credits");
 			buttonCredits.ButtonType = ButtonType.TextOnly;
 			buttonCredits.Position = iconFrame.Position + new Vector(iconFrame.Width / 2 - buttonCredits.Width / 2, 118);
-			buttonCredits.Clicked += buttonCredits_Clicked;
+			buttonCredits.Released += buttonCredits_Clicked;
 			buttonCredits.EnableLabelShadow(ContentManager, 2, 2);
 
-			buttonQuit = ControlFactory.CreateButton(ContentManager, "ButtonLongRectangle", "ButtonLongRectangleHover");
+			buttonQuit = ControlFactory.CreateButton(ContentManager, "ButtonLongRectangle", "ButtonLongRectangleHover", "ButtonLongRectangleSelected");
 			buttonQuit.Label = ControlFactory.CreateLabel(ContentManager, fontPath, fontSizeContent, fontColorLabelValue, "Quit");
 			buttonQuit.ButtonType = ButtonType.TextOnly;
 			buttonQuit.Position = iconFrame.Position + new Vector(iconFrame.Width / 2 - buttonQuit.Width / 2, 152);
-			buttonQuit.Clicked += buttonQuit_Clicked;
+			buttonQuit.Released += buttonQuit_Clicked;
 			buttonQuit.EnableLabelShadow(ContentManager, 2, 2);
 
 			textureBackgroundStripeTile = ContentManager.GetTexture("BackgroundStripeTile");
@@ -91,17 +91,14 @@ namespace LimitedLiability.Screens
 
 		private void buttonCredits_Clicked(object sender, EventArgs e)
 		{
-			throw new NotImplementedException();
 		}
 
 		private void buttonOptions_Clicked(object sender, EventArgs e)
 		{
-			throw new NotImplementedException();
 		}
 
 		private void buttonLoadGame_Clicked(object sender, EventArgs e)
 		{
-			throw new NotImplementedException();
 		}
 
 		private void buttonNewGame_Clicked(object sender, EventArgs e)
@@ -176,6 +173,11 @@ namespace LimitedLiability.Screens
 
 		public override void HandleMouseButtonReleasedEvent(object sender, SharpDL.Events.MouseButtonEventArgs e)
 		{
+			buttonNewGame.HandleMouseButtonReleasedEvent(sender, e);
+			buttonLoadGame.HandleMouseButtonReleasedEvent(sender, e);
+			buttonQuit.HandleMouseButtonReleasedEvent(sender, e);
+			buttonCredits.HandleMouseButtonReleasedEvent(sender, e);
+			buttonOptions.HandleMouseButtonReleasedEvent(sender, e);
 		}
 
 		private void OnQuitButtonClicked(object sender, EventArgs e)
