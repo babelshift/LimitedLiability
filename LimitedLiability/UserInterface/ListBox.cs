@@ -260,7 +260,15 @@ namespace LimitedLiability.UserInterface
 				iconScroller.Position = iconScrollerPosition;
 
 			foreach (var item in items)
+			{
 				item.Position = item.Position - new Vector(0, scrollDistance);
+
+				if (item.Bounds.Bottom < 0 || item.Bounds.Top > Height)
+					item.Visible = false;
+				else
+					item.Visible = true;
+
+			}
 		}
 
 		/// <summary>

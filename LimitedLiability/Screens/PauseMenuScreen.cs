@@ -51,35 +51,35 @@ namespace LimitedLiability.Screens
 			buttonResumeGame.Label = ControlFactory.CreateLabel(ContentManager, fontPath, fontSizeContent, fontColorLabelValue, "Resume");
 			buttonResumeGame.ButtonType = ButtonType.TextOnly;
 			buttonResumeGame.Position = iconFrame.Position + new Vector(iconFrame.Width / 2 - buttonResumeGame.Width / 2, 16);
-			buttonResumeGame.Clicked += (sender, e) => ExitScreen();
+			buttonResumeGame.Released += (sender, e) => ExitScreen();
 			buttonResumeGame.EnableLabelShadow(ContentManager, 2, 2);
 
 			buttonNewGame = ControlFactory.CreateButton(ContentManager, "ButtonLongRectangle", "ButtonLongRectangleHover", "ButtonLongRectangleSelected");
 			buttonNewGame.Label = ControlFactory.CreateLabel(ContentManager, fontPath, fontSizeContent, fontColorLabelValue, "New Game");
 			buttonNewGame.ButtonType = ButtonType.TextOnly;
 			buttonNewGame.Position = iconFrame.Position + new Vector(iconFrame.Width / 2 - buttonNewGame.Width / 2, 50);
-			buttonNewGame.Clicked += buttonNewGame_Clicked;
+			buttonNewGame.Released += buttonNewGame_Clicked;
 			buttonNewGame.EnableLabelShadow(ContentManager, 2, 2);
 
 			buttonLoadGame = ControlFactory.CreateButton(ContentManager, "ButtonLongRectangle", "ButtonLongRectangleHover", "ButtonLongRectangleSelected");
 			buttonLoadGame.Label = ControlFactory.CreateLabel(ContentManager, fontPath, fontSizeContent, fontColorLabelValue, "Load Game");
 			buttonLoadGame.ButtonType = ButtonType.TextOnly;
 			buttonLoadGame.Position = iconFrame.Position + new Vector(iconFrame.Width / 2 - buttonLoadGame.Width / 2, 84);
-			buttonLoadGame.Clicked += buttonLoadGame_Clicked;
+			buttonLoadGame.Released += buttonLoadGame_Clicked;
 			buttonLoadGame.EnableLabelShadow(ContentManager, 2, 2);
 
 			buttonOptions = ControlFactory.CreateButton(ContentManager, "ButtonLongRectangle", "ButtonLongRectangleHover", "ButtonLongRectangleSelected");
 			buttonOptions.Label = ControlFactory.CreateLabel(ContentManager, fontPath, fontSizeContent, fontColorLabelValue, "Options");
 			buttonOptions.ButtonType = ButtonType.TextOnly;
 			buttonOptions.Position = iconFrame.Position + new Vector(iconFrame.Width / 2 - buttonOptions.Width / 2, 118);
-			buttonOptions.Clicked += buttonOptions_Clicked;
+			buttonOptions.Released += buttonOptions_Clicked;
 			buttonOptions.EnableLabelShadow(ContentManager, 2, 2);
 
 			buttonQuit = ControlFactory.CreateButton(ContentManager, "ButtonLongRectangle", "ButtonLongRectangleHover", "ButtonLongRectangleSelected");
 			buttonQuit.Label = ControlFactory.CreateLabel(ContentManager, fontPath, fontSizeContent, fontColorLabelValue, "Quit");
 			buttonQuit.ButtonType = ButtonType.TextOnly;
 			buttonQuit.Position = iconFrame.Position + new Vector(iconFrame.Width / 2 - buttonQuit.Width / 2, 152);
-			buttonQuit.Clicked += buttonQuit_Clicked;
+			buttonQuit.Released += buttonQuit_Clicked;
 			buttonQuit.EnableLabelShadow(ContentManager, 2, 2);
 		}
 
