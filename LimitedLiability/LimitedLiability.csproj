@@ -1,0 +1,762 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{D6E1B1D1-0E84-44CD-869C-7CC739B0B823}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>LimitedLiability</RootNamespace>
+    <AssemblyName>LimitedLiability</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>true</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject>LimitedLiability.Program</StartupObject>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="log4net, Version=1.2.12.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Libs\log4net.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\Libs\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="SharpDL, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Libs\SharpDL.dll</HintPath>
+    </Reference>
+    <Reference Include="SharpDL.Events, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Libs\SharpDL.Events.dll</HintPath>
+    </Reference>
+    <Reference Include="SharpDL.Graphics, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Libs\SharpDL.Graphics.dll</HintPath>
+    </Reference>
+    <Reference Include="SharpDL.Input, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Libs\SharpDL.Input.dll</HintPath>
+    </Reference>
+    <Reference Include="SharpTiles, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Libs\SharpTiles.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Agents\Agent.cs" />
+    <Compile Include="Agents\AgentActivity.cs" />
+    <Compile Include="Agents\AgentFactory.cs" />
+    <Compile Include="Agents\AgentMetadata.cs" />
+    <Compile Include="Agents\AgentOrientation.cs" />
+    <Compile Include="Agents\AgentState.cs" />
+    <Compile Include="Agents\Employee.cs" />
+    <Compile Include="Agents\Equipment.cs" />
+    <Compile Include="Agents\EquipmentCondition.cs" />
+    <Compile Include="Agents\Job.cs" />
+    <Compile Include="Agents\JobFactory.cs" />
+    <Compile Include="Agents\JobLevel.cs" />
+    <Compile Include="Agents\Library.cs" />
+    <Compile Include="Agents\MobileAgent.cs" />
+    <Compile Include="Agents\OfficeDesk.cs" />
+    <Compile Include="Agents\Room.cs" />
+    <Compile Include="Agents\RoomFactory.cs" />
+    <Compile Include="Agents\RoomMetadata.cs" />
+    <Compile Include="Agents\SnackMachine.cs" />
+    <Compile Include="Agents\SodaMachine.cs" />
+    <Compile Include="Agents\Thought.cs" />
+    <Compile Include="Agents\ThoughtEventArgs.cs" />
+    <Compile Include="Agents\ThoughtType.cs" />
+    <Compile Include="Agents\TrashBin.cs" />
+    <Compile Include="Agents\Wall.cs" />
+    <Compile Include="Agents\WaterFountain.cs" />
+    <Compile Include="BankAccount.cs" />
+    <Compile Include="Business\BusinessManager.cs" />
+    <Compile Include="Business\BusinessProject.cs" />
+    <Compile Include="Business\BusinessProjectActionType.cs" />
+    <Compile Include="Business\BusinessProjectMetadata.cs" />
+    <Compile Include="Business\BusinessProjectState.cs" />
+    <Compile Include="Business\BusinessProjectType.cs" />
+    <Compile Include="Business\ResearchLevel.cs" />
+    <Compile Include="Camera.cs" />
+    <Compile Include="Content\CompanyMetadata.cs" />
+    <Compile Include="Content\ContentManager.cs" />
+    <Compile Include="UserInterface\Button.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="UserInterface\ButtonMailItem.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="UserInterface\ButtonMenuItem.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="UserInterface\Control.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="UserInterface\ControlFactory.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="UserInterface\Icon.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="UserInterface\Label.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="UserInterface\ListBox.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="UserInterface\ListItem.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="UserInterface\ListItemColumn.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="UserInterface\ListItemHoveredEventArgs.cs" />
+    <Compile Include="UserInterface\ListItemSelectedEventArgs.cs" />
+    <Compile Include="UserInterface\MailItemPage.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="UserInterface\ManeInspectEquipment.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="UserInterface\Menu.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="UserInterface\MenuCompany.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="UserInterface\MenuEmail.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="UserInterface\MenuInspectEmployee.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="UserInterface\MenuMailbox.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="UserInterface\MenuPurchase.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="UserInterface\MenuResume.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="UserInterface\MenuScenarioDescription.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="UserInterface\MenuViewEmployees.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="UserInterface\MessageBox.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="UserInterface\MouseOverScreenEdge.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="UserInterface\PurchasableItemPlacedEventArgs.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="UserInterface\PurchasableItemSelectedEventArgs.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="UserInterface\ScenarioItem.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="UserInterface\SimulationLabel.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="UserInterface\Styles.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="UserInterface\TabPanel.cs" />
+    <Compile Include="UserInterface\TabContainer.cs" />
+    <Compile Include="UserInterface\Textbox.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="UserInterface\ToolboxTray.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="UserInterface\Tooltip.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="UserInterface\TopToolboxTray.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="UserInterface\UserInterfaceManager.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="UserInterface\UserInterfaceState.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Content Include="Content\Data\StringReference.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Data\JobReference.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Compile Include="Content\Data\StringReferenceKeys.cs" />
+    <Compile Include="Content\EquipmentObject.cs" />
+    <Compile Include="Content\EquipmentObjectType.cs" />
+    <Compile Include="Content\IHasNeighbors.cs" />
+    <Compile Include="Content\INode.cs" />
+    <Compile Include="Content\JobLevelMetadata.cs" />
+    <Compile Include="Content\JobMetadata.cs" />
+    <Compile Include="Content\MapCell.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Content\MapCellType.cs" />
+    <Compile Include="Content\MapObject.cs" />
+    <Compile Include="Content\MapObjectLayer.cs" />
+    <Compile Include="Content\MapObjectLayerType.cs" />
+    <Compile Include="Content\MapObjectType.cs" />
+    <Compile Include="Content\PriorityQueue.cs" />
+    <Compile Include="Content\TextureBook.cs" />
+    <Compile Include="Content\TextureStore.cs" />
+    <Compile Include="Content\ThoughtMetadata.cs" />
+    <Compile Include="Content\Tile.cs" />
+    <Compile Include="Content\TiledMap.cs" />
+    <Compile Include="Content\TileLayer.cs" />
+    <Compile Include="Content\TileLayerType.cs" />
+    <Compile Include="Content\TilePosition.cs" />
+    <Compile Include="Content\TileType.cs" />
+    <Compile Include="CoordinateHelper.cs" />
+    <Compile Include="DateTimeHelper.cs" />
+    <Compile Include="Descriptors\IAffectsNecessities.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Descriptors\IPurchasable.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Descriptors\ISkillsAffector.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Descriptors\Necessities.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Descriptors\NecessityEffect.cs" />
+    <Compile Include="Descriptors\SkillEffect.cs" />
+    <Compile Include="Descriptors\Skills.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="EventHelper.cs" />
+    <Compile Include="GameState.cs" />
+    <Compile Include="GridManager.cs" />
+    <Compile Include="ICollidable.cs" />
+    <Compile Include="IDrawable.cs" />
+    <Compile Include="Mail\Resume.cs" />
+    <Compile Include="Mail\AttachmentType.cs" />
+    <Compile Include="Mail\IAttachment.cs" />
+    <Compile Include="Mail\MailItem.cs" />
+    <Compile Include="Mail\MailAddress.cs" />
+    <Compile Include="Mail\Mailbox.cs" />
+    <Compile Include="Mail\MailManager.cs" />
+    <Compile Include="Mail\MailState.cs" />
+    <Compile Include="Mail\MailAddressType.cs" />
+    <Compile Include="MainGame.cs" />
+    <Compile Include="Screens\LoadGameScreen.cs" />
+    <Compile Include="Screens\OptionsScreen.cs" />
+    <Compile Include="Screens\PauseMenuScreen.cs" />
+    <Compile Include="Screens\SaveGameScreen.cs" />
+    <Compile Include="Screens\ScenarioScreen.cs" />
+    <Compile Include="Simulation\Path.cs" />
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Screens\LoadingScreen.cs" />
+    <Compile Include="Screens\MainGameScreen.cs" />
+    <Compile Include="Screens\MainMenuScreen.cs" />
+    <Compile Include="Screens\Screen.cs" />
+    <Compile Include="Screens\ScreenFactory.cs" />
+    <Compile Include="Screens\ScreenManager.cs" />
+    <Compile Include="Screens\ScreenState.cs" />
+    <Compile Include="Simulation\Action.cs" />
+    <Compile Include="Simulation\EmployeeClickedEventArgs.cs" />
+    <Compile Include="Simulation\Intention.cs" />
+    <Compile Include="Simulation\ITriggerable.cs" />
+    <Compile Include="Simulation\ITriggerSubscriber.cs" />
+    <Compile Include="Simulation\PathNode.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Simulation\SimulationManager.cs" />
+    <Compile Include="Simulation\SimulationMessage.cs" />
+    <Compile Include="Simulation\SimulationMessageFactory.cs" />
+    <Compile Include="Simulation\Subscription.cs" />
+    <Compile Include="Simulation\Trigger.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Content\Images\Equipment\OfficeDesk.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Images\Equipment\SnackMachine.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Images\Equipment\SodaMachine.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Images\MaleEmployee0001_FacingDown.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Images\MaleEmployee0001_FacingLeft.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Images\MaleEmployee0001_FacingRight.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Images\MaleEmployee0001_FacingUp.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Images\TileHighlight.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Images\User Interface\BackgroundScenarioTile.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Images\User Interface\BackgroundStripeTile.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Images\User Interface\BackgroundStripeTileFaded.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Images\User Interface\BottomBar.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Images\User Interface\ButtonBottomBar.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Images\User Interface\ButtonBottomBarHover.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Images\User Interface\ButtonLongRectangle.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Images\User Interface\ButtonLongRectangleHover.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Images\User Interface\ButtonMailAction.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Images\User Interface\ButtonMailActionHover.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Images\User Interface\ButtonMailFolder.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Images\User Interface\ButtonMailFolderHover.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Images\User Interface\ButtonMailItem.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Images\User Interface\ButtonMailItemHover.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Images\User Interface\ButtonMailItemSelected.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Images\User Interface\ButtonMainMenuItemHover.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Images\User Interface\ButtonSquarePushed.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Images\User Interface\ButtonTopBar.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Images\User Interface\ButtonTopBarHover.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Images\User Interface\IconAccept.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Images\User Interface\IconAlertNotification.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Images\User Interface\IconAttachment.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Images\User Interface\IconDisciplineEmployee.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Images\User Interface\IconFastForward.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Images\User Interface\IconFireEmployee.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Images\User Interface\IconFolderArchive.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Images\User Interface\IconFolderInbox.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Images\User Interface\IconFolderOpen.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Images\User Interface\IconFolderOutbox.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Images\User Interface\IconInfo.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Images\User Interface\IconLibrary.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Images\User Interface\IconMailArchive.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Images\User Interface\IconMailNotification.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Images\User Interface\IconMailOpen.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Images\User Interface\IconMailRead.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Images\User Interface\IconMailUnread.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Images\User Interface\IconGameMenu.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Images\User Interface\IconNametag.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Images\User Interface\IconPause.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Images\User Interface\IconPlay.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Images\User Interface\IconPromoteEmployee.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Images\User Interface\IconReject.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Images\User Interface\IconRepairEquipment.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Images\User Interface\IconScrollbarMenuPurchase.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Images\User Interface\IconScroller.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Images\User Interface\IconSellEquipment.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Images\User Interface\IconShoppingCart.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Images\User Interface\ListItemHighlight.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Images\User Interface\MenuEmailFrame.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Images\User Interface\MenuMainFrame.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Images\User Interface\MenuPurchaseListBoxTarget.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Images\User Interface\MenuResumeFrame.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Images\User Interface\MenuScenarioFrame2.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Images\User Interface\ScenarioOverview1.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Images\User Interface\IconSeparator.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Images\User Interface\IconInputBar.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Images\User Interface\MenuCompanyFrame.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Images\User Interface\MenuMailboxFrame.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Images\User Interface\ButtonMainMenuItem.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Images\User Interface\MenuPauseFrame.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Images\User Interface\MenuPurchaseFrame.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Images\User Interface\MenuScenarioFrame.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Images\User Interface\ScenarioThumbnail1.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Images\User Interface\ScenarioThumbnail1Selected.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Images\User Interface\TextboxLongFrame.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Images\User Interface\ToolboxTrayButtonMail.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Images\User Interface\ToolboxTrayButtonMailHover.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Data\AgentReference.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Data\CompanyData.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Data\PeopleNames.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Images\User Interface\TopBar.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Maps\TileSet1.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <None Include="App.config" />
+    <Content Include="Content\Data\ContentReference.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Fonts\Arcade N.ttf">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Data\ThoughtReference.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Maps\OfficeOrthogonal1.tmx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Maps\Library.tmx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Fonts\DroidSans-Bold.ttf">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Fonts\DroidSans.ttf">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Content\Images\User Interface\ButtonMenuItem.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Images\User Interface\ButtonMenuItemHover.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Images\User Interface\ButtonSquare.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Images\User Interface\ButtonSquareHover.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Images\User Interface\IconArrowCircleLeft.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Images\User Interface\IconArrowCircleRight.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Images\User Interface\IconArrowsInward.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Images\User Interface\IconBarChartUp.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Images\User Interface\IconBin.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Images\User Interface\IconChair.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Images\User Interface\IconChicken.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Images\User Interface\IconCommunication.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Images\User Interface\IconCreativity.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Images\User Interface\IconDesk.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Images\User Interface\IconDollar.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Images\User Interface\IconForklift.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Images\User Interface\IconHandTruck.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Images\User Interface\IconIntelligence.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Images\User Interface\IconLeadership.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Images\User Interface\IconMedkit.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Images\User Interface\IconOpenBox.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Images\User Interface\IconPenPaper.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Images\User Interface\IconPersonAngry.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Images\User Interface\IconPersonHappy.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Images\User Interface\IconPersonPlain.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Images\User Interface\IconPersonTired.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Images\User Interface\IconPizza.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Images\User Interface\IconPlant.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Images\User Interface\IconSoda.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Images\User Interface\IconStatistics.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Images\User Interface\IconToothbrush.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Images\User Interface\IconWarning.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Images\User Interface\IconWatch.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Images\User Interface\IconWater.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Images\User Interface\IconWindow.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Images\User Interface\IconWindowClose.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Images\User Interface\IconWindowConfirm.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Images\User Interface\MenuEquipmentFrame.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Images\User Interface\MenuInspectEmployeeFrame.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Images\User Interface\MessageBoxFrame.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Images\User Interface\ToolboxTray.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Images\User Interface\ToolboxTrayButton.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Images\User Interface\ToolboxTrayButtonHover.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Images\User Interface\TooltipFrame.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Content\Images\Rooms\" />
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include=".NETFramework,Version=v4.5">
+      <Visible>False</Visible>
+      <ProductName>Microsoft .NET Framework 4.5 %28x86 and x64%29</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>
+    </PostBuildEvent>
+  </PropertyGroup>
+  <PropertyGroup>
+    <PreBuildEvent>copy "$(SolutionDir)Libs\*.*" "$(TargetDir)"
+copy "$(SolutionDir)Libs\x86\Windows\*.*" "$(TargetDir)"</PreBuildEvent>
+  </PropertyGroup>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
